@@ -1,3 +1,3 @@
-export const NothingHelper = () =>{
-    console.log("Again Nothing")
-}
+export const NothingHelper = () => {
+  console.log("Again Nothing");
+};
