@@ -20,7 +20,7 @@ export const ChatSideBar = () => {
           <Img src={UserImage} alt="User Avata" className="rounded-full w-14" />
           <div>Messaging</div>
         </div>
-        <div className="flex"></div>
+        <div className="flex flex-col"></div>
       </header>
     </div>
   );
