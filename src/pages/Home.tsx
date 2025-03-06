@@ -8,9 +8,13 @@ function Home() {
     <div className="h-full dark:bg-charcoalBlack">
       <h1>Welcome Home</h1>
       <TheNothingButton />
-      <button className="bg-darkBurgundy cursor-pointer" onClick={() => {
-        setDarkMode(!darkMode)
-        console.log("themeSwitched")}}>
+      <button
+        className="  bg-darkBurgund cursor-pointery"
+        onClick={() => {
+          setDarkMode(!darkMode);
+          console.log("themeSwitched");
+        }}
+      >
         ThemeModeToggler
       </button>
     </div>

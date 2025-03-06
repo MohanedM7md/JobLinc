@@ -2,11 +2,19 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 @theme {
-    --color-crimsonRed: #D72638;
-    --color-darkBurgundy: #780000;
-    --color-softRosewood: #A52A2A;
-    --color-lightGray: #F4F4F4;
-    --color-warmWhite: #FAFAFA;
-    --color-charcoalBlack: #222222;
-    --color-mutedSilver: #A0A0A0;
+  --color-crimsonRed: #d72638; /* Main buttons, highlights, brand color */
+  --color-darkBurgundy: #780000; /* Navbar, headers, strong contrast sections */
+  --color-softRosewood: #a52a2a; /* Secondary buttons, borders, accents */
+  --color-lightGray: #f4f4f4; /* Backgrounds, cards, subtle UI elements */
+  --color-warmWhite: #faf5ee;/* Main background, clean space */
+  --color-charcoalBlack: #222222; /* Main text, high contrast for readability */
+  --color-mutedSilver: #a0a0a0; /* Secondary text, icons, minor details */
+}
+
+:root{
+  height: 100%;
+  background-color:#faf5ee;
+}
+#root{
+  height:100lvh;
 }
