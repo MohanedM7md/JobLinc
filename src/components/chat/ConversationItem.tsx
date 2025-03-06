@@ -9,18 +9,18 @@ type ConversationItemType = {
   size?: string;
 };
 
-const ConversationItem = ({
+export const ConversationItem = ({
   imageUrl,
   userName,
   lastMessage,
   sentDate,
-  size = "w-32 h-20",
+  size = "w-12 ",
 }: ConversationItemType) => {
   return (
     <div className={`${size}`}>
-      <div>
-        <Checkbox />
-        <Img src={imageUrl} />
+      <div className="flex">
+        <Img className="w-full h-full rounded-full " src={imageUrl} />
+        <Checkbox className="relative hidden peer top-2 -left-10 " />
       </div>
       <div>
         <div>

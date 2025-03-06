@@ -1,14 +1,19 @@
-export const Checkbox = ({ style = "w-4 h-6" }: { style?: string }) => {
+import { useState } from "react";
+
+const Checkbox = ({ className = "" }: { className?: string }) => {
+  const [checked, setChecked] = useState(false);
   return (
-    <label className="relative inline-block cursor-pointer">
+    <label className={`${className} cursor-pointer`}>
       <input type="checkbox" className="peer hidden" />
       <span
-        className="w-8 h-8 border-2 border-gray-400 rounded-lg bg-white flex items-center justify-center 
-                      transition-all duration-300 peer-checked:bg-softRosewood
-                      peer-hover:bg-gray-300 peer-hover:shadow-md peer-hover:scale-105"
+        onClick={() => setChecked((c) => !c)}
+        className={` w-8 h-8 border-2 border-gray-400 rounded-lg bg-white flex items-center justify-center 
+                      transition-all duration-300 peer-checked:bg-crimsonRed 
+                      peer-hover:bg-gray-300 peer-hover:shadow-md peer-hover:scale-105
+                      peer-checked:hover:bg-crimsonRed`}
       >
         <svg
-          className={`${style}text-white opacity-0 scale-0 transition-transform duration-300 peer-checked:opacity-100 peer-checked:scale-100`}
+          className={` w-4 h-6 text-white ${checked ? "scale-100" : "scale-0 "} transition-transform duration-300`}
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
           fill="none"
@@ -23,3 +28,5 @@ export const Checkbox = ({ style = "w-4 h-6" }: { style?: string }) => {
     </label>
   );
 };
+
+export { Checkbox };

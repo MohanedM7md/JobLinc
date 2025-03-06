@@ -9,6 +9,10 @@
   --color-warmWhite: #faf5ee;/* Main background, clean space */
   --color-charcoalBlack: #222222; /* Main text, high contrast for readability */
   --color-mutedSilver: #a0a0a0; /* Secondary text, icons, minor details */
+  /* Dark */
+  --color-darkGray: #333333;
+  --color-warmBlack: #222222;
+  --color-charcoalWhite: #FAFAFA;
 }
 
 :root{
