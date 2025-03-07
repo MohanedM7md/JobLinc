@@ -1,3 +1,4 @@
+import React from "react";
 import { Img } from "react-image";
 import { ConversationItem } from "./ConversationItem";
 type ConversationItemType = {
@@ -50,9 +51,9 @@ export const ChatSideBar = () => {
   return (
     <div
       className="w-72  bg-lightGray
-                shadow-[0px_4px_10px_rgba(0,0,0,0.5)] 
+                shadow-[0px_0px_10px_rgba(0,0,0,0.5)] 
                 rounded-t-lg md:block hidden
-                dark:bg-darkGray"
+                dark:bg-darkGray fixed bottom-0 right-0 mr-8"
     >
       <header className="flex h-10 items-center gap-x-4 cursor-pointer">
         <div className="flex items-center rounded-t-lg shadow-2xl gap-x-4">

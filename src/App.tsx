@@ -1,5 +1,6 @@
+import React from "react";
 import { Route, Routes } from "react-router-dom";
-import Home from "./pages/Home";
+import PlayGround from "./pages/PlayGround";
 import "./context/ThemeProvider";
 import { ThemeProvider } from "./context/ThemeProvider";
 import { ChatSideBar } from "./components/chat/ChatSidebar";
@@ -8,13 +9,20 @@ function App() {
   return (
     <>
       <Routes>
+        <Route path="/" />
+
         <Route
-          path="/"
+          path="/playground"
           element={
             <ThemeProvider>
-              <Home />
+              <PlayGround />
             </ThemeProvider>
           }
+        />
+
+        <Route
+          path="/*"
+          element={<div className="text-red-500">Erorr 404</div>}
         />
       </Routes>
       <ChatSideBar />

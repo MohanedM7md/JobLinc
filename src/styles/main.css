@@ -14,11 +14,3 @@
   --color-warmBlack: #222222;
   --color-charcoalWhite: #FAFAFA;
 }
-
-:root{
-  height: 100%;
-  background-color:#faf5ee;
-}
-#root{
-  height:100lvh;
-}

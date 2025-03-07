@@ -1,7 +1,7 @@
 import { TheNothingButton } from "../components/TheNothingButton";
 import { GetNothing } from "../api/NothingFetch";
 import useTheme from "../hooks/useTheme";
-function Home() {
+function PlayGround() {
   const { darkMode, setDarkMode } = useTheme();
   GetNothing();
   return (
@@ -9,7 +9,7 @@ function Home() {
       <h1>Welcome Home</h1>
       <TheNothingButton />
       <button
-        className="  bg-darkBurgund cursor-pointery"
+        className="bg-darkBurgundy cursor-pointer"
         onClick={() => {
           setDarkMode(!darkMode);
           console.log("themeSwitched");
@@ -21,4 +21,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default PlayGround;
