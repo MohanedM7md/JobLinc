@@ -51,8 +51,8 @@ export const ChatSideBar = () => {
     <div
       className="w-72  bg-lightGray
                 shadow-[0px_4px_10px_rgba(0,0,0,0.5)] 
-                shadow-black-500 rounded-t-lg
-                md:block hidden dark:bg-darkGray"
+                rounded-t-lg md:block hidden
+                dark:bg-darkGray"
     >
       <header className="flex h-10 items-center gap-x-4 cursor-pointer">
         <div className="flex items-center rounded-t-lg shadow-2xl gap-x-4">
@@ -61,18 +61,18 @@ export const ChatSideBar = () => {
             Messaging
           </div>
         </div>
-        <div className="flex flex-col">
-          {mockConversations.map((conversation, index) => (
-            <ConversationItem
-              key={index}
-              imageUrl={conversation.imageUrl}
-              userName={conversation.userName}
-              lastMessage={conversation.lastMessage}
-              sentDate={conversation.sentDate}
-            />
-          ))}
-        </div>
       </header>
+      <div className="flex flex-col">
+        {mockConversations.map((conversation, index) => (
+          <ConversationItem
+            key={index}
+            imageUrl={conversation.imageUrl}
+            userName={conversation.userName}
+            lastMessage={conversation.lastMessage}
+            sentDate={conversation.sentDate}
+          />
+        ))}
+      </div>
     </div>
   );
 };
