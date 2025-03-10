@@ -1,7 +1,16 @@
 import { TheNothingButton } from "../components/TheNothingButton";
-import { GetNothing } from "../api/NothingFetch";
+import { GetNothing } from "../api/api";
 import useTheme from "../hooks/useTheme";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUser } from "../store/userSlice";
+import { useEffect } from "react";
+
 function PlayGround() {
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
+  useEffect(() => {
+    dispatch(fetchUser()); // Load user data on mount
+  }, [dispatch]);
   const { darkMode, setDarkMode } = useTheme();
   GetNothing();
   return (
@@ -17,6 +26,9 @@ function PlayGround() {
       >
         ThemeModeToggler
       </button>
+      <div>
+        <h1>Welcome, !</h1>
+      </div>
     </div>
   );
 }
