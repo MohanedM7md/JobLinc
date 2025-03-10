@@ -1,13 +1,19 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
+interface FetchUserPayload {
+  name: string;
+  email: string;
+  profilePicture: string;
+}
 export const fetchUser = createAsyncThunk("user/fetch", async () => {
   try {
     const response = await axios.get(
       "https://dummyjson.com/user/1?select=firstName,email",
     );
-    const { firstName: name, email } = response.data;
-
-    return { name, email };
+    const { firstName: name, email }: { firstName: string; email: string } =
+      response.data;
+    const profilePicture: string = "https://i.pravatar.cc/150?img=14";
+    return { name, email, profilePicture };
   } catch (error) {
     console.log(Error);
   }
@@ -19,7 +25,14 @@ enum status {
   SUCCESS = "SUCCESS",
   FAILED = "FAILED",
 }
-const intialState = {
+interface UserState {
+  name: string | null;
+  profilePicture: string | null;
+  email: string | null;
+  status: status | null;
+  loggedIn: boolean | null;
+}
+const intialState: UserState = {
   name: "",
   profilePicture: "",
   email: "",
@@ -42,12 +55,17 @@ const userSlice = createSlice({
       .addCase(fetchUser.pending, (state) => {
         state.status = status.LOADING;
       })
-      .addCase(fetchUser.fulfilled, (state, action) => {
-        state.name = action.payload?.name;
-        state.email = action.payload?.email;
-        state.profilePicture = "https://i.pravatar.cc/150?img=14";
-        state.status = status.SUCCESS;
-      })
+      .addCase(
+        fetchUser.fulfilled,
+        (state, action: PayloadAction<FetchUserPayload | undefined>) => {
+          if (action.payload) {
+            state.name = action.payload.name;
+            state.email = action.payload.email;
+            state.profilePicture = action.payload.profilePicture;
+            state.status = status.SUCCESS;
+          }
+        },
+      )
       .addCase(fetchUser.rejected, (state) => {
         state.status = status.FAILED;
       });
