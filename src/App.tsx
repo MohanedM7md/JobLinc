@@ -4,6 +4,8 @@ import PlayGround from "./pages/PlayGround";
 import "./context/ThemeProvider";
 import { ThemeProvider } from "./context/ThemeProvider";
 import { ChatSideBar } from "./components/chat/ChatSidebar";
+import { Provider } from "react-redux";
+import store from "./store/store";
 
 function App() {
   return (
@@ -15,7 +17,9 @@ function App() {
           path="/playground"
           element={
             <ThemeProvider>
-              <PlayGround />
+              <Provider store={store}>
+                <PlayGround />
+              </Provider>
             </ThemeProvider>
           }
         />
