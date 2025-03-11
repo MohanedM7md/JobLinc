@@ -2,7 +2,7 @@ import React from "react";
 import { Img } from "react-image";
 import { ConversationItem } from "./ConversationItem";
 import { useAppSelector } from "../../store/hooks";
-import SearchBar from "./SearchBar";
+import SearchBar from "./UI/SearchBar";
 
 type ConversationItemType = {
   imageUrl: string;

@@ -1,7 +1,6 @@
 import React from "react";
 import { Img } from "react-image";
-import { Checkbox } from "./CheckBox";
-import { SearchBar } from "./SearchBar";
+import Checkbox from "./UI/CheckBox";
 
 type ConversationItemProps = {
   imageUrl: string;

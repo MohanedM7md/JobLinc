@@ -29,4 +29,4 @@ function Checkbox({ className = "" }: { className?: string }) {
   );
 }
 
-export { Checkbox };
+export default Checkbox;

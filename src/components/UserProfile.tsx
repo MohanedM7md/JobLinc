@@ -8,7 +8,7 @@ interface UserProfileProps {
 }
 
 function UserProfile({ userId, clasName, children }: UserProfileProps) {
-  return <div className={`${clasName}`}>{children}</div>;
+  return <div className={`w-full ${clasName}`}>{children}</div>;
 }
 
 UserProfile.Image = ({
@@ -48,3 +48,5 @@ UserProfile.Headline = ({
   headline: string;
   className?: string;
 }) => <p className={`text-xs text-gray-500 ${className}`}>{headline}</p>;
+
+export default UserProfile;
