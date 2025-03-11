@@ -1,12 +1,12 @@
 import React from "react";
 import { Img } from "react-image";
 interface UserProfileProps {
-  userId: string;
+  clasName: string;
   children: React.ReactNode;
 }
 
-function UserProfile({ children }: UserProfileProps) {
-  return <div className={``}>{children}</div>;
+function UserProfile({ clasName, children }: UserProfileProps) {
+  return <div className={`${clasName}`}>{children}</div>;
 }
 
 UserProfile.Image = ({
