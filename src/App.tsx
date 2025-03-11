@@ -19,6 +19,7 @@ function App() {
             <ThemeProvider>
               <Provider store={store}>
                 <PlayGround />
+                <ChatSideBar />
               </Provider>
             </ThemeProvider>
           }
@@ -29,7 +30,6 @@ function App() {
           element={<div className="text-red-500">Erorr 404</div>}
         />
       </Routes>
-      <ChatSideBar />
     </>
   );
 }

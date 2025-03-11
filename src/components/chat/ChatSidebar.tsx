@@ -1,6 +1,8 @@
 import React from "react";
 import { Img } from "react-image";
 import { ConversationItem } from "./ConversationItem";
+import { useAppSelector } from "../../store/hooks";
+
 type ConversationItemType = {
   imageUrl: string;
   userName: string;
@@ -46,8 +48,8 @@ const mockConversations: ConversationItemType[] = [
   },
 ];
 
-const UserImage = "./src/components/chat/premium.jpeg";
-export const ChatSideBar = () => {
+export function ChatSideBar() {
+  const { profilePicture } = useAppSelector((state) => state.user);
   return (
     <div
       className="w-72  bg-lightGray
@@ -55,9 +57,14 @@ export const ChatSideBar = () => {
                 rounded-t-lg md:block hidden
                 dark:bg-darkGray fixed bottom-0 right-0 mr-8"
     >
-      <header className="flex h-10 items-center gap-x-4 cursor-pointer">
-        <div className="flex items-center rounded-t-lg shadow-2xl gap-x-4">
-          <Img src={UserImage} alt="User Avata" className="rounded-full w-14" />
+      <header className="flex h-10 w-full items-center gap-x-4 cursor-pointer">
+        <div className="flex h-full w-full items-center rounded-t-lg shadow-2xl gap-x-4">
+          <Img
+            src={[profilePicture]}
+            alt="User Avatar"
+            loader={<div>Loading</div>}
+            className="rounded-full h-full"
+          />
           <div className="text-charcoalBlack dark:text-charcoalWhite">
             Messaging
           </div>
@@ -76,4 +83,4 @@ export const ChatSideBar = () => {
       </div>
     </div>
   );
-};
+}

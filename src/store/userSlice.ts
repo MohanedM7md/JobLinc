@@ -15,45 +15,48 @@ export const fetchUser = createAsyncThunk("user/fetch", async () => {
     const profilePicture: string = "https://i.pravatar.cc/150?img=14";
     return { name, email, profilePicture };
   } catch (error) {
-    console.log(Error);
+    console.error(Error);
   }
 });
 
-enum status {
+enum Status {
   IDLE = "IDLE",
   LOADING = "LOADING",
   SUCCESS = "SUCCESS",
   FAILED = "FAILED",
 }
 interface UserState {
-  name: string | null;
-  profilePicture: string | null;
-  email: string | null;
-  status: status | null;
-  loggedIn: boolean | null;
+  name: string;
+  profilePicture: string;
+  email: string;
+  status: Status;
+  loggedIn: boolean;
 }
-const intialState: UserState = {
+const initialState: UserState = {
   name: "",
   profilePicture: "",
   email: "",
-  status: status.IDLE,
+  status: Status.IDLE,
   loggedIn: false,
 };
 
 const userSlice = createSlice({
   name: "user",
-  initialState: intialState,
+  initialState: initialState,
   reducers: {
     logOut: (state) => {
       state.loggedIn = false;
       state.name = "";
+      state.email = "";
       state.profilePicture = "";
+      status: Status.IDLE;
+      loggedIn: false;
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(fetchUser.pending, (state) => {
-        state.status = status.LOADING;
+        state.status = Status.LOADING;
       })
       .addCase(
         fetchUser.fulfilled,
@@ -62,12 +65,13 @@ const userSlice = createSlice({
             state.name = action.payload.name;
             state.email = action.payload.email;
             state.profilePicture = action.payload.profilePicture;
-            state.status = status.SUCCESS;
+            state.status = Status.SUCCESS;
           }
         },
       )
-      .addCase(fetchUser.rejected, (state) => {
-        state.status = status.FAILED;
+      .addCase(fetchUser.rejected, (state, action) => {
+        state.status = Status.FAILED;
+        console.error("Fetch failed:", action.payload);
       });
   },
 });

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const Checkbox = ({ className = "" }: { className?: string }) => {
+function Checkbox({ className = "" }: { className?: string }) {
   const [checked, setChecked] = useState(false);
   return (
     <label className={`${className} cursor-pointer`}>
@@ -27,6 +27,6 @@ const Checkbox = ({ className = "" }: { className?: string }) => {
       </span>
     </label>
   );
-};
+}
 
 export { Checkbox };
