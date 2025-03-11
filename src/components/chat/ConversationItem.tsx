@@ -1,25 +1,26 @@
 import React from "react";
 import { Img } from "react-image";
 import { Checkbox } from "./CheckBox";
+import { SearchBar } from "./SearchBar";
 
 type ConversationItemProps = {
   imageUrl: string;
   userName: string;
   lastMessage: string;
   sentDate: string;
-  size?: string;
+  className?: string;
 };
 
-export const ConversationItem = ({
+export function ConversationItem({
   imageUrl,
   userName,
   lastMessage,
   sentDate,
-  size = "w-full",
-}: ConversationItemProps) => {
+  className = "w-full",
+}: ConversationItemProps) {
   return (
     <div
-      className={`${size} flex items-center p-2  rounded-lg cursor-pointer `}
+      className={`${className} bg-lightGray flex items-center p-2 cursor-pointer `}
     >
       <div className="relative w-12 h-12 group grid grid-cols-1 grid-rows-1 items-center">
         <Img
@@ -44,4 +45,4 @@ export const ConversationItem = ({
       </div>
     </div>
   );
-};
+}

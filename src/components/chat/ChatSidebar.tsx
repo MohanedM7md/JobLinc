@@ -2,6 +2,7 @@ import React from "react";
 import { Img } from "react-image";
 import { ConversationItem } from "./ConversationItem";
 import { useAppSelector } from "../../store/hooks";
+import SearchBar from "./SearchBar";
 
 type ConversationItemType = {
   imageUrl: string;
@@ -52,13 +53,12 @@ export function ChatSideBar() {
   const { profilePicture } = useAppSelector((state) => state.user);
   return (
     <div
-      className="w-72  bg-lightGray
-                shadow-[0px_0px_10px_rgba(0,0,0,0.5)] 
+      className="w-72 shadow-[0px_0px_10px_rgba(0,0,0,0.5)] 
                 rounded-t-lg md:block hidden
                 dark:bg-darkGray fixed bottom-0 right-0 mr-8"
     >
-      <header className="flex h-10 w-full items-center gap-x-4 cursor-pointer">
-        <div className="flex h-full w-full items-center rounded-t-lg shadow-2xl gap-x-4">
+      <header className="flex w-full h-14 items-center gap-x-4 cursor-pointer border-">
+        <div className="flex p-2  h-full w-full items-center rounded shadow-2xl gap-x-4">
           <Img
             src={[profilePicture]}
             alt="User Avatar"
@@ -70,6 +70,7 @@ export function ChatSideBar() {
           </div>
         </div>
       </header>
+      <SearchBar />
       <div className="flex flex-col">
         {mockConversations.map((conversation, index) => (
           <ConversationItem
