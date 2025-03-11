@@ -1,11 +1,13 @@
 import React from "react";
 import { Img } from "react-image";
+import { Link } from "react-router-dom";
 interface UserProfileProps {
+  userId: string;
   clasName: string;
   children: React.ReactNode;
 }
 
-function UserProfile({ clasName, children }: UserProfileProps) {
+function UserProfile({ userId, clasName, children }: UserProfileProps) {
   return <div className={`${clasName}`}>{children}</div>;
 }
 
@@ -18,7 +20,13 @@ UserProfile.Image = ({
   userName: string;
   className?: string;
 }) => (
-  <Img src={photoUrl} alt={userName} className={`rounded-full ${className}`} />
+  <Link to="">
+    <Img
+      src={photoUrl}
+      alt={userName}
+      className={`rounded-full ${className}`}
+    />
+  </Link>
 );
 
 UserProfile.Name = ({
@@ -27,7 +35,11 @@ UserProfile.Name = ({
 }: {
   name: string;
   className?: string;
-}) => <h1 className={`font-medium text-sm ${className}`}>{name}</h1>;
+}) => (
+  <Link to="">
+    <h1 className={`font-medium text-sm ${className}`}>{name}</h1>
+  </Link>
+);
 
 UserProfile.Headline = ({
   headline,
