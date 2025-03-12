@@ -1,10 +1,14 @@
+import React from "react";
 import { Route, Routes } from "react-router-dom";
-import Home from "./pages/Home";
+import PlayGround from "./pages/PlayGround";
 import "./context/ThemeProvider";
 import { ThemeProvider } from "./context/ThemeProvider";
 import LandPage from "./pages/LandPage";
 import SignUpPage from "./pages/SignUpPage";
 import SignInPage from "./pages/SignInPage";
+import { Provider } from "react-redux";
+import store from "./store/store";
+
 function App() {
   return (
     <>
@@ -16,10 +20,23 @@ function App() {
               <Home />
               <LandPage />
             </ThemeProvider>
-          }>
-        </Route>
+          }
+        ></Route>
         <Route path="Signup" element={<SignUpPage />}></Route>
         <Route path="Signin" element={<SignInPage />}></Route>
+        <Route
+          path="/playground"
+          element={
+            <Provider store={store}>
+              <PlayGround />
+            </Provider>
+          }
+        />
+
+        <Route
+          path="/*"
+          element={<div className="text-red-500">Erorr 404</div>}
+        />
       </Routes>
     </>
   );
