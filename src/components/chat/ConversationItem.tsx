@@ -27,7 +27,13 @@ export function ConversationItem({
           src={imageUrl}
         />
 
-        <div className="col-start-1 row-start-1 flex items-center justify-center bg-darkGray  h-0  group-hover:h-full group-has-checked:h-full opacity-0 group-hover:opacity-100 group-has-checked:opacity-100 rounded-full transition-all">
+        <div
+          className="col-start-1 row-start-1 flex
+           items-center justify-center bg-darkGray  h-0
+           group-hover:h-full group-has-checked:h-full opacity-0
+            group-hover:opacity-100 group-has-checked:opacity-100 
+            rounded-full transition-all"
+        >
           <Checkbox />
         </div>
       </div>

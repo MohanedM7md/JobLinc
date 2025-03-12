@@ -19,7 +19,7 @@ function App() {
             <ThemeProvider>
               <Provider store={store}>
                 <PlayGround />
-                <ChatSideBar />
+                {/* <ChatSideBar /> */}
               </Provider>
             </ThemeProvider>
           }

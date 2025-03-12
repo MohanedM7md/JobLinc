@@ -13,19 +13,15 @@ function UserProfile({ userId, clasName, children }: UserProfileProps) {
 
 UserProfile.Image = ({
   photoUrl,
-  userName,
+  alt,
   className,
 }: {
   photoUrl: string;
-  userName: string;
+  alt: string;
   className?: string;
 }) => (
   <Link to="">
-    <Img
-      src={photoUrl}
-      alt={userName}
-      className={`rounded-full ${className}`}
-    />
+    <Img src={photoUrl} alt={alt} className={`rounded-full ${className}`} />
   </Link>
 );
 
@@ -37,7 +33,7 @@ UserProfile.Name = ({
   className?: string;
 }) => (
   <Link to="">
-    <h1 className={`font-medium text-sm ${className}`}>{name}</h1>
+    <h1 className={` inline font-medium text-sm ${className}`}>{name}</h1>
   </Link>
 );
 

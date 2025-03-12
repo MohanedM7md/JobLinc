@@ -4,7 +4,8 @@ import useTheme from "../hooks/useTheme";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { fetchUser } from "../store/userSlice";
 import { useEffect } from "react";
-import ChatMessages from "../components/chat/ChatMessages";
+
+import ChatWindow from "../components/chat/ChatWindow";
 
 function PlayGround() {
   const dispatch = useAppDispatch();
@@ -33,7 +34,7 @@ function PlayGround() {
           wlecome <div className=" text-3xl inline">{user.name}</div>{" "}
         </h1>
       </div>
-      <ChatMessages />
+      <ChatWindow />
     </div>
   );
 }
