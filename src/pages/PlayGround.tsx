@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { fetchUser } from "../store/userSlice";
 import ChatProvider from "../context/ChatsIdProvider";
 import { useEffect } from "react";
-import { ChatSideBar } from "../components/chat/ChatSidebar";
+import FloatingChatSystem from "../components/chat/FloatingChatSystem";
 
 function PlayGround() {
   /*   const dispatch = useAppDispatch();
@@ -35,7 +35,7 @@ function PlayGround() {
         </h1>
       </div>
       <ChatProvider>
-        <ChatSideBar />
+        <FloatingChatSystem />
       </ChatProvider>
     </div>
   );

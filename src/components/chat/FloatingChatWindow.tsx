@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import ChatHeader from "./ChatHeader";
+import FloatingChatHeader from "./FloatingChatHeader";
 import ChatMessages from "./ChatMessages";
 import ChatInput from "./ChatInput";
 import useChats from "../../hooks/useChats";
@@ -16,7 +16,7 @@ const mockUser: User = {
   status: "online",
 };
 
-function ChatWindow({
+function FloatingChatWindow({
   style,
   className,
   id,
@@ -44,7 +44,7 @@ function ChatWindow({
                  ${isActive ? "" : "translate-y-[calc(100%-60px)]"}`}
       style={style}
     >
-      <ChatHeader
+      <FloatingChatHeader
         onClick={activeToggler}
         user={mockUser}
         onClose={() => CloseChat(id)}
@@ -57,4 +57,4 @@ function ChatWindow({
   );
 }
 
-export default React.memo(ChatWindow);
+export default React.memo(FloatingChatWindow);

@@ -22,7 +22,7 @@ function MessageBubble({ message }: { message: MessageInterface }) {
   const rtl = isRTL(message.content.text);
 
   return (
-    <div className="flex flex-col ">
+    <div className="flex flex-col pl-1">
       <UserProfile.Image
         alt={message.sender.name}
         photoUrl={message.sender.profilePicture}
@@ -48,7 +48,8 @@ function MessageBubble({ message }: { message: MessageInterface }) {
             <Img
               src={message.content.image}
               alt="Sent Image"
-              className="rounded mt-2 w-full max-w-xs object-cover hover:opacity-80 hover:scale-105 transition-all duration-300 cursor-pointer"
+              className="rounded mt-2 w-full max-w-xs object-cover hover:opacity-80 
+              hover:scale-105 transition-all duration-300 cursor-pointer"
             />
           )}
 

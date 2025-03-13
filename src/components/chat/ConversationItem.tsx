@@ -11,7 +11,7 @@ type ConversationItemProps = {
   className?: string;
 };
 
-export function ConversationItem({
+export default function ConversationItem({
   id,
   imageUrl,
   userName,

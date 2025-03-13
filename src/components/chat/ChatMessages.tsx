@@ -55,7 +55,7 @@ interface User {
   profilePicture: string;
 }
 
-function ChatMessages({ id }: { id: string }) {
+function ChatMessages({ id, className }: { id: string; className?: string }) {
   const [users, setUsers] = useState<Map<string, User>>(new Map());
   const [messages, setMessages] = useState<any[]>([]);
 
@@ -69,14 +69,13 @@ function ChatMessages({ id }: { id: string }) {
     );
     setUsers(userMap);
 
-    // Mock fetching messages based on chat ID
     setTimeout(() => {
       setMessages(mockMessages[id] || []);
-    }, 500); // Simulate async delay
+    }, 500);
   }, [id]);
 
   return (
-    <div className="bg-gray-100 flex flex-col overflow-hidden">
+    <div className={`bg-gray-100 flex flex-col overflow-hidden`}>
       <div className="flex-1 overflow-y-auto space-y-2">
         {messages.length > 0 ? (
           messages.map((message, index) => {

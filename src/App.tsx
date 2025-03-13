@@ -3,13 +3,13 @@ import { Route, Routes } from "react-router-dom";
 import PlayGround from "./pages/PlayGround";
 import "./context/ThemeProvider";
 import { ThemeProvider } from "./context/ThemeProvider";
-import { ChatSideBar } from "./components/chat/ChatSidebar";
 import LandPage from "./pages/LandPage";
 import SignUpPage from "./pages/SignUpPage";
 import SignInPage from "./pages/SignInPage";
 import ForgotPassword from "./pages/ForgotPassword";
 import { Provider } from "react-redux";
 import store from "./store/store";
+import MessagingPage from "./pages/Messaging";
 
 function App() {
   return (
@@ -29,6 +29,7 @@ function App() {
           path="/Signin/ForgotPassword"
           element={<ForgotPassword />}
         ></Route>
+        <Route path="/messaging" element={<MessagingPage />} />
         <Route
           path="/playground"
           element={

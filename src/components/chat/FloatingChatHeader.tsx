@@ -13,12 +13,12 @@ interface ChatHeaderProps {
   onClose: () => void;
 }
 
-function ChatHeader({ onClick, user, onClose }: ChatHeaderProps) {
+function FloatingChatHeader({ onClick, user, onClose }: ChatHeaderProps) {
   return (
     <div
-      className={`flex items-center justify-between bg-charcoalWhite 
-        p-2 dark:text-charcoalBlack rounded-t-lg border-b-1 z-10
-        border-gray-300 cursor-pointer h-[60px] `}
+      className={`flex items-center justify-between bg-charcoalWhite dark:bg-darkGray 
+        p-2 text-charcoalBlack dark:text-charcoalBlack rounded-t-lg border-b-2 z-10
+        border-gray-200 dark:border-mutedSilver cursor-pointer h-[60px] `}
       onClick={onClick}
     >
       <div className="flex items-center space-x-3">
@@ -44,13 +44,13 @@ function ChatHeader({ onClick, user, onClose }: ChatHeaderProps) {
         </div>
       </div>
 
-      <div className="flex items-center space-x-2 ">
-        <button className="text-mutedSilver hover:text-warmBlack">
+      <div className="flex items-center space-x-2">
+        <button className="text-mutedSilver hover:text-darkBurgundy dark:hover:text-charcoalWhite">
           <MoreHorizontal size={20} />
         </button>
         <button
           onClick={onClose}
-          className="text-mutedSilver hover:text-warmBlack"
+          className="text-mutedSilver hover:text-darkBurgundy dark:hover:text-charcoalWhite"
         >
           <X size={20} />
         </button>
@@ -59,4 +59,4 @@ function ChatHeader({ onClick, user, onClose }: ChatHeaderProps) {
   );
 }
 
-export default ChatHeader;
+export default FloatingChatHeader;

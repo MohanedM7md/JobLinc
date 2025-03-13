@@ -1,10 +1,10 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { Img } from "react-image";
-import { ConversationItem } from "./ConversationItem";
+import ConversationList from "./ConversationList ";
 import { useAppSelector } from "../../store/hooks";
 import useChats from "../../hooks/useChats";
 import SearchBar from "./UI/SearchBar";
-import ChatWindow from "./ChatWindow";
+import FloatingChatWindow from "./FloatingChatWindow";
 
 type ConversationItemType = {
   id: string;
@@ -59,13 +59,13 @@ const mockConversations: ConversationItemType[] = [
   },
 ];
 
-export function ChatSideBar() {
+export default function FloatingChatSidebar() {
   const { profilePicture } = useAppSelector((state) => state.user);
   const [isActive, setActive] = useState<boolean>(() => {
     return localStorage.getItem("chatSidebarActive") === "true" || false;
   });
-  const { opnedChatsId, setOpnedChatsId } = useChats();
-  console.log(opnedChatsId);
+  const { setOpnedChatsId } = useChats();
+
   const handleConversationClick = (chatId: string) => {
     setOpnedChatsId((prevChats) => {
       if (prevChats.includes(chatId)) return prevChats;
@@ -111,29 +111,11 @@ export function ChatSideBar() {
           </div>
         </header>
         <SearchBar />
-        <div className="flex flex-col overflow-y-auto max-h-[400px]">
-          {mockConversations.map((conversation) => (
-            <ConversationItem
-              key={conversation.id}
-              id={conversation.id} // Pass ID here
-              imageUrl={conversation.imageUrl}
-              userName={conversation.userName}
-              lastMessage={conversation.lastMessage}
-              sentDate={conversation.sentDate}
-              onClick={() => handleConversationClick(conversation.id)}
-            />
-          ))}
-        </div>
+        <ConversationList
+          conversations={mockConversations}
+          onConversationClick={handleConversationClick}
+        />
       </div>
-      {opnedChatsId.map((opnedChatId, index) => {
-        return (
-          <ChatWindow
-            style={{ right: `${index * 410 + 330}px` }}
-            key={opnedChatId}
-            id={opnedChatId}
-          />
-        );
-      })}
     </>
   );
 }
