@@ -52,7 +52,12 @@ function FloatingChatWindow({
 
       <ChatMessages id={id} />
 
-      <ChatInput />
+      <ChatInput
+        id={id}
+        onSendMessage={() => {
+          console.log("SendMessage");
+        }}
+      />
     </div>
   );
 }

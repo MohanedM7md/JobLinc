@@ -2,12 +2,17 @@ import React, { useState } from "react";
 import { Paperclip, Image, Smile, Send } from "lucide-react";
 
 interface ChatInputProps {
-  onSendMessage: (message: string) => void;
+  id: string | null;
+  onSendMessage: (id: string, message: string) => void;
 }
 
-function ChatInput() {
+function ChatInput({ id, onSendMessage }: ChatInputProps) {
   const [message, setMessage] = useState("");
-
+  const handleSendMessage = () => {
+    if (!message.trim() || !id) return;
+    onSendMessage(id, message);
+    setMessage("");
+  };
   return (
     <div
       className="flex flex-col items-center p-3
@@ -43,6 +48,7 @@ function ChatInput() {
           </button>
         </div>
         <button
+          onClick={handleSendMessage}
           disabled={!message.trim()}
           className={`ml-2 p-1 rounded-l-full font-bold rounded-r-full transition-colors
             ${

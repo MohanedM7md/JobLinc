@@ -26,7 +26,12 @@ export default function PageChatWindow({
         <div>
           <PageChatHeader name={mockUser.name} status={mockUser.status} />
           <ChatMessages id={chatId} />
-          <ChatInput />
+          <ChatInput
+            id={chatId}
+            onSendMessage={() => {
+              console.log("SendMessage");
+            }}
+          />
         </div>
       ) : (
         <div className="flex items-center justify-center h-full text-gray-500">
