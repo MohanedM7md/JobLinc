@@ -1,13 +1,9 @@
-import {TheNothingButton} from "../components/TheNothingButton"
-import {GetNothing} from "../api/NothingFetch"
-function Home() {
-    GetNothing();
-  return (
-    <>
-      <h1>Welcome Home</h1>
-      <TheNothingButton/>
-    </>
-  );
-}
+import NavBar from '../components/NavBar';
 
-export default Home;
+
+function App() {
+    return(
+      <NavBar/>
+    );
+}
+export default App;
