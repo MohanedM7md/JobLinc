@@ -90,7 +90,7 @@ function SignUpInformation() {
                 email: emailText,
                 password: passText
             };
-            navigate("/MainPage", { state: userData }); // Redirect and send data
+            // navigate("/MainPage", { state: userData }); // Redirect and send data
         }
 
 
