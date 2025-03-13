@@ -8,7 +8,7 @@ interface User {
 }
 
 interface ChatHeaderProps {
-  onClick?: () => {};
+  onClick?: () => void;
   user: User;
   onClose: () => void;
 }
@@ -17,7 +17,8 @@ function ChatHeader({ onClick, user, onClose }: ChatHeaderProps) {
   return (
     <div
       className={`flex items-center justify-between bg-charcoalWhite 
-        p-2 dark:text-charcoalBlack rounded-t-lg border-b-1 z-10 border-gray-300`}
+        p-2 dark:text-charcoalBlack rounded-t-lg border-b-1 z-10
+        border-gray-300 cursor-pointer h-[60px] `}
       onClick={onClick}
     >
       <div className="flex items-center space-x-3">

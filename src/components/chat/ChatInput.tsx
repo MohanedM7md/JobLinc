@@ -21,15 +21,24 @@ function ChatInput() {
           shadow-inner focus:ring-1 focus:ring-gray-400"
         placeholder="Write a message..."
       />
-      <div className="flex justify-between w-full mt-4 ">
+      <div className="flex justify-between w-full pt-4 ">
         <div>
-          <button className="text-mutedSilver dark:text-charcoalWhite hover:text-charcoalBlack dark:hover:text-warmWhite p-2">
+          <button
+            className="text-mutedSilver dark:text-charcoalWhite
+           hover:text-charcoalBlack dark:hover:text-warmWhite p-2"
+          >
             <Paperclip size={20} />
           </button>
-          <button className="text-mutedSilver dark:text-charcoalWhite hover:text-charcoalBlack dark:hover:text-warmWhite p-2">
+          <button
+            className="text-mutedSilver dark:text-charcoalWhite
+           hover:text-charcoalBlack dark:hover:text-warmWhite p-2"
+          >
             <Image size={20} />
           </button>
-          <button className="text-mutedSilver dark:text-charcoalWhite hover:text-charcoalBlack dark:hover:text-warmWhite p-2">
+          <button
+            className="text-mutedSilver dark:text-charcoalWhite
+           hover:text-charcoalBlack dark:hover:text-warmWhite p-2"
+          >
             <Smile size={20} />
           </button>
         </div>

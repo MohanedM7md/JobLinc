@@ -7,7 +7,7 @@ type ConversationItemProps = {
   userName: string;
   lastMessage: string;
   sentDate: string;
-
+  onClick: () => void;
   className?: string;
 };
 
@@ -17,11 +17,12 @@ export function ConversationItem({
   userName,
   lastMessage,
   sentDate,
+  onClick,
   className = "w-full",
 }: ConversationItemProps) {
   return (
     <div
-      onClick={() => {}}
+      onClick={onClick}
       id={id}
       className={`${className} bg-charcoalWhite hover:bg-gray-200 flex items-center p-2 cursor-pointer `}
     >
