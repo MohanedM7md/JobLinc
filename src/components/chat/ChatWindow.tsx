@@ -17,7 +17,10 @@ const mockUser: User = {
 
 function ChatWindow() {
   return (
-    <div className="w-[400px] shadow-xl">
+    <div
+      id={""}
+      className="w-[400px] shadow-xl border-1 border-gray-200 rounded-t-lg"
+    >
       <ChatHeader user={mockUser} onClose={() => console.log("Chat Closed")} />
 
       <ChatMessages />

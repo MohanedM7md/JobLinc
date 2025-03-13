@@ -1,16 +1,18 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Img } from "react-image";
 import Checkbox from "./UI/CheckBox";
-
 type ConversationItemProps = {
+  id: string; // Added ID
   imageUrl: string;
   userName: string;
   lastMessage: string;
   sentDate: string;
+
   className?: string;
 };
 
 export function ConversationItem({
+  id,
   imageUrl,
   userName,
   lastMessage,
@@ -19,7 +21,9 @@ export function ConversationItem({
 }: ConversationItemProps) {
   return (
     <div
-      className={`${className} bg-lightGray flex items-center p-2 cursor-pointer `}
+      onClick={() => {}}
+      id={id}
+      className={`${className} bg-charcoalWhite hover:bg-gray-200 flex items-center p-2 cursor-pointer `}
     >
       <div className="relative w-12 h-12 group grid grid-cols-1 grid-rows-1 items-center">
         <Img
@@ -37,8 +41,6 @@ export function ConversationItem({
           <Checkbox />
         </div>
       </div>
-
-      {/* Chat Content */}
       <div className="flex flex-1 justify-between items-center ml-3">
         <div>
           <div className="font-medium">{userName}</div>

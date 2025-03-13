@@ -22,7 +22,7 @@ function MessageBubble({ message }: { message: MessageInterface }) {
   const rtl = isRTL(message.content.text);
 
   return (
-    <div className="flex flex-col pl-4">
+    <div className="flex flex-col ">
       <UserProfile.Image
         alt={message.sender.name}
         photoUrl={message.sender.profilePicture}

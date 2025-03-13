@@ -8,15 +8,17 @@ interface User {
 }
 
 interface ChatHeaderProps {
+  onClick?: () => {};
   user: User;
   onClose: () => void;
 }
 
-const ChatHeader: React.FC<ChatHeaderProps> = ({ user, onClose }) => {
+function ChatHeader({ onClick, user, onClose }: ChatHeaderProps) {
   return (
     <div
-      className="flex items-center justify-between 
-     bg-charcoalWhite p-2 dark:text-charcoalBlack rounded-t-lg border-b-2 border-gray-300"
+      className={`flex items-center justify-between bg-charcoalWhite 
+        p-2 dark:text-charcoalBlack rounded-t-lg border-b-1 z-10 border-gray-300`}
+      onClick={onClick}
     >
       <div className="flex items-center space-x-3">
         <div className="relative">
@@ -41,7 +43,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ user, onClose }) => {
         </div>
       </div>
 
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center space-x-2 ">
         <button className="text-mutedSilver hover:text-warmBlack">
           <MoreHorizontal size={20} />
         </button>
@@ -54,6 +56,6 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ user, onClose }) => {
       </div>
     </div>
   );
-};
+}
 
 export default ChatHeader;

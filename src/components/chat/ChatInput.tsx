@@ -16,10 +16,12 @@ function ChatInput() {
       <textarea
         value={message}
         onChange={(e) => setMessage(e.target.value)}
-        className="flex-1 w-full bg-warmWhite dark:bg-darkGray text-charcoalBlack dark:text-charcoalWhite p-2 rounded-lg resize-none h-10 focus:outline-none"
+        className="flex-1 w-full bg-warmWhite dark:bg-darkGray text-charcoalBlack
+         dark:text-charcoalWhite p-2 rounded-lg resize-none h-10 focus:outline-none
+          shadow-inner focus:ring-1 focus:ring-gray-400"
         placeholder="Write a message..."
       />
-      <div className="flex justify-between w-full mt-4">
+      <div className="flex justify-between w-full mt-4 ">
         <div>
           <button className="text-mutedSilver dark:text-charcoalWhite hover:text-charcoalBlack dark:hover:text-warmWhite p-2">
             <Paperclip size={20} />

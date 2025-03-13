@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import MessageBubble from "./MessageBubble";
-import UserProfile from "../UserProfile";
 
 const mockUsers = [
   {
@@ -61,7 +60,7 @@ function ChatMessages() {
   }, []);
 
   return (
-    <div className="h-[500px] w-[400px] bg-gray-100 flex flex-col overflow-hidden">
+    <div className="bg-gray-100 flex flex-col overflow-hidden bg-charcoalWhite">
       <div className="flex-1 overflow-y-auto space-y-2">
         {messages.map((message) => {
           const sender = {
