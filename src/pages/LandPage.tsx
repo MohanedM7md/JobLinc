@@ -6,8 +6,8 @@ function LandPage()
     return (
         <div className="flex flex-col">
             <h1>This will be the land page insha'Allah</h1>
-            <Link to="Signup">Go to Signup Page</Link>
-            <Link to="Signin">Go to Signin Page</Link>
+            <Link to="/Signup">Go to Signup Page</Link>
+            <Link to="/Signin">Go to Signin Page</Link>
 
 
             <Outlet />
