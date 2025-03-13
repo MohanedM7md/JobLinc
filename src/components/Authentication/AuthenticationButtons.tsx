@@ -42,7 +42,7 @@ type AuthenticationSignInButtonProps = {
 
 function AuthenticationSignInButton({ text }: AuthenticationSignInButtonProps)
 {
-    return (<button className="w-full bg-[#D72638] py-2 text-[#222222] font-semibold rounded-3xl mb-4 hover:bg-[#A52A2A] hover:cursor-pointer">{text}</button>);
+    return (<button className="w-full bg-crimsonRed py-2 text-charcoalBlack font-semibold rounded-3xl mb-4 hover:bg-softRosewood hover:cursor-pointer">{text}</button>);
 
 }
 
