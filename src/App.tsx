@@ -4,6 +4,10 @@ import PlayGround from "./pages/PlayGround";
 import "./context/ThemeProvider";
 import { ThemeProvider } from "./context/ThemeProvider";
 import { ChatSideBar } from "./components/chat/ChatSidebar";
+import LandPage from "./pages/LandPage";
+import SignUpPage from "./pages/SignUpPage";
+import SignInPage from "./pages/SignInPage";
+import ForgotPassword from "./pages/ForgotPassword";
 import { Provider } from "react-redux";
 import store from "./store/store";
 
@@ -11,8 +15,20 @@ function App() {
   return (
     <>
       <Routes>
-        <Route path="/" />
-
+        <Route
+          path="/"
+          element={
+            <ThemeProvider>
+              <LandPage />
+            </ThemeProvider>
+          }
+        ></Route>
+        <Route path="/Signup" element={<SignUpPage />}></Route>
+        <Route path="/Signin" element={<SignInPage />}></Route>
+        <Route
+          path="/Signin/ForgotPassword"
+          element={<ForgotPassword />}
+        ></Route>
         <Route
           path="/playground"
           element={
