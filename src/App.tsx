@@ -1,4 +1,3 @@
-import React from "react";
 import { Route, Routes } from "react-router-dom";
 import PlayGround from "./pages/PlayGround";
 import "./context/ThemeProvider";
@@ -9,10 +8,12 @@ import ForgotPassword from "./pages/ForgotPassword";
 import { Provider } from "react-redux";
 import store from "./store/store";
 import { ThemeProvider } from "./context/ThemeProvider";
+import NavBar from "./components/NavBar";
 
 function App() {
   return (
     <>
+      <NavBar/>
       <Routes>
         <Route
           path="/"
@@ -39,6 +40,7 @@ function App() {
           element={<div className="text-red-500">Erorr 404</div>}
         />
       </Routes>
+      
     </>
   );
 }
