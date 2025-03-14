@@ -1,29 +1,33 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "material-icons/iconfont/material-icons.css";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { fetchUser } from "../../store/userSlice";
 
 // Define types for the props
 interface ProfileDetailsProps {
-  img: string;
-  name: string;
-  title: string;
   isLincing: boolean;
 }
 
 export default function ProfileDetails(props: ProfileDetailsProps) {
   const [isLinc, setIsLinc] = useState<boolean>(props.isLincing);
   const Linc = !isLinc ? "Linc" : "Linc'd";
-
-  return (
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.user);
+  useEffect(() => {
+    dispatch(fetchUser()); // Load user data on mount
+    }, [dispatch]);
+  
+    return (
     <>
       <img
         className="rounded-full h-16 w-16 m-4"
-        src={props.img}
-        alt={props.name}
+        src={user.profilePicture ?? ""}
+        alt={user.name ?? ""}
       />
       <div className="mt-5 w-1/1 min-w-0">
         <div className="flex flex-row justify-between w-1/1">
           <div className="flex flex-row">
-            <p className="mr-2 font-bold">{props.name}</p>
+            <p className="mr-2 font-bold">{user.name}</p>
             <p
               className={
                 isLinc
@@ -36,7 +40,7 @@ export default function ProfileDetails(props: ProfileDetailsProps) {
             </p>
           </div>
         </div>
-        <p className="truncate font-light text-mutedSilver">{props.title}</p>
+        <p className="truncate font-light text-mutedSilver">{user.title}</p>
       </div>
     </>
   );

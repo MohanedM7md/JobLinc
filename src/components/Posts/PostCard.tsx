@@ -1,19 +1,14 @@
 import PostDetails from "./PostDetails";
 import ProfileDetails from "./ProfileDetails";
 import PostUtilityButton from "./PostUtilityButton";
-import { useState} from "react";
+import { useState } from "react";
 import "material-icons/iconfont/material-icons.css";
 
 interface ProfileContent {
-  name: string;
-  title: string;
-  img: string;
   isLincing: boolean;
 }
 
 interface PostContent {
-  text: string;
-  pics: string[];
   isLiked: boolean;
 }
 
@@ -35,9 +30,6 @@ export default function Post(props: PostProps) {
       <div className="flex flex-row w-1/1">
         <ProfileDetails
           key="user"
-          name={props.profile.name}
-          title={props.profile.title}
-          img={props.profile.img}
           isLincing={props.profile.isLincing}
         />
         <div className="" onBlur={() => setShowUtility(false)}>
@@ -58,7 +50,7 @@ export default function Post(props: PostProps) {
           clear
         </button>
       </div>
-      <PostDetails key="test" text={props.post.text} pics={props.post.pics} />
+      <PostDetails />
       <button
         className={
           isLike

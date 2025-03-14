@@ -1,22 +1,24 @@
-import { useState} from "react";
+import { useEffect, useState} from "react";
 import PostMedia from "./PostMedia";
+import { fetchPost } from "../../store/postSlice";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
 
-interface PostDetailsProps {
-  text: string;
-  pics: string[];
-}
 
-export default function PostDetails({ text, pics }: PostDetailsProps) {
+export default function PostDetails() {
   const [showMore, setShowMore] = useState<boolean>(false);
   const show = !showMore ? "Show more" : "Show less";
-
+  const dispatch = useAppDispatch();
+  const post = useAppSelector((state) => state.post);
+  useEffect(() => {
+    dispatch(fetchPost("0")); 
+    }, [dispatch]);
 
 
   return (
     <div>
       <div className="min-w-0 mr-3 ml-3">
         <p className={!showMore ? "truncate text-wrap line-clamp-3" : ""}>
-          {text}
+          {post.text}
         </p>
         <button
           onClick={() => setShowMore(!showMore)}
@@ -25,7 +27,7 @@ export default function PostDetails({ text, pics }: PostDetailsProps) {
           {show}
         </button>
       </div>
-      {pics.length > 0 ? <PostMedia key="mediaRendering" pics={pics} /> : null}
+      {post.pics.length > 0 ? <PostMedia key="mediaRendering" pics={post.pics} /> : null}
     </div>
   );
 }

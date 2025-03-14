@@ -25,8 +25,18 @@ function App() {
         ></Route>
         <Route path="/Signup" element={<SignUpPage />}></Route>
         <Route path="/Signin" element={<SignInPage />}></Route>
-        <Route path="/Signin/ForgotPassword" element={<ForgotPassword/>}></Route>
-        <Route path="/post" element={<PostContainer />}></Route>
+        <Route
+          path="/Signin/ForgotPassword"
+          element={<ForgotPassword />}
+        ></Route>
+        <Route
+          path="/post"
+          element={
+            <Provider store={store}>
+              <PostContainer />
+            </Provider>
+          }
+        />
         <Route
           path="/playground"
           element={
