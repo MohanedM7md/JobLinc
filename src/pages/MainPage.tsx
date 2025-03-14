@@ -1,16 +1,35 @@
-// This page is just a simulation of when the user signs up or signs in.
-// The user will be redirected to this page upon successful authentication
-import { useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "../store/store";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
-function MainPage()
-{
-    const location = useLocation();
-    const userData = location.state || {}; // Get the passed state
+function MainPage() {
+    const navigate = useNavigate();
+
+    // Get user data from Redux store
+    const user = useSelector((state: RootState) => state.user);
+    
+    console.log("Redux State in MainPage:", user); // Debug Redux data in component
+
+    // Redirect to sign-in page if not logged in
+    useEffect(() => {
+        if (!user.loggedIn) {
+            navigate("/signin");
+        }
+    }, [user.loggedIn, navigate]);
 
     return (
-        <div>
-            <h1>Welcome, {userData.email}!</h1>
-            <p>Your email: {userData.password}</p>
+        <div className="flex flex-col items-center justify-center min-h-screen">
+            <h1 className="text-2xl font-bold">Welcome to the Main Page</h1>
+
+            {user.loggedIn ? (
+                <div className="mt-4 p-4 border rounded-lg shadow-md">
+                    <p><strong>Username:</strong> {user.username}</p>
+                    <p><strong>Email:</strong> {user.email}</p>
+                </div>
+            ) : (
+                <p>Redirecting to sign-in...</p>
+            )}
         </div>
     );
 }
