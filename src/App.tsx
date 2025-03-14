@@ -9,11 +9,13 @@ import { Provider } from "react-redux";
 import store from "./store/store";
 import { ThemeProvider } from "./context/ThemeProvider";
 import NavBar from "./components/NavBar";
+import ManageNetworkCard from "./components/ManageNetworkCard";
 
 function App() {
   return (
     <>
       <NavBar/>
+      <ManageNetworkCard></ManageNetworkCard>
       <Routes>
         <Route
           path="/"
