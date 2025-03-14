@@ -15,9 +15,9 @@ export default function ProfileDetails(props: ProfileDetailsProps) {
   const user = useAppSelector((state) => state.user);
   useEffect(() => {
     dispatch(fetchUser()); // Load user data on mount
-    }, [dispatch]);
-  
-    return (
+  }, [dispatch]);
+
+  return (
     <>
       <img
         className="rounded-full h-16 w-16 m-4"
@@ -40,7 +40,7 @@ export default function ProfileDetails(props: ProfileDetailsProps) {
             </p>
           </div>
         </div>
-        <p className="truncate font-light text-mutedSilver">{user.title}</p>
+        <p className="truncate font-light text-mutedSilver">{user.headline}</p>
       </div>
     </>
   );

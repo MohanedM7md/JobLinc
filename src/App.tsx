@@ -10,6 +10,7 @@ import MainPage from "./pages/MainPage";
 import store from "./store/store";
 import { ThemeProvider } from "./context/ThemeProvider";
 import PostContainer from "./components/Posts/PostContainer";
+import { Provider } from "react-redux";
 
 function App() {
   return (
@@ -25,7 +26,10 @@ function App() {
         ></Route>
         <Route path="/Signup" element={<SignUpPage />}></Route>
         <Route path="/Signin" element={<SignInPage />}></Route>
-        <Route path="/Signin/ForgotPassword" element={<ForgotPassword/>}></Route>
+        <Route
+          path="/Signin/ForgotPassword"
+          element={<ForgotPassword />}
+        ></Route>
         <Route path="/MainPage" element={<MainPage />}></Route>
         {/* <Route
           path="/playground"
@@ -35,7 +39,14 @@ function App() {
             </Provider>
           }
         /> */}
-
+        <Route
+          path="/post"
+          element={
+            <Provider store={store}>
+              <PostContainer />
+            </Provider>
+          }
+        />
         <Route
           path="/*"
           element={<div className="text-red-500">Erorr 404</div>}

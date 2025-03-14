@@ -4,7 +4,7 @@ interface FetchUserPayload {
   name: string;
   email: string;
   profilePicture: string;
-  title: string;
+  headline: string;
 }
 export const fetchUser = createAsyncThunk("user/fetch", async () => {
   try {
@@ -14,8 +14,9 @@ export const fetchUser = createAsyncThunk("user/fetch", async () => {
     const { firstName: name, email }: { firstName: string; email: string } =
       response.data;
     const profilePicture: string = "https://i.pravatar.cc/150?img=14";
-    const title: string = "Phd in Something Something | Software Engineer probably";
-    return { name, email, profilePicture, title };
+    const headline: string =
+      "Phd in Something Something | Software Engineer probably";
+    return { name, email, profilePicture, headline };
   } catch (error) {
     console.log(Error);
   }
@@ -31,7 +32,7 @@ interface UserState {
   name: string | null;
   profilePicture: string | null;
   email: string | null;
-  title: string | null;
+  headline: string | null;
   status: status | null;
   loggedIn: boolean | null;
 }
@@ -39,7 +40,7 @@ const intialState: UserState = {
   name: "",
   profilePicture: "",
   email: "",
-  title: "",
+  headline: "",
   status: status.IDLE,
   loggedIn: false,
 };
@@ -66,7 +67,7 @@ const userSlice = createSlice({
             state.name = action.payload.name;
             state.email = action.payload.email;
             state.profilePicture = action.payload.profilePicture;
-            state.title = action.payload.title;
+            state.headline = action.payload.headline;
             state.status = status.SUCCESS;
           }
         },
