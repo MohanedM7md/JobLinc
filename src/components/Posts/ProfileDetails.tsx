@@ -1,4 +1,4 @@
-import { useState} from "react";
+import { useState } from "react";
 import "material-icons/iconfont/material-icons.css";
 
 // Define types for the props
