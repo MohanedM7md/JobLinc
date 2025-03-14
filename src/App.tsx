@@ -9,7 +9,7 @@ import { Provider } from "react-redux";
 import store from "./store/store";
 import { ThemeProvider } from "./context/ThemeProvider";
 import HomePage from "./pages/HomePage";
-import MyNetwork from "./pages/MyNetwork";
+import MyNetwork from "./pages/MyNetworkPage";
 
 
 function App() {

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import Searchbar from '../components/SearchBar';
 import NavIcon from '../components/NavIcon';
 import Logo from '../components/Logo';
+import { Outlet, Link } from "react-router-dom";
 function NavBar(){
         const [isLargeScreen, setIsLargeScreen] = useState<boolean>(window.innerWidth > 1280); // Typed as boolean
 
@@ -28,11 +29,11 @@ function NavBar(){
               </div>
             </div>
             <div className="flex flex-row items-center justify-between w-full">
-              <NavIcon Icon="fa-solid fa-house" Name="Home" />
-              <NavIcon Icon="fa-solid fa-user-group" Name={isLargeScreen ? 'My Network' : 'Network'} />
-              <NavIcon Icon="fa-solid fa-briefcase" Name="Jobs" />
-              <NavIcon Icon="fa-solid fa-message" Name="Messaging" />
-              <NavIcon Icon="fa-solid fa-bell" Name="Notifications" />
+              <NavIcon Icon="fa-solid fa-house" Name="Home" Link="/Home"/>
+              <NavIcon Icon="fa-solid fa-user-group" Name={isLargeScreen ? 'My Network' : 'Network'} Link = "/MyNetwork"/>
+              <NavIcon Icon="fa-solid fa-briefcase" Name="Jobs"/>
+              <NavIcon Icon="fa-solid fa-message" Name="Messaging"/>
+              <NavIcon Icon="fa-solid fa-bell" Name="Notifications"/>
               <NavIcon
                 Icon="fa-solid fa-user"
                 Name="Me"

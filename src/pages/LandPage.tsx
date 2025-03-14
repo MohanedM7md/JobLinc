@@ -10,9 +10,7 @@ function LandPage()
             <Link to="/Signin">Go to Signin Page</Link>
             <Link to="/Home">Go to Home Page</Link>
             <Link to="/MyNetwork">Go to My Network Page</Link>
-            <Outlet />
         </div>
     );
 }
-
 export default LandPage;
