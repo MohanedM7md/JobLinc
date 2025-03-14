@@ -1,19 +1,19 @@
 import React from "react";
 import { MoreHorizontal, X } from "lucide-react";
 
-interface User {
-  name: string;
+interface ChatInfo {
+  title: string;
   profilePicture: string;
   status: "online" | "offline";
 }
 
 interface ChatHeaderProps {
   onClick?: () => void;
-  user: User;
+  chatInfo: ChatInfo;
   onClose: () => void;
 }
 
-function FloatingChatHeader({ onClick, user, onClose }: ChatHeaderProps) {
+function FloatingChatHeader({ onClick, chatInfo, onClose }: ChatHeaderProps) {
   return (
     <div
       className={`flex items-center justify-between bg-charcoalWhite dark:bg-darkGray 
@@ -24,22 +24,22 @@ function FloatingChatHeader({ onClick, user, onClose }: ChatHeaderProps) {
       <div className="flex items-center space-x-3">
         <div className="relative">
           <img
-            src={user.profilePicture}
-            alt={user.name}
+            src={chatInfo.profilePicture}
+            alt={chatInfo.title}
             className="w-10 h-10 rounded-full"
           />
 
           <span
             className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 ${
-              user.status === "online" ? "bg-green-500" : "bg-mutedSilver"
+              chatInfo.status === "online" ? "bg-green-500" : "bg-mutedSilver"
             }`}
           />
         </div>
 
         <div>
-          <p className="text-lg font-semibold">{user.name}</p>
+          <p className="text-lg font-semibold">{chatInfo.title}</p>
           <p className="text-sm text-mutedSilver">
-            {user.status === "online" ? "Available" : "Offline"}
+            {chatInfo.status === "online" ? "Available" : "Offline"}
           </p>
         </div>
       </div>

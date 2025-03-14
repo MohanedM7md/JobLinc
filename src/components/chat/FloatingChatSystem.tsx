@@ -10,8 +10,8 @@ function FloatingChatSystem() {
       {opnedChatsId.map((opnedChatId, index) => {
         return (
           <FloatingChatWindow
-            style={{ right: `${index * 410 + 330}px` }}
             key={opnedChatId}
+            style={{ right: `${index * 410 + 330}px` }}
             id={opnedChatId}
           />
         );

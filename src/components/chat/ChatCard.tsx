@@ -1,25 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { Img } from "react-image";
 import Checkbox from "./UI/CheckBox";
-type ConversationItemProps = {
-  id: string; // Added ID
+interface ChatCard {
+  id: string;
   imageUrl: string;
-  userName: string;
+  chatName: string;
   lastMessage: string;
   sentDate: string;
   onClick: () => void;
   className?: string;
-};
+}
 
-export default function ConversationItem({
+export default function ChatCard({
   id,
   imageUrl,
-  userName,
+  chatName,
   lastMessage,
   sentDate,
   onClick,
   className = "w-full",
-}: ConversationItemProps) {
+}: ChatCard) {
   return (
     <div
       onClick={onClick}
@@ -44,7 +44,7 @@ export default function ConversationItem({
       </div>
       <div className="flex flex-1 justify-between items-center ml-3">
         <div>
-          <div className="font-medium">{userName}</div>
+          <div className="font-medium">{chatName}</div>
           <div className="text-sm text-gray-500 truncate max-w-[200px]">
             {lastMessage}
           </div>

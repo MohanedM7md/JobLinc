@@ -1,10 +1,9 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { Img } from "react-image";
-import ConversationList from "./ConversationList ";
+import ChatCardsList from "./ChatCardsList";
 import { useAppSelector } from "../../store/hooks";
 import useChats from "../../hooks/useChats";
 import SearchBar from "./UI/SearchBar";
-import FloatingChatWindow from "./FloatingChatWindow";
 
 type ConversationItemType = {
   id: string;
@@ -13,49 +12,27 @@ type ConversationItemType = {
   lastMessage: string;
   sentDate: string;
 };
-
-const mockConversations: ConversationItemType[] = [
+const mockConversations = [
   {
-    id: "chat-1",
+    chatId: "chat-1",
     imageUrl: "https://randomuser.me/api/portraits/men/45.jpg",
-    userName: "John Doe",
+    chatName: "John Doe",
     lastMessage: "Hey! How's it going?",
     sentDate: "Mar 6",
   },
   {
-    id: "chat-2",
+    chatId: "chat-2",
     imageUrl: "https://randomuser.me/api/portraits/men/68.jpg",
-    userName: "Jane Smith",
+    chatName: "Jane Smith",
     lastMessage: "I'll call you later.",
     sentDate: "Mar 5",
   },
   {
-    id: "chat-3",
+    chatId: "chat-3",
     imageUrl: "https://randomuser.me/api/portraits/men/23.jpg",
-    userName: "Michael Johnson",
+    chatName: "Michael Johnson",
     lastMessage: "Did you finish the project?",
     sentDate: "Mar 4",
-  },
-  {
-    id: "chat-4",
-    imageUrl: "https://randomuser.me/api/portraits/men/12.jpg",
-    userName: "Emily Davis",
-    lastMessage: "Thanks for your help!",
-    sentDate: "Mar 3",
-  },
-  {
-    id: "chat-5",
-    imageUrl: "https://randomuser.me/api/portraits/men/56.jpg",
-    userName: "David Brown",
-    lastMessage: "See you tomorrow!",
-    sentDate: "Mar 2",
-  },
-  {
-    id: "chat-6",
-    imageUrl: "https://randomuser.me/api/portraits/men/34.jpg",
-    userName: "Olivia Wilson",
-    lastMessage: "Let's meet up next week.",
-    sentDate: "Feb 28",
   },
 ];
 
@@ -111,9 +88,9 @@ export default function FloatingChatSidebar() {
           </div>
         </header>
         <SearchBar />
-        <ConversationList
-          conversations={mockConversations}
-          onConversationClick={handleConversationClick}
+        <ChatCardsList
+          CardsList={mockConversations}
+          onCardClick={handleConversationClick}
         />
       </div>
     </>
