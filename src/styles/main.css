@@ -14,3 +14,11 @@
   --color-warmBlack: #222222;
   --color-charcoalWhite: #FAFAFA;
 }
+
+input:-webkit-autofill {
+  background-color: #f4f4f4 !important;
+  color: inherit !important;
+  -webkit-box-shadow: 0 0 0px 1000px #f4f4f4 inset !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
