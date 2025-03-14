@@ -8,14 +8,13 @@ import ForgotPassword from "./pages/ForgotPassword";
 import { Provider } from "react-redux";
 import store from "./store/store";
 import { ThemeProvider } from "./context/ThemeProvider";
-import NavBar from "./components/NavBar";
-import ManageNetworkCard from "./components/ManageNetworkCard";
+import HomePage from "./pages/HomePage";
+import MyNetwork from "./pages/MyNetwork";
+
 
 function App() {
   return (
     <>
-      <NavBar/>
-      <ManageNetworkCard></ManageNetworkCard>
       <Routes>
         <Route
           path="/"
@@ -28,6 +27,10 @@ function App() {
         <Route path="/Signup" element={<SignUpPage />}></Route>
         <Route path="/Signin" element={<SignInPage />}></Route>
         <Route path="/Signin/ForgotPassword" element={<ForgotPassword/>}></Route>
+        <Route path="/Home" element={<HomePage />}></Route>
+        <Route path="/MyNetwork" element={<MyNetwork/>}></Route>
+
+
         <Route
           path="/playground"
           element={

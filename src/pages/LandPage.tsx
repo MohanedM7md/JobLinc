@@ -8,8 +8,8 @@ function LandPage()
             <h1>This will be the land page insha'Allah</h1>
             <Link to="/Signup">Go to Signup Page</Link>
             <Link to="/Signin">Go to Signin Page</Link>
-
-
+            <Link to="/Home">Go to Home Page</Link>
+            <Link to="/MyNetwork">Go to My Network Page</Link>
             <Outlet />
         </div>
     );
