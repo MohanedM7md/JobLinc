@@ -1,54 +1,80 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { AuthenticationSignInButton } from "./AuthenticationButtons";
-
+import { useDispatch } from "react-redux";
+import { setEmailPassword } from "../../store/userSlice";
 function SignUpInformation() {
     const [isEmpty, setEmpty] = useState({ email: true, password: true });
-    const [isFocusedEmail, setFocusedEmail] = useState(false);
-    const [isFocusedPass, setFocusedPass] = useState(false);
-    
-    const [showErrorEmail, setShowErrorEmail] = useState(false);
-    const [showErrorPass, setShowErrorPass] = useState(false);
+
+    const [emailText, setEmailText] = useState("");
+    const [passText, setPassText] = useState("");
+    const [showErrorEmailEmpty, setshowErrorEmailEmpty] = useState(false);
+    const [showErrorEmailInvalid, setshowErrorEmailInvalid] = useState(false);
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+    const [showErrorPassEmpty, setshowErrorPassEmpty] = useState(false);
+    const [showErrorPassInvalid, setshowErrorPassInvalid] = useState(false);
+    const dispatch = useDispatch();
 
     const [isHidden, setHidden] = useState(true);
+    const navigate = useNavigate();
+
     
     useEffect(() => {
         if (!isEmpty.email) {
-            setShowErrorEmail(false);
+            setshowErrorEmailEmpty(false);
+            setshowErrorEmailInvalid(false);
         }
         if (!isEmpty.password) {
-            setShowErrorPass(false);
+            setshowErrorPassEmpty(false);
+            setshowErrorPassInvalid(false);
         }
     }, [isEmpty]);
+
+    function isValidEmail(email: string) : boolean
+    {
+        return emailRegex.test(email);
+    }
+
+    function isValidPassword(pass: string) : boolean {
+        return pass.length >= 6;
+    }
 
     function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
         const { name, value } = event.target;
         setEmpty(prevVal => {
             if (name === "email") {
+                setEmailText(value);
                 return { email: value.length === 0, password: prevVal.password };
             } else if (name === "password") {
+                setPassText(value);
                 return { email: prevVal.email, password: value.length === 0 };
             }
             return prevVal;
         });
     }
 
-    function handleFocus(event: React.FocusEvent<HTMLInputElement>) {
-        const { name } = event.target;
-        name === "email" ? setFocusedEmail(true) : setFocusedPass(true);
-    }
 
     function handleFocusOut(event: React.FocusEvent<HTMLInputElement>) {
-        const { name } = event.target;
+        const { name, value } = event.target;
         if (name === "email") {
             if (isEmpty.email) {
-                setShowErrorEmail(true);
+                setshowErrorEmailEmpty(true);
+                setshowErrorEmailInvalid(false);
+            }
+            else {
+                setshowErrorEmailInvalid(!isValidEmail(value));
             }
         } else {
             if (isEmpty.password) {
-                setShowErrorPass(true);
+                setshowErrorPassEmpty(true);
+                setshowErrorPassInvalid(false);
+            }
+            else
+            {
+                setshowErrorPassInvalid(!isValidPassword(value));
             }
         }
-        name === "email" ? setFocusedEmail(false) : setFocusedPass(false);
     }
 
     function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
@@ -56,19 +82,46 @@ function SignUpInformation() {
         event.preventDefault();
     }
 
+    function isValidSubmit(event: React.FormEvent<HTMLFormElement>) {
+        event.preventDefault();
+
+        if (!showErrorPassInvalid && !showErrorEmailInvalid)
+        {
+            // Now we can take the First Name and Last Name
+            // Navigate to Another Page
+
+            // Now I have email and password, I need to put them in the store
+            // and take more details about the user in upcoming pages
+            const userData = {
+                email: emailText,
+                password: passText
+            }
+            dispatch(setEmailPassword(userData));
+            navigate("/UserDetails");
+        }
+
+
+    }
+
     return (
-        <form className="flex flex-col w-80 items-start gap-3">
+        <form onSubmit={isValidSubmit} className="flex flex-col w-80 items-start gap-3">
             <div className="flex flex-col w-full">
-                <label htmlFor="email" className="text-[14px] text-[#222222] font-bold">Email</label>
-                <input name="email" onFocus={handleFocus} onBlur={handleFocusOut} onChange={handleChange} required id="email" className={`outline-[0.7px] text-[14px] text-[#222222] h-8 px-2 rounded-sm hover:cursor-pointer hover:outline-[1px] hover:bg-gray-100 ${showErrorEmail && "outline-red-700 hover:outline-red-900"}`}></input>
-                {showErrorEmail && <p className="text-red-800 text-[10px]">Please enter your email address.</p>}
+                <label htmlFor="email" className="text-[14px] text-charcoalBlack font-bold">Email</label>
+                <input value={emailText} name="email" onBlur={handleFocusOut} onChange={handleChange} required id="email"  
+                className={`outline-[0.7px] text-[14px] text-charcoalBlack h-8 px-2 rounded-sm hover:cursor-text hover:outline-[1px] hover:bg-gray-100 focus:outline-black focus:outline-[1.5px] ${(showErrorEmailEmpty || showErrorEmailInvalid) && "outline-red-700 hover:outline-red-900"}`}></input>
+                {showErrorEmailEmpty && <p className="text-red-800 text-[10px]">Please enter your email address.</p>}
+                {showErrorEmailInvalid && <p className="text-red-800 text-[10px]">Please enter a valid email address.</p>}
+
             </div>
 
             <div className="flex flex-col relative w-full">
-                <label htmlFor="password" className="text-[14px] text-[#222222] font-bold">Password</label>
-                <input name="password" type={isHidden ? "password" : "text"} onFocus={handleFocus} onBlur={handleFocusOut} onChange={handleChange} required id="password" className={`outline-[0.7px] text-[14px] text-[#222222] h-8 px-2 rounded-sm hover:cursor-pointer hover:outline-[1px] hover:bg-gray-100 ${showErrorPass && "outline-red-700 hover:outline-red-900"}`}></input>
-                {showErrorPass && <p className="text-red-800 text-[10px]">Please enter your password.</p>}
-                <button onClick={handleClick} className="z-2 absolute top-7.5 right-0 rounded-2xl text-[10px] border-0 px-1.5 text-[#222222] font-semibold hover:cursor-pointer hover:bg-[#A52A2A]">Show</button>
+                <label htmlFor="password" className="text-[14px] text-charcoalBlack font-bold">Password</label>
+                <input value={passText} name="password" type={isHidden ? "password" : "text"} onBlur={handleFocusOut} onChange={handleChange} required id="password" 
+                className={`outline-[0.7px] text-[14px] text-charcoalBlack h-8 pl-2 pr-10 rounded-sm hover:cursor-text hover:outline-[1px] hover:bg-gray-100 focus:outline-black focus:outline-[1.5px] ${(showErrorPassEmpty || showErrorPassInvalid) && "outline-red-700 hover:outline-red-900"}`}  ></input>
+                {showErrorPassEmpty && <p className="text-red-800 text-[10px]">Please enter your password.</p>}
+                {showErrorPassInvalid && <p className="text-red-800 text-[10px]">Password must be 6 characters or more.</p>}
+
+                <button onClick={handleClick} className="z-2 absolute top-7.5 right-0 rounded-2xl text-[10px] border-0 px-1.5 text-charcoalBlack font-semibold hover:cursor-pointer">{isHidden ? "Show" : "Hide"}</button>
             </div>
 
             <div className="flex items-center">
@@ -76,12 +129,12 @@ function SignUpInformation() {
                     <input type="checkbox" id="default-checkbox" className="mr-2 scale-95"/>
                 </div>
                 <div className="flex items-center">
-                    <label htmlFor="default-checkbox" className="text-[14px] text-[#222222]">Keep me logged in</label>
+                    <label htmlFor="default-checkbox" className="text-[14px] text-charcoalBlack">Keep me logged in</label>
                 </div>
             </div>
 
             <div className="flex w-full flex-col items-center justify-center">
-                <div className="text-[12px] text-[#A0A0A0] mb-3">By clicking Agree & Join or Continue, you agree to the Job Linc <span className="text-[#A52A2A] font-semibold">User Agreement</span>, <span className="text-[#A52A2A] font-semibold">Privacy Policy</span>, and <span className="text-[#A52A2A] font-semibold">Cookie Policy.</span></div>
+                <div className="text-[12px] text-mutedSilver mb-3">By clicking Agree & Join or Continue, you agree to the Job Linc <span className="text-softRosewood font-semibold">User Agreement</span>, <span className="text-softRosewood font-semibold">Privacy Policy</span>, and <span className="text-softRosewood font-semibold">Cookie Policy.</span></div>
                 <AuthenticationSignInButton text="Agree & Join"/>
             </div>
         </form>

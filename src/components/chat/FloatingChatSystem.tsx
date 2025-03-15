@@ -14,7 +14,6 @@ function FloatingChatSystem() {
             <FloatingChatWindow
               key={opnedChatId}
               style={{ right: `${index * 410 + 330}px` }}
-              chatId={opnedChatId}
             />
           </ChatIdProvider>
         );
