@@ -48,3 +48,5 @@ UserProfile.Headline = ({
   headline: string;
   className?: string;
 }) => <p className={`text-xs text-gray-500 ${className}`}>{headline}</p>;
+
+export default UserProfile

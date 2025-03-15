@@ -10,6 +10,9 @@ import UserDetails from "./components/Authentication/UserDetails";
 //import { Provider } from "react-redux";
 import store from "./store/store";
 import { ThemeProvider } from "./context/ThemeProvider";
+import HomePage from "./pages/HomePage";
+import MyNetwork from "./pages/MyNetworkPage";
+
 import PostContainer from "./components/Posts/PostContainer";
 import { Provider } from "react-redux";
 
@@ -27,10 +30,9 @@ function App() {
         ></Route>
         <Route path="/Signup" element={<SignUpPage />}></Route>
         <Route path="/Signin" element={<SignInPage />}></Route>
-        <Route
-          path="/Signin/ForgotPassword"
-          element={<ForgotPassword />}
-        ></Route>
+        <Route path="/Signin/ForgotPassword" element={<ForgotPassword/>}></Route>
+        <Route path="/Home" element={<HomePage />}></Route>
+        <Route path="/MyNetwork" element={<MyNetwork/>}></Route>
         <Route path="/MainPage" element={<MainPage />}></Route>
         <Route path="/UserDetails" element={<UserDetails/>}></Route>
         {/* <Route
@@ -54,6 +56,7 @@ function App() {
           element={<div className="text-red-500">Erorr 404</div>}
         />
       </Routes>
+      
     </>
   );
 }
