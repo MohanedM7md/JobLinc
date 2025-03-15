@@ -20,7 +20,6 @@ function ThemeProvider({ children }: { children: React.ReactNode }) {
         : window.matchMedia("(prefers-color-scheme: dark)").matches;
 
     document.documentElement.classList.toggle("dark", userPrefrence);
-
     return userPrefrence;
   });
 
