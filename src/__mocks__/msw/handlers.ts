@@ -20,7 +20,7 @@ export const handler = [
           pics: ["https://d.newsweek.com/en/full/940601/05-23-galaxy.jpg"],
         },
       ],
-      { status: 200 },
+      { status: 200, statusText: "OK" },
     );
   }),
 ];

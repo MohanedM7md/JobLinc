@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const api = axios.create({
-  baseURL: "http://localhost:4000/api",
+  baseURL: "/api", //to be edited when the actual API is up
   timeout: 5000,
   headers: {
     "Content-Type": "application/json",
@@ -32,9 +32,8 @@ export const sendMessage = async (chatId: string, message: any) => {
 };
 
 // Fetch a a number of posts to populate a user's feed
-export const getFeed = async (count: number) => {
-  const response = await api.get(`post/feed/`, {
-    params:count});
+export const getFeed = async () => {
+  const response = await api.get(`post/feed/`);
   return response.data;
 };
 
