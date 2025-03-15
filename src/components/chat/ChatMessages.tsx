@@ -31,7 +31,7 @@ function ChatMessages({ users, messages, className }: ChatMessages) {
                 profilePicture: "",
               }),
             };
-            console.log({ sender, ...message });
+            console.log("_________ChatMessages_____________");
             return (
               <MessageBubble key={index} message={{ sender, ...message }} />
             );

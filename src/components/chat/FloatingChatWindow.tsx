@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import FloatingChatHeader from "./FloatingChatHeader";
 import ChatContent from "./ChatContent";
 import useChats from "../../hooks/useChats";
+import useChatid from "../../context/ChatIdProvider";
 const mockInfo: any = {
   title: "string",
   profilePicture: "https://randomuser.me/api/portraits/men/2.jpg",
@@ -11,12 +12,11 @@ const mockInfo: any = {
 function FloatingChatWindow({
   style,
   className,
-  chatId,
 }: {
   style?: React.CSSProperties;
   className?: string;
-  chatId: string;
 }) {
+  const { chatId } = useChatid();
   const [isActive, setActive] = useState<boolean>(false);
   const activeToggler = () => {
     setActive((prevIsActive) => !prevIsActive);

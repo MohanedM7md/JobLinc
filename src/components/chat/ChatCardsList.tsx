@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, memo } from "react";
 import ChatCard from "./ChatCard";
-import io from "socket.io-client";
+import { fetchChats } from "../../api/api";
+import { connectChatSocket } from "../../api/socket";
 
 interface ChatCardType {
   chatId: string;
@@ -8,30 +9,34 @@ interface ChatCardType {
   imageUrl: string;
   lastMessage: string;
   sentDate: string;
+  unreadCount: number;
 }
 
 interface ChatCardsListType {
   onCardClick: (id: string) => void;
 }
 
-export default function ChatCardsList({ onCardClick }: ChatCardsListType) {
+const ChatCardsList = ({ onCardClick }: ChatCardsListType) => {
   const [chats, setChats] = useState<ChatCardType[]>([]);
-
+  const chatSocket = connectChatSocket();
+  console.log("----------------ChatCardsList----------------");
   useEffect(() => {
-    const socket = io("http://localhost:4000");
-    socket.on("connect", () => {
-      socket.emit("UserID", "1");
-      socket.on("RecieveChats", (chats: ChatCardType[]) => {
-        setChats((prevChats) =>
-          JSON.stringify(prevChats) === JSON.stringify(chats)
-            ? prevChats
-            : chats,
-        );
-      });
+    const fetchData = async () => {
+      try {
+        const data = await fetchChats("1");
+        setChats(data);
+      } catch (error) {
+        console.error("Error fetching chat data:", error);
+      }
+    };
+    fetchData();
+
+    chatSocket.on("ChatsUpdate", (newChat: ChatCardType) => {
+      setChats((prev) => [...prev, newChat]);
     });
 
     return () => {
-      socket.disconnect();
+      chatSocket.off("ChatsUpdate");
     };
   }, []);
 
@@ -54,4 +59,6 @@ export default function ChatCardsList({ onCardClick }: ChatCardsListType) {
       )}
     </div>
   );
-}
+};
+
+export default memo(ChatCardsList);

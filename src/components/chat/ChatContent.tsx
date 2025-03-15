@@ -1,7 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import ChatMessages from "./ChatMessages";
 import ChatInput from "./ChatInput";
-import io from "socket.io-client";
+import { fetchMessages, fetchChatUsers } from "../../api/api";
+import {
+  connectChatSocket,
+  onReceiveMessage,
+  emitSendMessage,
+} from "../../api/socket";
+
 interface User {
   id: string;
   name: string;
@@ -20,41 +26,40 @@ interface ChatContentProps {
 export default function ChatContent({ chatId }: ChatContentProps) {
   const [users, setUsers] = useState<User[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
-  const [socket, setSocket] = useState<SocketIOClient.Socket | null>(null);
-
+  const chatSocket = connectChatSocket();
+  console.log("______________ChatContent_______________");
   useEffect(() => {
-    const newSocket = io("http://localhost:4000/chat");
-    setSocket(newSocket);
+    if (!chatId) return;
 
-    newSocket.on("connect", () => {
-      newSocket.emit("OpenChat", chatId);
-
-      newSocket.on("RevieveMessages", (messages: Message[]) => {
-        setMessages(messages);
-      });
-      newSocket.on("RevieveUsers", (Users: User[]) => {
-        setUsers(Users);
-      });
+    const fetchData = async () => {
+      const messagesData = await fetchMessages(chatId);
+      setMessages(messagesData);
+      const usersData = await fetchChatUsers(chatId);
+      setUsers(usersData);
+    };
+    fetchData();
+    chatSocket.emit("openChat", chatId);
+    onReceiveMessage((message: Message) => {
+      console.log("recieved Message: ", message);
+      setMessages((prev) => [...prev, message]);
     });
 
     return () => {
-      newSocket.disconnect();
+      chatSocket.off("receiveMessage");
     };
   }, [chatId]);
 
-  const handleSendMessage = (chatId: string, message: string) => {
-    console.log("message", message);
+  const handleSendMessage = (message: string) => {
     const newMessage: Message = {
       senderId: "1",
       time: new Date(),
       content: { text: message },
     };
-    setMessages((prevMessages) => {
-      return [...prevMessages, newMessage];
-    });
-
-    if (socket) {
-      socket.emit("SendMessage", newMessage);
+    console.log("message: :::: ", message);
+    setMessages((prev) => [...prev, newMessage]);
+    if (chatId) {
+      emitSendMessage({ chatId, ...newMessage });
+      chatSocket.off("receiveMessage");
     }
   };
 

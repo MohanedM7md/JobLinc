@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import ChatCardsList from "./ChatCardsList";
 import PageMessageWindow from "./PageChatWindow";
+import { ChatIdProvider } from "../../context/ChatIdProvider";
 
 export default function PageChatSystem() {
   const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
   console.log("--------------PageChatSystem rendered--------------");
-  const handleConversationClick = (chatId: string) => {
+  const handleConversationClick = useCallback((chatId: string) => {
     setSelectedChatId(chatId);
-  };
+  }, []);
   return (
     <div className="flex h-screen w-full">
       <div className="w-1/3 border-r bg-charcoalWhite border-gray-300 p-4 overflow-y-auto">

@@ -3,7 +3,7 @@ import { Paperclip, Image, Smile } from "lucide-react";
 
 interface ChatInputProps {
   id: string | null;
-  onSendMessage: (id: string, message: string) => void;
+  onSendMessage: (message: string) => void;
 }
 
 function ChatInput({ id, onSendMessage }: ChatInputProps) {
@@ -11,7 +11,7 @@ function ChatInput({ id, onSendMessage }: ChatInputProps) {
   const handleSendMessage = () => {
     if (!message.trim() || !id) return;
     console.log("input ", message);
-    onSendMessage(id, message);
+    onSendMessage(message);
     setMessage("");
   };
   return (

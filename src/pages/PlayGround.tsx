@@ -1,5 +1,4 @@
 import { TheNothingButton } from "../components/TheNothingButton";
-import { GetNothing } from "../api/api";
 import useTheme from "../hooks/useTheme";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { fetchUser } from "../store/userSlice";
@@ -14,9 +13,6 @@ function PlayGround() {
     dispatch(fetchUser()); // Load user data on mount
   }, [dispatch]); */
   const { darkMode, setDarkMode } = useTheme();
-  useEffect(() => {
-    GetNothing();
-  });
   return (
     <div className="h-full dark:bg-charcoalBlack">
       <h1>Welcome Home</h1>

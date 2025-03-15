@@ -1,4 +1,4 @@
-import React, { Children, createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 
 interface ChatIdContextType {
   chatId: string;
@@ -9,14 +9,22 @@ export const ChatsIdContext = createContext<ChatIdContextType>({
   setChatId: () => {},
 });
 
-export function ChatIdProvider({ children }: { children: React.ReactNode }) {
-  const [chatId, setChatId] = useState("");
-  <ChatsIdContext.Provider value={{ chatId, setChatId }}>
-    {children}
-  </ChatsIdContext.Provider>;
+export function ChatIdProvider({
+  children,
+  id,
+}: {
+  children: React.ReactNode;
+  id: string;
+}) {
+  const [chatId, setChatId] = useState(id);
+  return (
+    <ChatsIdContext.Provider value={{ chatId, setChatId }}>
+      {children}
+    </ChatsIdContext.Provider>
+  );
 }
 
-export default function useChats() {
+export default function useChatId() {
   const context = useContext(ChatsIdContext);
   if (!context) throw new Error("useChats must be used within a ChatProvider");
 
