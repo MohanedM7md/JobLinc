@@ -62,7 +62,6 @@
   "msw": {
     "workerDirectory": [
       "public",
-      ""
     ]
   }
 }
