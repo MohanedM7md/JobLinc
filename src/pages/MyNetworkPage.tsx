@@ -6,8 +6,8 @@ function MyNetwork(){
     return(
         <>
                 <NavBar></NavBar>
-                <ConnectCard profilePicture="src\assets\Tyrone.jpg" userName="Tyrone" userBio="Zingy"></ConnectCard>
-                <ManageNetworkCard></ManageNetworkCard>
+                <ConnectCard profilePicture="src\assets\Tyrone.jpg" userName="Tyrone" userBio="Barber"></ConnectCard>
+                <ManageNetworkCard></ManageNetworkCard> 
         </>
 
     );
