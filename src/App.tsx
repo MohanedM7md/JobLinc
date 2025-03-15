@@ -48,9 +48,7 @@ function App() {
         <Route
           path="/post"
           element={
-            <Provider store={store}>
               <PostContainer />
-            </Provider>
           }
         />
         <Route
