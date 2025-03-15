@@ -14,7 +14,7 @@ function LandPage()
                     <AuthenticationMicrosoftButton />
                     <div onClick={() => navigate("/Signin")
                     }>
-                        <AuthenticationSignInButton text="Sign in with email"/>
+                        <AuthenticationSignInButton id="navigate-to-sign-in" text="Sign in with email"/>
                     </div>
 
                     <div className="flex w-full flex-col items-center justify-center">

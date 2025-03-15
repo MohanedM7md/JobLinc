@@ -1,4 +1,4 @@
-import { use, useState } from "react";
+import { useState } from "react";
 import { AuthenticationSignInButton } from "./AuthenticationButtons";
 import SignHeader from "./SignHeader";
 import Modal from "./Modal";
@@ -37,7 +37,7 @@ function UserDetails() {
 
     function isValidPhoneNo(country: string, phoneNumber: string): boolean {
         const regex = countryPhoneRegex[country];
-        return regex ? regex.test(phoneNumber) : false;
+        return regex.test(phoneNumber);
     }
 
     function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -137,7 +137,7 @@ function UserDetails() {
 
                     {/* Submit Button */}
                     <div className="flex w-full flex-col items-center justify-center">
-                        <AuthenticationSignInButton text="Continue" />
+                        <AuthenticationSignInButton id="continue-btn" text="Continue" />
                     </div>
                 </form>
             </div>
@@ -192,7 +192,7 @@ function UserDetails() {
                     </div>
 
 
-                    <AuthenticationSignInButton text="Continue"/>
+                    <AuthenticationSignInButton id="submit-phone-no-btn" text="Continue"/>
                 </form>
             </Modal>
         </div>

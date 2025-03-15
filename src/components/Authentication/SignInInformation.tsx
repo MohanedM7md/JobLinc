@@ -204,7 +204,7 @@ function SignInInformation() {
             </div>
 
             <div className="flex w-full justify-center">
-                <AuthenticationSignInButton text="Sign in" />
+                <AuthenticationSignInButton id="sign-in-btn" text="Sign in" />
             </div>
 
             <Modal isOpen={isWrongEmailOrPassword} onClose={() => setIsWrongEmailOrPassword(false)}>
