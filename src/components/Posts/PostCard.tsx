@@ -19,7 +19,7 @@ export default function Post(props: PostProps) {
   const [isLike, setIsLike] = useState<boolean>(false);
   const like = !isLike ? "Like" : "Liked";
 
-  return !hide ? (
+  return !hide ? 
     <div className="flex flex-wrap w-1/1 bg-lightGray rounded-xl relative">
       <div className="flex flex-row w-1/1">
         <ProfileDetails
@@ -32,7 +32,9 @@ export default function Post(props: PostProps) {
         />
         <div className="" onBlur={() => setShowUtility(false)}>
           {showUtility ? (
-            <PostUtilityButton delete={() => console.log("will delete soon trust")} />
+            <PostUtilityButton
+              delete={() => console.log("will delete soon trust")}
+            />
           ) : null}
         </div>
         <button
@@ -48,7 +50,22 @@ export default function Post(props: PostProps) {
           clear
         </button>
       </div>
-      <PostDetails key={`Details of post ${props.post.postID}`} text={props.post.text} media={props.post.pics}/>
+      <PostDetails
+        key={`Details of post ${props.post.postID}`}
+        text={props.post.text}
+        media={props.post.pics}
+      />
+      <div className="flex flex-row m-auto py-2 w-11/12 border-b-1 border-gray-300">
+        <span className="text-blue-500 material-icons">thumb_up</span>
+        <span className="text-mutedSilver ml-2">{props.post.likes}</span>
+        <div className="flex flex-row justify-end w-1/1">
+          <span className="text-mutedSilver ml-2">{props.post.comments.length}</span>
+          <span className="text-mutedSilver ml-2">Comments</span>
+          <span className="text-mutedSilver ml-2">•</span>
+          <span className="text-mutedSilver ml-2">{props.post.reposts}</span>
+          <span className="text-mutedSilver ml-2">Reposts</span>
+        </div>
+      </div>
       <button
         className={
           isLike
@@ -65,12 +82,14 @@ export default function Post(props: PostProps) {
         <p className="material-icons mr-2 md:align-text-top lg:mr-3">
           insert_comment
         </p>
-        <span 
-        className="hidden md:inline-block"
-        onClick={() => {
-          setShowComment(!showComment);
-        }}
-        >Comment</span>
+        <span
+          className="hidden md:inline-block"
+          onClick={() => {
+            setShowComment(!showComment);
+          }}
+        >
+          Comment
+        </span>
       </button>
 
       <button className="w-3/12 h-10 cursor-pointer font-medium text-gray-500 hover:bg-gray-200">
@@ -85,12 +104,15 @@ export default function Post(props: PostProps) {
       {showComment ? (
         <>
           {props.post.comments.map((comment) => (
-            <CommentCard key={`comment ${comment.commentID}`} comment={comment} />
+            <CommentCard
+              key={`comment ${comment.commentID}`}
+              comment={comment}
+            />
           ))}
         </>
       ) : null}
     </div>
-  ) : (
+   : (
     <button onClick={() => setHide(false)}>undo</button>
   );
 }
