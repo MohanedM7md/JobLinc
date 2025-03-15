@@ -13,7 +13,8 @@ export default function CommentCard(props: CommentCardProps) {
   const [showReplies, setShowReplies] = useState(false);
   const [newReply, setNewReply] = useState<string>("");
 
-  function fetchReplies() { //Placeholder till Replies API is up
+  function fetchReplies() {
+    //Placeholder till Replies API is up
     const replies = repliesResponse;
     return replies;
   }
@@ -88,12 +89,15 @@ export default function CommentCard(props: CommentCardProps) {
                 placeholder="Write a reply..."
                 className="outline-[0.7px] outline-gray-300 text-[14px] text-charcoalBlack h-8 w-12/12 px-2 mt-1 rounded-3xl hover:cursor-text hover:outline-[1px] hover:bg-gray-100 focus:outline-black focus:outline-[1.5px]"
               ></input>
-              <button 
+              <button
                 onClick={() => {
-                  addReply(newReply)
-                  setNewReply("")
+                  if (newReply != "") {
+                    addReply(newReply);
+                    setNewReply("");
+                  }
                 }}
-                className="material-icons-round cursor-pointer rounded-full p-1 mt-1 mx-2 text-gray-500 hover:bg-gray-200 h-fit">
+                className="material-icons-round cursor-pointer rounded-full p-1 mt-1 mx-2 text-gray-500 hover:bg-gray-200 h-fit"
+              >
                 send
               </button>
             </div>

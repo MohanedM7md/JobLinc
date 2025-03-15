@@ -2,7 +2,7 @@ import { http, HttpResponse } from "msw";
 import { PostInterface } from "../../interfaces/postInterfaces";
 export const handler = [
   //handlers to your api calls will be here, will provide examples, if no understand, ask
-  http.get("api/post/feed", () => {
+  http.get("https://joblinc.me/api/post/feed", async ({params}) => {
     return HttpResponse.json<PostInterface[]>(
       [
         {
