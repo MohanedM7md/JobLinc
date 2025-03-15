@@ -4,12 +4,19 @@ import NavBar from "../components/NavBar";
 
 function MyNetwork(){
     return(
-        <>
-                <NavBar></NavBar>
-                <ConnectCard profilePicture="src\assets\Tyrone.jpg" userName="Tyrone" userBio="Barber"></ConnectCard>
+        <div className="w-full h-full">
+            <div>
+            <NavBar></NavBar>
+            </div>
+            <div></div>
                 <ManageNetworkCard></ManageNetworkCard> 
-        </>
-
+                <ConnectCard
+                lincbuttonid="LincButton"
+                profilePicture="src\assets\Tyrone.jpg" 
+                userName="Tyrone" 
+                userBio="Junior plumbing student @ waterloo university" 
+                Mutuals="Abdelrahman Fathy and 3 others are mutual connections"></ConnectCard>
+        </div>
     );
 }
 export default MyNetwork

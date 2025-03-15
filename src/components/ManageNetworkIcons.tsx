@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 
 interface ManageNetworkIconsProps {
+  id:string;
   Icon: string;
   IconName: string;
   Number?: string;
