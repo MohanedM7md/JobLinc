@@ -10,8 +10,9 @@ interface CommentCardProps {
 
 export default function CommentCard(props: CommentCardProps) {
   const [showReplies, setShowReplies] = useState(false);
+  const [newReply, setNewReply] = useState<string>("");
 
-  function fetchReplies() {
+  function fetchReplies() { //Placeholder till Replies API is up
     const replies = [
       {
         replyID: "1",
@@ -26,6 +27,26 @@ export default function CommentCard(props: CommentCardProps) {
       },
     ];
     return replies;
+  }
+
+  function addReply(text: string) {
+    const replyID = fetchReplies().length.toString();
+    const userID = "0"; //Should be logged in userID, same thing for all the other user info
+    const firstName = "Tyrone";
+    const lastName = "Biggums";
+    const profilePicture =
+      "https://images.ctfassets.net/h6goo9gw1hh6/2sNZtFAWOdP1lmQ33VwRN3/24e953b920a9cd0ff2e1d587742a2472/1-intro-photo-final.jpg?w=1200&h=992&q=70&fm=webp";
+    const headline = "I smoke rocks";
+    const replyText = text;
+    fetchReplies().push({
+      replyID,
+      userID,
+      firstName,
+      lastName,
+      profilePicture,
+      headline,
+      replyText,
+    });
   }
 
   return (
@@ -73,10 +94,17 @@ export default function CommentCard(props: CommentCardProps) {
               />
               <input
                 type="text"
+                value={newReply}
+                onChange={(e) => setNewReply(e.target.value)}
                 placeholder="Write a reply..."
                 className="outline-[0.7px] outline-gray-300 text-[14px] text-charcoalBlack h-8 w-12/12 px-2 mt-1 rounded-3xl hover:cursor-text hover:outline-[1px] hover:bg-gray-100 focus:outline-black focus:outline-[1.5px]"
               ></input>
-              <button className="material-icons-round cursor-pointer rounded-full p-1 mt-1 mx-2 text-gray-500 hover:bg-gray-200 h-fit">
+              <button 
+                onClick={() => {
+                  addReply(newReply)
+                  setNewReply("")
+                }}
+                className="material-icons-round cursor-pointer rounded-full p-1 mt-1 mx-2 text-gray-500 hover:bg-gray-200 h-fit">
                 send
               </button>
             </div>
