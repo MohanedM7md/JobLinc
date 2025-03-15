@@ -53,6 +53,11 @@ const userSlice = createSlice({
       state.loggedIn = false;
       state.status = "IDLE";
     },
+    setEmailPassword: (state, action: PayloadAction<{ email: string; password: string }>) => {
+      state.email = action.payload.email;
+      // state.password = action.payload.password;
+    },
+
   },
   extraReducers: (builder) => {
     builder
@@ -84,4 +89,4 @@ const userSlice = createSlice({
 });
 
 export default userSlice.reducer;
-export const { logOut } = userSlice.actions;
+export const { logOut, setEmailPassword } = userSlice.actions;

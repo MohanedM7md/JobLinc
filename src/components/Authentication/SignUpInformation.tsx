@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthenticationSignInButton } from "./AuthenticationButtons";
-
+import { useDispatch } from "react-redux";
+import { setEmailPassword } from "../../store/userSlice";
 function SignUpInformation() {
     const [isEmpty, setEmpty] = useState({ email: true, password: true });
 
@@ -13,7 +14,7 @@ function SignUpInformation() {
 
     const [showErrorPassEmpty, setshowErrorPassEmpty] = useState(false);
     const [showErrorPassInvalid, setshowErrorPassInvalid] = useState(false);
-
+    const dispatch = useDispatch();
 
     const [isHidden, setHidden] = useState(true);
     const navigate = useNavigate();
@@ -86,11 +87,17 @@ function SignUpInformation() {
 
         if (!showErrorPassInvalid && !showErrorEmailInvalid)
         {
+            // Now we can take the First Name and Last Name
+            // Navigate to Another Page
+
+            // Now I have email and password, I need to put them in the store
+            // and take more details about the user in upcoming pages
             const userData = {
                 email: emailText,
                 password: passText
-            };
-            // navigate("/MainPage", { state: userData }); // Redirect and send data
+            }
+            dispatch(setEmailPassword(userData));
+            navigate("/UserDetails");
         }
 
 

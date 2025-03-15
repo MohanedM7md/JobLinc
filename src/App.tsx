@@ -6,6 +6,7 @@ import SignUpPage from "./pages/SignUpPage";
 import SignInPage from "./pages/SignInPage";
 import ForgotPassword from "./pages/ForgotPassword";
 import MainPage from "./pages/MainPage";
+import UserDetails from "./components/Authentication/UserDetails";
 //import { Provider } from "react-redux";
 import store from "./store/store";
 import { ThemeProvider } from "./context/ThemeProvider";
@@ -26,6 +27,7 @@ function App() {
         <Route path="/Signin" element={<SignInPage />}></Route>
         <Route path="/Signin/ForgotPassword" element={<ForgotPassword/>}></Route>
         <Route path="/MainPage" element={<MainPage />}></Route>
+        <Route path="/UserDetails" element={<UserDetails/>}></Route>
         {/* <Route
           path="/playground"
           element={
