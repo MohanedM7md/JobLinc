@@ -1,4 +1,4 @@
-import { useState, ChangeEvent, FocusEvent, MouseEvent } from "react";
+import { useState, ChangeEvent, FocusEvent, MouseEvent, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthenticationSignInButton } from "./AuthenticationButtons";
 import { Outlet, Link } from "react-router-dom";
@@ -16,6 +16,15 @@ function SignInInformation() {
     const [showErrorEmailInvalid, setshowErrorEmailInvalid] = useState(false);
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     const [showErrorPassInvalid, setshowErrorPassInvalid] = useState(false);
+
+    useEffect(() => {
+        // Ensure reCAPTCHA loads properly on page refresh
+            const script = document.createElement("script");
+            script.src = "https://www.google.com/recaptcha/api.js";
+            script.async = true;
+            script.defer = true;
+            document.body.appendChild(script);
+    }, []);
 
     const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
@@ -134,6 +143,9 @@ function SignInInformation() {
                 </div>
                 {showErrorPassInvalid && <p className="text-red-800 text-[12px]">The password must have at least 6 characters.</p>}
             </div>
+
+            <div className="g-recaptcha" data-sitekey="6Le48PQqAAAAABGnl1yAsKhhNuTnArdIGeRyuQoV"></div>
+
 
             <div className="text-center">
                 <Link to="/Signin/ForgotPassword" className="text-warmBlack px-2 font-semibold hover:underline hover:rounded-3xl">
