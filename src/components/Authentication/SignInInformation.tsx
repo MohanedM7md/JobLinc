@@ -5,6 +5,13 @@ import { Outlet, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../store/store";
 import { loginUser } from "../../store/userSlice"; // New login thunk
+import Modal from "./Modal";
+
+declare global {
+    interface Window {
+        grecaptcha: any;
+    }
+}
 
 function SignInInformation() {
     const [isEmpty, setEmpty] = useState({ email: true, password: true });
@@ -17,14 +24,34 @@ function SignInInformation() {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     const [showErrorPassInvalid, setshowErrorPassInvalid] = useState(false);
 
+    const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
+    const [showErrorRecaptcha, setShowErrorRecaptcha] = useState(false);
+
+    const [isWrongEmailOrPassword, setIsWrongEmailOrPassword] = useState(false);
+
+
+
     useEffect(() => {
-        // Ensure reCAPTCHA loads properly on page refresh
-            const script = document.createElement("script");
-            script.src = "https://www.google.com/recaptcha/api.js";
-            script.async = true;
-            script.defer = true;
-            document.body.appendChild(script);
+        const script = document.createElement("script");
+        script.src = "https://www.google.com/recaptcha/api.js";
+        script.async = true;
+        script.defer = true;
+        script.onload = () => {
+            if (window.grecaptcha) {
+                window.grecaptcha.ready(() => {
+                    window.grecaptcha.render("recaptcha-container", {
+                        sitekey: "6Le48PQqAAAAABGnl1yAsKhhNuTnArdIGeRyuQoV",
+                        callback: (token: string) => {
+                            setRecaptchaToken(token);
+                            setShowErrorRecaptcha(false);
+                        },
+                    });
+                });
+            }
+        };
+        document.body.appendChild(script);
     }, []);
+    
 
     const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
@@ -73,12 +100,25 @@ function SignInInformation() {
 
         if (isValidEmail(emailText)) {
             if (isValidPassword(passText)) {
-                const userData = { email: emailText, password: passText };
-                const resultAction = await dispatch(loginUser(userData));
+                const recaptchaChecked = window.grecaptcha.getResponse();
+                if (recaptchaChecked !== "") {
+                    const userData = { email: emailText, password: passText };
+                    const resultAction = await dispatch(loginUser(userData));
 
-                if (loginUser.fulfilled.match(resultAction)) {
-                    navigate("/MainPage");
+                    if (loginUser.fulfilled.match(resultAction)) {
+                        navigate("/MainPage");
+                    }
+                    else
+                    {
+                        // Render a component to say wrong email or password
+                        setIsWrongEmailOrPassword(true);
+                    }
                 }
+                else
+                {
+                    setShowErrorRecaptcha(true);
+                }
+                
             } else {
                 setshowErrorPassInvalid(true);
             }
@@ -145,6 +185,8 @@ function SignInInformation() {
             </div>
 
             <div className="g-recaptcha" data-sitekey="6Le48PQqAAAAABGnl1yAsKhhNuTnArdIGeRyuQoV"></div>
+            {showErrorRecaptcha && <p className="text-red-800 text-[12px]">Please complete the reCAPTCHA.</p>}
+
 
 
             <div className="text-center">
@@ -164,7 +206,16 @@ function SignInInformation() {
             <div className="flex w-full justify-center">
                 <AuthenticationSignInButton text="Sign in" />
             </div>
+
+            <Modal isOpen={isWrongEmailOrPassword} onClose={() => setIsWrongEmailOrPassword(false)}>
+                <div className="flex flex-col items-start gap-4 w-full">
+                    <h2 className="font-bold text-[18px]">Wrong Email or Password.</h2>
+                    <p className="text-[18px]">Please try again.</p>
+                </div>
+            </Modal>
         </form>
+
+        
     );
 }
 
