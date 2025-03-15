@@ -35,7 +35,6 @@ function App() {
         <Route path="/MyNetwork" element={<MyNetwork />} />
         <Route path="/MainPage" element={<MainPage />} />
         <Route path="/UserDetails" element={<UserDetails />} />
-
         <Route
           path="/playground"
           element={
@@ -46,7 +45,6 @@ function App() {
             </ThemeProvider>
           }
         />
-
         <Route
           path="/post"
           element={
