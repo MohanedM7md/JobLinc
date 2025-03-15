@@ -1,82 +1,92 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
-interface FetchUserPayload {
-  name: string;
-  email: string;
-  profilePicture: string;
-  headline: string;
-}
-export const fetchUser = createAsyncThunk("user/fetch", async () => {
-  try {
-    const response = await axios.get(
-      "https://dummyjson.com/user/1?select=firstName,email",
-    );
-    const { firstName: name, email }: { firstName: string; email: string } =
-      response.data;
-    const profilePicture: string = "https://i.pravatar.cc/150?img=14";
-    const headline: string =
-      "Phd in Something Something | Software Engineer probably";
-    return { name, email, profilePicture, headline };
-  } catch (error) {
-    console.log(Error);
-  }
-});
 
-enum status {
-  IDLE = "IDLE",
-  LOADING = "LOADING",
-  SUCCESS = "SUCCESS",
-  FAILED = "FAILED",
-}
 interface UserState {
-  name: string | null;
-  profilePicture: string | null;
+  username: string | null;
   email: string | null;
-  headline: string | null;
-  status: status | null;
-  loggedIn: boolean | null;
+  profilePicture: string | null;
+  role: string | null;
+  accessToken: string | null;
+  refreshToken: string | null;
+  status: "IDLE" | "LOADING" | "SUCCESS" | "FAILED";
+  loggedIn: boolean;
 }
-const intialState: UserState = {
-  name: "",
-  profilePicture: "",
-  email: "",
-  headline: "",
-  status: status.IDLE,
+
+const initialState: UserState = {
+  username: null,
+  email: null,
+  profilePicture: null,
+  role: null,
+  accessToken: null,
+  refreshToken: null,
+  status: "IDLE",
   loggedIn: false,
 };
 
+// Fetch User Profile (Placeholder API)
+export const loginUser = createAsyncThunk(
+  "user/login",
+  async (userData: { email: string; password: string }, { rejectWithValue }) => {
+    try {
+      const response = await axios.post("http://localhost:3000/api/auth/login", userData);
+      console.log(response.data);
+      
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data || "Login failed");
+    }
+  }
+);
+
+// Create Redux Slice
 const userSlice = createSlice({
   name: "user",
-  initialState: intialState,
+  initialState,
   reducers: {
     logOut: (state) => {
+      state.username = null;
+      state.email = null;
+      state.profilePicture = null;
+      state.role = null;
+      state.accessToken = null;
+      state.refreshToken = null;
       state.loggedIn = false;
-      state.name = "";
-      state.profilePicture = "";
+      state.status = "IDLE";
     },
+    setEmailPassword: (state, action: PayloadAction<{ email: string; password: string }>) => {
+      state.email = action.payload.email;
+      // state.password = action.payload.password;
+    },
+
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchUser.pending, (state) => {
-        state.status = status.LOADING;
+      .addCase(loginUser.pending, (state) => {
+        state.status = "LOADING";
       })
-      .addCase(
-        fetchUser.fulfilled,
-        (state, action: PayloadAction<FetchUserPayload | undefined>) => {
-          if (action.payload) {
-            state.name = action.payload.name;
-            state.email = action.payload.email;
-            state.profilePicture = action.payload.profilePicture;
-            state.headline = action.payload.headline;
-            state.status = status.SUCCESS;
-          }
-        },
-      )
-      .addCase(fetchUser.rejected, (state) => {
-        state.status = status.FAILED;
+      .addCase(loginUser.fulfilled, (state, action: PayloadAction<any>) => {
+        console.log("Redux Payload:", action.payload); // Debug Redux update
+    
+        const userData = action.payload.user; // Extract user object from response
+    
+        if (userData) {
+            state.username = userData.username || null;
+            state.email = userData.email || null;
+            state.profilePicture = userData.profilePicture || null;
+            state.role = userData.role || null;
+            state.accessToken = userData.accessToken || null;
+            state.refreshToken = userData.refreshToken || null;
+            state.status = "SUCCESS";
+            state.loggedIn = true;
+        } else {
+            console.error("User data missing in API response:", action.payload);
+        }
+      })
+      .addCase(loginUser.rejected, (state) => {
+        state.status = "FAILED";
       });
   },
 });
 
 export default userSlice.reducer;
-export const { logOut } = userSlice.actions;
+export const { logOut, setEmailPassword } = userSlice.actions;
