@@ -4,7 +4,7 @@ import PostUtilityButton from "./PostUtilityButton";
 import { useState } from "react";
 import "material-icons/iconfont/material-icons.css";
 import CommentCard from "./Comments/CommentCard";
-import { CommentInterface, PostInterface } from "../../interfaces/postInterfaces";
+import { PostInterface } from "../../interfaces/postInterfaces";
 import { commentsResponse } from "../../__mocks__/PostsMock/commentsDB";
 
 interface PostProps {
