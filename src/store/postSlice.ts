@@ -17,7 +17,7 @@ const initialState: PostsPayload = {
         likes: 0,
         reposts: 0,
         pics: [],
-        comments: [{commentID:"0", userID:"0", firstName:"", lastName:"", profilePicture:"", headline:"", commentText:""}],
+        comments: [{commentID:"0", userID:"0", firstName:"", lastName:"", profilePicture:"", headline:"", commentText:"", replies:[]}],
     }]
 }
 
@@ -85,6 +85,17 @@ export const fetchPost = createAsyncThunk("post/fetch", async (count: number) =>
                     headline: "I am the main character",
                     commentText:
                       "A very good comment, yes indeed, It is called Lothric, where the transitory lands of the Lords of Cinder converge.",
+                    replies: [
+                      {
+                        replyID: "1",
+                        userID: "0",
+                        firstName: "Tyrone",
+                        lastName: "Biggums",
+                        profilePicture: "https://images.ctfassets.net/h6goo9gw1hh6/2sNZtFAWOdP1lmQ33VwRN3/24e953b920a9cd0ff2e1d587742a2472/1-intro-photo-final.jpg?w=1200&h=992&q=70&fm=webp",
+                        headline: "I smoke rocks",
+                        replyText: "I am the storm that is approaching, provoking black clouds in isolation.",
+                      },    
+                    ],
                   },
                 ];
                 const posts: PostInterface[] = [{
@@ -98,7 +109,7 @@ export const fetchPost = createAsyncThunk("post/fetch", async (count: number) =>
                     likes:likes,
                     reposts: reposts,
                     pics:postPics,
-                    comments 
+                    comments:comments, 
                 }];
                 resolve({posts});
             }, 1000);
