@@ -88,10 +88,7 @@ export default function FloatingChatSidebar() {
           </div>
         </header>
         <SearchBar />
-        <ChatCardsList
-          CardsList={mockConversations}
-          onCardClick={handleConversationClick}
-        />
+        <ChatCardsList onCardClick={handleConversationClick} />
       </div>
     </>
   );

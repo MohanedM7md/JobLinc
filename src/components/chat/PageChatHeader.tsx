@@ -7,6 +7,7 @@ interface PageChatHeader {
 }
 
 function PageChatHeader({ name, status }: PageChatHeader) {
+  console.log("--------------PageChatHeader rendered--------------");
   return (
     <div className="flex items-center justify-between p-3 bg-charcoalWhite text-white border-b border-gray-200">
       <div>
