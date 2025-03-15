@@ -1,14 +1,16 @@
 import ConnectCard from "../components/ConnectCard";
 import ManageNetworkCard from "../components/ManageNetworkCard";
+import MyNetworkOptionsCard from "../components/MyNetworkOptionsCard";
 import NavBar from "../components/NavBar";
 
 function MyNetwork(){
     return(
-        <div className="w-full h-full">
-            <div>
+        <div className="">
+            <div className="">
             <NavBar></NavBar>
+            <MyNetworkOptionsCard></MyNetworkOptionsCard>
             </div>
-            <div></div>
+            <div className="flex flex-row">
                 <ManageNetworkCard></ManageNetworkCard> 
                 <ConnectCard
                 lincbuttonid="LincButton"
@@ -16,6 +18,7 @@ function MyNetwork(){
                 userName="Tyrone" 
                 userBio="Junior plumbing student @ waterloo university" 
                 Mutuals="Abdelrahman Fathy and 3 others are mutual connections"></ConnectCard>
+            </div>
         </div>
     );
 }
