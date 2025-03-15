@@ -1,11 +1,12 @@
 import PostDetails from "./PostDetails";
 import ProfileDetails from "./ProfileDetails";
 import PostUtilityButton from "./PostUtilityButton";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "material-icons/iconfont/material-icons.css";
 import CommentCard from "./Comments/CommentCard";
-import { PostInterface } from "../../interfaces/postInterfaces";
+import { CommentInterface, PostInterface } from "../../interfaces/postInterfaces";
 import { commentsResponse } from "../../__mocks__/PostsMock/commentsDB";
+import { getComments } from "../../api/api";
 
 interface PostProps {
   post: PostInterface;
@@ -15,34 +16,34 @@ export default function Post(props: PostProps) {
   const [hide, setHide] = useState<boolean>(false);
   const [showUtility, setShowUtility] = useState<boolean>(false);
   const [showComment, setShowComment] = useState<boolean>(false);
+  const [comments, setComments] = useState<CommentInterface[]>([]);
   const [isLike, setIsLike] = useState<boolean>(false);
   const like = !isLike ? "Like" : "Liked";
   const [newComment, setNewComment] = useState<string>("");
 
-  function fetchComments() {
-    //Placeholder till comments API is up
-    const comments = commentsResponse;
-    return comments;
-  }
-
+  useEffect(() =>{
+    const response = getComments(props.post.postID);
+    response.then((data) => setComments(data));
+  },[showComment])
+    
   function addComment(text: string) {
-    const commentID = commentsResponse.length.toString();
-    const userID = "1"; //Should be logged in userID, same thing for all the user info
-    const firstName = "Anime";
-    const lastName = "Protagonist";
-    const profilePicture =
-      "https://i.pinimg.com/550x/04/bb/21/04bb2164bbfa3684118a442c17d086bf.jpg";
-    const headline = "I am the main character";
-    const commentText = text;
-    commentsResponse.push({
-      commentID,
-      userID,
-      firstName,
-      lastName,
-      profilePicture,
-      headline,
-      commentText,
-    });
+    //const commentID = commentsResponse.length.toString();
+    //const userID = "1"; //Should be logged in userID, same thing for all the user info
+    //const firstName = "Anime";
+    //const lastName = "Protagonist";
+    //const profilePicture =
+    //  "https://i.pinimg.com/550x/04/bb/21/04bb2164bbfa3684118a442c17d086bf.jpg";
+    //const headline = "I am the main character";
+    //const commentText = text;
+    //commentsResponse.push({
+    //  commentID,
+    //  userID,
+    //  firstName,
+    //  lastName,
+    //  profilePicture,
+    //  headline,
+    //  commentText,
+    //});
   }
 
   return !hide ? (
@@ -156,7 +157,7 @@ export default function Post(props: PostProps) {
               send
             </button>
           </div>
-          {fetchComments().map((comment) => (
+          {comments.map((comment) => (
             <CommentCard key={comment.commentID} comment={comment} />
           ))}
         </>

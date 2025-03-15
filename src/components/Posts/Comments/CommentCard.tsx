@@ -1,9 +1,9 @@
 import CommentContent from "./CommentContent";
 import CommenterDetails from "./CommenterDetails";
-import { CommentInterface } from "../../../interfaces/postInterfaces";
-import { useState } from "react";
+import { CommentInterface, RepliesInterface } from "../../../interfaces/postInterfaces";
+import { useEffect, useState } from "react";
 import ReplyCard from "./ReplyCard";
-import { repliesResponse } from "../../../__mocks__/PostsMock/repliesDB";
+import { getReplies } from "../../../api/api";
 
 interface CommentCardProps {
   comment: CommentInterface;
@@ -11,32 +11,32 @@ interface CommentCardProps {
 
 export default function CommentCard(props: CommentCardProps) {
   const [showReplies, setShowReplies] = useState(false);
+  const [replies, setReplies] = useState<RepliesInterface[]>([]);
   const [newReply, setNewReply] = useState<string>("");
 
-  function fetchReplies() {
-    //Placeholder till Replies API is up
-    const replies = repliesResponse;
-    return replies;
-  }
+  useEffect(() => {
+    const response = getReplies(props.comment.postID, props.comment.commentID);
+    response.then((data) => setReplies(data));
+  },[showReplies])
 
   function addReply(text: string) {
-    const replyID = fetchReplies().length.toString();
-    const userID = "0"; //Should be logged in userID, same thing for all the other user info
-    const firstName = "Tyrone";
-    const lastName = "Biggums";
-    const profilePicture =
-      "https://images.ctfassets.net/h6goo9gw1hh6/2sNZtFAWOdP1lmQ33VwRN3/24e953b920a9cd0ff2e1d587742a2472/1-intro-photo-final.jpg?w=1200&h=992&q=70&fm=webp";
-    const headline = "I smoke rocks";
-    const replyText = text;
-    fetchReplies().push({
-      replyID,
-      userID,
-      firstName,
-      lastName,
-      profilePicture,
-      headline,
-      replyText,
-    });
+    //const replyID = fetchReplies().length.toString();
+    //const userID = "0"; //Should be logged in userID, same thing for all the other user info
+    //const firstName = "Tyrone";
+    //const lastName = "Biggums";
+    //const profilePicture =
+    //  "https://images.ctfassets.net/h6goo9gw1hh6/2sNZtFAWOdP1lmQ33VwRN3/24e953b920a9cd0ff2e1d587742a2472/1-intro-photo-final.jpg?w=1200&h=992&q=70&fm=webp";
+    //const headline = "I smoke rocks";
+    //const replyText = text;
+    //fetchReplies().push({
+    //  replyID,
+    //  userID,
+    //  firstName,
+    //  lastName,
+    //  profilePicture,
+    //  headline,
+    //  replyText,
+    //});
   }
 
   return (
@@ -101,7 +101,7 @@ export default function CommentCard(props: CommentCardProps) {
                 send
               </button>
             </div>
-            {fetchReplies().map((reply) => (
+            {replies.map((reply) => (
               <ReplyCard key={reply.replyID} reply={reply} />
             ))}
           </>

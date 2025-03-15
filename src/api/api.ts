@@ -54,8 +54,8 @@ export const getComments = async (postID: string) => {
 };
 
 // Fetch replies for a comment (NOT in documentation)
-export const getReplies = async (postID: string,commentId: string) => {
-  const response = await api.get(`post/${postID}/comment/${commentId}/replies`);
+export const getReplies = async (postID: string,commentID: string) => {
+  const response = await api.get(`post/${postID}/comment/${commentID}/replies`);
   return response.data;
 };
 
