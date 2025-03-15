@@ -10,6 +10,8 @@ interface PostProps {
   post: PostInterface;
 }
 
+
+
 export default function Post(props: PostProps) {
   const [hide, setHide] = useState<boolean>(false);
   const [showUtility, setShowUtility] = useState<boolean>(false);
@@ -21,8 +23,12 @@ export default function Post(props: PostProps) {
     <div className="flex flex-wrap w-1/1 bg-lightGray rounded-xl relative">
       <div className="flex flex-row w-1/1">
         <ProfileDetails
-          key="user"
-          isLincing={false}
+          key={`Details of user ${props.post.userID}`}
+          id={props.post.userID}
+          name={props.post.firstName + " " + props.post.lastName}
+          headline={props.post.headline}
+          profilePicture={props.post.profilePicture}
+          isFollowing={false}
         />
         <div className="" onBlur={() => setShowUtility(false)}>
           {showUtility ? (
@@ -42,7 +48,7 @@ export default function Post(props: PostProps) {
           clear
         </button>
       </div>
-      <PostDetails key={`Details of post ${props.post.id}`} id={props.post.id} text={props.post.text} media={props.post.pics}/>
+      <PostDetails key={`Details of post ${props.post.postID}`} text={props.post.text} media={props.post.pics}/>
       <button
         className={
           isLike

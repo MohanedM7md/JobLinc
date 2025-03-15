@@ -3,7 +3,6 @@ import PostMedia from "./PostMedia";
 
 
 interface PostDetailsProps {
-  id: string;
   text: string;
   media: string[];
 }
