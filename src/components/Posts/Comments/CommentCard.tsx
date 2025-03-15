@@ -45,16 +45,18 @@ export default function CommentCard(props: CommentCardProps) {
         </div>
 
         {showReplies ? (
-          <>
             <div className="flex flex-wrap flex-row-reverse w-1/1 bg-lightGray rounded-xl relative pt-2">
               {props.comment.replies.map((reply) => (
                 <ReplyCard key={reply.replyID} reply={reply} />
               ))}
+
+              <button
+                onClick={() => setShowReplies(false)}
+                className="cursor-pointer text-md font-medium mr-10 px-2 text-mutedSilver hover:bg-gray-200 rounded-lg"
+              >
+                Collapse Replies
+              </button>
             </div>
-            <button onClick={() => setShowReplies(false)} className="cursor-pointer font-medium ml-2 px-2 text-mutedSilver hover:bg-gray-200 rounded-lg">
-              Collapse
-            </button>
-          </>
         ) : null}
       </div>
     );
