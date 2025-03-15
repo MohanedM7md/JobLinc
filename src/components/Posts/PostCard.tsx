@@ -48,7 +48,7 @@ export default function Post(props: PostProps) {
     return comments;
   }
 
-  return !hide ? 
+  return !hide ? (
     <div className="flex flex-wrap w-1/1 bg-lightGray rounded-xl relative">
       <div className="flex flex-row w-1/1">
         <ProfileDetails
@@ -88,7 +88,9 @@ export default function Post(props: PostProps) {
         <span className="text-blue-500 material-icons">thumb_up</span>
         <span className="text-mutedSilver ml-2">{props.post.likes}</span>
         <div className="flex flex-row justify-end w-1/1">
-          <span className="text-mutedSilver ml-2">{props.post.commentsNum}</span>
+          <span className="text-mutedSilver ml-2">
+            {props.post.commentsNum}
+          </span>
           <span className="text-mutedSilver ml-2">Comments</span>
           <span className="text-mutedSilver ml-2">•</span>
           <span className="text-mutedSilver ml-2">{props.post.reposts}</span>
@@ -131,12 +133,31 @@ export default function Post(props: PostProps) {
         <span className="hidden md:inline-block">Send</span>
       </button>
       {showComment ? (
-        fetchComments().map((comment) => (
-          <CommentCard key={comment.commentID} comment={comment} />
-        ))
+        <>
+          <div className="flex flex-row w-1/1 py-3">
+            <img
+              className="rounded-full h-10 w-10 mx-2"
+              src={
+                "https://i.pinimg.com/550x/04/bb/21/04bb2164bbfa3684118a442c17d086bf.jpg"
+              }
+              alt={"User"}
+            />
+            <input
+              type="text"
+              placeholder="Write a comment..."
+              className="outline-[0.7px] outline-gray-300 text-[14px] text-charcoalBlack h-8 w-12/12 px-2 mt-1 rounded-3xl hover:cursor-text hover:outline-[1px] hover:bg-gray-100 focus:outline-black focus:outline-[1.5px]"
+            ></input>
+            <button className="material-icons-round cursor-pointer rounded-full p-1 mt-1 mx-2 text-gray-500 hover:bg-gray-200 h-fit">
+              send
+            </button>
+          </div>
+          {fetchComments().map((comment) => (
+            <CommentCard key={comment.commentID} comment={comment} />
+          ))}
+        </>
       ) : null}
     </div>
-   : (
+  ) : (
     <button onClick={() => setHide(false)}>undo</button>
   );
 }
