@@ -9,7 +9,24 @@ interface CommentCardProps {
 }
 
 export default function CommentCard(props: CommentCardProps) {
-    const [showReplies, setShowReplies] = useState(false); 
+    const [showReplies, setShowReplies] = useState(false);
+
+    function fetchReplies() {
+      const replies = [
+        {
+          replyID: "1",
+          userID: "0",
+          firstName: "Tyrone",
+          lastName: "Biggums",
+          profilePicture:
+            "https://images.ctfassets.net/h6goo9gw1hh6/2sNZtFAWOdP1lmQ33VwRN3/24e953b920a9cd0ff2e1d587742a2472/1-intro-photo-final.jpg?w=1200&h=992&q=70&fm=webp",
+          headline: "I smoke rocks",
+          replyText:
+            "I am the storm that is approaching, provoking black clouds in isolation.",
+        },
+      ];
+      return replies;
+    }
     
     return (
       <div className="flex flex-wrap w-1/1 bg-lightGray rounded-xl relative py-2">
@@ -43,21 +60,14 @@ export default function CommentCard(props: CommentCardProps) {
             Reply
           </button>
         </div>
-
+        <div className="flex flex-wrap flex-row-reverse w-1/1 bg-lightGray rounded-xl relative pt-2">
         {showReplies ? (
-            <div className="flex flex-wrap flex-row-reverse w-1/1 bg-lightGray rounded-xl relative pt-2">
-              {props.comment.replies.map((reply) => (
-                <ReplyCard key={reply.replyID} reply={reply} />
-              ))}
-
-              <button
-                onClick={() => setShowReplies(false)}
-                className="cursor-pointer text-md font-medium mr-10 px-2 text-mutedSilver hover:bg-gray-200 rounded-lg"
-              >
-                Collapse Replies
-              </button>
-            </div>
-        ) : null}
+               fetchReplies().map((reply) => (
+                 <ReplyCard key={reply.replyID} reply={reply} />
+               ))
+             ) : null}
+        </div>
       </div>
     );
 }
+

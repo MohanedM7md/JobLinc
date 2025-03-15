@@ -6,7 +6,6 @@ export interface CommentInterface {
   profilePicture: string;
   headline: string;
   commentText: string;
-  replies: RepliesInterface[];
 }
 
 export interface RepliesInterface {
@@ -28,7 +27,7 @@ export interface PostInterface {
   headline: string;
   text: string;
   likes: number;
+  commentsNum: number;
   reposts: number;
   pics: string[];
-  comments: CommentInterface[];
 }

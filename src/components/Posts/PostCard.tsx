@@ -19,6 +19,35 @@ export default function Post(props: PostProps) {
   const [isLike, setIsLike] = useState<boolean>(false);
   const like = !isLike ? "Like" : "Liked";
 
+  function fetchComments() { //Placeholder till comments API is up
+    const comments = [
+      {
+        commentID: "0",
+        userID: "1",
+        firstName: "Anime",
+        lastName: "Protagonist",
+        profilePicture: "",
+        headline: "I am the main character",
+        commentText:
+          "A very good comment, yes indeed, It is called Lothric, where the transitory lands of the Lords of Cinder converge.",
+        replies: [
+          {
+            replyID: "1",
+            userID: "0",
+            firstName: "Tyrone",
+            lastName: "Biggums",
+            profilePicture:
+              "https://images.ctfassets.net/h6goo9gw1hh6/2sNZtFAWOdP1lmQ33VwRN3/24e953b920a9cd0ff2e1d587742a2472/1-intro-photo-final.jpg?w=1200&h=992&q=70&fm=webp",
+            headline: "I smoke rocks",
+            replyText:
+              "I am the storm that is approaching, provoking black clouds in isolation.",
+          },
+        ],
+      },
+    ];
+    return comments;
+  }
+
   return !hide ? 
     <div className="flex flex-wrap w-1/1 bg-lightGray rounded-xl relative">
       <div className="flex flex-row w-1/1">
@@ -59,7 +88,7 @@ export default function Post(props: PostProps) {
         <span className="text-blue-500 material-icons">thumb_up</span>
         <span className="text-mutedSilver ml-2">{props.post.likes}</span>
         <div className="flex flex-row justify-end w-1/1">
-          <span className="text-mutedSilver ml-2">{props.post.comments.length}</span>
+          <span className="text-mutedSilver ml-2">{props.post.commentsNum}</span>
           <span className="text-mutedSilver ml-2">Comments</span>
           <span className="text-mutedSilver ml-2">•</span>
           <span className="text-mutedSilver ml-2">{props.post.reposts}</span>
@@ -102,14 +131,9 @@ export default function Post(props: PostProps) {
         <span className="hidden md:inline-block">Send</span>
       </button>
       {showComment ? (
-        <>
-          {props.post.comments.map((comment) => (
-            <CommentCard
-              key={`comment ${comment.commentID}`}
-              comment={comment}
-            />
-          ))}
-        </>
+        fetchComments().map((comment) => (
+          <CommentCard key={comment.commentID} comment={comment} />
+        ))
       ) : null}
     </div>
    : (
