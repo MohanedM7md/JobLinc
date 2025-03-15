@@ -14,10 +14,10 @@ const initialState: PostsPayload = {
         profilePicture:"",
         headline:"",
         text: "",
+        commentsNum: 0,
         likes: 0,
         reposts: 0,
         pics: [],
-        comments: [{commentID:"0", userID:"0", firstName:"", lastName:"", profilePicture:"", headline:"", commentText:""}],
     }]
 }
 
@@ -73,20 +73,9 @@ export const fetchPost = createAsyncThunk("post/fetch", async (count: number) =>
                 const headline = "I smoke rocks";
                 const postText: string = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sollicitudin efficitur odio, vitae mollis libero dignissim nec. Maecenas lacinia velit ac lobortis finibus. Vestibulum facilisis fermentum dui in suscipit. Etiam mollis sapien sapien, ac efficitur mauris rutrum a. Duis vel vehicula est. Nullam imperdiet at ante a fringilla. Nunc sed nunc semper, mattis lectus nec, aliquam magna. Maecenas quis molestie mi. Praesent tempor turpis sit amet ipsum molestie maximus et vel lacus. Donec nec quam et turpis dapibus viverra. Nulla vehicula aliquet dictum. Aenean tristique tortor et est rutrum faucibus. Quisque eu erat a nunc pellentesque ultrices non non est. Pellentesque vulputate sit amet dui bibendum vehicula. Sed ut risus id ante facilisis faucibus.";
                 const likes = 6;
+                const commentsNum = 2;
                 const reposts = 3;
                 const postPics: string[] = ["https://d.newsweek.com/en/full/940601/05-23-galaxy.jpg"];
-                const comments = [
-                  {
-                    commentID: "0",
-                    userID: "1",
-                    firstName: "Anime",
-                    lastName: "Protagonist",
-                    profilePicture: "",
-                    headline: "I am the main character",
-                    commentText:
-                      "A very good comment, yes indeed, It is called Lothric, where the transitory lands of the Lords of Cinder converge.",
-                  },
-                ];
                 const posts: PostInterface[] = [{
                     postID:postID,
                     userID:userID,
@@ -96,9 +85,9 @@ export const fetchPost = createAsyncThunk("post/fetch", async (count: number) =>
                     headline:headline,
                     text:postText,
                     likes:likes,
+                    commentsNum:commentsNum,
                     reposts: reposts,
                     pics:postPics,
-                    comments 
                 }];
                 resolve({posts});
             }, 1000);
