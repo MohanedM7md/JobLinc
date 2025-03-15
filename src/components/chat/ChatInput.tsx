@@ -1,15 +1,11 @@
 import React, { useState } from "react";
 import { Paperclip, Image, Smile } from "lucide-react";
+import { ChatInputProps } from "./interfaces/Chat.interfaces";
 
-interface ChatInputProps {
-  id: string | null;
-  onSendMessage: (message: string) => void;
-}
-
-function ChatInput({ id, onSendMessage }: ChatInputProps) {
+function ChatInput({ chatId, onSendMessage }: ChatInputProps) {
   const [message, setMessage] = useState("");
   const handleSendMessage = () => {
-    if (!message.trim() || !id) return;
+    if (!message.trim() || !chatId) return;
     console.log("input ", message);
     onSendMessage(message);
     setMessage("");

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import ChatMessages from "./ChatMessages";
 import ChatInput from "./ChatInput";
 import { fetchMessages, fetchChatUsers } from "../../api/api";
@@ -7,30 +7,18 @@ import {
   onReceiveMessage,
   emitSendMessage,
 } from "../../api/socket";
+import { Message, MessageStatus } from "./interfaces/Message.interfaces";
+import { User } from "./interfaces/User.interfaces";
+import { useUser } from "./mockUse";
 
-interface User {
-  id: string;
-  name: string;
-  profilePicture: string;
-}
-interface Message {
-  senderId: string;
-  time: Date;
-  content: { text: string; image?: string; document?: string };
-}
-
-interface ChatContentProps {
-  chatId: string | null;
-}
-
-export default function ChatContent({ chatId }: ChatContentProps) {
+function ChatContent({ chatId }: { chatId: string }) {
   const [users, setUsers] = useState<User[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
   const chatSocket = connectChatSocket();
+  const { user } = useUser();
+
   console.log("______________ChatContent_______________");
   useEffect(() => {
-    if (!chatId) return;
-
     const fetchData = async () => {
       const messagesData = await fetchMessages(chatId);
       setMessages(messagesData);
@@ -51,8 +39,9 @@ export default function ChatContent({ chatId }: ChatContentProps) {
 
   const handleSendMessage = (message: string) => {
     const newMessage: Message = {
-      senderId: "1",
+      senderId: user,
       time: new Date(),
+      status: MessageStatus.Sent,
       content: { text: message },
     };
     console.log("message: :::: ", message);
@@ -69,7 +58,11 @@ export default function ChatContent({ chatId }: ChatContentProps) {
         <ChatMessages users={users} messages={messages} />
       </div>
 
-      {chatId && <ChatInput id={chatId} onSendMessage={handleSendMessage} />}
+      {chatId && (
+        <ChatInput chatId={chatId} onSendMessage={handleSendMessage} />
+      )}
     </div>
   );
 }
+
+export default ChatContent;

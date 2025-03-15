@@ -13,7 +13,8 @@ import store from "./store/store";
 import MessagingPage from "./pages/Messaging";
 import HomePage from "./pages/HomePage";
 import MyNetwork from "./pages/MyNetworkPage";
-import PostContainer from "./components/Posts/PostContainer";
+/* import PostContainer from "./components/Posts/PostContainer"; */
+import { UserProvider } from "./components/chat/mockUse";
 
 function App() {
   return (
@@ -30,7 +31,15 @@ function App() {
         <Route path="/Signup" element={<SignUpPage />} />
         <Route path="/Signin" element={<SignInPage />} />
         <Route path="/Signin/ForgotPassword" element={<ForgotPassword />} />
-        <Route path="/messaging" element={<MessagingPage />} />
+
+        <Route
+          path="/messaging"
+          element={
+            <UserProvider>
+              <MessagingPage />
+            </UserProvider>
+          }
+        />
         <Route path="/Home" element={<HomePage />} />
         <Route path="/MyNetwork" element={<MyNetwork />} />
         <Route path="/MainPage" element={<MainPage />} />
@@ -45,14 +54,14 @@ function App() {
             </ThemeProvider>
           }
         />
-        <Route
+        {/*       <Route
           path="/post"
           element={
             <Provider store={store}>
               <PostContainer />
             </Provider>
           }
-        />
+        /> */}
         <Route
           path="/*"
           element={<div className="text-red-500">Error 404</div>}

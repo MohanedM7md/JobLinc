@@ -1,9 +1,9 @@
-import React, { useState, useCallback } from "react";
-import ChatCardsList from "./ChatCardsList";
+import React, { useState, useCallback, memo } from "react";
+import ChatCardsList from "../ChatCardsList";
 import PageMessageWindow from "./PageChatWindow";
-import { ChatIdProvider } from "../../context/ChatIdProvider";
+import { ChatIdProvider } from "../../../context/ChatIdProvider";
 
-export default function PageChatSystem() {
+const PageChatSystem = () => {
   const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
   console.log("--------------PageChatSystem rendered--------------");
   const handleConversationClick = useCallback((chatId: string) => {
@@ -23,4 +23,6 @@ export default function PageChatSystem() {
       />
     </div>
   );
-}
+};
+
+export default memo(PageChatSystem);

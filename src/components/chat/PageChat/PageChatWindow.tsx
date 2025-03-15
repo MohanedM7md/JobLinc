@@ -1,20 +1,13 @@
-import ChatContent from "./ChatContent";
+import ChatContent from "../ChatContent";
 import PageChatHeader from "./PageChatHeader";
-
-interface PageChatWindowInterface {
-  className?: string;
-  chatId: string | null;
-}
+import { PageChatWindowInterface } from "../interfaces/Chat.interfaces";
 
 const chatTitle = {
   name: "Mohaned",
   status: "Naime",
 };
 
-export default function PageChatWindow({
-  className,
-  chatId,
-}: PageChatWindowInterface) {
+function PageChatWindow({ className, chatId }: PageChatWindowInterface) {
   console.log("--------------PageChatWindow rendered--------------id:", chatId);
 
   return (
@@ -32,3 +25,4 @@ export default function PageChatWindow({
     </div>
   );
 }
+export default PageChatWindow;

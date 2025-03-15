@@ -1,24 +1,9 @@
 import React, { useEffect, useState } from "react";
 import MessageBubble from "./MessageBubble";
+import { User } from "./interfaces/User.interfaces";
+import { ChatMessagesProbs } from "./interfaces/Message.interfaces";
 
-interface User {
-  id: string;
-  name: string;
-  profilePicture: string;
-}
-interface Message {
-  senderId: string;
-  time: Date;
-  content: { text: string; image?: string; document?: string };
-}
-
-interface ChatMessages {
-  users: User[];
-  messages: Message[];
-  className?: string;
-}
-
-function ChatMessages({ users, messages, className }: ChatMessages) {
+function ChatMessages({ users, messages, className }: ChatMessagesProbs) {
   return (
     <div className={`bg-gray-100 flex flex-col overflow-hidden`}>
       <div className="flex-1 overflow-y-auto space-y-2">
