@@ -5,24 +5,12 @@ import { useState } from "react";
 import "material-icons/iconfont/material-icons.css";
 import CommentCard from "./Comments/CommentCard";
 import { CommentInterface, PostInterface } from "../../interfaces/postInterfaces";
+import { commentsResponse } from "../../__mocks__/PostsMock/commentsDB";
 
 interface PostProps {
   post: PostInterface;
 }
 
-let comments: CommentInterface[] = [
-  {
-    commentID: "0",
-    userID: "1",
-    firstName: "Anime",
-    lastName: "Protagonist",
-    profilePicture:
-      "https://i.pinimg.com/550x/04/bb/21/04bb2164bbfa3684118a442c17d086bf.jpg",
-    headline: "I am the main character",
-    commentText:
-      "A very good comment, yes indeed, It is called Lothric, where the transitory lands of the Lords of Cinder converge.",
-  },
-];
 
 
 
@@ -35,18 +23,19 @@ export default function Post(props: PostProps) {
   const [newComment, setNewComment] = useState<string>("");
 
   function fetchComments() { //Placeholder till comments API is up
+    const comments = commentsResponse;
     return comments;
   }
 
   function addComment(text:string) {
-    const commentID = comments.length.toString();
+    const commentID = commentsResponse.length.toString();
     const userID = "1"; //Should be logged in userID, same thing for all the user info
     const firstName = "Anime";
     const lastName = "Protagonist";
     const profilePicture = "https://i.pinimg.com/550x/04/bb/21/04bb2164bbfa3684118a442c17d086bf.jpg";
     const headline = "I am the main character";
     const commentText = text;
-    comments.push({commentID, userID, firstName, lastName, profilePicture, headline, commentText});
+    commentsResponse.push({commentID, userID, firstName, lastName, profilePicture, headline, commentText});
   }
 
   return !hide ? (
