@@ -20,6 +20,7 @@
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.479.0",
     "material-icons": "^1.13.14",
+    "msq": "^1.0.1",
     "prop-types": "^15.8.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -61,7 +62,7 @@
   },
   "msw": {
     "workerDirectory": [
-      "public",
+      "public"
     ]
   }
 }
