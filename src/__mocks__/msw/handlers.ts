@@ -8,6 +8,16 @@ import { postsResponse } from "../PostsMock/postsDB";
 import { commentsResponse } from "../PostsMock/commentsDB";
 import { repliesResponse } from "../PostsMock/repliesDB";
 
+interface AddPostParams {}
+
+interface PostRequestBody {
+  text: string;
+}
+
+interface PostParams {
+  postID: string;
+}
+
 interface AddCommentParams {
   postID: string;
 }
@@ -25,14 +35,8 @@ interface AddReplyRequestBody {
   replyText: string;
 }
 
-interface AddPostParams {}
-
-interface AddPostRequestBody {
-  text: string;
-  userID: string;
-}
-
 const baseURL = "https://joblinc.me/api/";
+
 export const handler = [
   //handlers to your api calls will be here, will provide examples, if no understand, ask
   http.get(`${baseURL}post/feed`, async ({ params }) => {
@@ -62,13 +66,14 @@ export const handler = [
     },
   ),
 
-  http.post<AddPostParams, AddPostRequestBody>(
+  http.post<AddPostParams, PostRequestBody>(
     `${baseURL}post/add`,
     async ({ request }) => {
-      const { text, userID } = await request.json();
+      const { text } = await request.json();
+      console.log(text);
       const post: PostInterface = {
         postID: postsResponse.length.toString(),
-        userID: userID,
+        userID: "0",
         firstName: "Anime",
         lastName: "Protagonist",
         profilePicture:
@@ -84,6 +89,31 @@ export const handler = [
       return HttpResponse.json({ status: 200, statusText: "OK" });
     },
   ),
+
+  
+
+  http.post<PostParams, PostRequestBody>(`${baseURL}post/:postID/edit`, async ({ params,request }) => {
+    const { postID } = params;
+    const { text } = await request.json();
+    let editedPost = postsResponse.find((post) => post.postID = postID);
+    if (editedPost) {
+      editedPost.text = text;
+      return HttpResponse.json({ status:200, statusText:"OK"});
+    }
+    return HttpResponse.json({ status: 400, statusText: "Not Found" });
+  }),
+
+  http.delete<PostParams>(`${baseURL}post/:postID/delete`, async({ params }) => {
+    const { postID } = params;
+    const deletedPost = postsResponse.findIndex((post) => (post.postID = postID));
+    if (deletedPost != -1) {
+      console.log(postsResponse);
+      postsResponse.splice(deletedPost,1)
+      console.log(postsResponse);
+      return HttpResponse.json({ status: 200, statusText: "OK" });
+    }
+    return HttpResponse.json({ status: 400, statusText: "Not Found" });
+  }),
 
   http.post<AddCommentParams, AddCommentRequestBody>(
     `${baseURL}post/:postID/comment`,

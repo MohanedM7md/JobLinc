@@ -60,11 +60,9 @@ export const getReplies = async (postID: string, commentID: string) => {
 };
 
 // Create a post
-export const createPost = async (text: string, userID: string) => {
-  await api.post(`post/add`, {
-    body: JSON.stringify({ text, userID }),
-  });
-};
+export const createPost = async (text: string ) => {
+  await api.post(`post/add`, {text})
+  };
 
 // Create a comment (NOT in documentation)
 export const createComment = async (postID: string,commentText: string) => {
@@ -79,6 +77,14 @@ export const createReply = async (
 ) => {
   await api.post(`post/${postID}/comment/${commentID}/reply`, { replyText });
 };
+
+export const editPost = async (postID: string, text: string) => {
+  await api.post(`post/${postID}/edit`, { text });
+}
+
+export const deletePost = async (postID: string) => {
+  await api.delete(`post/${postID}/delete`);
+}
 
 // Like a post (NOT in documentation)
 export const likePost = async (postId: string) => {

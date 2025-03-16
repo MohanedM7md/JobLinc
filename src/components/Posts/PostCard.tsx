@@ -8,7 +8,8 @@ import {
   CommentInterface,
   PostInterface,
 } from "../../interfaces/postInterfaces";
-import { createComment, getComments } from "../../api/api";
+import { createComment, deletePost, getComments } from "../../api/api";
+import { useNavigate } from "react-router-dom";
 
 interface PostProps {
   post: PostInterface;
@@ -22,6 +23,7 @@ export default function Post(props: PostProps) {
   const [isLike, setIsLike] = useState<boolean>(false);
   const like = !isLike ? "Like" : "Liked";
   const [newComment, setNewComment] = useState<string>("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (showComment) {
@@ -35,6 +37,11 @@ export default function Post(props: PostProps) {
       getComments(props.post.postID).then((data) => setComments(data)),
     );
   }
+
+  function postDelete(){
+    deletePost(props.post.postID).then(() => navigate("/post"))
+  }
+
   return !hide ? (
     <div className="flex flex-wrap w-1/1 bg-lightGray rounded-xl relative">
       <div className="flex flex-row w-1/1">
@@ -49,7 +56,8 @@ export default function Post(props: PostProps) {
         <div className="" onBlur={() => setShowUtility(false)}>
           {showUtility ? (
             <PostUtilityButton
-              delete={() => console.log("will delete soon trust")}
+              post={props.post}
+              delete={() => postDelete()}
             />
           ) : null}
         </div>
