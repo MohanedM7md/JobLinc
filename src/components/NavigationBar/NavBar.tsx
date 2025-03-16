@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import Searchbar from '../components/SearchBar';
-import NavIcon from '../components/NavIcon';
-import Logo from '../components/Logo';
+import Searchbar from './SearchBar';
+import NavIcon from './NavIcon';
+import Logo from './Logo';
 //import { Outlet, Link } from "react-router-dom";
 function NavBar(){
         const [isLargeScreen, setIsLargeScreen] = useState<boolean>(window.innerWidth > 1280); // Typed as boolean

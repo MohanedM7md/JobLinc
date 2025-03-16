@@ -12,7 +12,7 @@ function MyNetworkOptionsCard() {
     }
 
     return (
-        <div className="flex flex-row items-center font-semibold">
+        <div className="flex flex-row items-center font-semibold justify-center md:justify-start">
             <div
                 className={`${
                     activeOption === "grow"
