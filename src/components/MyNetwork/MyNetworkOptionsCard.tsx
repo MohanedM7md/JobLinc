@@ -17,7 +17,7 @@ function MyNetworkOptionsCard() {
                 className={`${
                     activeOption === "grow"
                         ? "border-b-2 border-darkBurgundy text-darkBurgundy bg-gray-200"
-                        : "hover:bg-gray-200"
+                        : "hover:bg-gray-200 text-darkGray"
                 } cursor-pointer p-3`}
                 onClick={handleGrowClick}
             >
@@ -27,7 +27,7 @@ function MyNetworkOptionsCard() {
                 className={`${
                     activeOption === "catchup"
                         ? "border-b-2 border-darkBurgundy text-darkBurgundy bg-gray-200"
-                        : "hover:bg-gray-200"
+                        : "hover:bg-gray-200 text-darkGray"
                 } cursor-pointer p-3`}
                 onClick={handleCatchUpClick}
             >
