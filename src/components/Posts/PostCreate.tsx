@@ -1,10 +1,26 @@
 import { useState } from "react";
+import { postsResponse } from "../../__mocks__/PostsMock/postsDB";
+import { PostInterface } from "../../interfaces/postInterfaces";
 
 export default function PostCreate() {
     const [newText, setNewText] = useState<string>("");
-    //const [newPics, setNewPics] = useState<string[]>([""]);
-    //const picCheck = newPics.length > 0 ? true : false;
-    //const imageUploadRef = useRef(null);
+
+    const submitNewPost = () => {
+        const newPost:PostInterface = {
+            postID: postsResponse.length.toString(),
+            userID: "1",
+            firstName: "Anime",//Assuming this is the logged in user
+            lastName: "Protagonist",
+            profilePicture: "https://i.pin//img.com/550x/04/bb/21/04bb2164bbfa3684118a442c17d086bf.jpg",
+            headline: "I am the main character",
+            text: newText,
+            likes: 0,
+            commentsNum: 0,
+            reposts: 0,
+            pics: [],
+        }
+        postsResponse.push(newPost);
+    }
 
     return (
       <div className="flex flex-col h-screen bg-charcoalWhite m-0 justify-center items-center">
@@ -21,6 +37,7 @@ export default function PostCreate() {
             onChange={(e) => setNewText(e.target.value)}
             className="bg-white  w-11/12 outline-[0.7px] text-[14px] text-charcoalBlack h-25 px-2 rounded-sm hover:cursor-text hover:outline-[1px] hover:bg-gray-100 focus:outline-[1.5px] m-auto"
           ></textarea>
+          <button onClick={submitNewPost}>Submit</button>
         </form>
       </div>
     );

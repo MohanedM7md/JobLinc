@@ -1,15 +1,14 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
+import { PostInterface } from "../../interfaces/postInterfaces";
+import { postsResponse } from "../../__mocks__/PostsMock/postsDB";
 
-interface PostDetailsProps {
-  text: string;
-  pics: string[];
-}
-
-export default function PostEdit(props: PostDetailsProps) {
+export default function PostEdit(props: PostInterface) {
     const [newText, setNewText] = useState<string>(props.text);
-    const [newPics, setNewPics] = useState<string[]>(props.pics);
 
-    const imageUploadRef = useRef(null);
+    const submitEdit = () => {
+        const postIndex = postsResponse.findIndex(post => post.postID === props.postID);
+        postsResponse[postIndex].text = newText;
+    }
 
     return (
       <div className="flex m-auto">
@@ -20,14 +19,7 @@ export default function PostEdit(props: PostDetailsProps) {
             onChange={(e) => setNewText(e.target.value)}
             className=""
             ></input>
-          <input type="file" className="hidden" ref={imageUploadRef}></input>
-          <div className="flex bg-gray-100">
-            {newPics.map((picURL, index) => {
-                return ( 
-                    <img key={index} src={picURL} alt={`pic-${index}`} />
-                );
-            })}
-          </div>
+            <button onClick={() => submitEdit()}>Submit</button>          
         </form>
       </div>
     );

@@ -26,16 +26,21 @@ const initialState: UserState = {
 // Fetch User Profile (Placeholder API)
 export const loginUser = createAsyncThunk(
   "user/login",
-  async (userData: { email: string; password: string }, { rejectWithValue }) => {
+  async (
+    userData: { email: string; password: string },
+    { rejectWithValue },
+  ) => {
     try {
-      const response = await axios.post("http://localhost:3000/api/auth/login", userData);
+      const response = await axios.post(
+        "http://localhost:3000/api/auth/login",
+        userData,
+      );
       console.log(response.data);
-      
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data || "Login failed");
     }
-  }
+  },
 );
 
 // Create Redux Slice
@@ -53,11 +58,13 @@ const userSlice = createSlice({
       state.loggedIn = false;
       state.status = "IDLE";
     },
-    setEmailPassword: (state, action: PayloadAction<{ email: string; password: string }>) => {
+    setEmailPassword: (
+      state,
+      action: PayloadAction<{ email: string; password: string }>,
+    ) => {
       state.email = action.payload.email;
       // state.password = action.payload.password;
     },
-
   },
   extraReducers: (builder) => {
     builder
@@ -66,20 +73,20 @@ const userSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action: PayloadAction<any>) => {
         console.log("Redux Payload:", action.payload); // Debug Redux update
-    
+
         const userData = action.payload.user; // Extract user object from response
-    
+
         if (userData) {
-            state.username = userData.username || null;
-            state.email = userData.email || null;
-            state.profilePicture = userData.profilePicture || null;
-            state.role = userData.role || null;
-            state.accessToken = userData.accessToken || null;
-            state.refreshToken = userData.refreshToken || null;
-            state.status = "SUCCESS";
-            state.loggedIn = true;
+          state.username = userData.username || null;
+          state.email = userData.email || null;
+          state.profilePicture = userData.profilePicture || null;
+          state.role = userData.role || null;
+          state.accessToken = userData.accessToken || null;
+          state.refreshToken = userData.refreshToken || null;
+          state.status = "SUCCESS";
+          state.loggedIn = true;
         } else {
-            console.error("User data missing in API response:", action.payload);
+          console.error("User data missing in API response:", action.payload);
         }
       })
       .addCase(loginUser.rejected, (state) => {

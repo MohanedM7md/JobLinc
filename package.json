@@ -18,6 +18,7 @@
     "axios": "^1.8.1",
     "firebase": "^11.4.0",
     "jsonwebtoken": "^9.0.2",
+    "lucide-react": "^0.479.0",
     "material-icons": "^1.13.14",
     "prop-types": "^15.8.1",
     "react": "^19.0.0",
@@ -29,13 +30,14 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
-    "@tailwindcss/postcss": "^4.0.9",
+    "@mswjs/socket.io-binding": "^0.1.1",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.2.0",
     "@types/jest": "^29.5.14",
     "@types/prop-types": "^15.7.14",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
+    "@types/socket.io-client": "^1.4.36",
     "@typescript-eslint/eslint-plugin": "^8.25.0",
     "@typescript-eslint/parser": "^8.25.0",
     "@vitejs/plugin-react": "^4.3.4",
@@ -47,6 +49,8 @@
     "globals": "^15.15.0",
     "husky": "^8.0.0",
     "jsdom": "^26.0.0",
+    "msw": "^2.7.3",
+    "path-browserify": "^1.0.1",
     "prettier": "^3.5.3",
     "prettier-plugin-tailwindcss": "^0.6.11",
     "tailwindcss": "^4.0.10",
@@ -54,5 +58,10 @@
     "typescript-eslint": "^8.24.1",
     "vite": "^6.2.0",
     "vitest": "^3.0.7"
+  },
+  "msw": {
+    "workerDirectory": [
+      "public",
+    ]
   }
 }

@@ -5,10 +5,12 @@ import { useState } from "react";
 import "material-icons/iconfont/material-icons.css";
 import CommentCard from "./Comments/CommentCard";
 import { PostInterface } from "../../interfaces/postInterfaces";
+import { commentsResponse } from "../../__mocks__/PostsMock/commentsDB";
 
 interface PostProps {
   post: PostInterface;
 }
+
 
 
 
@@ -18,8 +20,25 @@ export default function Post(props: PostProps) {
   const [showComment, setShowComment] = useState<boolean>(false);
   const [isLike, setIsLike] = useState<boolean>(false);
   const like = !isLike ? "Like" : "Liked";
+  const [newComment, setNewComment] = useState<string>("");
 
-  return !hide ? 
+  function fetchComments() { //Placeholder till comments API is up
+    const comments = commentsResponse;
+    return comments;
+  }
+
+  function addComment(text:string) {
+    const commentID = commentsResponse.length.toString();
+    const userID = "1"; //Should be logged in userID, same thing for all the user info
+    const firstName = "Anime";
+    const lastName = "Protagonist";
+    const profilePicture = "https://i.pinimg.com/550x/04/bb/21/04bb2164bbfa3684118a442c17d086bf.jpg";
+    const headline = "I am the main character";
+    const commentText = text;
+    commentsResponse.push({commentID, userID, firstName, lastName, profilePicture, headline, commentText});
+  }
+
+  return !hide ? (
     <div className="flex flex-wrap w-1/1 bg-lightGray rounded-xl relative">
       <div className="flex flex-row w-1/1">
         <ProfileDetails
@@ -59,7 +78,9 @@ export default function Post(props: PostProps) {
         <span className="text-blue-500 material-icons">thumb_up</span>
         <span className="text-mutedSilver ml-2">{props.post.likes}</span>
         <div className="flex flex-row justify-end w-1/1">
-          <span className="text-mutedSilver ml-2">{props.post.comments.length}</span>
+          <span className="text-mutedSilver ml-2">
+            {props.post.commentsNum}
+          </span>
           <span className="text-mutedSilver ml-2">Comments</span>
           <span className="text-mutedSilver ml-2">•</span>
           <span className="text-mutedSilver ml-2">{props.post.reposts}</span>
@@ -103,16 +124,37 @@ export default function Post(props: PostProps) {
       </button>
       {showComment ? (
         <>
-          {props.post.comments.map((comment) => (
-            <CommentCard
-              key={`comment ${comment.commentID}`}
-              comment={comment}
+          <div className="flex flex-row w-1/1 py-3">
+            <img
+              className="rounded-full h-10 w-10 mx-2"
+              src={
+                "https://i.pinimg.com/550x/04/bb/21/04bb2164bbfa3684118a442c17d086bf.jpg"
+              }
+              alt={"User"}
             />
+            <input
+              type="text"
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              placeholder="Write a comment..."
+              className="outline-[0.7px] outline-gray-300 text-[14px] text-charcoalBlack h-8 w-12/12 px-2 mt-1 rounded-3xl hover:cursor-text hover:outline-[1px] hover:bg-gray-100 focus:outline-black focus:outline-[1.5px]"
+            ></input>
+            <button 
+              onClick={() => {
+                addComment(newComment)
+                setNewComment("")
+              }}
+              className="material-icons-round cursor-pointer rounded-full p-1 mt-1 mx-2 text-gray-500 hover:bg-gray-200 h-fit">
+              send
+            </button>
+          </div>
+          {fetchComments().map((comment) => (
+            <CommentCard key={comment.commentID} comment={comment} />
           ))}
         </>
       ) : null}
     </div>
-   : (
+  ) : (
     <button onClick={() => setHide(false)}>undo</button>
   );
 }
