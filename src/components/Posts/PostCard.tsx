@@ -4,9 +4,11 @@ import PostUtilityButton from "./PostUtilityButton";
 import { useEffect, useState } from "react";
 import "material-icons/iconfont/material-icons.css";
 import CommentCard from "./Comments/CommentCard";
-import { CommentInterface, PostInterface } from "../../interfaces/postInterfaces";
-import { commentsResponse } from "../../__mocks__/PostsMock/commentsDB";
-import { getComments } from "../../api/api";
+import {
+  CommentInterface,
+  PostInterface,
+} from "../../interfaces/postInterfaces";
+import { createComment, getComments } from "../../api/api";
 
 interface PostProps {
   post: PostInterface;
@@ -21,31 +23,18 @@ export default function Post(props: PostProps) {
   const like = !isLike ? "Like" : "Liked";
   const [newComment, setNewComment] = useState<string>("");
 
-  useEffect(() =>{
-    const response = getComments(props.post.postID);
-    response.then((data) => setComments(data));
-  },[showComment])
-    
-  function addComment(text: string) {
-    //const commentID = commentsResponse.length.toString();
-    //const userID = "1"; //Should be logged in userID, same thing for all the user info
-    //const firstName = "Anime";
-    //const lastName = "Protagonist";
-    //const profilePicture =
-    //  "https://i.pinimg.com/550x/04/bb/21/04bb2164bbfa3684118a442c17d086bf.jpg";
-    //const headline = "I am the main character";
-    //const commentText = text;
-    //commentsResponse.push({
-    //  commentID,
-    //  userID,
-    //  firstName,
-    //  lastName,
-    //  profilePicture,
-    //  headline,
-    //  commentText,
-    //});
-  }
+  useEffect(() => {
+    if (showComment) {
+      const response = getComments(props.post.postID);
+      response.then((data) => setComments(data));
+    }
+  }, [showComment]);
 
+  function addComment() {
+    createComment(props.post.postID, newComment).then(() =>
+      getComments(props.post.postID).then((data) => setComments(data)),
+    );
+  }
   return !hide ? (
     <div className="flex flex-wrap w-1/1 bg-lightGray rounded-xl relative">
       <div className="flex flex-row w-1/1">
@@ -148,7 +137,7 @@ export default function Post(props: PostProps) {
             <button
               onClick={() => {
                 if (newComment != "") {
-                  addComment(newComment);
+                  addComment();
                   setNewComment("");
                 }
               }}

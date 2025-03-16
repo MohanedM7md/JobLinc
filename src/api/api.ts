@@ -35,8 +35,8 @@ export const sendMessage = async (chatId: string, message: any) => {
 export const getFeed = async (count: number) => {
   const response = await api.get(`post/feed/`, {
     params: {
-      count: count
-    }
+      count: count,
+    },
   });
   return response.data;
 };
@@ -54,7 +54,7 @@ export const getComments = async (postID: string) => {
 };
 
 // Fetch replies for a comment (NOT in documentation)
-export const getReplies = async (postID: string,commentID: string) => {
+export const getReplies = async (postID: string, commentID: string) => {
   const response = await api.get(`post/${postID}/comment/${commentID}/replies`);
   return response.data;
 };
@@ -67,17 +67,17 @@ export const createPost = async (text: string, userID: string) => {
 };
 
 // Create a comment (NOT in documentation)
-export const createComment = async (postID: string, comment: string) => {
-  await api.post(`post/${postID}/comment`, {
-    body: JSON.stringify({ comment }),
-  });
+export const createComment = async (postID: string,commentText: string) => {
+  await api.post(`post/${postID}/comment`, { commentText });
 };
 
 // Create a reply (NOT in documentation)
-export const createReply = async (postID: string,commentID: string, reply: string) => {
-  await api.post(`post/${postID}/comment/${commentID}/reply`, {
-    body: JSON.stringify({ reply }),
-  });
+export const createReply = async (
+  postID: string,
+  commentID: string,
+  replyText: string,
+) => {
+  await api.post(`post/${postID}/comment/${commentID}/reply`, { replyText });
 };
 
 // Like a post (NOT in documentation)
@@ -90,7 +90,8 @@ export const likePost = async (postId: string) => {
 // Check if a post is liked (NOT in documentation)
 export const checkPostLike = async (postId: string, userID: string) => {
   const response = await api.get(`post/${postId}/react`, {
-    params: { userID }});
+    params: { userID },
+  });
   return response.data;
 };
 
@@ -102,7 +103,11 @@ export const likeComment = async (postID: string, commentId: string) => {
 };
 
 // Check if a comment is liked (NOT in documentation)
-export const checkCommentLike = async (postID:string, commentId: string, userID: string) => {
+export const checkCommentLike = async (
+  postID: string,
+  commentId: string,
+  userID: string,
+) => {
   const response = await api.get(`post/${postID}/comment/${commentId}/react`, {
     params: { userID },
   });
@@ -114,18 +119,12 @@ export const likeReply = async (replyID: string) => {
   await api.post(`reply/${replyID}/react`, {
     body: JSON.stringify({ type: "like" }),
   });
-}
+};
 
 // Check if a reply is liked (NOT in documentation)
 export const checkReplyLike = async (replyId: string, userID: string) => {
   const response = await api.get(`reply/${replyId}/react`, {
-    params: { userID }});
+    params: { userID },
+  });
   return response.data;
 };
-
-
-
-
-
-
-

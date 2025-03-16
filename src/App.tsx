@@ -14,6 +14,7 @@ import MessagingPage from "./pages/Messaging";
 import HomePage from "./pages/HomePage";
 import MyNetwork from "./pages/MyNetworkPage";
 import PostContainer from "./components/Posts/PostContainer";
+import PostCreate from "./components/Posts/PostCreate";
 
 function App() {
   return (
@@ -35,6 +36,8 @@ function App() {
         <Route path="/MyNetwork" element={<MyNetwork />} />
         <Route path="/MainPage" element={<MainPage />} />
         <Route path="/UserDetails" element={<UserDetails />} />
+        <Route path="/post/create" element={<PostCreate />} />
+        <Route path="/post" element={<PostContainer />} />
         <Route
           path="/playground"
           element={
@@ -43,12 +46,6 @@ function App() {
                 <PlayGround />
               </Provider>
             </ThemeProvider>
-          }
-        />
-        <Route
-          path="/post"
-          element={
-              <PostContainer />
           }
         />
         <Route

@@ -11,7 +11,7 @@ function LandPage()
             <Link to="/Home">Go to Home Page</Link>
             <Link to="/MyNetwork">Go to My Network Page</Link>
             <Link to="/post">Preview a Post</Link>
-            
+            <Link to="/post/create">Create a new post</Link>
             <Outlet />
         </div>
     );

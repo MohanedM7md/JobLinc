@@ -1,9 +1,12 @@
 import CommentContent from "./CommentContent";
 import CommenterDetails from "./CommenterDetails";
-import { CommentInterface, RepliesInterface } from "../../../interfaces/postInterfaces";
+import {
+  CommentInterface,
+  RepliesInterface,
+} from "../../../interfaces/postInterfaces";
 import { useEffect, useState } from "react";
 import ReplyCard from "./ReplyCard";
-import { getReplies } from "../../../api/api";
+import { createReply, getReplies } from "../../../api/api";
 
 interface CommentCardProps {
   comment: CommentInterface;
@@ -15,28 +18,22 @@ export default function CommentCard(props: CommentCardProps) {
   const [newReply, setNewReply] = useState<string>("");
 
   useEffect(() => {
-    const response = getReplies(props.comment.postID, props.comment.commentID);
-    response.then((data) => setReplies(data));
-  },[showReplies])
+    if (showReplies) {
+      const response = getReplies(
+        props.comment.postID,
+        props.comment.commentID,
+      );
+      response.then((data) => setReplies(data));
+    }
+  }, [showReplies]);
 
-  function addReply(text: string) {
-    //const replyID = fetchReplies().length.toString();
-    //const userID = "0"; //Should be logged in userID, same thing for all the other user info
-    //const firstName = "Tyrone";
-    //const lastName = "Biggums";
-    //const profilePicture =
-    //  "https://images.ctfassets.net/h6goo9gw1hh6/2sNZtFAWOdP1lmQ33VwRN3/24e953b920a9cd0ff2e1d587742a2472/1-intro-photo-final.jpg?w=1200&h=992&q=70&fm=webp";
-    //const headline = "I smoke rocks";
-    //const replyText = text;
-    //fetchReplies().push({
-    //  replyID,
-    //  userID,
-    //  firstName,
-    //  lastName,
-    //  profilePicture,
-    //  headline,
-    //  replyText,
-    //});
+  function addReply() {
+    createReply(props.comment.postID, props.comment.commentID, newReply).then(
+      () =>
+        getReplies(props.comment.postID, props.comment.commentID).then((data) =>
+          setReplies(data),
+        ),
+    );
   }
 
   return (
@@ -92,7 +89,7 @@ export default function CommentCard(props: CommentCardProps) {
               <button
                 onClick={() => {
                   if (newReply != "") {
-                    addReply(newReply);
+                    addReply();
                     setNewReply("");
                   }
                 }}
