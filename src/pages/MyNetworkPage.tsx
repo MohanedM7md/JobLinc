@@ -8,7 +8,7 @@ function MyNetwork(){
     const mockInvitations = [
         {
           profilePicture: "src/assets/Tyrone.jpg",
-          userName: "John Doe",
+          userName: "Ben Dover",
           userBio: "Frontend Developer at Tech Inc.",
           Mutuals: "5 mutual connections",
           ignoreButtonid: "ignore-1",
@@ -16,12 +16,20 @@ function MyNetwork(){
         },
         {
           profilePicture: "src/assets/Tyrone.jpg",
-          userName: "Jane Smith",
+          userName: "Abdelrahman Sakr",
           userBio: "UI/UX Designer at Design Studio",
           Mutuals: "2 mutual connections",
           ignoreButtonid: "ignore-2",
           acceptButtonid: "accept-2",
         },
+        {
+            profilePicture: "src/assets/Tyrone.jpg",
+            userName: "Abdelrahman Fathy",
+            userBio: "Mobile Developer at Monster Inc.",
+            Mutuals: "2 mutual connections",
+            ignoreButtonid: "ignore-3",
+            acceptButtonid: "accept-3",
+          },
       ];
     return(
         <div className="">
