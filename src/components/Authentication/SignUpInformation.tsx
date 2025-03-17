@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthenticationSignInButton } from "./AuthenticationButtons";
 import { useDispatch } from "react-redux";
-import { setEmailPassword } from "../../store/userSlice";
+import { setEmail, setPassword } from "../../store/userSlice";
 function SignUpInformation() {
     const [isEmpty, setEmpty] = useState({ email: true, password: true });
 
@@ -92,12 +92,16 @@ function SignUpInformation() {
 
             // Now I have email and password, I need to put them in the store
             // and take more details about the user in upcoming pages
-            const userData = {
-                email: emailText,
-                password: passText
-            }
-            dispatch(setEmailPassword(userData));
-            navigate("/UserDetails");
+
+            // const userData = {
+            //     email: emailText,
+            //     password: passText
+            // }
+            
+            dispatch(setEmail({email: emailText}));
+            dispatch(setPassword({password: passText}));
+
+            navigate("/UserDetails", {state: {email: emailText, password: passText} });
         }
 
 

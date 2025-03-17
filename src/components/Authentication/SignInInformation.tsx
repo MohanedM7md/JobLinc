@@ -1,10 +1,10 @@
-import { useState, ChangeEvent, FocusEvent, MouseEvent, useEffect } from "react";
+import { useState, ChangeEvent, FocusEvent, MouseEvent, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthenticationSignInButton } from "./AuthenticationButtons";
 import { Outlet, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../store/store";
-import { loginUser } from "../../store/userSlice"; // New login thunk
+import { loginUser, setPassword } from "../../store/userSlice"; // New login thunk
 import Modal from "./Modal";
 
 declare global {
@@ -26,31 +26,64 @@ function SignInInformation() {
 
     const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
     const [showErrorRecaptcha, setShowErrorRecaptcha] = useState(false);
+    const recaptchaRendered = useRef(false);
+
 
     const [isWrongEmailOrPassword, setIsWrongEmailOrPassword] = useState(false);
 
-
-
     useEffect(() => {
-        const script = document.createElement("script");
-        script.src = "https://www.google.com/recaptcha/api.js";
-        script.async = true;
-        script.defer = true;
-        script.onload = () => {
-            if (window.grecaptcha) {
-                window.grecaptcha.ready(() => {
-                    window.grecaptcha.render("recaptcha-container", {
-                        sitekey: "6Le48PQqAAAAABGnl1yAsKhhNuTnArdIGeRyuQoV",
-                        callback: (token: string) => {
-                            setRecaptchaToken(token);
-                            setShowErrorRecaptcha(false);
-                        },
-                    });
-                });
-            }
-        };
-        document.body.appendChild(script);
+        // Load script only once
+        if (!document.querySelector("script[src='https://www.google.com/recaptcha/api.js']")) {
+            const script = document.createElement("script");
+            script.src = "https://www.google.com/recaptcha/api.js";
+            script.async = true;
+            script.defer = true;
+            document.body.appendChild(script);
+        }
+
+        // Ensure reCAPTCHA renders only once
+        if (window.grecaptcha) {
+            window.grecaptcha.ready(() => {
+                if (!recaptchaRendered.current) {
+                    recaptchaRendered.current = true;
+                    const recaptchaElement = document.getElementById("recaptcha-container");
+
+                    if (recaptchaElement && recaptchaElement.childNodes.length === 0) {
+                        window.grecaptcha.render(recaptchaElement, {
+                            sitekey: "6Le48PQqAAAAABGnl1yAsKhhNuTnArdIGeRyuQoV",
+                            callback: (token: string) => {
+                                setRecaptchaToken(token);
+                                setShowErrorRecaptcha(false);
+                            },
+                        });
+                    }
+                }
+            });
+        }
     }, []);
+
+    // useEffect(() => {
+    //     const script = document.createElement("script");
+    //     script.src = "https://www.google.com/recaptcha/api.js";
+    //     script.async = true;
+    //     script.defer = true;
+    //     script.onload = () => {
+    //         if (window.grecaptcha) {
+    //             window.grecaptcha.ready(() => {
+    //                 window.grecaptcha.render("recaptcha-container", {
+    //                     sitekey: "6Le48PQqAAAAABGnl1yAsKhhNuTnArdIGeRyuQoV",
+    //                     callback: (token: string) => {
+    //                         setRecaptchaToken(token);
+    //                         setShowErrorRecaptcha(false);
+    //                     },
+    //                 });
+    //             });
+    //         }
+    //     };
+    //     document.body.appendChild(script);
+    // }, []);
+
+    
     
 
     const dispatch = useDispatch<AppDispatch>();
@@ -103,8 +136,9 @@ function SignInInformation() {
                 const recaptchaChecked = window.grecaptcha.getResponse();
                 if (recaptchaChecked !== "") {
                     const userData = { email: emailText, password: passText };
+                    dispatch(setPassword({password: passText})); 
                     const resultAction = await dispatch(loginUser(userData));
-
+                    //retrieveUser(userData.email, userData.password);
                     if (loginUser.fulfilled.match(resultAction)) {
                         navigate("/MainPage");
                     }
@@ -127,6 +161,9 @@ function SignInInformation() {
         }
     }
 
+
+
+    {/* Make it a form again when Back End is working */}
     return (
         <form onSubmit={isValidSubmit} className="flex flex-col w-80 items-start gap-3">
             <div className="relative w-full">
@@ -184,7 +221,7 @@ function SignInInformation() {
                 {showErrorPassInvalid && <p className="text-red-800 text-[12px]">The password must have at least 6 characters.</p>}
             </div>
 
-            <div className="g-recaptcha" data-sitekey="6Le48PQqAAAAABGnl1yAsKhhNuTnArdIGeRyuQoV"></div>
+            <div id="recaptcha-container" className="g-recaptcha" data-sitekey="6Le48PQqAAAAABGnl1yAsKhhNuTnArdIGeRyuQoV"></div>
             {showErrorRecaptcha && <p className="text-red-800 text-[12px]">Please complete the reCAPTCHA.</p>}
 
 
@@ -202,6 +239,7 @@ function SignInInformation() {
                     Keep me logged in
                 </label>
             </div>
+            
 
             <div className="flex w-full justify-center">
                 <AuthenticationSignInButton id="sign-in-btn" text="Sign in" />
