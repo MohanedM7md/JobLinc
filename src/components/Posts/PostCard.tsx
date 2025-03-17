@@ -1,41 +1,45 @@
 import PostDetails from "./PostDetails";
 import ProfileDetails from "./ProfileDetails";
 import PostUtilityButton from "./PostUtilityButton";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "material-icons/iconfont/material-icons.css";
 import CommentCard from "./Comments/CommentCard";
-import { PostInterface } from "../../interfaces/postInterfaces";
-import { commentsResponse } from "../../__mocks__/PostsMock/commentsDB";
+import {
+  CommentInterface,
+  PostInterface,
+} from "../../interfaces/postInterfaces";
+import { createComment, deletePost, getComments } from "../../api/api";
+import { useNavigate } from "react-router-dom";
 
 interface PostProps {
   post: PostInterface;
 }
 
-
-
-
 export default function Post(props: PostProps) {
   const [hide, setHide] = useState<boolean>(false);
   const [showUtility, setShowUtility] = useState<boolean>(false);
   const [showComment, setShowComment] = useState<boolean>(false);
+  const [comments, setComments] = useState<CommentInterface[]>([]);
   const [isLike, setIsLike] = useState<boolean>(false);
   const like = !isLike ? "Like" : "Liked";
   const [newComment, setNewComment] = useState<string>("");
+  const navigate = useNavigate();
 
-  function fetchComments() { //Placeholder till comments API is up
-    const comments = commentsResponse;
-    return comments;
+  useEffect(() => {
+    if (showComment) {
+      const response = getComments(props.post.postID);
+      response.then((data) => setComments(data));
+    }
+  }, [showComment]);
+
+  function addComment() {
+    createComment(props.post.postID, newComment).then(() =>
+      getComments(props.post.postID).then((data) => setComments(data)),
+    );
   }
 
-  function addComment(text:string) {
-    const commentID = commentsResponse.length.toString();
-    const userID = "1"; //Should be logged in userID, same thing for all the user info
-    const firstName = "Anime";
-    const lastName = "Protagonist";
-    const profilePicture = "https://i.pinimg.com/550x/04/bb/21/04bb2164bbfa3684118a442c17d086bf.jpg";
-    const headline = "I am the main character";
-    const commentText = text;
-    commentsResponse.push({commentID, userID, firstName, lastName, profilePicture, headline, commentText});
+  function postDelete(){
+    deletePost(props.post.postID).then(() => navigate("/"))
   }
 
   return !hide ? (
@@ -52,7 +56,8 @@ export default function Post(props: PostProps) {
         <div className="" onBlur={() => setShowUtility(false)}>
           {showUtility ? (
             <PostUtilityButton
-              delete={() => console.log("will delete soon trust")}
+              post={props.post}
+              delete={() => postDelete()}
             />
           ) : null}
         </div>
@@ -99,18 +104,16 @@ export default function Post(props: PostProps) {
         <span className="hidden md:inline-block">{like}</span>
       </button>
 
-      <button className="w-3/12 h-10 cursor-pointer font-medium text-gray-500 hover:bg-gray-200">
+      <button
+        onClick={() => {
+          setShowComment(!showComment);
+        }}
+        className="w-3/12 h-10 cursor-pointer font-medium text-gray-500 hover:bg-gray-200"
+      >
         <p className="material-icons mr-2 md:align-text-top lg:mr-3">
           insert_comment
         </p>
-        <span
-          className="hidden md:inline-block"
-          onClick={() => {
-            setShowComment(!showComment);
-          }}
-        >
-          Comment
-        </span>
+        <span className="hidden md:inline-block">Comment</span>
       </button>
 
       <button className="w-3/12 h-10 cursor-pointer font-medium text-gray-500 hover:bg-gray-200">
@@ -139,16 +142,19 @@ export default function Post(props: PostProps) {
               placeholder="Write a comment..."
               className="outline-[0.7px] outline-gray-300 text-[14px] text-charcoalBlack h-8 w-12/12 px-2 mt-1 rounded-3xl hover:cursor-text hover:outline-[1px] hover:bg-gray-100 focus:outline-black focus:outline-[1.5px]"
             ></input>
-            <button 
+            <button
               onClick={() => {
-                addComment(newComment)
-                setNewComment("")
+                if (newComment != "") {
+                  addComment();
+                  setNewComment("");
+                }
               }}
-              className="material-icons-round cursor-pointer rounded-full p-1 mt-1 mx-2 text-gray-500 hover:bg-gray-200 h-fit">
+              className="material-icons-round cursor-pointer rounded-full p-1 mt-1 mx-2 text-gray-500 hover:bg-gray-200 h-fit"
+            >
               send
             </button>
           </div>
-          {fetchComments().map((comment) => (
+          {comments.map((comment) => (
             <CommentCard key={comment.commentID} comment={comment} />
           ))}
         </>

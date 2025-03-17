@@ -1,39 +1,12 @@
-import axios from "axios";
-
-export const api = axios.create({
-  baseURL: "/api", //to be edited when the actual API is up
-  timeout: 5000,
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
-
-// Fetch chats for a user
-export const fetchChats = async (userId: string) => {
-  const response = await api.get(`/chats/${userId}`);
-  return response.data;
-};
-
-// Fetch messages for a chat
-export const fetchMessages = async (chatId: string) => {
-  const response = await api.get(`/messages/${chatId}`);
-  return response.data;
-};
-
-// Fetch users in a chat
-export const fetchChatUsers = async (chatId: string) => {
-  const response = await api.get(`/chats/${chatId}/users`);
-  return response.data;
-};
-
-// Send a message
-export const sendMessage = async (chatId: string, message: any) => {
-  await api.post(`/messages/${chatId}`, message);
-};
+import api from "./api";
 
 // Fetch a a number of posts to populate a user's feed
-export const getFeed = async () => {
-  const response = await api.get(`post/feed/`);
+export const getFeed = async (count: number) => {
+  const response = await api.get(`post/feed/`, {
+    params: {
+      count: count,
+    },
+  });
   return response.data;
 };
 
@@ -50,30 +23,38 @@ export const getComments = async (postID: string) => {
 };
 
 // Fetch replies for a comment (NOT in documentation)
-export const getReplies = async (postID: string,commentId: string) => {
+export const getReplies = async (postID: string, commentId: string) => {
   const response = await api.get(`post/${postID}/comment/${commentId}/replies`);
   return response.data;
 };
 
 // Create a post
-export const createPost = async (text: string, userID: string) => {
-  await api.post(`post/add`, {
-    body: JSON.stringify({ text, userID }),
-  });
+export const createPost = async (text: string) => {
+  await api.post(`post/add`, { text });
 };
 
 // Create a comment (NOT in documentation)
-export const createComment = async (postID: string, comment: string) => {
-  await api.post(`post/${postID}/comment`, {
-    body: JSON.stringify({ comment }),
-  });
+export const createComment = async (postID: string, commentText: string) => {
+  await api.post(`post/${postID}/comment`, { commentText });
 };
 
 // Create a reply (NOT in documentation)
-export const createReply = async (postID: string,commentID: string, reply: string) => {
+export const createReply = async (
+  postID: string,
+  commentID: string,
+  reply: string,
+) => {
   await api.post(`post/${postID}/comment/${commentID}/reply`, {
     body: JSON.stringify({ reply }),
   });
+};
+
+export const editPost = async (postID: string, text: string) => {
+  await api.post(`post/${postID}/edit`, { text });
+};
+
+export const deletePost = async (postID: string) => {
+  await api.delete(`post/${postID}/delete`);
 };
 
 // Like a post (NOT in documentation)
@@ -86,7 +67,8 @@ export const likePost = async (postId: string) => {
 // Check if a post is liked (NOT in documentation)
 export const checkPostLike = async (postId: string, userID: string) => {
   const response = await api.get(`post/${postId}/react`, {
-    params: { userID }});
+    params: { userID },
+  });
   return response.data;
 };
 
@@ -98,7 +80,11 @@ export const likeComment = async (postID: string, commentId: string) => {
 };
 
 // Check if a comment is liked (NOT in documentation)
-export const checkCommentLike = async (postID:string, commentId: string, userID: string) => {
+export const checkCommentLike = async (
+  postID: string,
+  commentId: string,
+  userID: string,
+) => {
   const response = await api.get(`post/${postID}/comment/${commentId}/react`, {
     params: { userID },
   });
@@ -110,12 +96,13 @@ export const likeReply = async (replyID: string) => {
   await api.post(`reply/${replyID}/react`, {
     body: JSON.stringify({ type: "like" }),
   });
-}
+};
 
 // Check if a reply is liked (NOT in documentation)
 export const checkReplyLike = async (replyId: string, userID: string) => {
   const response = await api.get(`reply/${replyId}/react`, {
-    params: { userID }});
+    params: { userID },
+  });
   return response.data;
 };
 

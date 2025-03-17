@@ -1,15 +1,11 @@
 import React, { useState } from "react";
 import { Paperclip, Image, Smile } from "lucide-react";
+import { ChatInputProps } from "./interfaces/Chat.interfaces";
 
-interface ChatInputProps {
-  id: string | null;
-  onSendMessage: (message: string) => void;
-}
-
-function ChatInput({ id, onSendMessage }: ChatInputProps) {
+function ChatInput({ chatId, onSendMessage }: ChatInputProps) {
   const [message, setMessage] = useState("");
   const handleSendMessage = () => {
-    if (!message.trim() || !id) return;
+    if (!message.trim() || !chatId) return;
     console.log("input ", message);
     onSendMessage(message);
     setMessage("");
@@ -20,6 +16,7 @@ function ChatInput({ id, onSendMessage }: ChatInputProps) {
      bg-charcoalWhite dark:bg-warmBlack border-t-1 border-gray-200"
     >
       <textarea
+        name="msg"
         value={message}
         onChange={(e) => setMessage(e.target.value)}
         className="flex-1 w-full bg-warmWhite dark:bg-darkGray text-charcoalBlack
@@ -49,6 +46,7 @@ function ChatInput({ id, onSendMessage }: ChatInputProps) {
           </button>
         </div>
         <button
+          id="send-msg-btn"
           onClick={handleSendMessage}
           disabled={!message.trim()}
           className={`ml-2 p-1 rounded-l-full font-bold rounded-r-full transition-colors

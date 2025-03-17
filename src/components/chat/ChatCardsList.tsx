@@ -1,29 +1,25 @@
 import React, { useEffect, useState, memo } from "react";
 import ChatCard from "./ChatCard";
-import { fetchChats } from "../../api/api";
-import { connectChatSocket } from "../../api/socket";
+import { fetchChats } from "../../services/api/api";
+import { connectChatSocket } from "../../services/api/socket";
+import { useUser } from "./mockUse";
+import { ChatCardInterface } from "./interfaces/Chat.interfaces";
 
-interface ChatCardType {
-  chatId: string;
-  chatName: string;
-  imageUrl: string;
-  lastMessage: string;
-  sentDate: string;
-  unreadCount: number;
-}
-
-interface ChatCardsListType {
+const ChatCardsList = ({
+  onCardClick,
+}: {
   onCardClick: (id: string) => void;
-}
-
-const ChatCardsList = ({ onCardClick }: ChatCardsListType) => {
-  const [chats, setChats] = useState<ChatCardType[]>([]);
+}) => {
+  const [chats, setChats] = useState<ChatCardInterface[]>([]);
   const chatSocket = connectChatSocket();
+  const { user } = useUser();
   console.log("----------------ChatCardsList----------------");
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await fetchChats("1");
+        if (!user) return;
+        const data = await fetchChats(user);
+        console.log("Data:  ", data);
         setChats(data);
       } catch (error) {
         console.error("Error fetching chat data:", error);
@@ -31,23 +27,23 @@ const ChatCardsList = ({ onCardClick }: ChatCardsListType) => {
     };
     fetchData();
 
-    chatSocket.on("ChatsUpdate", (newChat: ChatCardType) => {
+    chatSocket.on("ChatsUpdate", (newChat: ChatCardInterface) => {
       setChats((prev) => [...prev, newChat]);
     });
 
     return () => {
       chatSocket.off("ChatsUpdate");
     };
-  }, []);
-
+  }, [user]);
+  console.log("Chats:", chats);
   return (
     <div className="mt-4">
       {chats.length > 0 ? (
         chats.map((chatCard) => (
           <ChatCard
             key={chatCard.chatId}
-            id={chatCard.chatId}
-            imageUrl={chatCard.imageUrl}
+            chatId={chatCard.chatId}
+            chatPicture={chatCard.chatPicture}
             chatName={chatCard.chatName}
             lastMessage={chatCard.lastMessage}
             sentDate={chatCard.sentDate}

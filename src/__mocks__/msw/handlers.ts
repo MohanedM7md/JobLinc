@@ -103,9 +103,11 @@ export const handler = [
 
   http.delete<PostParams>(`${baseURL}post/:postID/delete`, async({ params }) => {
     const { postID } = params;
-    let deletedPost = postsResponse.findIndex((post) => (post.postID = postID));
-    if (deletedPost) {
+    const deletedPost = postsResponse.findIndex((post) => (post.postID = postID));
+    if (deletedPost != -1) {
+      console.log(postsResponse);
       postsResponse.splice(deletedPost,1)
+      console.log(postsResponse);
       return HttpResponse.json({ status: 200, statusText: "OK" });
     }
     return HttpResponse.json({ status: 400, statusText: "Not Found" });
@@ -152,9 +154,4 @@ export const handler = [
       return HttpResponse.json({ status: 200, statusText: "OK" });
     },
   ),
-
-  http.post(`${baseURL}auth/login`, async ({request}) => {
-    const user = {firstName: "JohnDoe", lastName: "wala3"};
-    return HttpResponse.json(user,{ status: 200, statusText: "OK" });
-  })
 ];

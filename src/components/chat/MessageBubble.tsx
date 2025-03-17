@@ -2,23 +2,9 @@ import React from "react";
 import { Img } from "react-image";
 import UserProfile from "../UserProfile";
 import { isRTL } from "../../utils/IsArabic";
+import { MessageBubbleInterface } from "./interfaces/Message.interfaces";
 
-interface MessageInterface {
-  sender: {
-    id: string;
-    name: string;
-    profilePicture: string;
-  };
-  time: Date;
-  content: {
-    text?: string;
-    image?: string;
-    video?: string;
-    document?: string;
-  };
-}
-
-function MessageBubble({ message }: { message: MessageInterface }) {
+function MessageBubble({ message }: { message: MessageBubbleInterface }) {
   const rtl = isRTL(message.content.text);
   console.log("_______________MessageBubble_____________");
   return (

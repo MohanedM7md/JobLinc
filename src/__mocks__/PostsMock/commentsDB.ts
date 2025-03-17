@@ -3,6 +3,7 @@ import { CommentInterface } from "../../interfaces/postInterfaces";
 export const commentsResponse: CommentInterface[] = [ //I'm assuming all those comments are for my post as that SHOULD be what I get from the API
     {
         commentID: "0",
+        postID:"0",
         userID: "1", //Should be logged in userID, same thing for all the user info
         firstName: "Anime",
         lastName: "Protagonist",
