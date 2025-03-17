@@ -68,7 +68,7 @@ describe("PostCard", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("calls delete post function", async () => {
+  it("the post is deleted upon pressing the delete button", async () => {
     const moreButton = screen.getByText("more_horiz");
     await userEvent.click(moreButton);
 

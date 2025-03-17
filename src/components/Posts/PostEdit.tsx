@@ -1,14 +1,16 @@
 import { useState } from "react";
 import { PostInterface } from "../../interfaces/postInterfaces";
 import { postsResponse } from "../../__mocks__/PostsMock/postsDB";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function PostEdit(props: PostInterface) {
     const [newText, setNewText] = useState<string>(props.text);
+    const navigate = useNavigate();
 
     function submitEdit(){
         const postIndex = postsResponse.findIndex(post => post.postID === props.postID);
         postsResponse[postIndex].text = newText;
+        navigate("/post");
     }
 
     return (

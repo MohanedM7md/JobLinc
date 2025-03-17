@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import { PostInterface } from "../../interfaces/postInterfaces";
 
 interface UtilityProps {

@@ -1,4 +1,4 @@
-import { render, screen, cleanup } from "@testing-library/react";
+import { render, screen, cleanup, getByText } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom/vitest";
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
@@ -44,19 +44,24 @@ describe("PostEdit Component", () => {
     expect(textarea.value).toBe("Updated text");
   });
 
-  it("submits the form on submit button click", () => {
-
-    
+  it("submits the form on submit button click", async () => {
     const submitButton = screen.getByText("Submit");
-    userEvent.click(submitButton);
-
-    expect(handleSubmit).toHaveBeenCalled();
+    await userEvent.click(submitButton);
+    expect(global.window.location.href).toContain("/post");
   });
 
   it("navigates to /post on cancel button click", () => {
     const cancelButton = screen.getByText("Cancel");
     userEvent.click(cancelButton);
-    // Add your assertion here to check if the navigation happened
-    // This might require using a mock router or checking the URL
+    expect(global.window.location.href).toContain("/");
   });
+
+  it("edits the posts", async () => {
+    const textarea = screen.getByRole("textbox") as HTMLTextAreaElement;
+    const submitButton = screen.getByText("Submit");
+    await userEvent.clear(textarea);
+    await userEvent.type(textarea, "Updated text");
+    await userEvent.click(submitButton);
+    expect(screen.getByText("Updated Text")).toBeInTheDocument();
+  })
 });
