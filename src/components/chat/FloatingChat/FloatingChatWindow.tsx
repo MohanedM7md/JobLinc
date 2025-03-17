@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, memo } from "react";
 import FloatingChatHeader from "./FloatingChatHeader";
-import ChatContent from "./ChatContent";
-import useChats from "../../hooks/useChats";
-import useChatid from "../../context/ChatIdProvider";
+import ChatContent from "../ChatContent";
+import useChats from "../../../hooks/useChats";
+import useChatid from "../../../context/ChatIdProvider";
 const mockInfo: any = {
   title: "string",
   profilePicture: "https://randomuser.me/api/portraits/men/2.jpg",
@@ -37,7 +37,7 @@ function FloatingChatWindow({
     >
       <FloatingChatHeader
         onClick={activeToggler}
-        chatInfo={mockInfo}
+        floatingHeaderData={mockInfo}
         onClose={() => CloseChat(chatId)}
       />
       <ChatContent chatId={chatId} />
@@ -45,4 +45,4 @@ function FloatingChatWindow({
   );
 }
 
-export default React.memo(FloatingChatWindow);
+export default memo(FloatingChatWindow);

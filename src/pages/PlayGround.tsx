@@ -2,9 +2,11 @@ import { TheNothingButton } from "../components/TheNothingButton";
 import useTheme from "../hooks/useTheme";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { fetchUser } from "../store/userSlice";
+import { useUser } from "../components/chat/mockUse";
 import ChatProvider from "../context/ChatsIdProvider";
 import { useEffect } from "react";
-import FloatingChatSystem from "../components/chat/FloatingChatSystem";
+import FloatingChatSystem from "../components/chat/FloatingChat/FloatingChatSystem";
+import { UserProvider } from "../components/chat/mockUse";
 
 function PlayGround() {
   /*   const dispatch = useAppDispatch();
@@ -12,6 +14,7 @@ function PlayGround() {
   useEffect(() => {
     dispatch(fetchUser()); // Load user data on mount
   }, [dispatch]); */
+
   const { darkMode, setDarkMode } = useTheme();
   return (
     <div className="h-full dark:bg-charcoalBlack">
@@ -30,9 +33,11 @@ function PlayGround() {
           {/* wlecome <div className=" text-3xl inline">{user.name}</div>{" "} */}
         </h1>
       </div>
-      <ChatProvider>
-        <FloatingChatSystem />
-      </ChatProvider>
+      <UserProvider>
+        <ChatProvider>
+          <FloatingChatSystem />
+        </ChatProvider>
+      </UserProvider>
     </div>
   );
 }
