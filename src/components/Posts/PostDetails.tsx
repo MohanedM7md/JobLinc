@@ -1,7 +1,6 @@
 import { useState } from "react";
 import PostMedia from "./PostMedia";
 
-
 interface PostDetailsProps {
   text: string;
   media: string[];
@@ -10,7 +9,6 @@ interface PostDetailsProps {
 export default function PostDetails(props: PostDetailsProps) {
   const [showMore, setShowMore] = useState<boolean>(false);
   const show = !showMore ? "Show more" : "Show less";
-
 
   return (
     <div>
@@ -25,7 +23,12 @@ export default function PostDetails(props: PostDetailsProps) {
           {show}
         </button>
       </div>
-      {props.media.length > 0 ? <PostMedia key="mediaRendering" pics={props.media} /> : null}
+      {props.media.length > 0 ? (
+        <PostMedia
+          key="mediaRendering"
+          pics={props.media}
+        />
+      ) : null}
     </div>
   );
 }

@@ -39,7 +39,7 @@ export default function Post(props: PostProps) {
   }
 
   function postDelete(){
-    deletePost(props.post.postID).then(() => navigate("/post"))
+    deletePost(props.post.postID).then(() => navigate("/"))
   }
 
   return !hide ? (

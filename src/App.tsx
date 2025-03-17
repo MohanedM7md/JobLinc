@@ -15,6 +15,7 @@ import HomePage from "./pages/HomePage";
 import MyNetwork from "./pages/MyNetworkPage";
 import PostContainer from "./components/Posts/PostContainer";
 import PostCreate from "./components/Posts/PostCreate";
+import PostEdit from "./components/Posts/PostEdit";
 
 function App() {
   return (
