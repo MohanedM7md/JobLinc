@@ -17,7 +17,7 @@ export interface PageChatHeader {
 
 export interface PageChatWindowInterface {
   className?: string;
-  chatId: string | null;
+  chatId: string;
 }
 
 export interface ChatCardInterface {
@@ -27,7 +27,6 @@ export interface ChatCardInterface {
   lastMessage: string;
   sentDate: string;
   unseenCount?: number;
-
 }
 export interface ChatCardProps extends ChatCardInterface {
   onClick: () => void;

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import PageChatSystem from "../components/chat/PageChat/PageChatSystem";
 import { useUser } from "../components/chat/mockUse";
 export function MessagingPage() {
@@ -11,6 +11,7 @@ export function MessagingPage() {
   return (
     <>
       <PageChatSystem />
+      <iframe src="https://www.example.com" width="600" height="400"></iframe>
     </>
   );
 }

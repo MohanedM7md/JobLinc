@@ -17,10 +17,16 @@ const PageChatSystem = () => {
         </div>
         <ChatCardsList onCardClick={handleConversationClick} />
       </div>
-      <PageMessageWindow
-        className="flex-grow flex flex-col justify-end"
-        chatId={selectedChatId}
-      />
+      {selectedChatId ? (
+        <PageMessageWindow
+          className="flex-grow flex flex-col justify-end"
+          chatId={selectedChatId}
+        />
+      ) : (
+        <div className="flex-grow flex items-center justify-center">
+          <h2 className="text-gray-500">Choose a chat to start messaging</h2>
+        </div>
+      )}
     </div>
   );
 };

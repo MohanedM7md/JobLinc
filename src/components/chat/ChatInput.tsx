@@ -16,6 +16,7 @@ function ChatInput({ chatId, onSendMessage }: ChatInputProps) {
      bg-charcoalWhite dark:bg-warmBlack border-t-1 border-gray-200"
     >
       <textarea
+        name="msg"
         value={message}
         onChange={(e) => setMessage(e.target.value)}
         className="flex-1 w-full bg-warmWhite dark:bg-darkGray text-charcoalBlack
@@ -45,6 +46,7 @@ function ChatInput({ chatId, onSendMessage }: ChatInputProps) {
           </button>
         </div>
         <button
+          id="send-msg-btn"
           onClick={handleSendMessage}
           disabled={!message.trim()}
           className={`ml-2 p-1 rounded-l-full font-bold rounded-r-full transition-colors

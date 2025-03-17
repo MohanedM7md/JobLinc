@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import ChatMessages from "./ChatMessages";
 import ChatInput from "./ChatInput";
-import { fetchMessages, fetchChatUsers } from "../../api/api";
+import { fetchChatData } from "../../services/api/api";
 import {
   connectChatSocket,
   onReceiveMessage,
   emitSendMessage,
-} from "../../api/socket";
+} from "../../services/api/socket";
 import {
   RecievedMessage,
   MessageStatus,
@@ -23,25 +23,29 @@ function ChatContent({ chatId }: { chatId: string }) {
   console.log("______________ChatContent_______________");
   useEffect(() => {
     const fetchData = async () => {
-      const chatData = await fetchData(chatId);
-      const users: User[] = response.data.participants.map((participant: any) => ({
-        id: participant.userId,
-        name: `${participant.firstname} ${participant.lastname}`,
-        profilePicture: participant.profilePicture,
-      }));
-    
-      const messages: RecievedMessage[] = response.data.messages.map((msg: any) => ({
-        id: msg.messageId,
-        senderId:msg.senderId,
-        status:msg.status,
-        time: new Date(msg.sentDate * 1000),
-        content: {
-          text: msg.content.text || undefined,
-          image: msg.content.image || undefined,
-          video: msg.content.video || undefined,
-          document: msg.content.document || undefined,
-        },
-      }));
+      const response = await fetchChatData(chatId);
+      const users: User[] = response.data.participants.map(
+        (participant: any) => ({
+          id: participant.userId,
+          name: `${participant.firstname} ${participant.lastname}`,
+          profilePicture: participant.profilePicture,
+        }),
+      );
+
+      const messages: RecievedMessage[] = response.data.messages.map(
+        (msg: any) => ({
+          id: msg.messageId,
+          senderId: msg.senderId,
+          status: msg.status,
+          time: new Date(msg.sentDate * 1000),
+          content: {
+            text: msg.content.text || undefined,
+            image: msg.content.image || undefined,
+            video: msg.content.video || undefined,
+            document: msg.content.document || undefined,
+          },
+        }),
+      );
       setUsers(users);
       setMessages(messages);
     };

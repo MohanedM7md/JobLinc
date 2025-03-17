@@ -5,7 +5,7 @@ import { ChatCardProps } from "./interfaces/Chat.interfaces";
 
 export default function ChatCard({
   chatId,
-  imageUrl,
+  chatPicture,
   chatName,
   lastMessage,
   sentDate,
@@ -22,7 +22,7 @@ export default function ChatCard({
       <div className="relative w-12 h-12 group grid grid-cols-1 grid-rows-1 items-center">
         <Img
           className="col-start-1 row-start-1 rounded-full w-full h-full object-fit"
-          src={imageUrl}
+          src={chatPicture}
         />
 
         <div
