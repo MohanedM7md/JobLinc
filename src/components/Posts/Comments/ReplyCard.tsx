@@ -9,7 +9,7 @@ interface ReplyCardProps {
 export default function ReplyCard(props: ReplyCardProps) {
     return (
   <div className="flex flex-wrap w-11/12 relative">
-    <div className="flex flex-row w-1/1 px-2">
+    <div className="flex flex-row w-1/1 pr-2">
       <CommenterDetails
         key={`Details of Commenter ${props.reply.userID}`}
         userID={props.reply.userID}
