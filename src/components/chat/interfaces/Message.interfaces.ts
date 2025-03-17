@@ -7,29 +7,32 @@ export enum MessageStatus {
 }
 
 export interface MessageBase {
-  time: Date; // Timestamp of the message
+  id: string;
+  time: Date;
   content: {
-    text?: string; // Optional text content
-    image?: string; // Optional image URL
-    video?: string; // Optional video URL
-    document?: string; // Optional document URL
+    text?: string;
+    image?: string;
+    video?: string;
+    document?: string;
   };
 }
-export interface Message extends MessageBase {
-  senderId: string; // ID of the message sender
-  status: MessageStatus; // Status of the message
+export interface RecievedMessage extends MessageBase {
+  senderId: string;
+  status: MessageStatus;
 }
 
-export interface MessageInterface extends MessageBase {
+export interface MessageBubbleInterface extends MessageBase {
   sender: {
-    id: string; // ID of the sender
-    name: string; // Name of the sender
-    profilePicture: string; // URL of the sender's profile picture
+    id: string;
+    name: string;
+    profilePicture: string;
   };
 }
 
 export interface ChatMessagesProbs {
   users: User[];
-  messages: Message[];
+  messages: RecievedMessage[];
   className?: string;
 }
+
+export interface SentMessage {}

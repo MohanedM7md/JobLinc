@@ -9,7 +9,8 @@ function FloatingChatSystem() {
   const { opnedChatsId } = useChats();
   const { setUser } = useUser();
   useEffect(() => {
-    setUser("1");
+    const UserId = window.prompt("Enter User ID:") || "1";
+    setUser(UserId);
   }, []);
   return (
     <>

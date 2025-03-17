@@ -4,7 +4,7 @@ export interface FloatingHeaderData {
   status: "online" | "offline";
 }
 
-export interface HeaderProbs {
+export interface FlaotingHeaderProbs {
   onClick?: () => void;
   floatingHeaderData: FloatingHeaderData; //(title, profile picture, status)
   onClose: () => void;
@@ -23,12 +23,11 @@ export interface PageChatWindowInterface {
 export interface ChatCardInterface {
   chatId: string;
   chatName: string;
-  imageUrl: string;
+  chatPicture: string;
   lastMessage: string;
   sentDate: string;
   unseenCount?: number;
-  isPinned?: boolean;
-  isMuted?: boolean;
+
 }
 export interface ChatCardProps extends ChatCardInterface {
   onClick: () => void;

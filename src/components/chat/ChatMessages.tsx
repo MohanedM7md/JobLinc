@@ -18,7 +18,10 @@ function ChatMessages({ users, messages, className }: ChatMessagesProbs) {
             };
             console.log("_________ChatMessages_____________");
             return (
-              <MessageBubble key={index} message={{ sender, ...message }} />
+              <MessageBubble
+                key={message.id + index}
+                message={{ sender, ...message }}
+              />
             );
           })
         ) : (
