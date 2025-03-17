@@ -13,9 +13,12 @@ function MainPage() {
 
     // Redirect to sign-in page if not logged in
     useEffect(() => {
-        if (!user.loggedIn) {
-            navigate("/signin");
-        }
+        setTimeout(() => {
+            if (!user.loggedIn) {
+                navigate("/Signin");
+            }
+        }, 1000)
+        
     }, [user.loggedIn, navigate]);
 
     return (

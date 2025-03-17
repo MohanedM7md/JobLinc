@@ -105,3 +105,16 @@ export const checkReplyLike = async (replyId: string, userID: string) => {
   });
   return response.data;
 };
+
+
+// Testing Fetching user data after sign in
+export const retrieveUser = async (email: string, password: string) =>
+{
+  const response = await api.post(`auth/login`, {email, password});
+  return response.data;
+}
+
+
+
+
+
