@@ -1,8 +1,12 @@
 import api from "./api";
 
 // Fetch a a number of posts to populate a user's feed
-export const getFeed = async () => {
-  const response = await api.get(`post/feed/`);
+export const getFeed = async (count: number) => {
+  const response = await api.get(`post/feed/`, {
+    params: {
+      count: count,
+    },
+  });
   return response.data;
 };
 
@@ -25,17 +29,13 @@ export const getReplies = async (postID: string, commentId: string) => {
 };
 
 // Create a post
-export const createPost = async (text: string, userID: string) => {
-  await api.post(`post/add`, {
-    body: JSON.stringify({ text, userID }),
-  });
+export const createPost = async (text: string) => {
+  await api.post(`post/add`, { text });
 };
 
 // Create a comment (NOT in documentation)
-export const createComment = async (postID: string, comment: string) => {
-  await api.post(`post/${postID}/comment`, {
-    body: JSON.stringify({ comment }),
-  });
+export const createComment = async (postID: string, commentText: string) => {
+  await api.post(`post/${postID}/comment`, { commentText });
 };
 
 // Create a reply (NOT in documentation)
@@ -47,6 +47,14 @@ export const createReply = async (
   await api.post(`post/${postID}/comment/${commentID}/reply`, {
     body: JSON.stringify({ reply }),
   });
+};
+
+export const editPost = async (postID: string, text: string) => {
+  await api.post(`post/${postID}/edit`, { text });
+};
+
+export const deletePost = async (postID: string) => {
+  await api.delete(`post/${postID}/delete`);
 };
 
 // Like a post (NOT in documentation)

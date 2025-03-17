@@ -1,12 +1,14 @@
 import Post from "./PostCard";
-import { postsResponse } from "../../__mocks__/PostsMock/postsDB";
-import { useEffect } from "react";
-import { getFeed } from "../../services/api/api";
+import { useEffect, useState } from "react";
+import { getFeed } from "../../api/api";
 
 export default function PostContainer() {
-  const posts = postsResponse;
+  const [posts, setPosts] = useState([]);
   useEffect(() => {
-    getFeed();
+    const response = getFeed(10);
+    response.then((data) => {
+      setPosts(data);
+    });
   }, []);
   return (
     <div className="flex flex-wrap lg:w-5/12 md:w-8/12 sm:1/1 m-auto">

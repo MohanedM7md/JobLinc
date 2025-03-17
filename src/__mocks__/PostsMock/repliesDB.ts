@@ -2,7 +2,7 @@ import { RepliesInterface } from "../../interfaces/postInterfaces";
 
 export const repliesResponse: RepliesInterface[] = [
     {
-        replyID: "1",
+        replyID: "0",
         userID: "0", //Should be logged in userID, same thing for all the other user info
         firstName: "Tyrone",
         lastName: "Biggums",

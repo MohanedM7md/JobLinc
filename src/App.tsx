@@ -13,7 +13,9 @@ import store from "./store/store";
 import MessagingPage from "./pages/Messaging";
 import HomePage from "./pages/HomePage";
 import MyNetwork from "./pages/MyNetworkPage";
-/* import PostContainer from "./components/Posts/PostContainer"; */
+import PostContainer from "./components/Posts/PostContainer";
+import PostCreate from "./components/Posts/PostCreate";
+import PostEdit from "./components/Posts/PostEdit";
 import { UserProvider } from "./components/chat/mockUse";
 
 function App() {
@@ -44,6 +46,8 @@ function App() {
         <Route path="/MyNetwork" element={<MyNetwork />} />
         <Route path="/MainPage" element={<MainPage />} />
         <Route path="/UserDetails" element={<UserDetails />} />
+        <Route path="/post/create" element={<PostCreate />} />
+        <Route path="/post" element={<PostContainer />} />
         <Route
           path="/playground"
           element={

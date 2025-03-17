@@ -1,5 +1,6 @@
 export interface CommentInterface {
   commentID: string;
+  postID: string;
   userID: string;
   firstName: string;
   lastName: string;

@@ -8,7 +8,7 @@ export default function PostMedia(props:MediaProps) {
     renderPics();
     
     return (
-        <div className="grid grid-rows-4 grid-cols-2">
+        <div data-testid="media-rendering" className="grid grid-rows-4 grid-cols-2">
             {renderedPics}
         </div>
     )

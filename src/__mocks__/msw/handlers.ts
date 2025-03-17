@@ -1,26 +1,157 @@
 import { http, HttpResponse } from "msw";
-import { PostInterface } from "../../interfaces/postInterfaces";
+import {
+  CommentInterface,
+  PostInterface,
+  RepliesInterface,
+} from "../../interfaces/postInterfaces";
+import { postsResponse } from "../PostsMock/postsDB";
+import { commentsResponse } from "../PostsMock/commentsDB";
+import { repliesResponse } from "../PostsMock/repliesDB";
+
+interface AddPostParams {}
+
+interface PostRequestBody {
+  text: string;
+}
+
+interface PostParams {
+  postID: string;
+}
+
+interface AddCommentParams {
+  postID: string;
+}
+
+interface AddCommentRequestBody {
+  commentText: string;
+}
+
+interface AddReplyParams {
+  postID: string;
+  commentID: string;
+}
+
+interface AddReplyRequestBody {
+  replyText: string;
+}
+
+const baseURL = "https://joblinc.me/api/";
+
 export const handler = [
   //handlers to your api calls will be here, will provide examples, if no understand, ask
-  http.get("api/post/feed", () => {
-    return HttpResponse.json<PostInterface[]>(
-      [
-        {
-          postID: "0",
-          userID: "0",
-          firstName: "Tyrone",
-          lastName: "Biggums",
-          profilePicture:
-            "https://images.ctfassets.net/h6goo9gw1hh6/2sNZtFAWOdP1lmQ33VwRN3/24e953b920a9cd0ff2e1d587742a2472/1-intro-photo-final.jpg?w=1200&h=992&q=70&fm=webp",
-          headline: "I smoke rocks",
-          text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sollicitudin efficitur odio, vitae mollis libero dignissim nec. Maecenas lacinia velit ac lobortis finibus. Vestibulum facilisis fermentum dui in suscipit. Etiam mollis sapien sapien, ac efficitur mauris rutrum a. Duis vel vehicula est. Nullam imperdiet at ante a fringilla. Nunc sed nunc semper, mattis lectus nec, aliquam magna. Maecenas quis molestie mi. Praesent tempor turpis sit amet ipsum molestie maximus et vel lacus. Donec nec quam et turpis dapibus viverra. Nulla vehicula aliquet dictum. Aenean tristique tortor et est rutrum faucibus. Quisque eu erat a nunc pellentesque ultrices non non est. Pellentesque vulputate sit amet dui bibendum vehicula. Sed ut risus id ante facilisis faucibus.",
-          likes: 6,
-          commentsNum: 2,
-          reposts: 3,
-          pics: ["https://d.newsweek.com/en/full/940601/05-23-galaxy.jpg"],
-        },
-      ],
-      { status: 200, statusText: "OK" },
-    );
+  http.get(`${baseURL}post/feed`, async ({ params }) => {
+    return HttpResponse.json<PostInterface[]>(postsResponse, {
+      status: 200,
+      statusText: "OK",
+    });
   }),
+
+  http.get(`${baseURL}post/:postID/comment`, async ({ params }) => {
+    const { postID } = params;
+    return HttpResponse.json<CommentInterface[]>(commentsResponse, {
+      status: 200,
+      statusText: "OK",
+    });
+  }),
+
+  http.get(
+    `${baseURL}post/:postID/comment/:commentID/replies`,
+    async ({ params }) => {
+      const { postID } = params;
+      const { commentID } = params;
+      return HttpResponse.json<RepliesInterface[]>(repliesResponse, {
+        status: 200,
+        statusText: "OK",
+      });
+    },
+  ),
+
+  http.post<AddPostParams, PostRequestBody>(
+    `${baseURL}post/add`,
+    async ({ request }) => {
+      const { text } = await request.json();
+      console.log(text);
+      const post: PostInterface = {
+        postID: postsResponse.length.toString(),
+        userID: "0",
+        firstName: "Anime",
+        lastName: "Protagonist",
+        profilePicture:
+          "https://i.pinimg.com/550x/04/bb/21/04bb2164bbfa3684118a442c17d086bf.jpg",
+        headline: "I am the main character",
+        text: text,
+        likes: 0,
+        commentsNum: 0,
+        reposts: 0,
+        pics: [],
+      };
+      postsResponse.push(post);
+      return HttpResponse.json({ status: 200, statusText: "OK" });
+    },
+  ),
+
+  http.post<PostParams, PostRequestBody>(`${baseURL}post/:postID/edit`, async ({ params,request }) => {
+    const { postID } = params;
+    const { text } = await request.json();
+    let editedPost = postsResponse.find((post) => post.postID = postID);
+    if (editedPost) {
+      editedPost.text = text;
+      return HttpResponse.json({ status:200, statusText:"OK"});
+    }
+    return HttpResponse.json({ status: 400, statusText: "Not Found" });
+  }),
+
+  http.delete<PostParams>(`${baseURL}post/:postID/delete`, async({ params }) => {
+    const { postID } = params;
+    const deletedPost = postsResponse.findIndex((post) => (post.postID = postID));
+    if (deletedPost != -1) {
+      console.log(postsResponse);
+      postsResponse.splice(deletedPost,1)
+      console.log(postsResponse);
+      return HttpResponse.json({ status: 200, statusText: "OK" });
+    }
+    return HttpResponse.json({ status: 400, statusText: "Not Found" });
+  }),
+
+  http.post<AddCommentParams, AddCommentRequestBody>(
+    `${baseURL}post/:postID/comment`,
+    async ({ params, request }) => {
+      const { postID } = params;
+      const { commentText } = await request.json();
+      const comment: CommentInterface = {
+        commentID: commentsResponse.length.toString(),
+        postID: postID,
+        userID: "0",
+        firstName: "Anime",
+        lastName: "Protagonist",
+        profilePicture:
+          "https://i.pinimg.com/550x/04/bb/21/04bb2164bbfa3684118a442c17d086bf.jpg",
+        headline: "I am the main character",
+        commentText: commentText,
+      };
+      commentsResponse.push(comment);
+      return HttpResponse.json({ status: 200, statusText: "OK" });
+    },
+  ),
+
+  http.post<AddReplyParams, AddReplyRequestBody>(
+    `${baseURL}post/:postID/comment/:commentID/reply`,
+    async ({ params, request }) => {
+      const { postID } = params;
+      const { commentID } = params;
+      const { replyText } = await request.json();
+      const reply: RepliesInterface = {
+        replyID: repliesResponse.length.toString(),
+        userID: "0",
+        firstName: "Anime",
+        lastName: "Protagonist",
+        profilePicture:
+          "https://i.pinimg.com/550x/04/bb/21/04bb2164bbfa3684118a442c17d086bf.jpg",
+        headline: "I am the main character",
+        replyText: replyText,
+      };
+      repliesResponse.push(reply);
+      return HttpResponse.json({ status: 200, statusText: "OK" });
+    },
+  ),
 ];
