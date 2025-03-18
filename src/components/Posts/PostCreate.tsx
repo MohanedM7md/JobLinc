@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createPost } from "../../api/api";
+import { createPost } from "../../services/api/postServices";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function PostCreate() {
