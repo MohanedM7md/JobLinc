@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthenticationSignInButton } from "./AuthenticationButtons";
 import { useDispatch } from "react-redux";
-import { setEmailPassword } from "../../store/userSlice";
+import { setEmail, setPassword } from "../../store/userSlice";
 function SignUpInformation() {
     const [isEmpty, setEmpty] = useState({ email: true, password: true });
 
@@ -92,19 +92,23 @@ function SignUpInformation() {
 
             // Now I have email and password, I need to put them in the store
             // and take more details about the user in upcoming pages
-            const userData = {
-                email: emailText,
-                password: passText
-            }
-            dispatch(setEmailPassword(userData));
-            navigate("/UserDetails");
+
+            // const userData = {
+            //     email: emailText,
+            //     password: passText
+            // }
+            
+            dispatch(setEmail({email: emailText}));
+            dispatch(setPassword({password: passText}));
+
+            navigate("/UserDetails", {state: {email: emailText, password: passText} });
         }
 
 
     }
 
     return (
-        <form onSubmit={isValidSubmit} className="flex flex-col w-80 items-start gap-3">
+        <form onSubmit={isValidSubmit} className="flex flex-col w-80 items-start gap-3 mb-3">
             <div className="flex flex-col w-full">
                 <label htmlFor="email" className="text-[14px] text-charcoalBlack font-bold">Email</label>
                 <input value={emailText} name="email" onBlur={handleFocusOut} onChange={handleChange} required id="email"  
@@ -134,8 +138,8 @@ function SignUpInformation() {
             </div>
 
             <div className="flex w-full flex-col items-center justify-center">
-                <div className="text-[12px] text-mutedSilver mb-3">By clicking Agree & Join or Continue, you agree to the Job Linc <span className="text-softRosewood font-semibold">User Agreement</span>, <span className="text-softRosewood font-semibold">Privacy Policy</span>, and <span className="text-softRosewood font-semibold">Cookie Policy.</span></div>
-                <AuthenticationSignInButton text="Agree & Join"/>
+                <div className="text-[12px] text-mutedSilver mb-3">By clicking Agree & Join or Continue, you agree to the JobLinc's <span className="text-softRosewood font-semibold">User Agreement</span>, <span className="text-softRosewood font-semibold">Privacy Policy</span>, and <span className="text-softRosewood font-semibold">Cookie Policy.</span></div>
+                <AuthenticationSignInButton id="sign-up-btn" text="Agree & Join"/>
             </div>
         </form>
     );
