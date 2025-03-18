@@ -3,11 +3,10 @@ import {
   CommentInterface,
   PostInterface,
   RepliesInterface,
-} from "../../interfaces/postInterfaces";
-import { postsResponse } from "../PostsMock/postsDB";
-import { commentsResponse } from "../PostsMock/commentsDB";
-import { repliesResponse } from "../PostsMock/repliesDB";
-import { msghandlers } from "./ChatMock/msgHandlers";
+} from "../../../interfaces/postInterfaces";
+import { postsResponse } from "../../PostsMock/postsDB";
+import { commentsResponse } from "../../PostsMock/commentsDB";
+import { repliesResponse } from "../../PostsMock/repliesDB";
 
 interface AddPostParams {}
 
@@ -38,7 +37,7 @@ interface AddReplyRequestBody {
 
 const baseURL = "/api/";
 
-export const handler = [
+export const postHandler = [
   //handlers to your api calls will be here, will provide examples, if no understand, ask
   //get feed handler
   http.get(`${baseURL}post/feed`, async ({ params }) => {
@@ -51,7 +50,9 @@ export const handler = [
   //get post comments handler
   http.get(`${baseURL}post/:postID/comment`, async ({ params }) => {
     const { postID } = params;
-    const comments = commentsResponse.filter((comment) => comment.postID === postID)
+    const comments = commentsResponse.filter(
+      (comment) => comment.postID === postID,
+    );
     return HttpResponse.json<CommentInterface[]>(comments, {
       status: 200,
       statusText: "OK",
@@ -64,7 +65,9 @@ export const handler = [
     async ({ params }) => {
       const { postID } = params;
       const { commentID } = params;
-      const replies = repliesResponse.filter((reply) => reply.postID === postID && reply.commentID === commentID)
+      const replies = repliesResponse.filter(
+        (reply) => reply.postID === postID && reply.commentID === commentID,
+      );
       return HttpResponse.json<RepliesInterface[]>(replies, {
         status: 200,
         statusText: "OK",
@@ -78,7 +81,8 @@ export const handler = [
     async ({ request }) => {
       const { text } = await request.json();
       console.log(text);
-      const post: PostInterface = { //user data are hard coded for now
+      const post: PostInterface = {
+        //user data are hard coded for now
         postID: postsResponse.length.toString(),
         userID: "0",
         firstName: "Anime",
@@ -98,27 +102,36 @@ export const handler = [
   ),
 
   //edit post handler
-  http.post<PostParams, PostRequestBody>(`${baseURL}post/:postID/edit`, async ({ params,request }) => {
-    const { postID } = params;
-    const { text } = await request.json();
-    let editedPost = postsResponse.find((post) => post.postID === postID);
-    if (editedPost) {
-      editedPost.text = text;
-      return HttpResponse.json({ status:200, statusText:"OK"});
-    }
-    return HttpResponse.json({ status: 400, statusText: "Not Found" });
-  }),
+  http.post<PostParams, PostRequestBody>(
+    `${baseURL}post/:postID/edit`,
+    async ({ params, request }) => {
+      const { postID } = params;
+      const { text } = await request.json();
+      let editedPost = postsResponse.find((post) => post.postID === postID);
+      if (editedPost) {
+        editedPost.text = text;
+        return HttpResponse.json({ status: 200, statusText: "OK" });
+      }
+      return HttpResponse.json({ status: 400, statusText: "Not Found" });
+    },
+  ),
 
-  //delete post handler
-  http.delete<PostParams>(`${baseURL}post/:postID/delete`, async({ params }) => {
-    const { postID } = params;
-    const deletedPost = postsResponse.findIndex((post) => (post.postID === postID));
-    if (deletedPost != -1) {
-      postsResponse.splice(deletedPost,1)
-      return HttpResponse.json({ status: 200, statusText: "OK" });
-    }
-    return HttpResponse.json({ status: 400, statusText: "Not Found" });
-  }),
+  http.delete<PostParams>(
+    `${baseURL}post/:postID/delete`,
+    async ({ params }) => {
+      const { postID } = params;
+      const deletedPost = postsResponse.findIndex(
+        (post) => (post.postID = postID),
+      );
+      if (deletedPost != -1) {
+        console.log(postsResponse);
+        postsResponse.splice(deletedPost, 1);
+        console.log(postsResponse);
+        return HttpResponse.json({ status: 200, statusText: "OK" });
+      }
+      return HttpResponse.json({ status: 400, statusText: "Not Found" });
+    },
+  ),
 
   //add comment handler
   http.post<AddCommentParams, AddCommentRequestBody>(
