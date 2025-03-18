@@ -38,11 +38,12 @@ function AuthenticationMicrosoftButton()
 
 type AuthenticationSignInButtonProps = {
     text: string;
+    id: string;
 };
 
-function AuthenticationSignInButton({ text }: AuthenticationSignInButtonProps)
+function AuthenticationSignInButton({ text, id }: AuthenticationSignInButtonProps)
 {
-    return (<button className="w-full bg-crimsonRed py-2 text-charcoalBlack font-semibold rounded-3xl hover:bg-softRosewood hover:cursor-pointer">{text}</button>);
+    return (<button id={id} className="w-full bg-crimsonRed py-2 text-charcoalBlack font-semibold rounded-3xl hover:bg-softRosewood hover:cursor-pointer">{text}</button>);
 
 }
 

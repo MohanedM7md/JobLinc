@@ -8,7 +8,7 @@ import {
   CommentInterface,
   PostInterface,
 } from "../../interfaces/postInterfaces";
-import { createComment, deletePost, getComments } from "../../api/api";
+import { createComment, deletePost, getComments } from "../../services/api/postServices";
 import { useNavigate } from "react-router-dom";
 
 interface PostProps {
