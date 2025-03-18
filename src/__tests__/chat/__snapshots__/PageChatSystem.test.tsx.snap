@@ -29,6 +29,7 @@ exports[`PageChatSystem  > Should RenderChatSystem:  1`] = `
     </div>
     <div
       class="flex-grow flex flex-col justify-end w-2/3 flex flex-col"
+      data-testid="test-PageWindow"
     >
       <div
         class="flex-grow flex items-center justify-center"

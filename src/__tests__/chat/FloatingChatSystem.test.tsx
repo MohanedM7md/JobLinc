@@ -6,10 +6,8 @@ import FloatingChatSystem from "../../components/chat/FloatingChat/FloatingChatS
 import { UserProvider } from "../../components/chat/mockUse";
 import { expect, it, describe } from "vitest";
 
-// Mock the useUser hook
-
-describe("FloatingChatSystem ", () => {
-  it("Should RenderChatSystem: ", () => {
+describe("FloatingChatSystem \n", () => {
+  it("Should RenderChatSystem", () => {
     const { container } = render(
       <UserProvider userId={"0"}>
         <ChatProvider>
@@ -19,7 +17,7 @@ describe("FloatingChatSystem ", () => {
     );
     expect(container).toMatchSnapshot();
   });
-  it("fetches and displays chat cards and there contents", async () => {
+  it("fetches and displays chat cards with correct data", async () => {
     render(
       <UserProvider userId={"4"}>
         <ChatProvider>
@@ -28,41 +26,35 @@ describe("FloatingChatSystem ", () => {
       </UserProvider>,
     );
 
-    await waitFor(
-      () => (
-        expect(screen.getByText("Mohaned")).toBeInTheDocument(),
-        expect(
-          screen.getByText("Sounds good! See you then."),
-        ).toBeInTheDocument(),
-        expect(screen.getByText("Michael")).toBeInTheDocument(),
-        expect(screen.getByText("Happy birthday bro!")).toBeInTheDocument(),
-      ),
-    );
-  });
-    describe("Clicks on a chat card", () => {
-    describe("it should Create floating chat window", () => {
-      it("renders floating chat window by test id", async () => {
-        render(
-          <UserProvider userId={"4"}>
-            <ChatProvider>
-              <FloatingChatSystem />
-            </ChatProvider>
-          </UserProvider>,
-        );
-
-        const mohanedCard = await screen.findByText("Mohaned");
-        userEvent.click(mohanedCard);
-        const mohanedMessage = await screen.findByTestId("1-1633024800000");
-      /*   const floatingWindow = await screen.findByTestId(
-          "floating-chat-window",
-        );
-        expect(floatingWindow).toBeInTheDocument(); */
-      });
+    await waitFor(() => {
+      expect(screen.getByText("Mohaned")).toBeInTheDocument();
+      expect(
+        screen.getByText("Sounds good! See you then."),
+      ).toBeInTheDocument();
+      expect(screen.getByText("Michael")).toBeInTheDocument();
+      expect(screen.getByText("Happy birthday bro!")).toBeInTheDocument();
     });
-     /*  it("Should displays messages correctly", async () => {
+  });
+  describe("Clicks on a certain chat card\n", () => {
+    it("Renders Flaoting chat window", async () => {
       render(
-        <UserProvider userId="4">
-          <FloatingChatSystem />
+        <UserProvider userId={"4"}>
+          <ChatProvider>
+            <FloatingChatSystem />
+          </ChatProvider>
+        </UserProvider>,
+      );
+      const mohanedCard = await screen.findByText("Mohaned");
+      await userEvent.click(mohanedCard);
+      expect(screen.getByTestId("test-floatingWindow")).toBeInTheDocument();
+    });
+
+    it("Should displays messages correctly", async () => {
+      render(
+        <UserProvider userId={"4"}>
+          <ChatProvider>
+            <FloatingChatSystem />
+          </ChatProvider>
         </UserProvider>,
       );
 
@@ -72,8 +64,8 @@ describe("FloatingChatSystem ", () => {
       const michaelCard = await screen.findByText("Michael");
       expect(michaelCard).toBeInTheDocument();
 
-      userEvent.click(mohanedCard);
-      screen.debug();
+      await userEvent.click(mohanedCard);
+
       const mohanedMessage = await screen.findByTestId("1-1633024800000");
       expect(mohanedMessage).toBeInTheDocument();
       expect(mohanedMessage).toHaveTextContent("Mohaned");
@@ -83,6 +75,6 @@ describe("FloatingChatSystem ", () => {
       expect(johnMessage).toBeInTheDocument();
       expect(johnMessage).toHaveTextContent("John");
       expect(johnMessage).toHaveTextContent("Hey Mohaned!");
-    }); */
+    });
   });
 });

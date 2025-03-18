@@ -6,8 +6,6 @@ import PageChatSystem from "../../components/chat/PageChat/PageChatSystem";
 import { UserProvider } from "../../components/chat/mockUse";
 import { expect, it, describe } from "vitest";
 
-// Mock the useUser hook
-
 describe("PageChatSystem ", () => {
   it("Should RenderChatSystem: ", () => {
     const { container } = render(
@@ -39,7 +37,7 @@ describe("PageChatSystem ", () => {
     );
   });
   describe("Clicks on a chat card", () => {
-    it("Should displays {userName, msg and profile Pic} correctly", async () => {
+    it("Should display page chat window", async () => {
       render(
         <UserProvider userId="4">
           <PageChatSystem />
@@ -48,11 +46,22 @@ describe("PageChatSystem ", () => {
 
       const mohanedCard = await screen.findByText("Mohaned");
       expect(mohanedCard).toBeInTheDocument();
+      await userEvent.click(mohanedCard);
 
-      const michaelCard = await screen.findByText("Michael");
-      expect(michaelCard).toBeInTheDocument();
+      const chatWindow = await screen.findByTestId("test-PageWindow");
+      expect(chatWindow).toBeInTheDocument();
+    });
 
-      userEvent.click(mohanedCard);
+    it("Should displays messages correctly", async () => {
+      render(
+        <UserProvider userId="4">
+          <PageChatSystem />
+        </UserProvider>,
+      );
+
+      const mohanedCard = await screen.findByText("Mohaned");
+      expect(mohanedCard).toBeInTheDocument();
+      await userEvent.click(mohanedCard);
 
       const mohanedMessage = await screen.findByTestId("1-1633024800000");
       expect(mohanedMessage).toBeInTheDocument();

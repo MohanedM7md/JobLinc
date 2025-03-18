@@ -1,5 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { render, screen } from "@testing-library/react";
 import "../../../test/setupTests";
 
 import MessageBubble from "../../components/chat/MessageBubble";
@@ -29,6 +28,5 @@ describe("MessageBubble ", () => {
     );
     expect(screen.getByText("Hello! How are you?")).toBeInTheDocument();
     expect(screen.getByText("Ahmed")).toBeInTheDocument();
-    expect(screen.getByText("Hello! How are you?")).toBeInTheDocument();
   });
 });
