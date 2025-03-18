@@ -156,9 +156,10 @@ export default function Post(props: PostProps) {
               send
             </button>
           </div>
-          {comments.map((comment) => (
+          {comments ? 
+          comments.map((comment) => (
             <CommentCard key={comment.commentID} comment={comment} />
-          ))}
+          )) : null}
         </>
       ) : null}
     </div>

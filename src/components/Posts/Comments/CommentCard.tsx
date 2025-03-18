@@ -107,9 +107,9 @@ export default function CommentCard(props: CommentCardProps) {
                 send
               </button>
             </div>
-            {replies.map((reply) => (
+            {replies ? replies.map((reply) => (
               <ReplyCard key={reply.replyID} reply={reply} />
-            ))}
+            )) : null}
           </>
         ) : null}
       </div>
