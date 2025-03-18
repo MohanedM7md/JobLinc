@@ -35,7 +35,7 @@ interface AddReplyRequestBody {
   replyText: string;
 }
 
-const baseURL = "https://joblinc.me/api/";
+const baseURL = "/api/";
 
 export const handler = [
   //handlers to your api calls will be here, will provide examples, if no understand, ask
