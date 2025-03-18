@@ -10,11 +10,16 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
   if (!isOpen) return null; // Don't render if closed
 
   return (
-    <div data-testid="modal-overlay" className="fixed inset-0 flex items-center justify-center z-50">
+    <div className="fixed inset-0 flex items-center justify-center z-50">
       {/* Background overlay */}
       <div 
+        data-testid="modal-overlay"
         className="absolute inset-0 bg-black opacity-50"
-        onClick={onClose} // Close modal when clicking outside
+        onClick={(event) => {
+          if (event.target === event.currentTarget) {
+            onClose(); // ✅ Only close when clicking directly on the overlay
+          }
+        }}
       />
 
       {/* Modal content */}

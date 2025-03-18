@@ -11,7 +11,6 @@ import { RootState } from "../../store/store";
 
 
 
-
 function UserDetails() {
     const [userDetails, setUserDetails] = useState({ firstName: "", lastName: "" });
     const [showErrorFirstNameEmpty, setShowErrorFirstNameEmpty] = useState(false);
@@ -173,7 +172,8 @@ function UserDetails() {
                             className="w-full outline-[0.7px] text-[14px] text-charcoalBlack h-10 px-2 rounded-sm border border-gray-300 focus:outline-black focus:outline-[1.5px]"
                         />
                         {showErrorFirstNameEmpty && <p className="text-red-800 text-[10px]">Please enter your first name.</p>}
-                        {showErrorFirstNameInvalid && <p className="text-red-800 text-[10px]">Please enter a valid first name.</p>}
+                        {showErrorFirstNameInvalid && <p data-testid="errorFirstName" className="text-red-800 text-[10px]">Please enter a valid first name.</p>}
+
                     </div>
 
                     {/* Last Name Input */}
@@ -189,7 +189,8 @@ function UserDetails() {
                             className="w-full outline-[0.7px] text-[14px] text-charcoalBlack h-10 px-2 rounded-sm border border-gray-300 focus:outline-black focus:outline-[1.5px]"
                         />
                         {showErrorLastNameEmpty && <p className="text-red-800 text-[10px]">Please enter your last name.</p>}
-                        {showErrorLastNameInvalid && <p className="text-red-800 text-[10px]">Please enter a valid last name.</p>}
+                        {showErrorLastNameInvalid && <p data-testid="errorLastName" className="text-red-800 text-[10px]">Please enter a valid last name.</p>}
+
                     </div>
 
                     {/* Submit Button */}
@@ -237,7 +238,6 @@ function UserDetails() {
                     </div>
 
                     {/* Phone Number Input */}
-                    {/* Phone Number Input with Label */}
                     {/* Phone Number Input with Label */}
                     <div className="flex flex-col w-full gap-2">
                         <label htmlFor="phone-number" className="text-[12px]">Phone number</label>
