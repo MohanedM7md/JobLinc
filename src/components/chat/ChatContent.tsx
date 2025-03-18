@@ -1,13 +1,8 @@
 import React, { useState, useEffect } from "react";
 import ChatMessages from "./ChatMessages";
 import ChatInput from "./ChatInput";
-// import { fetchChatData } from "../../services/api/api";
-import { fetchChatData } from "../../services/api/chatServices";
-import {
-  connectChatSocket,
-  onReceiveMessage,
-  emitSendMessage,
-} from "../../services/api/socket";
+
+import { connectChatSocket } from "../../services/api/socket";
 import {
   RecievedMessage,
   MessageStatus,

@@ -1,4 +1,3 @@
-import React from "react";
 import { MoreHorizontal, X } from "lucide-react";
 import { FlaotingHeaderProbs } from "../interfaces/Chat.interfaces";
 

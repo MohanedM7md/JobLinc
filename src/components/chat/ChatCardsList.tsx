@@ -1,10 +1,8 @@
 import React, { useEffect, useState, memo } from "react";
 import ChatCard from "./ChatCard";
-// import { fetchChats } from "../../services/api/api";
 import { fetchChats } from "../../services/api/chatServices";
 import { connectChatSocket } from "../../services/api/socket";
 import { useUser } from "./mockUse";
-import { fetchChats } from "../../services/api/chatServices";
 import { ChatCardInterface } from "./interfaces/Chat.interfaces";
 
 const ChatCardsList = ({

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, ReactNode } from "react";
 
 interface UserContextType {
   user: string;
@@ -13,7 +13,7 @@ export function UserProvider({
   children: ReactNode;
   userId: string;
 }) {
-  const [user, setUser] = useState<string>(userId);
+  const [user, _] = useState<string>(userId);
 
   return (
     <UserContext.Provider value={{ user }}>{children}</UserContext.Provider>

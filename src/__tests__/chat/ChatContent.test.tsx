@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import ChatProvider from "../../context/ChatsIdProvider";
-import ChatContent from "../../components/chat/ChatContent";
+import ChatContent from "@chatComponent/ChatContent";
 import { UserProvider } from "../../components/chat/mockUse";
 import { expect, it, describe } from "vitest";
 
