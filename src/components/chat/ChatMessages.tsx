@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, memo } from "react";
 import MessageBubble from "./MessageBubble";
 import { User } from "./interfaces/User.interfaces";
 import { ChatMessagesProbs } from "./interfaces/Message.interfaces";
@@ -8,18 +8,21 @@ function ChatMessages({ users, messages, className }: ChatMessagesProbs) {
     <div className={`bg-gray-100 flex flex-col overflow-hidden`}>
       <div className="flex-1 overflow-y-auto space-y-2">
         {messages.length > 0 ? (
-          messages.map((message, index) => {
+          messages.map((message) => {
             const sender = {
-              ...(users.find((user: User) => user.id == message.senderId) || {
-                id: "",
-                name: "Unknown",
+              ...(users.find(
+                (user: User) => user.userId == message.senderId,
+              ) || {
+                userId: "",
+                firstName: "Unknown",
+                lastName: "Unknown",
                 profilePicture: "",
               }),
             };
             console.log("_________ChatMessages_____________");
             return (
               <MessageBubble
-                key={message.id + index}
+                key={message.messageId}
                 message={{ sender, ...message }}
               />
             );
@@ -34,4 +37,4 @@ function ChatMessages({ users, messages, className }: ChatMessagesProbs) {
   );
 }
 
-export default React.memo(ChatMessages);
+export default memo(ChatMessages);

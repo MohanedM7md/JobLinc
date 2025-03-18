@@ -34,6 +34,7 @@ function FloatingChatWindow({
                 rounded-t-lg transition-transform duration-300
                  ${isActive ? "" : "translate-y-[calc(100%-60px)]"}`}
       style={style}
+      data-testid="test-floatingWindow"
     >
       <FloatingChatHeader
         onClick={activeToggler}

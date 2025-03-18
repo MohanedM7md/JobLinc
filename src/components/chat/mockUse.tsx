@@ -2,20 +2,23 @@ import React, { createContext, useContext, useState, ReactNode } from "react";
 
 interface UserContextType {
   user: string;
-  setUser: (user: string) => void;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
-export const UserProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<string>("");
+export function UserProvider({
+  children,
+  userId,
+}: {
+  children: ReactNode;
+  userId: string;
+}) {
+  const [user, setUser] = useState<string>(userId);
 
   return (
-    <UserContext.Provider value={{ user, setUser }}>
-      {children}
-    </UserContext.Provider>
+    <UserContext.Provider value={{ user }}>{children}</UserContext.Provider>
   );
-};
+}
 
 export const useUser = () => {
   const context = useContext(UserContext);

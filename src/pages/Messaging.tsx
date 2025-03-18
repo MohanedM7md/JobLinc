@@ -1,17 +1,15 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import PageChatSystem from "../components/chat/PageChat/PageChatSystem";
-import { useUser } from "../components/chat/mockUse";
+import { UserProvider } from "../components/chat/mockUse"; // Adjust the import path as necessary
+
 export function MessagingPage() {
-  const { setUser } = useUser();
-  useEffect(() => {
-    const chatId = window.prompt("Enter Chat ID:") || "1";
-    setUser(chatId);
-  }, []);
+  const [userId, _] = useState(window.prompt("Enter Chat ID:") || "1");
 
   return (
     <>
-      <PageChatSystem />
-      <iframe src="https://www.example.com" width="600" height="400"></iframe>
+      <UserProvider userId={userId}>
+        <PageChatSystem />
+      </UserProvider>
     </>
   );
 }

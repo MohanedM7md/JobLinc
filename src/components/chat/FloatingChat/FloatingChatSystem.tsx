@@ -7,11 +7,6 @@ import { useEffect } from "react";
 
 function FloatingChatSystem() {
   const { opnedChatsId } = useChats();
-  const { setUser } = useUser();
-  useEffect(() => {
-    const UserId = window.prompt("Enter User ID:") || "1";
-    setUser(UserId);
-  }, []);
   return (
     <>
       <FloatingChatSidebar />

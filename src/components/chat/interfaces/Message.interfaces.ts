@@ -7,8 +7,8 @@ export enum MessageStatus {
 }
 
 export interface MessageBase {
-  id: string;
-  time: Date;
+  sentDate: Date;
+  messageId: string;
   content: {
     text?: string;
     image?: string;
@@ -23,15 +23,16 @@ export interface RecievedMessage extends MessageBase {
 
 export interface MessageBubbleInterface extends MessageBase {
   sender: {
-    id: string;
-    name: string;
+    userId: string;
+    firstName: string;
+    lastName: string;
     profilePicture: string;
   };
 }
 
 export interface ChatMessagesProbs {
   users: User[];
-  messages: RecievedMessage[];
+  messages: RecievedMessage[] | [];
   className?: string;
 }
 
