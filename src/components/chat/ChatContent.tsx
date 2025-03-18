@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import ChatMessages from "./ChatMessages";
 import ChatInput from "./ChatInput";
-import { fetchChatData } from "../../services/api/api";
+// import { fetchChatData } from "../../services/api/api";
+import { fetchChatData } from "../../services/api/chatServices";
 import {
   connectChatSocket,
   onReceiveMessage,

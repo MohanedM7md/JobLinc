@@ -1,6 +1,6 @@
 import Post from "./PostCard";
 import { useEffect, useState } from "react";
-import { getFeed } from "../../api/api";
+import { getFeed } from "../../services/api/postServices";
 
 export default function PostContainer() {
   const [posts, setPosts] = useState([]);
