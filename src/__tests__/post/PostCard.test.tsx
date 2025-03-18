@@ -1,6 +1,6 @@
 import { render, screen, cleanup } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import PostCard from "../components/Posts/PostCard";
+import PostCard from "../../components/Posts/PostCard";
 import { BrowserRouter as Router } from "react-router-dom";
 import "@testing-library/jest-dom/vitest";
 import userEvent from "@testing-library/user-event";

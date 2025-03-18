@@ -1,35 +1,4 @@
-import axios from "axios";
-
-export const api = axios.create({
-  baseURL: "https://joblinc.me/api",
-  timeout: 5000,
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
-
-// Fetch chats for a user
-export const fetchChats = async (userId: string) => {
-  const response = await api.get(`/chats/${userId}`);
-  return response.data;
-};
-
-// Fetch messages for a chat
-export const fetchMessages = async (chatId: string) => {
-  const response = await api.get(`/messages/${chatId}`);
-  return response.data;
-};
-
-// Fetch users in a chat
-export const fetchChatUsers = async (chatId: string) => {
-  const response = await api.get(`/chats/${chatId}/users`);
-  return response.data;
-};
-
-// Send a message
-export const sendMessage = async (chatId: string, message: any) => {
-  await api.post(`/messages/${chatId}`, message);
-};
+import api from "./api";
 
 // Fetch a a number of posts to populate a user's feed
 export const getFeed = async (count: number, signal: AbortSignal) => {
@@ -55,18 +24,18 @@ export const getComments = async (postID: string) => {
 };
 
 // Fetch replies for a comment (NOT in documentation)
-export const getReplies = async (postID: string, commentID: string) => {
-  const response = await api.get(`post/${postID}/comment/${commentID}/replies`);
+export const getReplies = async (postID: string, commentId: string) => {
+  const response = await api.get(`post/${postID}/comment/${commentId}/replies`);
   return response.data;
 };
 
 // Create a post
-export const createPost = async (text: string ) => {
-  await api.post(`post/add`, {text})
-  };
+export const createPost = async (text: string) => {
+  await api.post(`post/add`, { text });
+};
 
 // Create a comment (NOT in documentation)
-export const createComment = async (postID: string,commentText: string) => {
+export const createComment = async (postID: string, commentText: string) => {
   await api.post(`post/${postID}/comment`, { commentText });
 };
 
@@ -74,18 +43,20 @@ export const createComment = async (postID: string,commentText: string) => {
 export const createReply = async (
   postID: string,
   commentID: string,
-  replyText: string,
+  reply: string,
 ) => {
-  await api.post(`post/${postID}/comment/${commentID}/reply`, { replyText });
+  await api.post(`post/${postID}/comment/${commentID}/reply`, {
+    body: JSON.stringify({ reply }),
+  });
 };
 
 export const editPost = async (postID: string, text: string) => {
   await api.post(`post/${postID}/edit`, { text });
-}
+};
 
 export const deletePost = async (postID: string) => {
   await api.delete(`post/${postID}/delete`);
-}
+};
 
 // Like a post (NOT in documentation)
 export const likePost = async (postId: string) => {

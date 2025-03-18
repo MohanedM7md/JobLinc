@@ -6,7 +6,7 @@ import {
 } from "../../../interfaces/postInterfaces";
 import { useEffect, useState } from "react";
 import ReplyCard from "./ReplyCard";
-import { createReply, getReplies } from "../../../api/api";
+import { createReply, getReplies } from "../../../services/api/postServices";
 
 interface CommentCardProps {
   comment: CommentInterface;

@@ -2,7 +2,7 @@ import { render, screen, cleanup } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom/vitest";
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import PostEdit from "../components/Posts//PostEdit";
+import PostEdit from "../../components/Posts/PostEdit";
 import { BrowserRouter as Router } from "react-router-dom";
 
 describe("PostEdit Component", () => {

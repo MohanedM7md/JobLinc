@@ -2,11 +2,11 @@ import { describe, it, expect, vi, Mock } from "vitest";
 import "@testing-library/jest-dom/vitest";
 import { render, screen } from "@testing-library/react";
 import { BrowserRouter as Router } from "react-router-dom";
-import PostContainer from "../components/Posts/PostContainer";
-import { getFeed } from "../api/api";
-import { PostInterface } from "../interfaces/postInterfaces";
+import PostContainer from "../../components/Posts/PostContainer";
+import { getFeed } from "../../services/api/postServices";
+import { PostInterface } from "../../interfaces/postInterfaces";
 
-vi.mock("../api/api", () => ({
+vi.mock("../../services/api/postServices", () => ({
   getFeed: vi.fn(),
 }));
 

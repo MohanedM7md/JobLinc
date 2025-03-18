@@ -1,11 +1,6 @@
 import React from "react";
 import { MoreHorizontal } from "lucide-react"; // Horizontal dots icon
-
-interface PageChatHeader {
-  name: string;
-  status?: string;
-}
-
+import type { PageChatHeader } from "../interfaces/Chat.interfaces";
 function PageChatHeader({ name, status }: PageChatHeader) {
   console.log("--------------PageChatHeader rendered--------------");
   return (

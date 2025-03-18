@@ -1,52 +1,19 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { Img } from "react-image";
-import ChatCardsList from "./ChatCardsList";
-import { useAppSelector } from "../../store/hooks";
-import useChats from "../../hooks/useChats";
-import SearchBar from "./UI/SearchBar";
+import ChatCardsList from "../ChatCardsList";
+import { useAppSelector } from "../../../store/hooks";
+import useChats from "../../../hooks/useChats";
+import SearchBar from "../UI/SearchBar";
 
-type ConversationItemType = {
-  id: string;
-  imageUrl: string;
-  userName: string;
-  lastMessage: string;
-  sentDate: string;
-};
-const mockConversations = [
-  {
-    chatId: "chat-1",
-    imageUrl: "https://randomuser.me/api/portraits/men/45.jpg",
-    chatName: "John Doe",
-    lastMessage: "Hey! How's it going?",
-    sentDate: "Mar 6",
-  },
-  {
-    chatId: "chat-2",
-    imageUrl: "https://randomuser.me/api/portraits/men/68.jpg",
-    chatName: "Jane Smith",
-    lastMessage: "I'll call you later.",
-    sentDate: "Mar 5",
-  },
-  {
-    chatId: "chat-3",
-    imageUrl: "https://randomuser.me/api/portraits/men/23.jpg",
-    chatName: "Michael Johnson",
-    lastMessage: "Did you finish the project?",
-    sentDate: "Mar 4",
-  },
-];
-
-export default function FloatingChatSidebar() {
+function FloatingChatSidebar() {
   const { profilePicture } = useAppSelector((state) => state.user);
   const [isActive, setActive] = useState<boolean>(() => {
     return localStorage.getItem("chatSidebarActive") === "true" || false;
   });
   const { setOpnedChatsId } = useChats();
-
   const handleConversationClick = (chatId: string) => {
     setOpnedChatsId((prevChats) => {
       if (prevChats.includes(chatId)) return prevChats;
-
       return [...prevChats, chatId];
     });
   };
@@ -75,7 +42,7 @@ export default function FloatingChatSidebar() {
           <div className="flex items-center gap-x-4 w-full">
             <Img
               src={[
-                profilePicture,
+                profilePicture ? profilePicture : "",
                 "https://randomuser.me/api/portraits/men/2.jpg",
               ]}
               alt="User Avatar"
@@ -93,3 +60,5 @@ export default function FloatingChatSidebar() {
     </>
   );
 }
+
+export default FloatingChatSidebar;

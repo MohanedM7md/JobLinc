@@ -1,6 +1,6 @@
 import { render, screen, cleanup } from "@testing-library/react";
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import CommenterDetails from "../components/Posts/Comments/CommenterDetails";
+import CommenterDetails from "../../components/Posts/Comments/CommenterDetails";
 import "@testing-library/jest-dom/vitest";
 
 describe("CommenterDetails Component", () => {
