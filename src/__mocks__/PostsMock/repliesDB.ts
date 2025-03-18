@@ -4,6 +4,8 @@ export const repliesResponse: RepliesInterface[] = [
     {
         replyID: "0",
         userID: "0", //Should be logged in userID, same thing for all the other user info
+        postID: "0",
+        commentID: "0",
         firstName: "Tyrone",
         lastName: "Biggums",
         profilePicture:

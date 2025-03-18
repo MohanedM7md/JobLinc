@@ -1,8 +1,8 @@
 import { render } from "@testing-library/react";
-import PostMedia from "./PostMedia";
+import PostMedia from "../../components/Posts/PostMedia";
 import { describe, it, expect } from "vitest";
 
-describe("PostMedia Component", () => {
+describe("PostMediat", () => {
   it("renders correctly with one picture", () => {
     const pics = ["pic1.jpg"];
     const { container } = render(<PostMedia pics={pics} />);

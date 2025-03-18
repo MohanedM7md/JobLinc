@@ -8,7 +8,11 @@ import {
   CommentInterface,
   PostInterface,
 } from "../../interfaces/postInterfaces";
-import { createComment, deletePost, getComments } from "../../services/api/postServices";
+import {
+  createComment,
+  deletePost,
+  getComments,
+} from "../../services/api/postServices";
 import { useNavigate } from "react-router-dom";
 
 interface PostProps {
@@ -38,8 +42,8 @@ export default function Post(props: PostProps) {
     );
   }
 
-  function postDelete(){
-    deletePost(props.post.postID).then(() => navigate("/"))
+  function postDelete() {
+    deletePost(props.post.postID).then(() => navigate("/"));
   }
 
   return !hide ? (
@@ -55,13 +59,11 @@ export default function Post(props: PostProps) {
         />
         <div className="" onBlur={() => setShowUtility(false)}>
           {showUtility ? (
-            <PostUtilityButton
-              post={props.post}
-              delete={() => postDelete()}
-            />
+            <PostUtilityButton postID={props.post.postID} postText={props.post.text} delete={() => postDelete()} />
           ) : null}
         </div>
         <button
+          data-testid={`Options ${props.post.postID}`}
           onClick={() => setShowUtility(!showUtility)}
           className="material-icons-round cursor-pointer mr-1 text-mutedSilver hover:bg-gray-200 h-fit"
         >
@@ -154,9 +156,10 @@ export default function Post(props: PostProps) {
               send
             </button>
           </div>
-          {comments.map((comment) => (
+          {comments ? 
+          comments.map((comment) => (
             <CommentCard key={comment.commentID} comment={comment} />
-          ))}
+          )) : null}
         </>
       ) : null}
     </div>

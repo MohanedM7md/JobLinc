@@ -1,10 +1,10 @@
 import { render, screen, cleanup } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import ProfileDetails from "./ProfileDetails";
+import ProfileDetails from "../../components/Posts/ProfileDetails";
 import "@testing-library/jest-dom/vitest";
 
-describe("ProfileDetails Component", () => {
+describe("ProfileDetails", () => {
   const props = {
     id: "1",
     name: "John Doe",

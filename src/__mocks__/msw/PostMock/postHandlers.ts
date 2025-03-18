@@ -3,11 +3,10 @@ import {
   CommentInterface,
   PostInterface,
   RepliesInterface,
-} from "../../interfaces/postInterfaces";
-import { postsResponse } from "../PostsMock/postsDB";
-import { commentsResponse } from "../PostsMock/commentsDB";
-import { repliesResponse } from "../PostsMock/repliesDB";
-import { msghandlers } from "./ChatMock/msgHandlers";
+} from "../../../interfaces/postInterfaces";
+import { postsResponse } from "../../PostsMock/postsDB";
+import { commentsResponse } from "../../PostsMock/commentsDB";
+import { repliesResponse } from "../../PostsMock/repliesDB";
 
 interface AddPostParams {}
 
@@ -36,10 +35,11 @@ interface AddReplyRequestBody {
   replyText: string;
 }
 
-const baseURL = "https://joblinc.me/api/";
+const baseURL = "/api/";
 
-export const handler = [
+export const postHandler = [
   //handlers to your api calls will be here, will provide examples, if no understand, ask
+  //get feed handler
   http.get(`${baseURL}post/feed`, async ({ params }) => {
     return HttpResponse.json<PostInterface[]>(postsResponse, {
       status: 200,
@@ -47,32 +47,42 @@ export const handler = [
     });
   }),
 
+  //get post comments handler
   http.get(`${baseURL}post/:postID/comment`, async ({ params }) => {
     const { postID } = params;
-    return HttpResponse.json<CommentInterface[]>(commentsResponse, {
+    const comments = commentsResponse.filter(
+      (comment) => comment.postID === postID,
+    );
+    return HttpResponse.json<CommentInterface[]>(comments, {
       status: 200,
       statusText: "OK",
     });
   }),
 
+  //get comment replies handler
   http.get(
     `${baseURL}post/:postID/comment/:commentID/replies`,
     async ({ params }) => {
       const { postID } = params;
       const { commentID } = params;
-      return HttpResponse.json<RepliesInterface[]>(repliesResponse, {
+      const replies = repliesResponse.filter(
+        (reply) => reply.postID === postID && reply.commentID === commentID,
+      );
+      return HttpResponse.json<RepliesInterface[]>(replies, {
         status: 200,
         statusText: "OK",
       });
     },
   ),
 
+  //add post handler
   http.post<AddPostParams, PostRequestBody>(
     `${baseURL}post/add`,
     async ({ request }) => {
       const { text } = await request.json();
       console.log(text);
       const post: PostInterface = {
+        //user data are hard coded for now
         postID: postsResponse.length.toString(),
         userID: "0",
         firstName: "Anime",
@@ -91,12 +101,13 @@ export const handler = [
     },
   ),
 
+  //edit post handler
   http.post<PostParams, PostRequestBody>(
     `${baseURL}post/:postID/edit`,
     async ({ params, request }) => {
       const { postID } = params;
       const { text } = await request.json();
-      let editedPost = postsResponse.find((post) => (post.postID = postID));
+      let editedPost = postsResponse.find((post) => post.postID === postID);
       if (editedPost) {
         editedPost.text = text;
         return HttpResponse.json({ status: 200, statusText: "OK" });
@@ -122,6 +133,7 @@ export const handler = [
     },
   ),
 
+  //add comment handler
   http.post<AddCommentParams, AddCommentRequestBody>(
     `${baseURL}post/:postID/comment`,
     async ({ params, request }) => {
@@ -143,6 +155,7 @@ export const handler = [
     },
   ),
 
+  //add reply handler
   http.post<AddReplyParams, AddReplyRequestBody>(
     `${baseURL}post/:postID/comment/:commentID/reply`,
     async ({ params, request }) => {
@@ -152,6 +165,8 @@ export const handler = [
       const reply: RepliesInterface = {
         replyID: repliesResponse.length.toString(),
         userID: "0",
+        postID: postID,
+        commentID: commentID,
         firstName: "Anime",
         lastName: "Protagonist",
         profilePicture:

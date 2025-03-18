@@ -1,12 +1,12 @@
 import { render, screen, cleanup } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import CommentCard from "./CommentCard";
-import { CommentInterface } from "../../../interfaces/postInterfaces";
-import * as api from "../../../api/api";
+import CommentCard from "../../components/Posts/Comments/CommentCard";
+import { CommentInterface } from "../../interfaces/postInterfaces";
+import * as api from "../../services/api/postServices"
 import "@testing-library/jest-dom/vitest";
 
-vi.mock("../../../api/api");
+vi.mock("../../services/api/postServices");
 
 const mockComment: CommentInterface = {
   postID: "1",
@@ -28,9 +28,15 @@ describe("CommentCard", () => {
     cleanup();
   });
 
-  it("renders CommentCard component", () => {
+  it("renders component", () => {
     expect(screen.getByText("John Doe")).toBeInTheDocument();
     expect(screen.getByText("This is a comment")).toBeInTheDocument();
+  });
+
+  it("registers a like", async () => {
+    const likeButton = screen.getByText("Like");
+    await userEvent.click(likeButton);
+    expect(screen.getByText("Liked")).toBeInTheDocument();
   });
 
   it("shows replies when Reply button is clicked", async () => {
