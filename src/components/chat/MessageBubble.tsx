@@ -7,17 +7,18 @@ import { MessageBubbleInterface } from "./interfaces/Message.interfaces";
 function MessageBubble({ message }: { message: MessageBubbleInterface }) {
   const rtl = isRTL(message.content.text);
   console.log("_______________MessageBubble_____________");
+
   return (
-    <div className="flex flex-col pl-1">
+    <div data-testid={message.messageId} className="flex flex-col pl-1">
       <UserProfile.Image
-        alt={message.sender.name}
+        alt={message.sender.firstName}
         photoUrl={message.sender.profilePicture}
         className="w-10 h-10 rounded-full absolute inline"
       />
 
       <div className=" w-full">
         <UserProfile.Name
-          name={message.sender.name}
+          name={message.sender.firstName}
           className="pl-12 text-lg font-semibold text-gray-800"
         />
 

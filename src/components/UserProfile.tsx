@@ -19,11 +19,7 @@ UserProfile.Image = ({
   photoUrl: string;
   alt: string;
   className?: string;
-}) => (
-  <Link to="">
-    <Img src={photoUrl} alt={alt} className={`rounded-full ${className}`} />
-  </Link>
-);
+}) => <Img src={photoUrl} alt={alt} className={`rounded-full ${className}`} />;
 
 UserProfile.Name = ({
   name,
@@ -31,11 +27,7 @@ UserProfile.Name = ({
 }: {
   name: string;
   className?: string;
-}) => (
-  <Link to="">
-    <h1 className={` inline font-medium text-sm ${className}`}>{name}</h1>
-  </Link>
-);
+}) => <h1 className={` inline font-medium text-sm ${className}`}>{name}</h1>;
 
 UserProfile.Headline = ({
   headline,

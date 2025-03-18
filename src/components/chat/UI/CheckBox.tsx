@@ -4,7 +4,7 @@ function Checkbox({ className = "" }: { className?: string }) {
   const [checked, setChecked] = useState(false);
   return (
     <label className={`${className} cursor-pointer`}>
-      <input type="checkbox" className="peer hidden" />
+      <input aria-label="cht-slct" type="checkbox" className="peer hidden" />
       <span
         onClick={() => setChecked((c) => !c)}
         className={` w-7 h-7 border-2 border-gray-400 rounded-lg bg-white flex items-center justify-center 

@@ -1,11 +1,10 @@
-import React, { useState, useCallback, memo } from "react";
+import React, { useState, useCallback } from "react";
 import ChatCardsList from "../ChatCardsList";
 import PageMessageWindow from "./PageChatWindow";
-import { ChatIdProvider } from "../../../context/ChatIdProvider";
+import { useUser } from "../mockUse";
 
 const PageChatSystem = () => {
-  const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
-  console.log("--------------PageChatSystem rendered--------------");
+  const [selectedChatId, setSelectedChatId] = useState<string>("");
   const handleConversationClick = useCallback((chatId: string) => {
     setSelectedChatId(chatId);
   }, []);
@@ -17,18 +16,13 @@ const PageChatSystem = () => {
         </div>
         <ChatCardsList onCardClick={handleConversationClick} />
       </div>
-      {selectedChatId ? (
-        <PageMessageWindow
-          className="flex-grow flex flex-col justify-end"
-          chatId={selectedChatId}
-        />
-      ) : (
-        <div className="flex-grow flex items-center justify-center">
-          <h2 className="text-gray-500">Choose a chat to start messaging</h2>
-        </div>
-      )}
+
+      <PageMessageWindow
+        className="flex-grow flex flex-col justify-end"
+        chatId={selectedChatId}
+      />
     </div>
   );
 };
 
-export default memo(PageChatSystem);
+export default PageChatSystem;

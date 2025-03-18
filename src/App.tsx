@@ -34,14 +34,7 @@ function App() {
         <Route path="/Signin" element={<SignInPage />} />
         <Route path="/Signin/ForgotPassword" element={<ForgotPassword />} />
 
-        <Route
-          path="/messaging"
-          element={
-            <UserProvider>
-              <MessagingPage />
-            </UserProvider>
-          }
-        />
+        <Route path="/messaging" element={<MessagingPage />} />
         <Route path="/Home" element={<HomePage />} />
         <Route path="/MyNetwork" element={<MyNetwork />} />
         <Route path="/MainPage" element={<MainPage />} />
@@ -59,12 +52,7 @@ function App() {
             </ThemeProvider>
           }
         />
-        {/*       <Route
-          path="/post"
-          element={
-              <PostContainer />
-          }
-        /> */}
+
         <Route
           path="/*"
           element={<div className="text-red-500">Error 404</div>}

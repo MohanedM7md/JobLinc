@@ -1,12 +1,12 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { Img } from "react-image";
 import ChatCardsList from "../ChatCardsList";
-import { useAppSelector } from "../../../store/hooks";
+/* import { useAppSelector } from "../../../store/hooks"; */
 import useChats from "../../../hooks/useChats";
 import SearchBar from "../UI/SearchBar";
 
 function FloatingChatSidebar() {
-  const { profilePicture } = useAppSelector((state) => state.user);
+  /*  const { profilePicture } = useAppSelector((state) => state.user); */
   const [isActive, setActive] = useState<boolean>(() => {
     return localStorage.getItem("chatSidebarActive") === "true" || false;
   });
@@ -40,13 +40,9 @@ function FloatingChatSidebar() {
           onClick={activeToggler}
         >
           <div className="flex items-center gap-x-4 w-full">
-            <Img
-              src={[
-                profilePicture ? profilePicture : "",
-                "https://randomuser.me/api/portraits/men/2.jpg",
-              ]}
+            <img
+              src="https://randomuser.me/api/portraits/men/2.jpg"
               alt="User Avatar"
-              loader={<div>Loading...</div>}
               className="rounded-full w-10 h-10 border border-mutedSilver"
             />
             <div className="text-charcoalBlack dark:text-charcoalWhite font-semibold">

@@ -22,7 +22,6 @@ function SignInPage()
             </div>
             <div className="text-warmBlack">New to JobLinc? 
                 <Link to="/Signup" className="ml-2 font-bold hover:underline">Join now</Link>
-
                 <Outlet />
             </div>
         </div>

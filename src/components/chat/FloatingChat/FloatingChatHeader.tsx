@@ -1,4 +1,3 @@
-import React from "react";
 import { MoreHorizontal, X } from "lucide-react";
 import { FlaotingHeaderProbs } from "../interfaces/Chat.interfaces";
 
@@ -13,6 +12,7 @@ function FloatingChatHeader({
         p-2 text-charcoalBlack dark:text-charcoalBlack rounded-t-lg border-b-2 z-10
         border-gray-200 dark:border-mutedSilver cursor-pointer h-[60px] `}
       onClick={onClick}
+      data-testid="test-header"
     >
       <div className="flex items-center space-x-3">
         <div className="relative">
@@ -44,6 +44,7 @@ function FloatingChatHeader({
           <MoreHorizontal size={20} />
         </button>
         <button
+          data-testid="close-button"
           onClick={onClose}
           className="text-mutedSilver hover:text-darkBurgundy dark:hover:text-charcoalWhite"
         >

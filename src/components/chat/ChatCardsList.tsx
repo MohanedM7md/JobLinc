@@ -11,31 +11,25 @@ const ChatCardsList = ({
   onCardClick: (id: string) => void;
 }) => {
   const [chats, setChats] = useState<ChatCardInterface[]>([]);
-  const chatSocket = connectChatSocket();
   const { user } = useUser();
-  console.log("----------------ChatCardsList----------------");
+
+  console.log(
+    "----------------ChatCardsList---------------- for userID: ",
+    user,
+  );
   useEffect(() => {
     const fetchData = async () => {
       try {
         if (!user) return;
         const data = await fetchChats(user);
-        console.log("Data:  ", data);
+
         setChats(data);
       } catch (error) {
         console.error("Error fetching chat data:", error);
       }
     };
     fetchData();
-
-    chatSocket.on("ChatsUpdate", (newChat: ChatCardInterface) => {
-      setChats((prev) => [...prev, newChat]);
-    });
-
-    return () => {
-      chatSocket.off("ChatsUpdate");
-    };
   }, [user]);
-  console.log("Chats:", chats);
   return (
     <div className="mt-4">
       {chats.length > 0 ? (

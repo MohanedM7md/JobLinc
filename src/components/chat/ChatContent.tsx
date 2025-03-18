@@ -1,18 +1,15 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import ChatMessages from "./ChatMessages";
 import ChatInput from "./ChatInput";
-import { fetchChatData } from "../../services/api/chatServices";
-import {
-  connectChatSocket,
-  onReceiveMessage,
-  emitSendMessage,
-} from "../../services/api/socket";
+
+import { connectChatSocket } from "../../services/api/socket";
 import {
   RecievedMessage,
   MessageStatus,
 } from "./interfaces/Message.interfaces";
 import { User } from "./interfaces/User.interfaces";
 import { useUser } from "./mockUse";
+import { fetchChatData } from "../../services/api/chatServices";
 
 function ChatContent({ chatId }: { chatId: string }) {
   const [users, setUsers] = useState<User[]>([]);
@@ -23,38 +20,18 @@ function ChatContent({ chatId }: { chatId: string }) {
   console.log("______________ChatContent_______________");
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetchChatData(chatId);
-      const users: User[] = response.data.participants.map(
-        (participant: any) => ({
-          id: participant.userId,
-          name: `${participant.firstname} ${participant.lastname}`,
-          profilePicture: participant.profilePicture,
-        }),
-      );
+      const data = await fetchChatData(chatId);
 
-      const messages: RecievedMessage[] = response.data.messages.map(
-        (msg: any) => ({
-          id: msg.messageId,
-          senderId: msg.senderId,
-          status: msg.status,
-          time: new Date(msg.sentDate * 1000),
-          content: {
-            text: msg.content.text || undefined,
-            image: msg.content.image || undefined,
-            video: msg.content.video || undefined,
-            document: msg.content.document || undefined,
-          },
-        }),
-      );
-      setUsers(users);
-      setMessages(messages);
+      setUsers(data.users);
+      setMessages(data.messages);
     };
     fetchData();
+
     chatSocket.emit("openChat", chatId, user);
     chatSocket.on("receiveMessage", (message: RecievedMessage) => {
       console.log("recieved Message: ", message);
       setMessages((prev) => [...prev, message]);
-      chatSocket.emit("messageRecieved", chatId, message.id);
+      chatSocket.emit("messageRecieved", chatId, message.messageId);
     });
     chatSocket.on("messageRead", () => {
       console.log("Message Read: ");
@@ -74,26 +51,24 @@ function ChatContent({ chatId }: { chatId: string }) {
 
   const handleSendMessage = (message: string) => {
     const newMessage: any = {
-      id: `${user}-${new Date().getTime()}`,
-      chatId,
+      messageId: `${user}-${new Date().getTime()}`,
       senderId: user,
       time: new Date(),
       status: MessageStatus.Sent,
       content: { text: message },
     };
-    setMessages((prev) => [...prev, newMessage]);
+    setMessages((prevMsgs) => [...prevMsgs, newMessage]);
     if (chatId) {
-      chatSocket?.emit("sendMessage", newMessage, (status: MessageStatus) => {
-        console.log("call back called: ", status);
-        setMessages((prev) =>
-          prev.map((msg) =>
-            msg.id === newMessage.id ? { ...msg, status } : msg,
-          ),
-        );
+      chatSocket?.emit("sendMessage", { ...newMessage, chatId }, () => {
+        console.log("call back called: msg delivered");
+        setMessages((prevMsgs) => {
+          prevMsgs.pop;
+          newMessage.status = MessageStatus.Delivered;
+          return [...prevMsgs, newMessage];
+        });
       });
     }
   };
-
   return (
     <div className="flex flex-col flex-1 overflow-hidden">
       <div className="flex-1 overflow-y-auto">
@@ -102,10 +77,7 @@ function ChatContent({ chatId }: { chatId: string }) {
           <div>{JSON.stringify(messages[messages.length - 1].status)}</div>
         )}
       </div>
-
-      {chatId && (
-        <ChatInput chatId={chatId} onSendMessage={handleSendMessage} />
-      )}
+      <ChatInput chatId={chatId} onSendMessage={handleSendMessage} />
     </div>
   );
 }
