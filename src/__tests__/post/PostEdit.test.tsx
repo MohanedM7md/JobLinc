@@ -3,28 +3,24 @@ import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom/vitest";
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import PostEdit from "../../components/Posts/PostEdit";
-import { BrowserRouter as Router } from "react-router-dom";
+import { BrowserRouter, MemoryRouter, Route, Routes} from "react-router-dom";
 
 describe("PostEdit", () => {
-  const mockPost = {
-    postID: "0",
-    userID: "user1",
-    firstName: "John",
-    lastName: "Doe",
-    profilePicture: "profile.jpg",
-    headline: "Software Engineer",
-    text: "Initial text",
-    likes: 0,
-    commentsNum: 0,
-    reposts: 0,
-    pics: [],
-  };
-
+   const mockLocation = {
+     state: {
+       postID: "0",
+       postText: "Initial text",
+     },
+   };
   beforeEach(() => {
     render(
-      <Router>
-        <PostEdit {...mockPost} />
-      </Router>,
+      <MemoryRouter
+        initialEntries={[{ pathname: "/edit", state: mockLocation.state }]}
+      >
+        <Routes>
+          <Route path="/edit" element={<PostEdit />} />
+        </Routes>
+      </MemoryRouter>,
     );
   });
 
@@ -33,7 +29,7 @@ describe("PostEdit", () => {
   });
 
   it("renders correctly with initial text", () => {
-    expect(screen.getByText("Create a new Post")).toBeInTheDocument();
+    expect(screen.getByText("Edit Post")).toBeInTheDocument();
     expect(screen.getByDisplayValue("Initial text")).toBeInTheDocument();
   });
 
@@ -44,16 +40,10 @@ describe("PostEdit", () => {
     expect(textarea.value).toBe("Updated text");
   });
 
-  it("submits the form on submit button click", async () => {
-    const submitButton = screen.getByText("Submit");
-    await userEvent.click(submitButton);
-    expect(global.window.location.href).toContain("/post");
-  });
-
-  it("navigates to /post on cancel button click", () => {
+  it("reroutes to the post again on cancel", async () => {
     const cancelButton = screen.getByText("Cancel");
-    userEvent.click(cancelButton);
-    expect(global.window.location.href).toContain("/");
+    await userEvent.click(cancelButton);
+    expect(global.window.location.href).toContain("/post");
   });
 
   it("edits the posts", async () => {

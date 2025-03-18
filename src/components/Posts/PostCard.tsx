@@ -59,7 +59,7 @@ export default function Post(props: PostProps) {
         />
         <div className="" onBlur={() => setShowUtility(false)}>
           {showUtility ? (
-            <PostUtilityButton post={props.post} delete={() => postDelete()} />
+            <PostUtilityButton postID={props.post.postID} postText={props.post.text} delete={() => postDelete()} />
           ) : null}
         </div>
         <button

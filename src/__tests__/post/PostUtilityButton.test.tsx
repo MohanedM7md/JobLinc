@@ -4,6 +4,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import PostUtilityButton from "../../components/Posts/PostUtilityButton";
 import { PostInterface } from "../../interfaces/postInterfaces";
 import "@testing-library/jest-dom/vitest";
+import { BrowserRouter } from "react-router-dom";
 
 describe("PostUtilityButton", () => {
   let mockDelete: () => void;
@@ -24,7 +25,15 @@ describe("PostUtilityButton", () => {
       commentsNum: 5,
       reposts: 2,
     };
-    render(<PostUtilityButton delete={mockDelete} post={mockPost} />);
+    render(
+      <BrowserRouter>
+        <PostUtilityButton
+          delete={mockDelete}
+          postID={mockPost.postID}
+          postText={mockPost.text}
+        />
+      </BrowserRouter>,
+    );
   });
 
   afterEach(() => {

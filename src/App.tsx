@@ -48,6 +48,7 @@ function App() {
         <Route path="/UserDetails" element={<UserDetails />} />
         <Route path="/post/create" element={<PostCreate />} />
         <Route path="/post" element={<PostContainer />} />
+        <Route path="/post/:postID/edit" element={<PostEdit />} />
         <Route
           path="/playground"
           element={
