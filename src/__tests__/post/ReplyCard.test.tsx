@@ -17,7 +17,7 @@ const mockReply: RepliesInterface = {
   replyText: "This is a reply",
 };
 
-describe("ReplyCard Component", () => {
+describe("ReplyCard", () => {
   beforeEach(() => {
     render(<ReplyCard reply={mockReply} />);
   });

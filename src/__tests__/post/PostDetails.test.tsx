@@ -4,7 +4,7 @@ import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom/vitest";
 import PostDetails from "../../components/Posts/PostDetails";
 
-describe("PostDetails Component", () => {
+describe("PostDetails", () => {
   const text =
     "This is a sample post text that is long enough to be truncated.";
   const media = ["image1.jpg", "image2.jpg"];

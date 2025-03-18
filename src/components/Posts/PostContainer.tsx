@@ -5,14 +5,11 @@ export default function PostContainer() {
   const [posts, setPosts] = useState([]);
   useEffect(() => {
     const controller = new AbortController();
-    const response = getFeed(10, controller.signal)
+    const response = getFeed(10)
     response.then((data) => {
       setPosts(data);
     })
     
-    return () => {
-      controller.abort();
-    }
   }, []);
   return (
     <div className="flex flex-wrap lg:w-5/12 md:w-8/12 sm:1/1 m-auto">

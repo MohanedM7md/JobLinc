@@ -39,6 +39,7 @@ const baseURL = "/api/";
 
 export const handler = [
   //handlers to your api calls will be here, will provide examples, if no understand, ask
+  //get feed handler
   http.get(`${baseURL}post/feed`, async ({ params }) => {
     return HttpResponse.json<PostInterface[]>(postsResponse, {
       status: 200,
@@ -46,6 +47,7 @@ export const handler = [
     });
   }),
 
+  //get post comments handler
   http.get(`${baseURL}post/:postID/comment`, async ({ params }) => {
     const { postID } = params;
     const comments = commentsResponse.filter((comment) => comment.postID === postID)
@@ -55,6 +57,7 @@ export const handler = [
     });
   }),
 
+  //get comment replies handler
   http.get(
     `${baseURL}post/:postID/comment/:commentID/replies`,
     async ({ params }) => {
@@ -68,12 +71,13 @@ export const handler = [
     },
   ),
 
+  //add post handler
   http.post<AddPostParams, PostRequestBody>(
     `${baseURL}post/add`,
     async ({ request }) => {
       const { text } = await request.json();
       console.log(text);
-      const post: PostInterface = {
+      const post: PostInterface = { //user data are hard coded for now
         postID: postsResponse.length.toString(),
         userID: "0",
         firstName: "Anime",
@@ -92,6 +96,7 @@ export const handler = [
     },
   ),
 
+  //edit post handler
   http.post<PostParams, PostRequestBody>(`${baseURL}post/:postID/edit`, async ({ params,request }) => {
     const { postID } = params;
     const { text } = await request.json();
@@ -103,18 +108,18 @@ export const handler = [
     return HttpResponse.json({ status: 400, statusText: "Not Found" });
   }),
 
+  //delete post handler
   http.delete<PostParams>(`${baseURL}post/:postID/delete`, async({ params }) => {
     const { postID } = params;
     const deletedPost = postsResponse.findIndex((post) => (post.postID === postID));
     if (deletedPost != -1) {
-      console.log(postsResponse);
       postsResponse.splice(deletedPost,1)
-      console.log(postsResponse);
       return HttpResponse.json({ status: 200, statusText: "OK" });
     }
     return HttpResponse.json({ status: 400, statusText: "Not Found" });
   }),
 
+  //add comment handler
   http.post<AddCommentParams, AddCommentRequestBody>(
     `${baseURL}post/:postID/comment`,
     async ({ params, request }) => {
@@ -136,6 +141,7 @@ export const handler = [
     },
   ),
 
+  //add reply handler
   http.post<AddReplyParams, AddReplyRequestBody>(
     `${baseURL}post/:postID/comment/:commentID/reply`,
     async ({ params, request }) => {

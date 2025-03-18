@@ -5,7 +5,7 @@ import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import PostEdit from "../../components/Posts/PostEdit";
 import { BrowserRouter as Router } from "react-router-dom";
 
-describe("PostEdit Component", () => {
+describe("PostEdit", () => {
   const mockPost = {
     postID: "0",
     userID: "user1",

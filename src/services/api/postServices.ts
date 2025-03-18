@@ -1,12 +1,11 @@
 import api from "./api";
 
 // Fetch a a number of posts to populate a user's feed
-export const getFeed = async (count: number, signal: AbortSignal) => {
+export const getFeed = async (count: number) => {
   const response = await api.get(`post/feed/`, {
     params: {
       count: count,
     },
-    signal: signal,
   });
   return response.data;
 };
@@ -43,11 +42,9 @@ export const createComment = async (postID: string, commentText: string) => {
 export const createReply = async (
   postID: string,
   commentID: string,
-  reply: string,
+  replyText: string
 ) => {
-  await api.post(`post/${postID}/comment/${commentID}/reply`, {
-    body: JSON.stringify({ reply }),
-  });
+  await api.post(`post/${postID}/comment/${commentID}/reply`, { replyText });
 };
 
 export const editPost = async (postID: string, text: string) => {

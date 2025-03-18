@@ -3,7 +3,7 @@ import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import CommenterDetails from "../../components/Posts/Comments/CommenterDetails";
 import "@testing-library/jest-dom/vitest";
 
-describe("CommenterDetails Component", () => {
+describe("CommenterDetails", () => {
   const props = {
     userID: "123",
     name: "John Doe",

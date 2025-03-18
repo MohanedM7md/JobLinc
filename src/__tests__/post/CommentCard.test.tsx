@@ -28,7 +28,7 @@ describe("CommentCard", () => {
     cleanup();
   });
 
-  it("renders CommentCard component", () => {
+  it("renders component", () => {
     expect(screen.getByText("John Doe")).toBeInTheDocument();
     expect(screen.getByText("This is a comment")).toBeInTheDocument();
   });

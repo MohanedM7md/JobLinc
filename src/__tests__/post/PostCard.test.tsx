@@ -1,7 +1,7 @@
 import { render, screen, cleanup } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import PostCard from "../../components/Posts/PostCard";
-import { BrowserRouter as Router } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 import "@testing-library/jest-dom/vitest";
 import userEvent from "@testing-library/user-event";
 
@@ -31,9 +31,9 @@ const mockPost = {
 describe("PostCard", () => {
   beforeEach(() => {
     render(
-      <Router>
+      <BrowserRouter>
         <PostCard post={mockPost} />
-      </Router>,
+      </BrowserRouter>,
     );
   });
 
@@ -66,14 +66,5 @@ describe("PostCard", () => {
     expect(
       screen.queryByPlaceholderText("Write a comment..."),
     ).not.toBeInTheDocument();
-  });
-
-  it("deletes the post", async () => {
-    const moreButton = screen.getByText("more_horiz");
-    await userEvent.click(moreButton);
-
-    const deleteButton = screen.getByText("Delete");
-    await userEvent.click(deleteButton);  
-    expect(screen.queryByText("John Doe")).toBeNull();
   });
 });

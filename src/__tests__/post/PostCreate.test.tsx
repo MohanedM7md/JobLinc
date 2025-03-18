@@ -7,7 +7,7 @@ import PostCreate from "../../components/Posts/PostCreate";
 
 
 
-describe("PostCreate Component", () => {
+describe("PostCreate", () => {
   beforeEach(() => {
     render(
       <BrowserRouter>
@@ -20,7 +20,7 @@ describe("PostCreate Component", () => {
     cleanup();
   });
 
-  it("renders correctly", () => {
+  it("renders all elements correctly", () => {
     expect(screen.getByText("Create a new Post")).toBeInTheDocument();
     expect(screen.getByLabelText("Enter your text here:")).toBeInTheDocument();
     expect(screen.getByText("Submit")).toBeInTheDocument();

@@ -12,6 +12,7 @@ export default function PostUtilityButton(props:UtilityProps) {
             Edit
           </button>
         <button
+          data-testid={`Delete ${props.post.postID}`}
           onClick={() => props.delete()}
           className="h-8 w-22 bg-crimsonRed text-white font-medium hover:bg-red-700"
         >
