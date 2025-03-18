@@ -7,6 +7,7 @@ import {
 import { postsResponse } from "../PostsMock/postsDB";
 import { commentsResponse } from "../PostsMock/commentsDB";
 import { repliesResponse } from "../PostsMock/repliesDB";
+import { msghandlers } from "./ChatMock/msgHandlers";
 
 interface AddPostParams {}
 
@@ -90,28 +91,36 @@ export const handler = [
     },
   ),
 
-  http.post<PostParams, PostRequestBody>(`${baseURL}post/:postID/edit`, async ({ params,request }) => {
-    const { postID } = params;
-    const { text } = await request.json();
-    let editedPost = postsResponse.find((post) => post.postID = postID);
-    if (editedPost) {
-      editedPost.text = text;
-      return HttpResponse.json({ status:200, statusText:"OK"});
-    }
-    return HttpResponse.json({ status: 400, statusText: "Not Found" });
-  }),
+  http.post<PostParams, PostRequestBody>(
+    `${baseURL}post/:postID/edit`,
+    async ({ params, request }) => {
+      const { postID } = params;
+      const { text } = await request.json();
+      let editedPost = postsResponse.find((post) => (post.postID = postID));
+      if (editedPost) {
+        editedPost.text = text;
+        return HttpResponse.json({ status: 200, statusText: "OK" });
+      }
+      return HttpResponse.json({ status: 400, statusText: "Not Found" });
+    },
+  ),
 
-  http.delete<PostParams>(`${baseURL}post/:postID/delete`, async({ params }) => {
-    const { postID } = params;
-    const deletedPost = postsResponse.findIndex((post) => (post.postID = postID));
-    if (deletedPost != -1) {
-      console.log(postsResponse);
-      postsResponse.splice(deletedPost,1)
-      console.log(postsResponse);
-      return HttpResponse.json({ status: 200, statusText: "OK" });
-    }
-    return HttpResponse.json({ status: 400, statusText: "Not Found" });
-  }),
+  http.delete<PostParams>(
+    `${baseURL}post/:postID/delete`,
+    async ({ params }) => {
+      const { postID } = params;
+      const deletedPost = postsResponse.findIndex(
+        (post) => (post.postID = postID),
+      );
+      if (deletedPost != -1) {
+        console.log(postsResponse);
+        postsResponse.splice(deletedPost, 1);
+        console.log(postsResponse);
+        return HttpResponse.json({ status: 200, statusText: "OK" });
+      }
+      return HttpResponse.json({ status: 400, statusText: "Not Found" });
+    },
+  ),
 
   http.post<AddCommentParams, AddCommentRequestBody>(
     `${baseURL}post/:postID/comment`,
