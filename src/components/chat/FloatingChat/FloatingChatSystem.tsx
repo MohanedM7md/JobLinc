@@ -6,13 +6,13 @@ import { useUser } from "../mockUse";
 import { useEffect } from "react";
 
 function FloatingChatSystem() {
-  const { opnedChatsId } = useChats();
+  const { opnedChatsId = [] } = useChats();
   return (
     <>
       <FloatingChatSidebar />
       {opnedChatsId.map((opnedChatId, index) => {
         return (
-          <ChatIdProvider id={opnedChatId}>
+          <ChatIdProvider key={opnedChatId} id={opnedChatId}>
             <FloatingChatWindow
               key={opnedChatId}
               style={{ right: `${index * 410 + 330}px` }}

@@ -1,12 +1,12 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { Img } from "react-image";
 import ChatCardsList from "../ChatCardsList";
-import { useAppSelector } from "../../../store/hooks";
+/* import { useAppSelector } from "../../../store/hooks"; */
 import useChats from "../../../hooks/useChats";
 import SearchBar from "../UI/SearchBar";
 
 function FloatingChatSidebar() {
-  const { profilePicture } = useAppSelector((state) => state.user);
+  /*  const { profilePicture } = useAppSelector((state) => state.user); */
   const [isActive, setActive] = useState<boolean>(() => {
     return localStorage.getItem("chatSidebarActive") === "true" || false;
   });
