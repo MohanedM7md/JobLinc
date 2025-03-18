@@ -158,7 +158,7 @@ function SignUpInformation() {
     return (
         <form onSubmit={isValidSubmit} className="flex flex-col w-80 items-start gap-3 mb-3">
             <div className="flex flex-col w-full">
-                <label htmlFor="email" className="text-[14px] text-charcoalBlack font-bold">Email</label>
+                <label htmlFor="email" className="text-[14px] text-charcoalBlack font-bold">Email *</label>
                 <input value={emailText} name="email" onBlur={handleFocusOut} onChange={handleChange} required id="email"  
                 className={`outline-[0.7px] text-[14px] text-charcoalBlack h-8 px-2 rounded-sm hover:cursor-text hover:outline-[1px] hover:bg-gray-100 focus:outline-black focus:outline-[1.5px] ${(showErrorEmailEmpty || showErrorEmailInvalid) && "outline-red-700 hover:outline-red-900"}`}></input>
                 {showErrorEmailEmpty && <p className="text-red-800 text-[10px]">Please enter your email address.</p>}
@@ -167,7 +167,7 @@ function SignUpInformation() {
             </div>
 
             <div className="flex flex-col relative w-full">
-                <label htmlFor="password" className="text-[14px] text-charcoalBlack font-bold">Password</label>
+                <label htmlFor="password" className="text-[14px] text-charcoalBlack font-bold">Password *</label>
                 <input value={passText} name="password" type={isHidden ? "password" : "text"} onBlur={handleFocusOut} onChange={handleChange} required id="password" 
                 className={`outline-[0.7px] text-[14px] text-charcoalBlack h-8 pl-2 pr-10 rounded-sm hover:cursor-text hover:outline-[1px] hover:bg-gray-100 focus:outline-black focus:outline-[1.5px] ${(showErrorPassEmpty || showErrorPassInvalid) && "outline-red-700 hover:outline-red-900"}`}  ></input>
                 {showErrorPassEmpty && <p className="text-red-800 text-[10px]">Please enter your password.</p>}
