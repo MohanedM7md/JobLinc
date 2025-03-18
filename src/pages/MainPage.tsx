@@ -23,7 +23,7 @@ function MainPage() {
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen">
-            <h1 className="text-2xl font-bold">Welcome to the Main Page</h1>
+            <h1 data-testid="welcome" className="text-2xl font-bold">Welcome to the Main Page</h1>
 
             {user.loggedIn ? (
                 <div className="mt-4 p-4 border rounded-lg shadow-md">

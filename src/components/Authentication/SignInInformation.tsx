@@ -181,7 +181,8 @@ function SignInInformation() {
                         required
                     />
                     <label
-                        htmlFor="email"
+                        htmlFor="email-or-phone"
+                        aria-labelledby="email-or-phone"
                         className={`absolute left-2 text-mutedSilver transition-all px-1 ${
                             !isEmpty.email || isFocusedEmail ? "top-[0px] text-[10px] z-3" : "top-2 text-base"
                         }`}
@@ -189,7 +190,7 @@ function SignInInformation() {
                         Email or phone
                     </label>
                 </div>
-                {showErrorEmailInvalid && <p className="text-red-800 text-[12px]">Please enter a valid email address.</p>}
+                {showErrorEmailInvalid && <p data-testid="errorEmail" className="text-red-800 text-[12px]">Please enter a valid email address.</p>}
             </div>
 
             <div className="relative w-full">
@@ -222,9 +223,7 @@ function SignInInformation() {
             </div>
 
             <div id="recaptcha-container" className="g-recaptcha" data-sitekey="6Le48PQqAAAAABGnl1yAsKhhNuTnArdIGeRyuQoV"></div>
-            {showErrorRecaptcha && <p className="text-red-800 text-[12px]">Please complete the reCAPTCHA.</p>}
-
-
+            {showErrorRecaptcha && <p data-testid="errorRECAPTCHA" className="text-red-800 text-[12px]">Please complete the reCAPTCHA.</p>}
 
             <div className="text-center">
                 <Link to="/Signin/ForgotPassword" className="text-warmBlack px-2 font-semibold hover:underline hover:rounded-3xl">
