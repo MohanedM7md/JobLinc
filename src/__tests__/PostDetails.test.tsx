@@ -2,7 +2,7 @@ import { render, screen, cleanup } from "@testing-library/react";
 import { expect, describe, it, beforeEach, afterEach } from "vitest";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom/vitest";
-import PostDetails from "./PostDetails";
+import PostDetails from "../components/Posts//PostDetails";
 
 describe("PostDetails Component", () => {
   const text =

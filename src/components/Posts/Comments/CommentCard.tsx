@@ -16,6 +16,8 @@ export default function CommentCard(props: CommentCardProps) {
   const [showReplies, setShowReplies] = useState(false);
   const [replies, setReplies] = useState<RepliesInterface[]>([]);
   const [newReply, setNewReply] = useState<string>("");
+  const [isLike, setIsLike] = useState<boolean>(false);
+  const like = !isLike ? "Like" : "Liked";
 
   useEffect(() => {
     if (showReplies) {
@@ -57,8 +59,15 @@ export default function CommentCard(props: CommentCardProps) {
         commentText={props.comment.commentText}
       />
       <div className="ml-14.5">
-        <button className="cursor-pointer text-sm font-medium px-2 text-mutedSilver hover:bg-gray-200 rounded-lg">
-          Like
+        <button
+          onClick={()=> setIsLike(!isLike)}
+          className={
+            isLike
+              ? "transition cursor-pointer text-sm font-medium px-2 text-blue-500 hover:bg-blue-100 rounded-lg"
+              : "transition cursor-pointer text-sm font-medium px-2 text-mutedSilver hover:bg-gray-200 rounded-lg"
+          }
+        >
+          {like}
         </button>
         <span className="text-mutedSilver font-medium text-sm">|</span>
         <button

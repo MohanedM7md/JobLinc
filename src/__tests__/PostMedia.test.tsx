@@ -1,5 +1,5 @@
 import { render } from "@testing-library/react";
-import PostMedia from "./PostMedia";
+import PostMedia from "../components/Posts/PostMedia";
 import { describe, it, expect } from "vitest";
 
 describe("PostMedia Component", () => {

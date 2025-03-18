@@ -11,6 +11,8 @@ export interface CommentInterface {
 
 export interface RepliesInterface {
   replyID: string;
+  commentID: string;
+  postID: string;
   userID: string;
   firstName: string;
   lastName: string;

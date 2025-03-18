@@ -1,13 +1,13 @@
-import { render, screen, cleanup, getByText } from "@testing-library/react";
+import { render, screen, cleanup } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom/vitest";
-import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
-import PostEdit from "./PostEdit";
+import { describe, it, expect, beforeEach, afterEach } from "vitest";
+import PostEdit from "../components/Posts//PostEdit";
 import { BrowserRouter as Router } from "react-router-dom";
 
 describe("PostEdit Component", () => {
   const mockPost = {
-    postID: "1",
+    postID: "0",
     userID: "user1",
     firstName: "John",
     lastName: "Doe",
@@ -60,7 +60,7 @@ describe("PostEdit Component", () => {
     const textarea = screen.getByRole("textbox") as HTMLTextAreaElement;
     const submitButton = screen.getByText("Submit");
     await userEvent.clear(textarea);
-    await userEvent.type(textarea, "Updated text");
+    await userEvent.type(textarea, "Updated Text");
     await userEvent.click(submitButton);
     expect(screen.getByText("Updated Text")).toBeInTheDocument();
   })

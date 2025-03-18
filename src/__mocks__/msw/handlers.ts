@@ -48,7 +48,8 @@ export const handler = [
 
   http.get(`${baseURL}post/:postID/comment`, async ({ params }) => {
     const { postID } = params;
-    return HttpResponse.json<CommentInterface[]>(commentsResponse, {
+    const comments = commentsResponse.filter((comment) => comment.postID === postID)
+    return HttpResponse.json<CommentInterface[]>(comments, {
       status: 200,
       statusText: "OK",
     });
@@ -59,7 +60,8 @@ export const handler = [
     async ({ params }) => {
       const { postID } = params;
       const { commentID } = params;
-      return HttpResponse.json<RepliesInterface[]>(repliesResponse, {
+      const replies = repliesResponse.filter((reply) => reply.postID === postID && reply.commentID === commentID)
+      return HttpResponse.json<RepliesInterface[]>(replies, {
         status: 200,
         statusText: "OK",
       });
@@ -93,7 +95,7 @@ export const handler = [
   http.post<PostParams, PostRequestBody>(`${baseURL}post/:postID/edit`, async ({ params,request }) => {
     const { postID } = params;
     const { text } = await request.json();
-    let editedPost = postsResponse.find((post) => post.postID = postID);
+    let editedPost = postsResponse.find((post) => post.postID === postID);
     if (editedPost) {
       editedPost.text = text;
       return HttpResponse.json({ status:200, statusText:"OK"});
@@ -103,7 +105,7 @@ export const handler = [
 
   http.delete<PostParams>(`${baseURL}post/:postID/delete`, async({ params }) => {
     const { postID } = params;
-    const deletedPost = postsResponse.findIndex((post) => (post.postID = postID));
+    const deletedPost = postsResponse.findIndex((post) => (post.postID === postID));
     if (deletedPost != -1) {
       console.log(postsResponse);
       postsResponse.splice(deletedPost,1)
@@ -143,6 +145,8 @@ export const handler = [
       const reply: RepliesInterface = {
         replyID: repliesResponse.length.toString(),
         userID: "0",
+        postID: postID,
+        commentID: commentID,
         firstName: "Anime",
         lastName: "Protagonist",
         profilePicture:

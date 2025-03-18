@@ -32,11 +32,12 @@ export const sendMessage = async (chatId: string, message: any) => {
 };
 
 // Fetch a a number of posts to populate a user's feed
-export const getFeed = async (count: number) => {
+export const getFeed = async (count: number, signal: AbortSignal) => {
   const response = await api.get(`post/feed/`, {
     params: {
       count: count,
     },
+    signal: signal,
   });
   return response.data;
 };

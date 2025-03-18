@@ -1,6 +1,6 @@
-import { render, screen, cleanup, queryByText } from "@testing-library/react";
+import { render, screen, cleanup } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import PostCard from "./PostCard";
+import PostCard from "../components/Posts/PostCard";
 import { BrowserRouter as Router } from "react-router-dom";
 import "@testing-library/jest-dom/vitest";
 import userEvent from "@testing-library/user-event";
@@ -68,13 +68,12 @@ describe("PostCard", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("the post is deleted upon pressing the delete button", async () => {
+  it("deletes the post", async () => {
     const moreButton = screen.getByText("more_horiz");
     await userEvent.click(moreButton);
 
     const deleteButton = screen.getByText("Delete");
-    await userEvent.click(deleteButton);
-    window.history.pushState({}, "Test page", "/post");
-    expect(screen.queryByText("John")).toBeNull();
+    await userEvent.click(deleteButton);  
+    expect(screen.queryByText("John Doe")).toBeNull();
   });
 });
