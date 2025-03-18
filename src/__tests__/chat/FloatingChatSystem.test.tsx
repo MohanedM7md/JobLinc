@@ -1,6 +1,5 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import "../../../test/setupTests";
 import ChatProvider from "../../context/ChatsIdProvider";
 import FloatingChatSystem from "../../components/chat/FloatingChat/FloatingChatSystem";
 import { UserProvider } from "../../components/chat/mockUse";

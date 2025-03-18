@@ -1,6 +1,5 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import "../../../test/setupTests";
 import ChatProvider from "../../context/ChatsIdProvider";
 import ChatContent from "../../components/chat/ChatContent";
 import { UserProvider } from "../../components/chat/mockUse";

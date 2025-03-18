@@ -2,7 +2,6 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import FloatingChatWindow from "../../components/chat/FloatingChat/FloatingChatWindow";
 import { UserProvider } from "../../components/chat/mockUse";
-import "../../../test/setupTests";
 import { ChatIdProvider } from "../../context/ChatIdProvider";
 import { expect, it, vi, describe, beforeEach } from "vitest";
 

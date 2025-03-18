@@ -1,6 +1,4 @@
 import { render, screen } from "@testing-library/react";
-import "../../../test/setupTests";
-
 import MessageBubble from "../../components/chat/MessageBubble";
 import { UserProvider } from "../../components/chat/mockUse";
 import { expect, it, describe } from "vitest";

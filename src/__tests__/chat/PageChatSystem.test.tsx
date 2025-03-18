@@ -1,7 +1,5 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import "../../../test/setupTests";
-
 import PageChatSystem from "../../components/chat/PageChat/PageChatSystem";
 import { UserProvider } from "../../components/chat/mockUse";
 import { expect, it, describe } from "vitest";

@@ -1,6 +1,4 @@
 import { render, screen } from "@testing-library/react";
-import "../../../test/setupTests";
-
 import ChatCard from "../../components/chat/ChatCard";
 import { ChatCardProps } from "../../components/chat/interfaces/Chat.interfaces";
 import { expect, it, describe, vi } from "vitest";
