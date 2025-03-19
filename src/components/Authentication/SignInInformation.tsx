@@ -187,7 +187,7 @@ function SignInInformation() {
                             !isEmpty.email || isFocusedEmail ? "top-[0px] text-[10px] z-3" : "top-2 text-base"
                         }`}
                     >
-                        Email or phone
+                        Email
                     </label>
                 </div>
                 {showErrorEmailInvalid && <p data-testid="errorEmail" className="text-red-800 text-[12px]">Please enter a valid email address.</p>}

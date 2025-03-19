@@ -1,8 +1,11 @@
-import { useState, ChangeEvent, FocusEvent } from "react";
+import { useState, ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthenticationSignInButton } from "../components/Authentication/AuthenticationButtons";
 import SignHeader from "../components/Authentication/SignHeader";
 import Modal from "../components/Authentication/Modal";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@store/store";
+import { forgotPassword } from "@store/userSlice";
 function ForgotPassword()
 {
     const [emailText, setEmailText] = useState("");
@@ -11,6 +14,8 @@ function ForgotPassword()
 
 
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isModalErrorOpen, setIsModalErrorOpen] = useState(false);
+
 
 
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -19,6 +24,7 @@ function ForgotPassword()
     const [isEmpty, setEmpty] = useState(true);
     const [isFocusedEmail, setFocusedEmail] = useState(false);
 
+    const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
 
     
@@ -54,16 +60,25 @@ function ForgotPassword()
         navigate("/Signin");
     }
 
-    function isValidSubmit(event: React.FormEvent<HTMLFormElement>)
+    async function isValidSubmit(event: React.FormEvent<HTMLFormElement>)
     {
         event.preventDefault();
         if (isValidEmail(emailText))
         {
             
             // Send to the BE a post request to send an email to this email
-            
+            const userData = {email: emailText}
+            const resultAction = await dispatch(forgotPassword(userData));
             // Display a success message
-            setIsModalOpen(true);
+            if (forgotPassword.fulfilled.match(resultAction)) {
+                setIsModalOpen(true); // Will have a place to enter the OTP in it, then submit the OTP
+            }
+            else
+            {
+                // Render a component to say wrong email or password
+                setIsModalErrorOpen(true);
+            }
+            
         }
         else
         {
@@ -80,18 +95,24 @@ function ForgotPassword()
                     <div className="relative w-full">
                         <div className="relative mb-13 w-full">
                             <input value={emailText} type="text" name="email" onChange={handleChange} onFocus={handleFocus} onBlur={handleFocusOut} id="email-or-phone" placeholder=" " className="peer z-1 border w-full h-11 rounded-sm absolute px-2 hover:cursor-text focus:outline-black transition-all" required />
-                            <label htmlFor="email" className={`absolute left-2 text-mutedSilver transition-all px-1 ${(!isEmpty || isFocusedEmail) ? "top-[0px] text-[10px] z-3" : "top-2 text-base"}`}>Email or phone</label>
+                            <label htmlFor="email" className={`absolute left-2 text-mutedSilver transition-all px-1 ${(!isEmpty || isFocusedEmail) ? "top-[0px] text-[10px] z-3" : "top-2 text-base"}`}>Email</label>
                         </div>
                         {showErrorEmailEmpty && <p className="text-red-800 text-[12px]">Please enter your email address.</p>}
                         {showErrorEmailInvalid && <p className="text-red-800 text-[12px]">Please enter a valid email address.</p>}
                     </div>
-                    <p className="text-warmBlack text-[12px]">We'll send a verification code to this email or phone number if it matches an existing JobLinc account.</p>
+                    <p className="text-warmBlack text-[12px]">We'll send a verification code to this Email if it matches an existing JobLinc account.</p>
                     <AuthenticationSignInButton id="next-btn" text="Next"/>
                     <button onClick={handleBackBtn} className="w-full bg-crimsonRed py-2 text-charcoalBlack font-semibold rounded-3xl mb-4 hover:bg-softRosewood hover:cursor-pointer">Back</button>
                 </div>
             </form>
 
-            <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+            <Modal isOpen={isModalOpen} onClose={() => setIsModalErrorOpen(false)}>
+                <div className="flex flex-col gap-2">
+                    <h2 className="font-bold text-[18px]">An error occured, please try again later.</h2>
+                </div>
+            </Modal>
+
+            <Modal isOpen={isModalErrorOpen} onClose={() => setIsModalOpen(false)}>
                 <div className="flex flex-col gap-2">
                     <h2 className="font-bold text-[18px]">Email sent successfully!</h2>
                     <p className="font-semibold text-[15px]">Kindly check your email for the verification code</p>

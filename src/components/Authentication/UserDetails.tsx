@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { registerUser, setUserDetailsOnRegister } from "../../store/userSlice";
 import type { AppDispatch } from "../../store/store";  // Import the correct type
 import { RootState } from "../../store/store";
+import { log } from "console";
 
 
 
@@ -126,9 +127,10 @@ function UserDetails() {
                 city: selectedCity,
                 phoneNumber: phoneNumber.length > 0 ? phoneNumber : ""
             };
+            console.log("data before fetch: " + userData);
             
             const resultAction = await dispatch(registerUser({firstname: userData.firstname, lastname: userData.lastname, email: userData.email, 
-                                                               password: userData.password, country: userData.country, city: userData.city, phoneNumber: userData.phoneNumber}));
+                                                              password: userData.password, country: userData.country, city: userData.city, phoneNumber: userData.phoneNumber}));
             console.log(resultAction);
             
             //retrieveUser(userData.email, userData.password);

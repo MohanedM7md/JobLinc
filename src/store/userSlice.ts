@@ -15,6 +15,7 @@ interface UserState {
   role: string | null;
   accessToken: string | null;
   refreshToken: string | null;
+  forgotToken: string | null;
   status: "IDLE" | "LOADING" | "SUCCESS" | "FAILED";
   loggedIn: boolean;
 }
@@ -33,6 +34,7 @@ const initialState: UserState = {
   role: null,
   accessToken: null,
   refreshToken: null,
+  forgotToken: null,
   status: "IDLE",
   loggedIn: false,
 };
@@ -48,6 +50,20 @@ export const loginUser = createAsyncThunk(
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data || "Login failed");
+    }
+  }
+);
+
+export const forgotPassword = createAsyncThunk(
+  "user/forgotPassword",
+  async (userData: { email: string }, { rejectWithValue }) => {
+    try {
+      console.log(userData);
+      const response = await axios.post("http://localhost:3000/api/auth/forgot-password", userData);
+      console.log(response.data);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data || "Forgot password failed");
     }
   }
 );
@@ -161,6 +177,23 @@ const userSlice = createSlice({
         
       })
       .addCase(registerUser.rejected, (state) => {
+        state.status = "FAILED";
+      })
+      // Forgot Password
+      .addCase(forgotPassword.pending, (state) => {
+        state.status = "LOADING";
+      })
+      .addCase(forgotPassword.fulfilled, (state, action: PayloadAction<any>) => {
+        console.log("Redux payload:", action.payload);
+
+        const userData = action.payload;
+
+        if (userData)
+        {
+          state.forgotToken = userData.forgotToken;
+        }
+      })
+      .addCase(forgotPassword.rejected, (state) => {
         state.status = "FAILED";
       });
   },
