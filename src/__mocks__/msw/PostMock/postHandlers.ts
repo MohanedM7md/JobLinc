@@ -4,9 +4,9 @@ import {
   PostInterface,
   RepliesInterface,
 } from "../../../interfaces/postInterfaces";
-import { postsResponse } from "../../PostsMock/postsDB";
-import { commentsResponse } from "../../PostsMock/commentsDB";
-import { repliesResponse } from "../../PostsMock/repliesDB";
+import { postsResponse } from "./postsDB";
+import { commentsResponse } from "./commentsDB";
+import { repliesResponse } from "./repliesDB";
 
 interface AddPostParams {}
 
@@ -15,11 +15,11 @@ interface PostRequestBody {
 }
 
 interface PostParams {
-  postID: string;
+  postId: string;
 }
 
 interface AddCommentParams {
-  postID: string;
+  postId: string;
 }
 
 interface AddCommentRequestBody {
@@ -27,8 +27,8 @@ interface AddCommentRequestBody {
 }
 
 interface AddReplyParams {
-  postID: string;
-  commentID: string;
+  postId: string;
+  commentId: string;
 }
 
 interface AddReplyRequestBody {
@@ -48,10 +48,10 @@ export const postHandler = [
   }),
 
   //get post comments handler
-  http.get(`${baseURL}post/:postID/comment`, async ({ params }) => {
-    const { postID } = params;
+  http.get(`${baseURL}post/:postId/comment`, async ({ params }) => {
+    const { postId } = params;
     const comments = commentsResponse.filter(
-      (comment) => comment.postID === postID,
+      (comment) => comment.postId === postId,
     );
     return HttpResponse.json<CommentInterface[]>(comments, {
       status: 200,
@@ -61,12 +61,12 @@ export const postHandler = [
 
   //get comment replies handler
   http.get(
-    `${baseURL}post/:postID/comment/:commentID/replies`,
+    `${baseURL}post/:postId/comment/:commentId/replies`,
     async ({ params }) => {
-      const { postID } = params;
-      const { commentID } = params;
+      const { postId } = params;
+      const { commentId } = params;
       const replies = repliesResponse.filter(
-        (reply) => reply.postID === postID && reply.commentID === commentID,
+        (reply) => reply.postId === postId && reply.commentId === commentId,
       );
       return HttpResponse.json<RepliesInterface[]>(replies, {
         status: 200,
@@ -83,16 +83,16 @@ export const postHandler = [
       console.log(text);
       const post: PostInterface = {
         //user data are hard coded for now
-        postID: postsResponse.length.toString(),
-        userID: "0",
-        firstName: "Anime",
-        lastName: "Protagonist",
+        postId: postsResponse.length.toString(),
+        userId: "0",
+        firstname: "Anime",
+        lastname: "Protagonist",
         profilePicture:
           "https://i.pinimg.com/550x/04/bb/21/04bb2164bbfa3684118a442c17d086bf.jpg",
         headline: "I am the main character",
         text: text,
         likes: 0,
-        commentsNum: 0,
+        comments: 0,
         reposts: 0,
         pics: [],
       };
@@ -103,11 +103,11 @@ export const postHandler = [
 
   //edit post handler
   http.post<PostParams, PostRequestBody>(
-    `${baseURL}post/:postID/edit`,
+    `${baseURL}post/:postId/edit`,
     async ({ params, request }) => {
-      const { postID } = params;
+      const { postId } = params;
       const { text } = await request.json();
-      let editedPost = postsResponse.find((post) => post.postID === postID);
+      let editedPost = postsResponse.find((post) => post.postId === postId);
       if (editedPost) {
         editedPost.text = text;
         return HttpResponse.json({ status: 200, statusText: "OK" });
@@ -117,11 +117,11 @@ export const postHandler = [
   ),
 
   http.delete<PostParams>(
-    `${baseURL}post/:postID/delete`,
+    `${baseURL}post/:postId/delete`,
     async ({ params }) => {
-      const { postID } = params;
+      const { postId } = params;
       const deletedPost = postsResponse.findIndex(
-        (post) => (post.postID = postID),
+        (post) => (post.postId = postId),
       );
       if (deletedPost != -1) {
         console.log(postsResponse);
@@ -135,16 +135,16 @@ export const postHandler = [
 
   //add comment handler
   http.post<AddCommentParams, AddCommentRequestBody>(
-    `${baseURL}post/:postID/comment`,
+    `${baseURL}post/:postId/comment`,
     async ({ params, request }) => {
-      const { postID } = params;
+      const { postId } = params;
       const { commentText } = await request.json();
       const comment: CommentInterface = {
-        commentID: commentsResponse.length.toString(),
-        postID: postID,
-        userID: "0",
-        firstName: "Anime",
-        lastName: "Protagonist",
+        commentId: commentsResponse.length.toString(),
+        postId: postId,
+        userId: "0",
+        firstname: "Anime",
+        lastname: "Protagonist",
         profilePicture:
           "https://i.pinimg.com/550x/04/bb/21/04bb2164bbfa3684118a442c17d086bf.jpg",
         headline: "I am the main character",
@@ -157,18 +157,18 @@ export const postHandler = [
 
   //add reply handler
   http.post<AddReplyParams, AddReplyRequestBody>(
-    `${baseURL}post/:postID/comment/:commentID/reply`,
+    `${baseURL}post/:postId/comment/:commentId/reply`,
     async ({ params, request }) => {
-      const { postID } = params;
-      const { commentID } = params;
+      const { postId } = params;
+      const { commentId } = params;
       const { replyText } = await request.json();
       const reply: RepliesInterface = {
-        replyID: repliesResponse.length.toString(),
-        userID: "0",
-        postID: postID,
-        commentID: commentID,
-        firstName: "Anime",
-        lastName: "Protagonist",
+        replyId: repliesResponse.length.toString(),
+        userId: "0",
+        postId: postId,
+        commentId: commentId,
+        firstname: "Anime",
+        lastname: "Protagonist",
         profilePicture:
           "https://i.pinimg.com/550x/04/bb/21/04bb2164bbfa3684118a442c17d086bf.jpg",
         headline: "I am the main character",

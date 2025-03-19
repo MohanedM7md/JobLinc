@@ -1,36 +1,36 @@
 export interface CommentInterface {
-  commentID: string;
-  postID: string;
-  userID: string;
-  firstName: string;
-  lastName: string;
+  commentId: string;
+  postId: string;
+  userId: string;
+  firstname: string;
+  lastname: string;
   profilePicture: string;
   headline: string;
   commentText: string;
 }
 
 export interface RepliesInterface {
-  replyID: string;
-  commentID: string;
-  postID: string;
-  userID: string;
-  firstName: string;
-  lastName: string;
+  replyId: string;
+  commentId: string;
+  postId: string;
+  userId: string;
+  firstname: string;
+  lastname: string;
   profilePicture: string;
   headline: string;
   replyText: string;
 }
 
 export interface PostInterface {
-  postID: string;
-  userID: string;
-  firstName: string;
-  lastName: string;
+  postId: string;
+  userId: string;
+  firstname: string;
+  lastname: string;
   profilePicture: string;
   headline: string;
   text: string;
   likes: number;
-  commentsNum: number;
+  comments: number;
   reposts: number;
   pics: string[];
 }

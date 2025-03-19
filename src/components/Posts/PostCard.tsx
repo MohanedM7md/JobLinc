@@ -31,39 +31,39 @@ export default function Post(props: PostProps) {
 
   useEffect(() => {
     if (showComment) {
-      const response = getComments(props.post.postID);
+      const response = getComments(props.post.postId);
       response.then((data) => setComments(data));
     }
   }, [showComment]);
 
   function addComment() {
-    createComment(props.post.postID, newComment).then(() =>
-      getComments(props.post.postID).then((data) => setComments(data)),
+    createComment(props.post.postId, newComment).then(() =>
+      getComments(props.post.postId).then((data) => setComments(data)),
     );
   }
 
   function postDelete() {
-    deletePost(props.post.postID).then(() => navigate("/"));
+    deletePost(props.post.postId).then(() => navigate("/"));
   }
 
   return !hide ? (
     <div className="flex flex-wrap w-1/1 bg-lightGray rounded-xl relative">
       <div className="flex flex-row w-1/1">
         <ProfileDetails
-          key={`Details of user ${props.post.userID}`}
-          id={props.post.userID}
-          name={props.post.firstName + " " + props.post.lastName}
+          key={`Details of user ${props.post.userId}`}
+          id={props.post.userId}
+          name={props.post.firstname + " " + props.post.lastname}
           headline={props.post.headline}
           profilePicture={props.post.profilePicture}
           isFollowing={false}
         />
-        <div className="" onBlur={() => setShowUtility(false)}>
+        <div className="">
           {showUtility ? (
-            <PostUtilityButton postID={props.post.postID} postText={props.post.text} delete={() => postDelete()} />
+            <PostUtilityButton postId={props.post.postId} postText={props.post.text} delete={() => postDelete()} />
           ) : null}
         </div>
         <button
-          data-testid={`Options ${props.post.postID}`}
+          data-testid={`Options ${props.post.postId}`}
           onClick={() => setShowUtility(!showUtility)}
           className="material-icons-round cursor-pointer mr-1 text-mutedSilver hover:bg-gray-200 h-fit"
         >
@@ -77,7 +77,7 @@ export default function Post(props: PostProps) {
         </button>
       </div>
       <PostDetails
-        key={`Details of post ${props.post.postID}`}
+        key={`Details of post ${props.post.postId}`}
         text={props.post.text}
         media={props.post.pics}
       />
@@ -86,7 +86,7 @@ export default function Post(props: PostProps) {
         <span className="text-mutedSilver ml-2">{props.post.likes}</span>
         <div className="flex flex-row justify-end w-1/1">
           <span className="text-mutedSilver ml-2">
-            {props.post.commentsNum}
+            {props.post.comments}
           </span>
           <span className="text-mutedSilver ml-2">Comments</span>
           <span className="text-mutedSilver ml-2">•</span>
@@ -158,7 +158,7 @@ export default function Post(props: PostProps) {
           </div>
           {comments ? 
           comments.map((comment) => (
-            <CommentCard key={comment.commentID} comment={comment} />
+            <CommentCard key={comment.commentId} comment={comment} />
           )) : null}
         </>
       ) : null}

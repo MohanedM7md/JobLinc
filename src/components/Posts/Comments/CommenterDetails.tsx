@@ -1,5 +1,5 @@
 interface CommenterProps {
-  userID: string;
+  userId: string;
   name: string;
   profilePicture: string;
   headline: string;
