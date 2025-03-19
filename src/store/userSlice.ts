@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 
 interface UserState {
-  userID: number | null;
+  userId: number | null;
   username: string | null;
   firstname: string | null;
   lastname: string | null;
@@ -16,12 +16,13 @@ interface UserState {
   accessToken: string | null;
   refreshToken: string | null;
   forgotToken: string | null;
+  resetToken: string | null;
   status: "IDLE" | "LOADING" | "SUCCESS" | "FAILED";
   loggedIn: boolean;
 }
 
 const initialState: UserState = {
-  userID: null,
+  userId: null,
   username: null,
   firstname: null,
   lastname: null,
@@ -35,6 +36,7 @@ const initialState: UserState = {
   accessToken: null,
   refreshToken: null,
   forgotToken: null,
+  resetToken: null,
   status: "IDLE",
   loggedIn: false,
 };
@@ -58,9 +60,19 @@ export const forgotPassword = createAsyncThunk(
   "user/forgotPassword",
   async (userData: { email: string }, { rejectWithValue }) => {
     try {
-      console.log(userData);
       const response = await axios.post("http://localhost:3000/api/auth/forgot-password", userData);
-      console.log(response.data);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data || "Forgot password failed");
+    }
+  }
+);
+
+export const resetPassword = createAsyncThunk(
+  "user/resetPassword",
+  async (userData: { email: string, newPassword: string, resetToken: string }, { rejectWithValue }) => {
+    try {
+      const response = await axios.post("http://localhost:3000/api/auth/reset-password", userData);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data || "Forgot password failed");
@@ -80,6 +92,21 @@ export const registerUser = createAsyncThunk(
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data || "Register failed");
+    }
+  }
+);
+
+export const confirmOTP = createAsyncThunk(
+  "user/confirmOTP",
+  async (userData: { email: string; forgotToken: string, otp: string }, { rejectWithValue }) => {
+    try {
+      console.log("from userSlice: " + userData);
+      
+      const response = await axios.post("http://localhost:3000/api/auth/confirm-otp", userData);
+      console.log("Response in ConfirmOTP: " + JSON.stringify(response.data));
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data || "Confirm OTP failed");
     }
   }
 );
@@ -133,7 +160,7 @@ const userSlice = createSlice({
         const userData = action.payload; // Extract user object from response
 
         if (userData) {
-          state.userID = userData.userID || null;
+          state.userId = userData.userID || null;
           state.username = userData.username || null;
           state.firstname = userData.firstname || null;
           state.lastname = userData.lastname || null;
@@ -165,7 +192,7 @@ const userSlice = createSlice({
 
         if (userData)
         {
-          state.userID = userData.userID || null;
+          state.userId = userData.userID || null;
           state.username = userData.username || null;
           state.email = userData.email || null; // Can be removed since we already dispatched and set the email
           state.role = userData.role || null;
@@ -190,10 +217,51 @@ const userSlice = createSlice({
 
         if (userData)
         {
-          state.forgotToken = userData.forgotToken;
+          state.forgotToken = userData.forgotToken || null;
+          state.status = "SUCCESS"
+          
         }
       })
       .addCase(forgotPassword.rejected, (state) => {
+        state.status = "FAILED";
+      })
+      // Confirm OTP
+      .addCase(confirmOTP.pending, (state) => {
+        state.status = "LOADING";
+      })
+      .addCase(confirmOTP.fulfilled, (state, action: PayloadAction<any>) => {
+        console.log("Redux payload:", action.payload);
+
+        const userData = action.payload;
+
+        if (userData)
+        {
+          state.resetToken = userData.resetToken || null;
+          state.status = "SUCCESS"
+        }
+      })
+      .addCase(confirmOTP.rejected, (state) => {
+        state.status = "FAILED";
+      })
+      // Reset Password
+      .addCase(resetPassword.pending, (state) => {
+        state.status = "LOADING";
+      })
+      .addCase(resetPassword.fulfilled, (state, action: PayloadAction<any>) => {
+        console.log("Redux payload:", action.payload);
+
+        const userData = action.payload;
+
+        if (userData)
+        {
+          state.userId = userData.userId || null;
+          state.role = userData.role || null;
+          state.accessToken = userData.accessToken || null;
+          state.refreshToken = userData.refreshToken || null;
+          state.status = "SUCCESS";
+        }
+      })
+      .addCase(resetPassword.rejected, (state) => {
         state.status = "FAILED";
       });
   },
