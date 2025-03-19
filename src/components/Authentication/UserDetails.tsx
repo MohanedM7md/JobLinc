@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { registerUser, setUserDetailsOnRegister } from "../../store/userSlice";
 import type { AppDispatch } from "../../store/store";  // Import the correct type
 import { RootState } from "../../store/store";
+import { log } from "console";
 
 
 
@@ -104,7 +105,7 @@ function UserDetails() {
     {
         // Check validity of phone number
         event.preventDefault();        
-        if (isValidPhoneNo(selectedCountry, phoneNumber)) {
+        if (isValidPhoneNo(selectedCountry, phoneNumber) || phoneNumber.length === 0) {
             // Do Something here with the valid phone number
 
             dispatch(setUserDetailsOnRegister({
@@ -112,7 +113,7 @@ function UserDetails() {
                 lastname: userDetails.lastName,
                 country: selectedCountry,
                 city: selectedCity,
-                phoneNumber: phoneNumber
+                phoneNumber: phoneNumber.length > 0 ? phoneNumber : ""
             }));
 
 
@@ -124,10 +125,14 @@ function UserDetails() {
                 password: user.password || "",
                 country: selectedCountry,
                 city: selectedCity,
-                phoneNumber: phoneNumber
+                phoneNumber: phoneNumber.length > 0 ? phoneNumber : ""
             };
+            console.log("data before fetch: " + userData);
             
-            const resultAction = await dispatch(registerUser({firstname: userData.firstname, lastname: userData.lastname, email: userData.email, password: userData.password, country: userData.country, city: userData.city, phoneNumber: userData.phoneNumber}));
+            const resultAction = await dispatch(registerUser({firstname: userData.firstname, lastname: userData.lastname, email: userData.email, 
+                                                              password: userData.password, country: userData.country, city: userData.city, phoneNumber: userData.phoneNumber}));
+            console.log(resultAction);
+            
             //retrieveUser(userData.email, userData.password);
             
             if (registerUser.fulfilled.match(resultAction)) {
@@ -138,10 +143,7 @@ function UserDetails() {
                 // Render a component to say wrong email or password
                 alert("An error Occurred, please try again later.");
             }
-            console.log("dispatched and will nav");
-            
-            // Navigate to main page
-            navigate("/MainPage");
+            // console.log("dispatched and will nav");
         }
         else {
             setIsValidPhone(false);
@@ -161,7 +163,7 @@ function UserDetails() {
                 <form onSubmit={handleSubmit} className="flex flex-col w-full items-start gap-4">
                     {/* First Name Input */}
                     <div className="flex flex-col w-full">
-                        <label htmlFor="first-name" className="text-[14px] text-charcoalBlack font-bold">First name</label>
+                        <label htmlFor="first-name" className="text-[14px] text-charcoalBlack font-bold">First name *</label>
                         <input 
                             value={userDetails.firstName} 
                             name="firstName" 
@@ -178,7 +180,7 @@ function UserDetails() {
 
                     {/* Last Name Input */}
                     <div className="flex flex-col w-full">
-                        <label htmlFor="last-name" className="text-[14px] text-charcoalBlack font-bold">Last name</label>
+                        <label htmlFor="last-name" className="text-[14px] text-charcoalBlack font-bold">Last name *</label>
                         <input 
                             value={userDetails.lastName} 
                             name="lastName" 
@@ -209,7 +211,7 @@ function UserDetails() {
 
                     {/* Country Selection */}
                     <div className="flex flex-col w-full gap-2">
-                        <label htmlFor="countries" className="text-[12px]">Select country</label>
+                        <label htmlFor="countries" className="text-[12px]">Select country *</label>
                         <select 
                             id="countries" 
                             value={selectedCountry} 
@@ -224,7 +226,7 @@ function UserDetails() {
                     </div>
 
                     <div className="flex flex-col w-full gap-2">
-                        <label htmlFor="cities" className="text-[12px]">Select city</label>
+                        <label htmlFor="cities" className="text-[12px]">Select city *</label>
                         <select 
                             id="cities" 
                             value={selectedCity} 

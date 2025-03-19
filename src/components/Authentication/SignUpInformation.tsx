@@ -158,7 +158,7 @@ function SignUpInformation() {
     return (
         <form onSubmit={isValidSubmit} className="flex flex-col w-80 items-start gap-3 mb-3">
             <div className="flex flex-col w-full">
-                <label htmlFor="email" className="text-[14px] text-charcoalBlack font-bold">Email</label>
+                <label htmlFor="email" className="text-[14px] text-charcoalBlack font-bold">Email *</label>
                 <input value={emailText} name="email" onBlur={handleFocusOut} onChange={handleChange} required id="email"  
                 className={`outline-[0.7px] text-[14px] text-charcoalBlack h-8 px-2 rounded-sm hover:cursor-text hover:outline-[1px] hover:bg-gray-100 focus:outline-black focus:outline-[1.5px] ${(showErrorEmailEmpty || showErrorEmailInvalid) && "outline-red-700 hover:outline-red-900"}`}></input>
                 {showErrorEmailEmpty && <p className="text-red-800 text-[10px]">Please enter your email address.</p>}
@@ -167,7 +167,7 @@ function SignUpInformation() {
             </div>
 
             <div className="flex flex-col relative w-full">
-                <label htmlFor="password" className="text-[14px] text-charcoalBlack font-bold">Password</label>
+                <label htmlFor="password" className="text-[14px] text-charcoalBlack font-bold">Password *</label>
                 <input value={passText} name="password" type={isHidden ? "password" : "text"} onBlur={handleFocusOut} onChange={handleChange} required id="password" 
                 className={`outline-[0.7px] text-[14px] text-charcoalBlack h-8 pl-2 pr-10 rounded-sm hover:cursor-text hover:outline-[1px] hover:bg-gray-100 focus:outline-black focus:outline-[1.5px] ${(showErrorPassEmpty || showErrorPassInvalid) && "outline-red-700 hover:outline-red-900"}`}  ></input>
                 {showErrorPassEmpty && <p className="text-red-800 text-[10px]">Please enter your password.</p>}
@@ -185,13 +185,15 @@ function SignUpInformation() {
                 </div>
             </div>
 
+            <div id="recaptcha-container" className="g-recaptcha" data-sitekey="6Le48PQqAAAAABGnl1yAsKhhNuTnArdIGeRyuQoV"></div>
+            {showErrorRecaptcha && <p data-testid="errorRECAPTCHA" className="text-red-800 text-[12px]">Please complete the reCAPTCHA.</p>}
+
             <div className="flex w-full flex-col items-center justify-center">
                 <div className="text-[12px] text-mutedSilver mb-3">By clicking Agree & Join or Continue, you agree to the JobLinc's <span className="text-softRosewood font-semibold">User Agreement</span>, <span className="text-softRosewood font-semibold">Privacy Policy</span>, and <span className="text-softRosewood font-semibold">Cookie Policy.</span></div>
                 <AuthenticationSignInButton id="sign-up-btn" text="Agree & Join"/>
             </div>
 
-            <div id="recaptcha-container" className="g-recaptcha" data-sitekey="6Le48PQqAAAAABGnl1yAsKhhNuTnArdIGeRyuQoV"></div>
-            {showErrorRecaptcha && <p data-testid="errorRECAPTCHA" className="text-red-800 text-[12px]">Please complete the reCAPTCHA.</p>}
+            
 
         </form>
     );
