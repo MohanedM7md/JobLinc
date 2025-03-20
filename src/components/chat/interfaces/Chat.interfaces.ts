@@ -42,3 +42,11 @@ export interface ChatInputProps {
   chatId: string;
   onSendMessage: (message: string) => void;
 }
+
+export interface NetWorkCard {
+  userId: string;
+  chatPicture: string;
+  chatName: string;
+  onClick: () => void;
+  className?: string;
+}

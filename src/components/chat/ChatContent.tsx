@@ -1,4 +1,4 @@
-import { memo, useState, useEffect } from "react";
+import { memo, useState, useEffect, useRef } from "react";
 import ChatMessages from "./ChatMessages";
 import ChatInput from "./ChatInput";
 import {
@@ -13,10 +13,9 @@ import {
 } from "./interfaces/Message.interfaces";
 import { User } from "./interfaces/User.interfaces";
 import { useUser } from "./mockUse";
-import { fetchChatData, createChat } from "../../services/api/chatServices";
-import useChatid from "../../context/ChatIdProvider";
-import classNames from "classnames";
-
+import { fetchChatData, createChat } from "@services/api/chatServices";
+import useChatid from "@context/ChatIdProvider";
+import Status from "./Status";
 function ChatContent({
   userId,
   className,
@@ -28,18 +27,23 @@ function ChatContent({
   const [messages, setMessages] = useState<RecievedMessage[]>([]);
   const { chatId, setChatId } = useChatid();
   const { user } = useUser();
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+  useEffect(() => {
     const fetchData = async () => {
-      let data;
       if (userId && !chatId) {
-        data = await createChat({ userId, myId: user });
+        const data = await createChat({ userId, myId: user });
+        setUsers(data.users);
+        setMessages(data.messages);
         setChatId(data.chatId);
       } else {
-        data = await fetchChatData(chatId);
+        const data = await fetchChatData(chatId);
+        setUsers(data.users);
+        setMessages(data.messages);
       }
-      setUsers(data.users);
-      setMessages(data.messages);
     };
 
     fetchData();
@@ -56,7 +60,6 @@ function ChatContent({
 
     return () => {
       unsubscribeFromMessages();
-      disconnectChatSocket();
     };
   }, [chatId]);
 
@@ -84,11 +87,16 @@ function ChatContent({
   };
 
   return (
-    <div className={`${className} flex flex-col flex-1 overflow-hidden`}>
-      <div className="flex-1 overflow-y-auto">
+    <div className={`${className} flex flex-col flex-1 overflow-y-hidden `}>
+      <div className="flex-1 max-h-[50vh] overflow-y-auto">
         <ChatMessages users={users} messages={messages} />
-        {messages.length > 0 && (
-          <div>{JSON.stringify(messages[messages.length - 1].status)}</div>
+
+        {messages[messages.length - 1] != undefined && (
+          <Status
+            className="text-sm pl-2 bg-gray-100 text-gray-600"
+            lastMessage={messages[messages.length - 1]}
+            ref={messagesEndRef}
+          />
         )}
       </div>
       <ChatInput chatId={chatId} onSendMessage={handleSendMessage} />

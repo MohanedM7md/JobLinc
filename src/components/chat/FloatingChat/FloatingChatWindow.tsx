@@ -28,17 +28,12 @@ function FloatingChatWindow({
       return prevsChatsId.filter((id) => id != chatId);
     });
   };
-  const windowClass = classNames(
-    "fixed bottom-0 sm:bottom-0 w-full sm:w-[400px] max-h-[70vh] shadow-xl b\
-    order border-gray-200 rounded-t-lg transition-transform duration-300",
-    className,
-    {
-      "translate-y-[calc(100%-60px)]": !isActive,
-    },
-  );
+
   return (
     <div
-      className={windowClass}
+      className={`fixed w-full bottom-0 sm:w-[400px] shadow-xl border
+         border-gray-200 rounded-t-lg transition-transform duration-300
+          ${className} ${!isActive ? "translate-y-[calc(100%-60px)]" : ""}`}
       style={style}
       data-testid="test-floatingWindow"
     >
@@ -47,8 +42,7 @@ function FloatingChatWindow({
         floatingHeaderData={mockInfo}
         onClose={() => CloseChat(chatId)}
       />
-
-      <ChatContent className="h-[80vh] overflow-auto" userId="2" />
+      <ChatContent userId="2" />
     </div>
   );
 }

@@ -18,7 +18,7 @@ export const subscribeToMessages = (
   ChatSocket.on("receiveMessage", (message: RecievedMessage) => {
     console.log("📩 Received Message:", message);
     onMessageReceived(message);
-    ChatSocket.emit("messageRecieved", chatId, message.messageId);
+    ChatSocket?.emit("messageRecieved", chatId, message.messageId);
   });
 
   ChatSocket.on("messageRead", () => {

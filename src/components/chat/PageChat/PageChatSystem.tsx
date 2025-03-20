@@ -5,14 +5,14 @@ import useChatId from "@context/ChatIdProvider";
 import connectToChat, { disconnectChatSocket } from "@services/api/ChatSocket";
 
 const PageChatSystem = () => {
+  useEffect(() => {
+    connectToChat();
+    return () => disconnectChatSocket();
+  }, []);
   const { setChatId } = useChatId();
   console.log("Page System");
   const handleConversationClick = useCallback((chatId: string) => {
     setChatId(chatId);
-  }, []);
-  useEffect(() => {
-    connectToChat();
-    return () => disconnectChatSocket();
   }, []);
   return (
     <div className="flex h-screen w-full">

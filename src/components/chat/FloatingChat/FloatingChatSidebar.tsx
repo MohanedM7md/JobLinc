@@ -35,8 +35,8 @@ function FloatingChatSidebar() {
       >
         <header
           className="flex w-full h-14 bg-charcoalWhite dark:bg-darkGray 
-                   items-center gap-x-4 px-4 border-b-2 border-gray-200 
-                   rounded-t-2xl "
+                     items-center gap-x-4 px-4 border-b-2 border-gray-200 
+                     rounded-t-2xl "
           onClick={activeToggler}
         >
           <div className="flex items-center gap-x-4 w-full">
