@@ -21,40 +21,15 @@ export interface RepliesInterface {
   replyText: string;
 }
 
-export interface UserPostInterface {
-  postId: string;
-  userId: string;
-  firstname: string;
-  lastname: string;
-  profilePicture: string;
-  headline: string;
-  text: string;
-  time: Date;
-  likes: number;
-  comments: number;
-  reposts: number;
-  media: string[];
-}
-
-export interface CompanyPostInterface {
-  postId: string;
-  companyId: string;
-  companyName: string;
-  profilePicture: string;
-  headline: string;
-  text: string;
-  time: Date;
-  likes: number;
-  comments: number;
-  reposts: number;
-  media: string[];
-}
-
 export interface PostInterface {
   postId: string;
-  posterId: string;
-  name: string;
-  profilePicture: string;
+  userId: string | null;
+  firstname: string;
+  lastname: string;
+  profilePicture: string | null;
+  companyId: string | null;
+  companyName: string | null;
+  companyLogo: string | null;
   headline: string;
   text: string;
   time: Date;
@@ -62,14 +37,4 @@ export interface PostInterface {
   comments: number;
   reposts: number;
   media: string[];
-}
-
-export type Post = 
-| {
-  userPost: UserPostInterface;
-  companyPost?: never;
-}
-| {
-  userPost?: never;
-  companyPost: CompanyPostInterface;
 }

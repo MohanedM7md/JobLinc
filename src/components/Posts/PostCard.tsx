@@ -29,6 +29,10 @@ export default function Post(props: PostProps) {
   const [newComment, setNewComment] = useState<string>("");
   const navigate = useNavigate();
 
+  const posterId: string = props.post.userId ?? props.post.companyId ?? "0";
+  const name: string = props.post.firstname !== "" ?  props.post.firstname + " " + props.post.lastname : props.post.companyName ?? "Company Name";
+  const posterPic: string = props.post.profilePicture ?? props.post.companyLogo ?? "NotFound"
+
   useEffect(() => {
     if (showComment) {
       const response = getComments(props.post.postId);
@@ -50,11 +54,11 @@ export default function Post(props: PostProps) {
     <div className="flex flex-wrap w-1/1 bg-lightGray rounded-xl relative">
       <div className="flex flex-row w-1/1">
         <ProfileDetails
-          key={`Details of poster ${props.post.posterId}`}
-          id={props.post.posterId}
-          name={props.post.name}
+          key={`Details of poster ${posterId}`}
+          id={posterId}
+          name={name}
           headline={props.post.headline}
-          profilePicture={props.post.profilePicture}
+          profilePicture={posterPic}
           isFollowing={false}
         />
         <div className="">
