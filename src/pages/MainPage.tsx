@@ -2,6 +2,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
 
 function MainPage() {
     const navigate = useNavigate();
@@ -29,6 +30,7 @@ function MainPage() {
                 <div className="mt-4 p-4 border rounded-lg shadow-md">
                     <p><strong>Username:</strong> {user.username}</p>
                     <p><strong>Email:</strong> {user.email}</p>
+                    <Link className="text-[16px] text-warmBlack font-semibold hover:underline" to="/ChangePassword">Change password</Link>
                 </div>
             ) : (
                 <p>Redirecting to sign-in...</p>

@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../store/store";
 import { loginUser, setPassword } from "../../store/userSlice"; // New login thunk
 import Modal from "./Modal";
+import store from "../../store/store";
 
 declare global {
     interface Window {
@@ -62,26 +63,6 @@ function SignInInformation() {
         }
     }, []);
 
-    // useEffect(() => {
-    //     const script = document.createElement("script");
-    //     script.src = "https://www.google.com/recaptcha/api.js";
-    //     script.async = true;
-    //     script.defer = true;
-    //     script.onload = () => {
-    //         if (window.grecaptcha) {
-    //             window.grecaptcha.ready(() => {
-    //                 window.grecaptcha.render("recaptcha-container", {
-    //                     sitekey: "6Le48PQqAAAAABGnl1yAsKhhNuTnArdIGeRyuQoV",
-    //                     callback: (token: string) => {
-    //                         setRecaptchaToken(token);
-    //                         setShowErrorRecaptcha(false);
-    //                     },
-    //                 });
-    //             });
-    //         }
-    //     };
-    //     document.body.appendChild(script);
-    // }, []);
 
     
     
@@ -137,6 +118,7 @@ function SignInInformation() {
                 if (recaptchaChecked !== "") {
                     const userData = { email: emailText, password: passText };
                     dispatch(setPassword({password: passText})); 
+                    console.log("store data before sign in: " + JSON.stringify(store.getState().user));
                     const resultAction = await dispatch(loginUser(userData));
                     //retrieveUser(userData.email, userData.password);
                     if (loginUser.fulfilled.match(resultAction)) {
