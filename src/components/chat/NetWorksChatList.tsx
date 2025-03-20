@@ -1,18 +1,19 @@
-import { useEffect, useState, memo } from "react";
+import React, { useEffect, useState, memo } from "react";
 import ChatCard from "./ChatCard";
 import { fetchChats } from "../../services/api/chatServices";
-
+import { connectChatSocket } from "../../services/api/socket";
 import { useUser } from "./mockUse";
 import { ChatCardInterface } from "./interfaces/Chat.interfaces";
+import classNames from "classnames";
 
-const ChatCardsList = ({
+const NetWorksChatList = ({
   onCardClick,
   className,
 }: {
   onCardClick: (id: string) => void;
   className?: string;
 }) => {
-  const [chats, setChats] = useState<ChatCardInterface[]>([]);
+  const [users, setUsers] = useState<ChatCardInterface[]>([]);
   const { user } = useUser();
 
   console.log(
@@ -24,7 +25,7 @@ const ChatCardsList = ({
       try {
         if (!user) return;
         const data = await fetchChats(user);
-        setChats(data);
+        setUsers(data);
       } catch (error) {
         console.error("Error fetching chat data:", error);
       }
@@ -33,11 +34,11 @@ const ChatCardsList = ({
   }, []);
   return (
     <div className={`mt-4 ${className}`}>
-      {chats.length > 0 ? (
-        chats.map((chatCard) => (
+      {users.length > 0 ? (
+        users.map((chatCard) => (
           <ChatCard
             key={chatCard.chatId}
-            chatId={chatCard.chatId}
+            chatId={""}
             chatPicture={chatCard.chatPicture}
             chatName={chatCard.chatName}
             lastMessage={chatCard.lastMessage}
@@ -46,10 +47,10 @@ const ChatCardsList = ({
           />
         ))
       ) : (
-        <div className="text-gray-500 text-center mt-4">No chats found</div>
+        <div className="text-gray-500 text-center mt-4">No NetWorks found</div>
       )}
     </div>
   );
 };
 
-export default memo(ChatCardsList);
+export default memo(NetWorksChatList);

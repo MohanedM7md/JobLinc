@@ -10,7 +10,7 @@ describe("ChatContent \n", () => {
     const { container } = render(
       <UserProvider userId={"4"}>
         <ChatProvider>
-          <ChatContent chatId="chat-1" />
+          <ChatContent userId="2" />
         </ChatProvider>
       </UserProvider>,
     );
@@ -21,7 +21,7 @@ describe("ChatContent \n", () => {
     render(
       <UserProvider userId={"4"}>
         <ChatProvider>
-          <ChatContent chatId="chat-1" />
+          <ChatContent userId="2" />
         </ChatProvider>
       </UserProvider>,
     );
@@ -34,7 +34,7 @@ describe("ChatContent \n", () => {
     render(
       <UserProvider userId={"4"}>
         <ChatProvider>
-          <ChatContent chatId="chat-1" />
+          <ChatContent userId="2" />
         </ChatProvider>
       </UserProvider>,
     );

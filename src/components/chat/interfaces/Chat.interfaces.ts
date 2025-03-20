@@ -27,6 +27,11 @@ export interface ChatCardInterface {
   lastMessage: string;
   sentDate: string;
   unseenCount?: number;
+  isRead?: boolean;
+}
+export interface ChatSession {
+  chatId: string;
+  userId: string;
 }
 export interface ChatCardProps extends ChatCardInterface {
   onClick: () => void;

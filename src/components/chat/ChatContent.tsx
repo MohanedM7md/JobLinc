@@ -1,51 +1,62 @@
-import React, { useState, useEffect } from "react";
+import { memo, useState, useEffect } from "react";
 import ChatMessages from "./ChatMessages";
 import ChatInput from "./ChatInput";
-
-import { connectChatSocket } from "../../services/api/socket";
+import {
+  disconnectChatSocket,
+  subscribeToMessages,
+  unsubscribeFromMessages,
+  sendMessage,
+} from "@services/api/ChatSocket";
 import {
   RecievedMessage,
   MessageStatus,
 } from "./interfaces/Message.interfaces";
 import { User } from "./interfaces/User.interfaces";
 import { useUser } from "./mockUse";
-import { fetchChatData } from "../../services/api/chatServices";
+import { fetchChatData, createChat } from "../../services/api/chatServices";
+import useChatid from "../../context/ChatIdProvider";
+import classNames from "classnames";
 
-function ChatContent({ chatId }: { chatId: string }) {
+function ChatContent({
+  userId,
+  className,
+}: {
+  userId: string;
+  className?: string;
+}) {
   const [users, setUsers] = useState<User[]>([]);
   const [messages, setMessages] = useState<RecievedMessage[]>([]);
-  const chatSocket = connectChatSocket();
+  const { chatId, setChatId } = useChatid();
   const { user } = useUser();
 
-  console.log("______________ChatContent_______________");
   useEffect(() => {
     const fetchData = async () => {
-      const data = await fetchChatData(chatId);
-
+      let data;
+      if (userId && !chatId) {
+        data = await createChat({ userId, myId: user });
+        setChatId(data.chatId);
+      } else {
+        data = await fetchChatData(chatId);
+      }
       setUsers(data.users);
       setMessages(data.messages);
     };
+
     fetchData();
 
-    chatSocket.emit("openChat", chatId, user);
-    chatSocket.on("receiveMessage", (message: RecievedMessage) => {
-      console.log("recieved Message: ", message);
-      setMessages((prev) => [...prev, message]);
-      chatSocket.emit("messageRecieved", chatId, message.messageId);
-    });
-    chatSocket.on("messageRead", () => {
-      console.log("Message Read: ");
-      setMessages((prev) =>
-        prev.map((msg) => ({
-          ...msg,
-          status: MessageStatus.Read,
-        })),
-      );
-    });
+    subscribeToMessages(
+      chatId,
+      user,
+      (message) => setMessages((prev) => [...prev, message]),
+      () =>
+        setMessages((prev) =>
+          prev.map((msg) => ({ ...msg, status: MessageStatus.Read })),
+        ),
+    );
 
     return () => {
-      chatSocket.off("receiveMessage");
-      chatSocket.off("messageRead");
+      unsubscribeFromMessages();
+      disconnectChatSocket();
     };
   }, [chatId]);
 
@@ -57,20 +68,23 @@ function ChatContent({ chatId }: { chatId: string }) {
       status: MessageStatus.Sent,
       content: { text: message },
     };
+
     setMessages((prevMsgs) => [...prevMsgs, newMessage]);
+
     if (chatId) {
-      chatSocket?.emit("sendMessage", { ...newMessage, chatId }, () => {
-        console.log("call back called: msg delivered");
+      sendMessage(chatId, newMessage, () => {
+        console.log("✅ Message delivered");
         setMessages((prevMsgs) => {
-          prevMsgs.pop;
+          prevMsgs.pop();
           newMessage.status = MessageStatus.Delivered;
           return [...prevMsgs, newMessage];
         });
       });
     }
   };
+
   return (
-    <div className="flex flex-col flex-1 overflow-hidden">
+    <div className={`${className} flex flex-col flex-1 overflow-hidden`}>
       <div className="flex-1 overflow-y-auto">
         <ChatMessages users={users} messages={messages} />
         {messages.length > 0 && (
@@ -82,4 +96,4 @@ function ChatContent({ chatId }: { chatId: string }) {
   );
 }
 
-export default ChatContent;
+export default memo(ChatContent);

@@ -47,7 +47,8 @@ function FloatingChatWindow({
         floatingHeaderData={mockInfo}
         onClose={() => CloseChat(chatId)}
       />
-      <ChatContent chatId={chatId} />
+
+      <ChatContent className="h-[80vh] overflow-auto" userId="2" />
     </div>
   );
 }

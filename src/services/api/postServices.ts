@@ -1,4 +1,4 @@
-import api from "./api";
+import { api } from "./api";
 
 // Fetch a a number of posts to populate a user's feed
 export const getFeed = async (count: number) => {
@@ -106,15 +106,8 @@ export const checkReplyLike = async (replyId: string, userID: string) => {
   return response.data;
 };
 
-
 // Testing Fetching user data after sign in
-export const retrieveUser = async (email: string, password: string) =>
-{
-  const response = await api.post(`auth/login`, {email, password});
+export const retrieveUser = async (email: string, password: string) => {
+  const response = await api.post(`auth/login`, { email, password });
   return response.data;
-}
-
-
-
-
-
+};

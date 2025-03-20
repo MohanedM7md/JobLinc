@@ -1,12 +1,15 @@
 import FloatingChatSidebar from "./FloatingChatSidebar";
 import FloatingChatWindow from "./FloatingChatWindow";
-import useChats from "../../../hooks/useChats";
-import { ChatIdProvider } from "../../../context/ChatIdProvider";
-import { useUser } from "../mockUse";
+import useChats from "@hooks/useChats";
+import { ChatIdProvider } from "@context/ChatIdProvider";
+import connectToChat, { disconnectChatSocket } from "@services/api/ChatSocket";
 import { useEffect } from "react";
-
 function FloatingChatSystem() {
   const { opnedChatsId = [] } = useChats();
+  useEffect(() => {
+    connectToChat();
+    return () => disconnectChatSocket();
+  }, []);
   return (
     <>
       <FloatingChatSidebar />

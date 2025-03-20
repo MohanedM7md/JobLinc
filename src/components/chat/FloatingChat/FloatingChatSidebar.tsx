@@ -51,7 +51,10 @@ function FloatingChatSidebar() {
           </div>
         </header>
         <SearchBar />
-        <ChatCardsList onCardClick={handleConversationClick} />
+        <ChatCardsList
+          className="max-h-[80vh] overflow-auto"
+          onCardClick={handleConversationClick}
+        />
       </div>
     </>
   );

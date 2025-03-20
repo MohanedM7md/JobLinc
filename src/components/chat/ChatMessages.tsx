@@ -5,8 +5,8 @@ import { ChatMessagesProbs } from "./interfaces/Message.interfaces";
 
 function ChatMessages({ users, messages, className }: ChatMessagesProbs) {
   return (
-    <div className={`bg-gray-100 flex flex-col overflow-hidden`}>
-      <div className="flex-1 overflow-y-auto space-y-2">
+    <div className={`bg-gray-100 flex flex-col pt-2`}>
+      <div className="flex-1 space-y-2 h-80">
         {messages.length > 0 ? (
           messages.map((message) => {
             const sender = {
@@ -19,7 +19,6 @@ function ChatMessages({ users, messages, className }: ChatMessagesProbs) {
                 profilePicture: "",
               }),
             };
-            console.log("_________ChatMessages_____________");
             return (
               <MessageBubble
                 key={message.messageId}

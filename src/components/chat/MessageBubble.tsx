@@ -6,27 +6,30 @@ import { MessageBubbleInterface } from "./interfaces/Message.interfaces";
 
 function MessageBubble({ message }: { message: MessageBubbleInterface }) {
   const rtl = isRTL(message.content.text);
-  console.log("_______________MessageBubble_____________");
 
   return (
-    <div data-testid={message.messageId} className="flex flex-col pl-1">
+    <div
+      data-testid={message.messageId}
+      className="flex items-start gap-3 pl-1"
+    >
       <UserProfile.Image
         alt={message.sender.firstName}
         photoUrl={message.sender.profilePicture}
-        className="w-10 h-10 rounded-full absolute inline"
+        className="w-10 h-10 rounded-full flex-shrink-0"
       />
 
-      <div className=" w-full">
+      <div className="w-full">
         <UserProfile.Name
           name={message.sender.firstName}
-          className="pl-12 text-lg font-semibold text-gray-800"
+          className="text-lg font-semibold text-gray-800"
         />
 
         <div
-          className={`hover:bg-gray-200 rounded-md bg-gray-100 pl-12 pr-2 w-full ${rtl ? "text-right mr-2" : "text-left"}`}
+          className={`hover:bg-gray-200 rounded-md bg-gray-100 p-2 w-full 
+          ${rtl ? "text-right" : "text-left"}`}
         >
           {message.content.text && (
-            <p className="transition-all duration-200 p-1 ">
+            <p className="transition-all duration-200">
               {message.content.text}
             </p>
           )}
