@@ -10,10 +10,28 @@ export const fetchChats = async (userId: string) => {
   return response.data;
 };
 
-export const fetchNetWorks = async (userId: string) => {
-  const response = await axiosApi.get(`/Networks/${userId}`);
+export interface NetWorkCard {
+  userId: string;
+  chatPicture: string;
+  chatName: string;
+  onClick: () => void;
+  className?: string;
+}
 
-  return response.data;
+export const fetchNetWorks = async (Id: string) => {
+  const response = await axiosApi.get(`/Networks/${Id}`);
+  const users = response.data.map(
+    ({
+      userId,
+      firstname: chatName,
+      profilePicture: chatPicture,
+    }: {
+      userId: string;
+      firstname: string;
+      profilePicture: string;
+    }) => ({ userId, chatName, chatPicture }),
+  );
+  return users;
 };
 export const fetchChatData = async (chatId: string) => {
   const response = await axiosApi.get(`/messages/${chatId}`);

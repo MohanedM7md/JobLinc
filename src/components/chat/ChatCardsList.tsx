@@ -1,24 +1,25 @@
 import { useEffect, useState, memo } from "react";
 import ChatCard from "./ChatCard";
 import { fetchChats } from "../../services/api/chatServices";
-
 import { useUser } from "./mockUse";
 import { ChatCardInterface } from "./interfaces/Chat.interfaces";
 
 const ChatCardsList = ({
   onCardClick,
-  className,
+  className = "",
 }: {
   onCardClick: (id: string) => void;
   className?: string;
 }) => {
   const [chats, setChats] = useState<ChatCardInterface[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const { user } = useUser();
 
   console.log(
     "----------------ChatCardsList---------------- for userID: ",
     user,
   );
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -27,12 +28,15 @@ const ChatCardsList = ({
         setChats(data);
       } catch (error) {
         console.error("Error fetching chat data:", error);
+      } finally {
+        setIsLoading(false); // ✅ Set loading to false after fetching data
       }
     };
     fetchData();
   }, []);
+  if (isLoading) return null;
   return (
-    <div className={`mt-4 ${className}`}>
+    <div className={`${className} overflow-auto`}>
       {chats.length > 0 ? (
         chats.map((chatCard) => (
           <ChatCard

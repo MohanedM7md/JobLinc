@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import PageChatSystem from "../components/chat/PageChat/PageChatSystem";
-import { UserProvider } from "../components/chat/mockUse"; // Adjust the import path as necessary
-import { ChatIdProvider } from "../context/ChatIdProvider";
+import PageChatSystem from "@chatComponent/PageChat/PageChatSystem";
+import { UserProvider } from "@chatComponent/mockUse"; // Adjust the import path as necessary
+import { ChatIdProvider } from "@context/ChatIdProvider";
+import { NetworkUserIdProvider } from "@context/NetworkUserIdProvider";
 
 export function MessagingPage() {
   const [userId, setUserId] = useState("");
@@ -15,7 +16,9 @@ export function MessagingPage() {
       {userId ? (
         <UserProvider userId={userId}>
           <ChatIdProvider>
-            <PageChatSystem />
+            <NetworkUserIdProvider>
+              <PageChatSystem />
+            </NetworkUserIdProvider>
           </ChatIdProvider>
         </UserProvider>
       ) : (

@@ -1,6 +1,6 @@
-import React, { useEffect, useState, memo } from "react";
+import { useEffect, useState, memo } from "react";
 import NetworkCard from "./NetworkCard";
-import { fetchChats } from "../../services/api/chatServices";
+import { fetchNetWorks } from "@services/api/chatServices";
 import { useUser } from "./mockUse";
 import { NetWorkCard } from "./interfaces/Chat.interfaces";
 
@@ -13,26 +13,31 @@ const NetWorksChatList = ({
 }) => {
   const [users, setUsers] = useState<NetWorkCard[]>([]);
   const { user } = useUser();
+  const [isLoading, setIsLoading] = useState(true);
 
   console.log(
     "----------------NetWorksChatList---------------- for userID: ",
     user,
   );
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         if (!user) return;
-        const data = await fetchChats(user);
+        const data = await fetchNetWorks(user);
         setUsers(data);
+        setIsLoading(false);
+        console.log(users);
       } catch (error) {
         console.error("Error fetching chat data:", error);
       }
     };
     fetchData();
   }, [user]);
+  if (isLoading) return null;
   return (
-    <div className={`mt-4 ${className}`}>
-      {users.length > 0 ? (
+    <div className={`${className} max-h-[60vh] overflow-auto`}>
+      {users.length != 0 ? (
         users.map((user) => (
           <NetworkCard
             key={user.userId}
@@ -43,7 +48,7 @@ const NetWorksChatList = ({
           />
         ))
       ) : (
-        <div className="text-gray-500 text-center mt-4">No NetWorks found</div>
+        <div className="text-gray-500 text-center mt-4">No chats found</div>
       )}
     </div>
   );

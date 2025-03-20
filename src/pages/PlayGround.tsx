@@ -1,10 +1,8 @@
 import { TheNothingButton } from "../components/TheNothingButton";
 import useTheme from "../hooks/useTheme";
-import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { fetchUser } from "../store/userSlice";
-import { useUser } from "../components/chat/mockUse";
+
 import ChatProvider from "../context/ChatsIdProvider";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import FloatingChatSystem from "../components/chat/FloatingChat/FloatingChatSystem";
 import { UserProvider } from "../components/chat/mockUse";
 

@@ -2,10 +2,11 @@ import FloatingChatSidebar from "./FloatingChatSidebar";
 import FloatingChatWindow from "./FloatingChatWindow";
 import useChats from "@hooks/useChats";
 import { ChatIdProvider } from "@context/ChatIdProvider";
+import { NetworkUserIdProvider } from "@context/NetworkUserIdProvider";
 import connectToChat, { disconnectChatSocket } from "@services/api/ChatSocket";
 import { useEffect } from "react";
 function FloatingChatSystem() {
-  const { opnedChatsId = [] } = useChats();
+  const { opnedChats = [] } = useChats();
   useEffect(() => {
     connectToChat();
     return () => disconnectChatSocket();
@@ -13,13 +14,17 @@ function FloatingChatSystem() {
   return (
     <>
       <FloatingChatSidebar />
-      {opnedChatsId.map((opnedChatId, index) => {
+      {opnedChats.map((opnedChat, index) => {
+        const { chatId, userId } = opnedChat; // Extract values properly
+
         return (
-          <ChatIdProvider key={opnedChatId} id={opnedChatId}>
-            <FloatingChatWindow
-              key={opnedChatId}
-              style={{ right: `${index * 410 + 330}px` }}
-            />
+          <ChatIdProvider key={chatId} id={chatId}>
+            <NetworkUserIdProvider key={userId} id={userId}>
+              <FloatingChatWindow
+                key={chatId} // Ensure each FloatingChatWindow has a unique key
+                style={{ right: `${index * 410 + 330}px` }}
+              />
+            </NetworkUserIdProvider>
           </ChatIdProvider>
         );
       })}

@@ -19,9 +19,9 @@ export default function ChatCard({
       id={chatId}
       className={`${className} bg-charcoalWhite hover:bg-gray-200 flex items-center p-2 cursor-pointer `}
     >
-      <div className="relative w-12 h-12 group grid grid-cols-1 grid-rows-1 items-center">
+      <div className="relative w-12 h-12 group grid  grid-cols-1 grid-rows-1 shrink-0 items-center">
         <img
-          className="col-start-1 row-start-1 rounded-full w-full h-full object-fit"
+          className="col-start-1  row-start-1 rounded-full w-full h-full object-fit"
           alt={chatName}
           src={chatPicture}
         />

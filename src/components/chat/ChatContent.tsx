@@ -2,7 +2,6 @@ import { memo, useState, useEffect, useRef } from "react";
 import ChatMessages from "./ChatMessages";
 import ChatInput from "./ChatInput";
 import {
-  disconnectChatSocket,
   subscribeToMessages,
   unsubscribeFromMessages,
   sendMessage,
@@ -15,17 +14,13 @@ import { User } from "./interfaces/User.interfaces";
 import { useUser } from "./mockUse";
 import { fetchChatData, createChat } from "@services/api/chatServices";
 import useChatid from "@context/ChatIdProvider";
+import useNetworkUserId from "@context/NetworkUserIdProvider";
 import Status from "./Status";
-function ChatContent({
-  userId,
-  className,
-}: {
-  userId: string;
-  className?: string;
-}) {
+function ChatContent({ className }: { className?: string }) {
   const [users, setUsers] = useState<User[]>([]);
   const [messages, setMessages] = useState<RecievedMessage[]>([]);
   const { chatId, setChatId } = useChatid();
+  const { userId } = useNetworkUserId();
   const { user } = useUser();
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 

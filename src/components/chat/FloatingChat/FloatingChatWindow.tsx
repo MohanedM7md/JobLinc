@@ -3,7 +3,7 @@ import FloatingChatHeader from "./FloatingChatHeader";
 import ChatContent from "../ChatContent";
 import useChats from "../../../hooks/useChats";
 import useChatid from "../../../context/ChatIdProvider";
-import classNames from "classnames";
+import useNetworkUserId from "@context/NetworkUserIdProvider";
 const mockInfo: any = {
   title: "string",
   profilePicture: "https://randomuser.me/api/portraits/men/2.jpg",
@@ -18,14 +18,17 @@ function FloatingChatWindow({
   className?: string;
 }) {
   const { chatId } = useChatid();
+  const { userId } = useNetworkUserId();
   const [isActive, setActive] = useState<boolean>(true);
   const activeToggler = () => {
     setActive((prevIsActive) => !prevIsActive);
   };
-  const { setOpnedChatsId } = useChats();
-  const CloseChat = (chatId: string) => {
-    setOpnedChatsId((prevsChatsId) => {
-      return prevsChatsId.filter((id) => id != chatId);
+  const { setOpnedChats } = useChats();
+  const CloseChat = (chatId?: string, userId?: string) => {
+    setOpnedChats((prevChats) => {
+      return prevChats.filter(
+        (chat) => chat.chatId !== chatId && chat.userId !== userId,
+      );
     });
   };
 
@@ -40,9 +43,9 @@ function FloatingChatWindow({
       <FloatingChatHeader
         onClick={activeToggler}
         floatingHeaderData={mockInfo}
-        onClose={() => CloseChat(chatId)}
+        onClose={() => CloseChat(chatId, userId)}
       />
-      <ChatContent userId="2" />
+      <ChatContent />
     </div>
   );
 }
