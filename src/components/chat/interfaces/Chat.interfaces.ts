@@ -26,8 +26,8 @@ export interface ChatCardInterface {
   chatPicture: string;
   lastMessage: string;
   sentDate: string;
-  unseenCount?: number;
-  isRead?: boolean;
+  unseenCount: number;
+  isRead: boolean;
 }
 export interface ChatSession {
   chatId: string;

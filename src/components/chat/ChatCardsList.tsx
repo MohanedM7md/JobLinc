@@ -29,7 +29,7 @@ const ChatCardsList = ({
       } catch (error) {
         console.error("Error fetching chat data:", error);
       } finally {
-        setIsLoading(false); // ✅ Set loading to false after fetching data
+        setIsLoading(false);
       }
     };
     fetchData();
@@ -46,6 +46,8 @@ const ChatCardsList = ({
             chatName={chatCard.chatName}
             lastMessage={chatCard.lastMessage}
             sentDate={chatCard.sentDate}
+            unseenCount={chatCard.unseenCount}
+            isRead={chatCard.isRead}
             onClick={() => onCardClick(chatCard.chatId)}
           />
         ))
