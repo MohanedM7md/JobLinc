@@ -1,8 +1,9 @@
 import { http, HttpResponse } from "msw";
 import {
   CommentInterface,
-  PostInterface,
+  Post,
   RepliesInterface,
+  UserPostInterface,
 } from "../../../interfaces/postInterfaces";
 import { postsResponse } from "./postsDB";
 import { commentsResponse } from "./commentsDB";
@@ -41,7 +42,7 @@ export const postHandler = [
   //handlers to your api calls will be here, will provide examples, if no understand, ask
   //get feed handler
   http.get(`${baseURL}post/feed`, async ({ params }) => {
-    return HttpResponse.json<PostInterface[]>(postsResponse, {
+    return HttpResponse.json<Post[]>(postsResponse, {
       status: 200,
       statusText: "OK",
     });
@@ -81,20 +82,24 @@ export const postHandler = [
     async ({ request }) => {
       const { text } = await request.json();
       console.log(text);
-      const post: PostInterface = {
-        //user data are hard coded for now
-        postId: postsResponse.length.toString(),
-        userId: "0",
-        firstname: "Anime",
-        lastname: "Protagonist",
-        profilePicture:
-          "https://i.pinimg.com/550x/04/bb/21/04bb2164bbfa3684118a442c17d086bf.jpg",
-        headline: "I am the main character",
-        text: text,
-        likes: 0,
-        comments: 0,
-        reposts: 0,
-        pics: [],
+      const post: Post = {
+        userPost: {
+          //user data are hard coded for now
+          postId: postsResponse.length.toString(),
+          userId: "0",
+          firstname: "Anime",
+          lastname: "Protagonist",
+          profilePicture:
+            "https://i.pinimg.com/550x/04/bb/21/04bb2164bbfa3684118a442c17d086bf.jpg",
+          headline: "I am the main character",
+          text: text,
+          time: new Date(),
+          likes: 0,
+          comments: 0,
+          reposts: 0,
+          media: [],
+        },
+        companyPost: undefined,
       };
       postsResponse.push(post);
       return HttpResponse.json({ status: 200, statusText: "OK" });
@@ -107,9 +112,13 @@ export const postHandler = [
     async ({ params, request }) => {
       const { postId } = params;
       const { text } = await request.json();
-      let editedPost = postsResponse.find((post) => post.postId === postId);
+      const editedPost = postsResponse.find((post) =>
+        post.userPost
+          ? post.userPost.postId === postId
+          : post.companyPost.postId === postId,
+      );
       if (editedPost) {
-        editedPost.text = text;
+        editedPost.userPost ? editedPost.userPost.text = text : editedPost.companyPost.text;
         return HttpResponse.json({ status: 200, statusText: "OK" });
       }
       return HttpResponse.json({ status: 400, statusText: "Not Found" });
@@ -120,8 +129,10 @@ export const postHandler = [
     `${baseURL}post/:postId/delete`,
     async ({ params }) => {
       const { postId } = params;
-      const deletedPost = postsResponse.findIndex(
-        (post) => (post.postId = postId),
+      const deletedPost = postsResponse.findIndex((post) =>
+        post.userPost
+          ? post.userPost.postId === postId
+          : post.companyPost.postId === postId,
       );
       if (deletedPost != -1) {
         console.log(postsResponse);

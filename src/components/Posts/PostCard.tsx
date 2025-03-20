@@ -50,16 +50,20 @@ export default function Post(props: PostProps) {
     <div className="flex flex-wrap w-1/1 bg-lightGray rounded-xl relative">
       <div className="flex flex-row w-1/1">
         <ProfileDetails
-          key={`Details of user ${props.post.userId}`}
-          id={props.post.userId}
-          name={props.post.firstname + " " + props.post.lastname}
+          key={`Details of poster ${props.post.posterId}`}
+          id={props.post.posterId}
+          name={props.post.name}
           headline={props.post.headline}
           profilePicture={props.post.profilePicture}
           isFollowing={false}
         />
         <div className="">
           {showUtility ? (
-            <PostUtilityButton postId={props.post.postId} postText={props.post.text} delete={() => postDelete()} />
+            <PostUtilityButton
+              postId={props.post.postId}
+              postText={props.post.text}
+              delete={() => postDelete()}
+            />
           ) : null}
         </div>
         <button
@@ -79,15 +83,13 @@ export default function Post(props: PostProps) {
       <PostDetails
         key={`Details of post ${props.post.postId}`}
         text={props.post.text}
-        media={props.post.pics}
+        media={props.post.media}
       />
       <div className="flex flex-row m-auto py-2 w-11/12 border-b-1 border-gray-300">
         <span className="text-blue-500 material-icons">thumb_up</span>
         <span className="text-mutedSilver ml-2">{props.post.likes}</span>
         <div className="flex flex-row justify-end w-1/1">
-          <span className="text-mutedSilver ml-2">
-            {props.post.comments}
-          </span>
+          <span className="text-mutedSilver ml-2">{props.post.comments}</span>
           <span className="text-mutedSilver ml-2">Comments</span>
           <span className="text-mutedSilver ml-2">•</span>
           <span className="text-mutedSilver ml-2">{props.post.reposts}</span>
@@ -156,10 +158,11 @@ export default function Post(props: PostProps) {
               send
             </button>
           </div>
-          {comments ? 
-          comments.map((comment) => (
-            <CommentCard key={comment.commentId} comment={comment} />
-          )) : null}
+          {comments
+            ? comments.map((comment) => (
+                <CommentCard key={comment.commentId} comment={comment} />
+              ))
+            : null}
         </>
       ) : null}
     </div>
