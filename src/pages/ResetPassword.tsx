@@ -6,14 +6,13 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store/store";
 import { resetPassword } from "../store/userSlice";
 import Modal from "../components/Authentication/Modal";
-import { log } from "console";
+import PasswordFieldNormal from "../components/Authentication/Utilities/PasswordFieldNormal";
 
 
 function ResetPassword()
 {
 
     const [passText, setPassText] = useState("");
-    const [isHidden, setIsHidden] = useState(true);
 
     const [showErrorPassEmpty, setshowErrorPassEmpty] = useState(false);
     const [showErrorPassInvalid, setshowErrorPassInvalid] = useState(false);
@@ -30,33 +29,6 @@ function ResetPassword()
         return pass.length >= 6;
     }
 
-    function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
-        setIsHidden(prevVal => !prevVal);
-        event.preventDefault();
-    }
-
-    function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
-        const { value } = event.target;
-        setPassText(value);
-        setshowErrorPassEmpty(false);
-        setshowErrorPassInvalid(false);
-    }
-
-    function handleFocusOut(event: React.FocusEvent<HTMLInputElement>) {
-        const { value } = event.target;
-        if (value.length === 0) {
-            setshowErrorPassEmpty(true);
-            setshowErrorPassInvalid(false);
-        }
-        else
-        {
-            if (!isValidPassword(value))
-            {
-                setshowErrorPassInvalid(true);
-                setshowErrorPassEmpty(false);
-            }
-        }
-    }
 
     async function isValidSubmit(event: React.FormEvent<HTMLFormElement>)
     {
@@ -89,14 +61,7 @@ function ResetPassword()
             <form onSubmit={isValidSubmit}>
                 <div className="flex flex-col w-80 gap-4 bg-lightGray p-5 rounded-xl">
                     <h1 className="text-warmBlack text-[20px] font-bold">Reset Password</h1>
-                    <div className="flex flex-col relative w-full">
-                        <label htmlFor="password" className="text-[14px] text-charcoalBlack font-bold">New password *</label>
-                        <input value={passText} name="password" type={isHidden ? "password" : "text"} onBlur={handleFocusOut} onChange={handleChange} required id="password" 
-                        className={`outline-[0.7px] text-[14px] text-charcoalBlack h-8 pl-2 pr-10 rounded-sm hover:cursor-text hover:outline-[1px] hover:bg-gray-100 focus:outline-black focus:outline-[1.5px] ${(showErrorPassEmpty || showErrorPassInvalid) && "outline-red-700 hover:outline-red-900"}`}></input>
-                        {showErrorPassEmpty && <p className="text-red-800 text-[10px]">Please enter your password.</p>}
-                        {showErrorPassInvalid && <p data-testid="errorPass" className="text-red-800 text-[10px]">Password must be 6 characters or more.</p>}
-                        <button onClick={handleClick} className="z-2 absolute top-7.5 right-0 rounded-2xl text-[10px] border-0 px-1.5 text-charcoalBlack font-semibold hover:cursor-pointer">{isHidden ? "Show" : "Hide"}</button>
-                    </div>
+                    <PasswordFieldNormal labelText="New Password *" passwordText={passText} setPasswordText={setPassText} showErrorPassEmpty={showErrorPassEmpty} setshowErrorPassEmpty={setshowErrorPassEmpty} showErrorPassInvalid={showErrorPassInvalid} setshowErrorPassInvalid={setshowErrorPassInvalid} />
                     <AuthenticationSignInButton id="done-btn" text="Done"/>
                 </div>
             </form>
