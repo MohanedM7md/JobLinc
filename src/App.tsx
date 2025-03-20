@@ -17,6 +17,7 @@ import PostContainer from "./components/Posts/PostContainer";
 import PostCreate from "./components/Posts/PostCreate";
 import PostEdit from "./components/Posts/PostEdit";
 import { UserProvider } from "./components/chat/mockUse";
+import ResetPassword from "./pages/ResetPassword";
 
 function App() {
   return (
@@ -33,6 +34,8 @@ function App() {
         <Route path="/Signup" element={<SignUpPage />} />
         <Route path="/Signin" element={<SignInPage />} />
         <Route path="/Signin/ForgotPassword" element={<ForgotPassword />} />
+        <Route path="/ResetPassword" element={<ResetPassword />} />
+
 
         <Route path="/messaging" element={<MessagingPage />} />
         <Route path="/Home" element={<HomePage />} />
