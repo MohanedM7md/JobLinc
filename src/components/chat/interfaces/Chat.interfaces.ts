@@ -41,6 +41,7 @@ export interface ChatCardProps extends ChatCardInterface {
 export interface ChatInputProps {
   chatId: string;
   onSendMessage: (message: string) => void;
+  onTypingMessage: (isTyping: boolean) => void;
 }
 
 export interface NetWorkCard {

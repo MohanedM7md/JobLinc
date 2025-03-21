@@ -5,6 +5,8 @@ import {
   subscribeToMessages,
   unsubscribeFromMessages,
   sendMessage,
+  typing,
+  stopTyping,
 } from "@services/api/ChatSocket";
 import {
   RecievedMessage,
@@ -16,6 +18,8 @@ import { fetchChatData, createChat } from "@services/api/chatServices";
 import useChatid from "@context/ChatIdProvider";
 import useNetworkUserId from "@context/NetworkUserIdProvider";
 import Status from "./Status";
+import UserTypingIndicator from "./UserTyping";
+
 function ChatContent({ className }: { className?: string }) {
   const [users, setUsers] = useState<User[]>([]);
   const [messages, setMessages] = useState<RecievedMessage[]>([]);
@@ -23,7 +27,8 @@ function ChatContent({ className }: { className?: string }) {
   const { userId } = useNetworkUserId();
   const { user } = useUser();
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
-
+  const [typingUsers, setTypingUsers] = useState<string[]>([]);
+  console.log("typing triggers update");
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -42,7 +47,6 @@ function ChatContent({ className }: { className?: string }) {
     };
 
     fetchData();
-
     subscribeToMessages(
       chatId,
       user,
@@ -51,10 +55,21 @@ function ChatContent({ className }: { className?: string }) {
         setMessages((prev) =>
           prev.map((msg) => ({ ...msg, status: MessageStatus.Read })),
         ),
+      (userId) =>
+        setTypingUsers((prevTypingUsers) => {
+          console.log("Before update:", prevTypingUsers);
+          if (!prevTypingUsers.includes(userId)) {
+            console.log("Adding user:", userId);
+            return [...prevTypingUsers, userId];
+          }
+          return prevTypingUsers;
+        }),
+      (userId) =>
+        setTypingUsers((prev) => prev.filter((preUser) => preUser != userId)),
     );
 
     return () => {
-      unsubscribeFromMessages();
+      unsubscribeFromMessages(chatId);
     };
   }, [chatId]);
 
@@ -80,21 +95,43 @@ function ChatContent({ className }: { className?: string }) {
       });
     }
   };
-
+  const handleTypingMessage = (isTyping: boolean) => {
+    if (!chatId || !user) return;
+    switch (isTyping) {
+      case true:
+        typing(chatId, user);
+        break;
+      case false:
+        stopTyping(chatId, user);
+        break;
+    }
+  };
   return (
     <div className={`${className} flex flex-col flex-1 overflow-y-hidden `}>
       <div className="flex-1 max-h-[50vh] overflow-y-auto">
         <ChatMessages users={users} messages={messages} />
-
-        {messages[messages.length - 1] != undefined && (
-          <Status
-            className="text-sm pl-2 bg-gray-100 text-gray-600"
-            lastMessage={messages[messages.length - 1]}
-            ref={messagesEndRef}
+        {typingUsers.map((typingUserId) => (
+          <UserTypingIndicator
+            key={typingUserId}
+            userImage={
+              users.find((user) => user.userId == typingUserId)?.profilePicture
+            }
           />
-        )}
+        ))}
+        {messages[messages.length - 1] != undefined &&
+          typingUsers.length == 0 && (
+            <Status
+              className="text-sm pl-2 bg-gray-100 text-gray-600"
+              lastMessage={messages[messages.length - 1]}
+              ref={messagesEndRef}
+            />
+          )}
       </div>
-      <ChatInput chatId={chatId} onSendMessage={handleSendMessage} />
+      <ChatInput
+        chatId={chatId}
+        onSendMessage={handleSendMessage}
+        onTypingMessage={handleTypingMessage}
+      />
     </div>
   );
 }

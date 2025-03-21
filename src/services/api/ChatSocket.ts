@@ -1,5 +1,6 @@
 import { connectSocket } from "./api";
 import { RecievedMessage } from "@chatComponent/interfaces/Message.interfaces";
+import { User } from "@chatComponent/interfaces/User.interfaces";
 let ChatSocket: SocketIOClient.Socket | null = null;
 
 export const connectToChat = () => {
@@ -11,6 +12,8 @@ export const subscribeToMessages = (
   userId: string,
   onMessageReceived: (message: RecievedMessage) => void,
   onMessageRead: () => void,
+  onUserTyping: (userId: string) => void,
+  onStopUserTyping: (userId: string) => void,
 ) => {
   if (!ChatSocket) return;
 
@@ -25,6 +28,14 @@ export const subscribeToMessages = (
     console.log("📖 Message Read");
     onMessageRead();
   });
+  ChatSocket.on("messageTyping", (userId: string) => {
+    console.log("📖 Other User is typing :", userId);
+    onUserTyping(userId);
+  });
+  ChatSocket.on("stopTyping", (userId: string) => {
+    console.log("📖 Other User is stopped typing : ", userId);
+    onStopUserTyping(userId);
+  });
 };
 
 export const sendMessage = (
@@ -35,11 +46,19 @@ export const sendMessage = (
   if (!ChatSocket) return;
   ChatSocket.emit("sendMessage", { ...message, chatId }, callback);
 };
-
-export const unsubscribeFromMessages = () => {
+export const typing = (chatId: string, user: string) => {
+  if (!ChatSocket) return;
+  ChatSocket.emit("messageTyping", chatId, user);
+};
+export const stopTyping = (chatId: string, user: string) => {
+  if (!ChatSocket) return;
+  ChatSocket.emit("stopTyping", chatId, user);
+};
+export const unsubscribeFromMessages = (chatId: string) => {
   if (!ChatSocket) return;
   ChatSocket.off("receiveMessage");
   ChatSocket.off("messageRead");
+  ChatSocket.emit("leaveChat", chatId);
 };
 
 export const disconnectChatSocket = () => {
