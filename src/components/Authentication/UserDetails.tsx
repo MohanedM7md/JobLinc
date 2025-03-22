@@ -9,6 +9,7 @@ import type { AppDispatch } from "../../store/store";  // Import the correct typ
 import { RootState } from "../../store/store";
 import NameFieldNormal from "./Utilities/NameFieldNormal";
 import { isValidName } from "./Utilities/Validations";
+import store from "../../store/store";
 
 
 
@@ -24,6 +25,7 @@ function UserDetails() {
     const [showErrorLastNameInvalid, setShowErrorLastNameInvalid] = useState(false);
     
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isModalOpenError, setIsModalOpenError] = useState(false);
     
     const [selectedCountry, setSelectedCountry] = useState("Egypt"); // Default country
     const [selectedCity, setSelectedCity] = useState("Cairo");
@@ -34,7 +36,8 @@ function UserDetails() {
     const user = useSelector((state: RootState) => state.user);
 
 
-    const dispatch = useDispatch<AppDispatch>();    const navigate = useNavigate();
+    const dispatch = useDispatch<AppDispatch>();    
+    const navigate = useNavigate();
 
     const countryCities: Record<string, string[]> = {
         "Egypt": ["Cairo", "Alexandria", "Giza", "Luxor"],
@@ -117,12 +120,15 @@ function UserDetails() {
             //retrieveUser(userData.email, userData.password);
             
             if (registerUser.fulfilled.match(resultAction)) {
+                localStorage.setItem("token", store.getState().user.accessToken || "");
                 navigate("/MainPage");
             }
             else
             {
                 // Render a component to say wrong email or password
-                alert("An error Occurred, please try again later.");
+                // alert("An error Occurred, please try again later.");
+                setIsModalOpenError(true);
+
             }
             // console.log("dispatched and will nav");
         }
@@ -220,6 +226,13 @@ function UserDetails() {
 
                     <AuthenticationSignInButton id="submit-phone-no-btn" text="Continue"/>
                 </form>
+            </Modal>
+
+            <Modal isOpen={isModalOpenError} onClose={() => setIsModalOpenError(false)}>
+                <div className="flex flex-col items-start gap-4 w-full">
+                        <h2 className="font-bold text-[18px]">This email is already registered.</h2>
+                        <p className="text-[18px]">Did you forget your password? <Link to="/Signin/ForgotPassword" className="text-warmBlack font-bold hover:underline hover:cursor-pointer">Forgot password</Link></p>
+                </div>          
             </Modal>
         </div>
     );

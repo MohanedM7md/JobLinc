@@ -6,6 +6,7 @@ import { setEmail, setPassword } from "../../store/userSlice";
 import EmailFieldNormal from "./Utilities/EmailFieldNormal";
 import PasswordFieldNormal from "./Utilities/PasswordFieldNormal";
 import Checkbox from "./Utilities/Checkbox";
+import store from "../../store/store";
 function SignUpInformation() {
 
     const [emailText, setEmailText] = useState("");
@@ -74,6 +75,7 @@ function SignUpInformation() {
             {
                 dispatch(setEmail({email: emailText}));
                 dispatch(setPassword({password: passText}));
+                // Set access token in the local storage
                 navigate("/UserDetails");
             }
             else

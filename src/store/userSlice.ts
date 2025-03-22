@@ -47,7 +47,7 @@ export const loginUser = createAsyncThunk(
   async (userData: { email: string; password: string }, { rejectWithValue }) => {
     try {
       console.log(userData);
-      const response = await api.post("http://localhost:3000/api/auth/login", userData);
+      const response = await api.post("http://joblinc.me:3000/api/auth/login", userData);
       console.log(response.data);
       return response.data;
     } catch (error: any) {
@@ -62,7 +62,7 @@ export const registerUser = createAsyncThunk(
     try {
       console.log("from userSlice: " + userData);
       
-      const response = await api.post("http://localhost:3000/api/auth/register", userData);
+      const response = await api.post("http://joblinc.me:3000/api/auth/register", userData);
       console.log(response.data);
       return response.data;
     } catch (error: any) {
@@ -75,7 +75,7 @@ export const forgotPassword = createAsyncThunk(
   "user/forgotPassword",
   async (userData: { email: string }, { rejectWithValue }) => {
     try {
-      const response = await api.post("http://localhost:3000/api/auth/forgot-password", userData);
+      const response = await api.post("http://joblinc.me:3000/api/auth/forgot-password", userData);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data || "Forgot password failed");
@@ -87,7 +87,7 @@ export const resetPassword = createAsyncThunk(
   "user/resetPassword",
   async (userData: { email: string, newPassword: string, resetToken: string }, { rejectWithValue }) => {
     try {
-      const response = await api.post("http://localhost:3000/api/auth/reset-password", userData);
+      const response = await api.post("http://joblinc.me:3000/api/auth/reset-password", userData);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data || "Forgot password failed");
@@ -101,7 +101,7 @@ export const confirmOTP = createAsyncThunk(
     try {
       console.log("from userSlice: " + userData);
       
-      const response = await api.post("http://localhost:3000/api/auth/confirm-otp", userData);
+      const response = await api.post("http://joblinc.me:3000/api/auth/confirm-otp", userData);
       console.log("Response in ConfirmOTP: " + JSON.stringify(response.data));
       return response.data;
     } catch (error: any) {
@@ -116,13 +116,26 @@ export const changePassword = createAsyncThunk(
     try {
       console.log("from userSlice: " + userData);
       
-      const response = await api.post("http://localhost:3000/api/auth/change-password", userData);
+      const response = await api.post("http://joblinc.me:3000/api/auth/change-password", userData);
       console.log(response.data);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data || "Change Password failed");
     }
   }
+);
+
+
+export const getUserDetails = createAsyncThunk(
+  "user/getUserDetails",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await api.get("http://joblinc.me:3000/api/user/me");
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data || "User details fetch failed");
+    }
+  } 
 );
 // Create Redux Slice
 const userSlice = createSlice({
@@ -295,6 +308,38 @@ const userSlice = createSlice({
         }
       })
       .addCase(changePassword.rejected, (state) => {
+        state.status = "FAILED";
+      })
+      // Get User Details
+      .addCase(getUserDetails.pending, (state) => {
+        state.status = "LOADING";
+      })
+      .addCase(getUserDetails.fulfilled, (state, action: PayloadAction<any>) => {
+        console.log("Redux payload:", action.payload);
+
+        const userData = action.payload;
+
+        if (userData)
+        {
+          state.userId = userData.userId || null;
+          state.username = userData.username || null;
+          state.firstname = userData.firstname || null;
+          state.lastname = userData.lastname || null;
+          state.country = userData.country || null;
+          state.city = userData.city || null;
+          state.phoneNumber = userData.phoneNumber || null;
+          state.profilePicture = userData.profilePicture || null;
+          state.email = userData.email || null;
+          state.role = userData.role || null;
+          state.status = "SUCCESS";
+          state.loggedIn = true;
+        }
+        else 
+        {
+          console.error("User data missing in API response:", action.payload);
+        }
+      })
+      .addCase(getUserDetails.rejected, (state) => {
         state.status = "FAILED";
       });
   },

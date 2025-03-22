@@ -78,6 +78,8 @@ function SignInInformation() {
                     const resultAction = await dispatch(loginUser(userData));
                     //retrieveUser(userData.email, userData.password);
                     if (loginUser.fulfilled.match(resultAction)) {
+                        // Setting the access token in the local storage
+                        localStorage.setItem("token", store.getState().user.accessToken || "");
                         navigate("/MainPage");
                     }
                     else
