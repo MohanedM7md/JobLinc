@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { AuthenticationSignInButton } from "./AuthenticationButtons";
 import { useDispatch } from "react-redux";
 import { setEmail, setPassword } from "../../store/userSlice";
-import { isValidEmail, isValidPassword } from "./Utilities/Validations";
 import EmailFieldNormal from "./Utilities/EmailFieldNormal";
 import PasswordFieldNormal from "./Utilities/PasswordFieldNormal";
 import Checkbox from "./Utilities/Checkbox";

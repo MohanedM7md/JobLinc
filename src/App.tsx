@@ -18,6 +18,8 @@ import PostCreate from "./components/Posts/PostCreate";
 import PostEdit from "./components/Posts/PostEdit";
 import ChangePassword from "./pages/ChangePassword";
 import ResetPassword from "./pages/ResetPassword";
+import UpdateEmail from "./pages/UpdateEmail";
+import UpdateUsername from "./pages/UpdateUsername";
 
 function App() {
   return (
@@ -36,6 +38,8 @@ function App() {
         <Route path="/Signin/ForgotPassword" element={<ForgotPassword />} />
         <Route path="/ResetPassword" element={<ResetPassword />} />
         <Route path="/ChangePassword" element={<ChangePassword />}></Route>
+        <Route path="/UpdateEmail" element={<UpdateEmail />} />
+        <Route path="/UpdateUsername" element={<UpdateUsername />} />
 
         <Route path="/messaging" element={<MessagingPage />} />
         <Route path="/Home" element={<HomePage />} />

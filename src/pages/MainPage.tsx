@@ -27,10 +27,12 @@ function MainPage() {
             <h1 data-testid="welcome" className="text-2xl font-bold">Welcome to the Main Page</h1>
 
             {user.loggedIn ? (
-                <div className="mt-4 p-4 border rounded-lg shadow-md">
+                <div className="flex flex-col mt-4 p-4 border rounded-lg shadow-md">
                     <p><strong>Username:</strong> {user.username}</p>
                     <p><strong>Email:</strong> {user.email}</p>
                     <Link className="text-[16px] text-warmBlack font-semibold hover:underline" to="/ChangePassword">Change password</Link>
+                    <Link className="text-[16px] text-warmBlack font-semibold hover:underline" to="/UpdateEmail">Update email</Link>
+                    <Link className="text-[16px] text-warmBlack font-semibold hover:underline" to="/UpdateUsername">Update username</Link>
                 </div>
             ) : (
                 <p>Redirecting to sign-in...</p>
