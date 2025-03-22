@@ -22,14 +22,14 @@ function MainPage() {
             navigate("/Signin");
         } else {
             dispatch(getUserDetails())
-                .unwrap()
-                .then(() => {
-                    setLoading(false);
-                })
-                .catch((error) => {
-                    console.error("Error fetching user data: ", error);
-                    navigate("/Signin");
-                });
+            .unwrap()
+            .then(() => {
+                setLoading(false);
+            })
+            .catch((error) => {
+                console.error("Error fetching user data: ", error);
+                navigate("/Signin");
+            });
         }
     }, [navigate, dispatch]);
 
