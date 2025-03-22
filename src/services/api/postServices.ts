@@ -15,9 +15,9 @@ export const getFeed = async (count: number, signal: AbortSignal) => {
 };
 
 // Fetch a post by ID
-export const getPost = async (postID: string) => {
+export const getPost = async (postId: string) => {
   try {
-    const response = await api.get(`post/${postID}`);
+    const response = await api.get(`post/${postId}`);
     return response.data;
   } catch (error) {
     console.error("Error fetching post:", error);
@@ -25,9 +25,9 @@ export const getPost = async (postID: string) => {
 };
 
 // Fetch comments for a post (NOT in documentation)
-export const getComments = async (postID: string) => {
+export const getComments = async (postId: string) => {
   try {
-    const response = await api.get(`post/${postID}/comment`);
+    const response = await api.get(`post/${postId}/comment`);
     return response.data;
   } catch (error) {
     console.error("Error fetching comments:", error);
@@ -35,10 +35,10 @@ export const getComments = async (postID: string) => {
 };
 
 // Fetch replies for a comment (NOT in documentation)
-export const getReplies = async (postID: string, commentId: string) => {
+export const getReplies = async (postId: string, commentId: string) => {
   try {
     const response = await api.get(
-      `post/${postID}/comment/${commentId}/replies`,
+      `post/${postId}/comment/${commentId}/replies`,
     );
     return response.data;
   } catch (error) {
@@ -56,9 +56,9 @@ export const createPost = async (text: string) => {
 };
 
 // Create a comment (NOT in documentation)
-export const createComment = async (postID: string, commentText: string) => {
+export const createComment = async (postId: string, commentText: string) => {
   try {
-    await api.post(`post/${postID}/comment`, { commentText });
+    await api.post(`post/${postId}/comment`, { commentText });
   } catch (error) {
     console.error("Error creating comment:", error);
   }
@@ -66,28 +66,28 @@ export const createComment = async (postID: string, commentText: string) => {
 
 // Create a reply (NOT in documentation)
 export const createReply = async (
-  postID: string,
-  commentID: string,
+  postId: string,
+  commentId: string,
   replyText: string,
 ) => {
   try {
-    await api.post(`post/${postID}/comment/${commentID}/reply`, { replyText });
+    await api.post(`post/${postId}/comment/${commentId}/reply`, { replyText });
   } catch (error) {
     console.error("Error creating reply:", error);
   }
 };
 
-export const editPost = async (postID: string, text: string) => {
+export const editPost = async (postId: string, text: string) => {
   try {
-    await api.post(`post/${postID}/edit`, { text });
+    await api.post(`post/${postId}/edit`, { text });
   } catch (error) {
     console.error("Error editing post:", error);
   }
 };
 
-export const deletePost = async (postID: string) => {
+export const deletePost = async (postId: string) => {
   try {
-    await api.delete(`post/${postID}/delete`);
+    await api.delete(`post/${postId}/delete`);
   } catch (error) {
     console.error("Error deleting post:", error);
   }
@@ -105,10 +105,10 @@ export const likePost = async (postId: string) => {
 };
 
 // Check if a post is liked (NOT in documentation)
-export const checkPostLike = async (postId: string, userID: string) => {
+export const checkPostLike = async (postId: string, userId: string) => {
   try {
     const response = await api.get(`post/${postId}/react`, {
-      params: { userID },
+      params: { userId },
     });
     return response.data;
   } catch (error) {
@@ -117,9 +117,9 @@ export const checkPostLike = async (postId: string, userID: string) => {
 };
 
 // Like a comment (NOT in documentation)
-export const likeComment = async (postID: string, commentId: string) => {
+export const likeComment = async (postId: string, commentId: string) => {
   try {
-    await api.post(`post/${postID}/comment/${commentId}/react`, {
+    await api.post(`post/${postId}/comment/${commentId}/react`, {
       body: JSON.stringify({ type: "like" }),
     });
   } catch (error) {
@@ -129,15 +129,15 @@ export const likeComment = async (postID: string, commentId: string) => {
 
 // Check if a comment is liked (NOT in documentation)
 export const checkCommentLike = async (
-  postID: string,
+  postId: string,
   commentId: string,
-  userID: string,
+  userId: string,
 ) => {
   try {
     const response = await api.get(
-      `post/${postID}/comment/${commentId}/react`,
+      `post/${postId}/comment/${commentId}/react`,
       {
-        params: { userID },
+        params: { userId },
       },
     );
     return response.data;
@@ -147,9 +147,9 @@ export const checkCommentLike = async (
 };
 
 // Like a reply (NOT in documentation)
-export const likeReply = async (replyID: string) => {
+export const likeReply = async (replyId: string) => {
   try {
-    await api.post(`reply/${replyID}/react`, {
+    await api.post(`reply/${replyId}/react`, {
       body: JSON.stringify({ type: "like" }),
     });
   } catch (error) {
@@ -158,10 +158,10 @@ export const likeReply = async (replyID: string) => {
 };
 
 // Check if a reply is liked (NOT in documentation)
-export const checkReplyLike = async (replyId: string, userID: string) => {
+export const checkReplyLike = async (replyId: string, userId: string) => {
   try {
     const response = await api.get(`reply/${replyId}/react`, {
-      params: { userID },
+      params: { userId },
     });
     return response.data;
   } catch (error) {
