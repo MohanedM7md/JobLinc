@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import axios from "axios";
+import api from "../services/api/api";
 
 interface UserState {
   userId: number | null;
@@ -47,7 +47,7 @@ export const loginUser = createAsyncThunk(
   async (userData: { email: string; password: string }, { rejectWithValue }) => {
     try {
       console.log(userData);
-      const response = await axios.post("http://localhost:3000/api/auth/login", userData);
+      const response = await api.post("http://localhost:3000/api/auth/login", userData);
       console.log(response.data);
       return response.data;
     } catch (error: any) {
@@ -56,11 +56,26 @@ export const loginUser = createAsyncThunk(
   }
 );
 
+export const registerUser = createAsyncThunk(
+  "user/register",
+  async (userData: { firstname:string, lastname:string, email: string; password: string, country: string, city: string, phoneNumber: string }, { rejectWithValue }) => {
+    try {
+      console.log("from userSlice: " + userData);
+      
+      const response = await api.post("http://localhost:3000/api/auth/register", userData);
+      console.log(response.data);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data || "Register failed");
+    }
+  }
+);
+
 export const forgotPassword = createAsyncThunk(
   "user/forgotPassword",
   async (userData: { email: string }, { rejectWithValue }) => {
     try {
-      const response = await axios.post("http://localhost:3000/api/auth/forgot-password", userData);
+      const response = await api.post("http://localhost:3000/api/auth/forgot-password", userData);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data || "Forgot password failed");
@@ -72,26 +87,10 @@ export const resetPassword = createAsyncThunk(
   "user/resetPassword",
   async (userData: { email: string, newPassword: string, resetToken: string }, { rejectWithValue }) => {
     try {
-      const response = await axios.post("http://localhost:3000/api/auth/reset-password", userData);
+      const response = await api.post("http://localhost:3000/api/auth/reset-password", userData);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data || "Forgot password failed");
-    }
-  }
-);
-
-
-export const registerUser = createAsyncThunk(
-  "user/register",
-  async (userData: { firstname:string, lastname:string, email: string; password: string, country: string, city: string, phoneNumber: string }, { rejectWithValue }) => {
-    try {
-      console.log("from userSlice: " + userData);
-      
-      const response = await axios.post("http://localhost:3000/api/auth/register", userData);
-      console.log(response.data);
-      return response.data;
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data || "Register failed");
     }
   }
 );
@@ -102,11 +101,26 @@ export const confirmOTP = createAsyncThunk(
     try {
       console.log("from userSlice: " + userData);
       
-      const response = await axios.post("http://localhost:3000/api/auth/confirm-otp", userData);
+      const response = await api.post("http://localhost:3000/api/auth/confirm-otp", userData);
       console.log("Response in ConfirmOTP: " + JSON.stringify(response.data));
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data || "Confirm OTP failed");
+    }
+  }
+);
+
+export const changePassword = createAsyncThunk(
+  "user/changePassword",
+  async (userData: { oldPassword: string, newPassword: string, refreshToken: string }, { rejectWithValue }) => {
+    try {
+      console.log("from userSlice: " + userData);
+      
+      const response = await api.post("http://localhost:3000/api/auth/change-password", userData);
+      console.log(response.data);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data || "Change Password failed");
     }
   }
 );
@@ -262,6 +276,25 @@ const userSlice = createSlice({
         }
       })
       .addCase(resetPassword.rejected, (state) => {
+        state.status = "FAILED";
+      })
+      // Change Password
+      .addCase(changePassword.pending, (state) => {
+        state.status = "LOADING";
+      })
+      .addCase(changePassword.fulfilled, (state, action: PayloadAction<any>) => {
+        console.log("Redux payload:", action.payload);
+
+        const userData = action.payload;
+
+        if (userData)
+        {
+          state.accessToken = userData.accessToken || null;
+          state.refreshToken = userData.refreshToken || null;
+          state.status = "SUCCESS";
+        }
+      })
+      .addCase(changePassword.rejected, (state) => {
         state.status = "FAILED";
       });
   },
