@@ -44,85 +44,130 @@ const initialState: UserState = {
 // Fetch User Profile (Placeholder API)
 export const loginUser = createAsyncThunk(
   "user/login",
-  async (userData: { email: string; password: string }, { rejectWithValue }) => {
+  async (
+    userData: { email: string; password: string },
+    { rejectWithValue },
+  ) => {
     try {
       console.log(userData);
-      const response = await api.post("http://localhost:3000/api/auth/login", userData);
+      const response = await api.post(
+        "https://joblinc.me/api/auth/login",
+        userData,
+      );
       console.log(response.data);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data || "Login failed");
     }
-  }
+  },
 );
 
 export const registerUser = createAsyncThunk(
   "user/register",
-  async (userData: { firstname:string, lastname:string, email: string; password: string, country: string, city: string, phoneNumber: string }, { rejectWithValue }) => {
+  async (
+    userData: {
+      firstname: string;
+      lastname: string;
+      email: string;
+      password: string;
+      country: string;
+      city: string;
+      phoneNumber: string;
+    },
+    { rejectWithValue },
+  ) => {
     try {
       console.log("from userSlice: " + userData);
-      
-      const response = await api.post("http://localhost:3000/api/auth/register", userData);
+
+      const response = await api.post(
+        "https://joblinc.me/api/auth/register",
+        userData,
+      );
       console.log(response.data);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data || "Register failed");
     }
-  }
+  },
 );
 
 export const forgotPassword = createAsyncThunk(
   "user/forgotPassword",
   async (userData: { email: string }, { rejectWithValue }) => {
     try {
-      const response = await api.post("http://localhost:3000/api/auth/forgot-password", userData);
+      const response = await api.post(
+        "https://joblinc.me/api/auth/forgot-password",
+        userData,
+      );
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data || "Forgot password failed");
     }
-  }
+  },
 );
 
 export const resetPassword = createAsyncThunk(
   "user/resetPassword",
-  async (userData: { email: string, newPassword: string, resetToken: string }, { rejectWithValue }) => {
+  async (
+    userData: { email: string; newPassword: string; resetToken: string },
+    { rejectWithValue },
+  ) => {
     try {
-      const response = await api.post("http://localhost:3000/api/auth/reset-password", userData);
+      const response = await api.post(
+        "https://joblinc.me/api/auth/reset-password",
+        userData,
+      );
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data || "Forgot password failed");
     }
-  }
+  },
 );
 
 export const confirmOTP = createAsyncThunk(
   "user/confirmOTP",
-  async (userData: { email: string; forgotToken: string, otp: string }, { rejectWithValue }) => {
+  async (
+    userData: { email: string; forgotToken: string; otp: string },
+    { rejectWithValue },
+  ) => {
     try {
       console.log("from userSlice: " + userData);
-      
-      const response = await api.post("http://localhost:3000/api/auth/confirm-otp", userData);
+
+      const response = await api.post(
+        "https://joblinc.me/api/auth/confirm-otp",
+        userData,
+      );
       console.log("Response in ConfirmOTP: " + JSON.stringify(response.data));
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data || "Confirm OTP failed");
     }
-  }
+  },
 );
 
 export const changePassword = createAsyncThunk(
   "user/changePassword",
-  async (userData: { oldPassword: string, newPassword: string, refreshToken: string }, { rejectWithValue }) => {
+  async (
+    userData: {
+      oldPassword: string;
+      newPassword: string;
+      refreshToken: string;
+    },
+    { rejectWithValue },
+  ) => {
     try {
       console.log("from userSlice: " + userData);
-      
-      const response = await api.post("http://localhost:3000/api/auth/change-password", userData);
+
+      const response = await api.post(
+        "https://joblinc.me/api/auth/change-password",
+        userData,
+      );
       console.log(response.data);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data || "Change Password failed");
     }
-  }
+  },
 );
 // Create Redux Slice
 const userSlice = createSlice({
@@ -139,21 +184,21 @@ const userSlice = createSlice({
       state.loggedIn = false;
       state.status = "IDLE";
     },
-    setEmail: (
-      state,
-      action: PayloadAction<{ email: string; }>,
-    ) => {
+    setEmail: (state, action: PayloadAction<{ email: string }>) => {
       state.email = action.payload.email;
     },
-    setPassword: (
-      state,
-      action: PayloadAction<{ password: string }>,
-    ) => {
+    setPassword: (state, action: PayloadAction<{ password: string }>) => {
       state.password = action.payload.password; // May be changed later
     },
     setUserDetailsOnRegister: (
       state,
-      action: PayloadAction<{firstname: string, lastname: string, country: string, city: string, phoneNumber: string}>,
+      action: PayloadAction<{
+        firstname: string;
+        lastname: string;
+        country: string;
+        city: string;
+        phoneNumber: string;
+      }>,
     ) => {
       state.firstname = action.payload.firstname;
       state.lastname = action.payload.lastname;
@@ -164,7 +209,7 @@ const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-        // login user
+      // login user
       .addCase(loginUser.pending, (state) => {
         state.status = "LOADING";
       })
@@ -204,8 +249,7 @@ const userSlice = createSlice({
 
         const userData = action.payload;
 
-        if (userData)
-        {
+        if (userData) {
           state.userId = userData.userID || null;
           state.username = userData.username || null;
           state.email = userData.email || null; // Can be removed since we already dispatched and set the email
@@ -215,7 +259,6 @@ const userSlice = createSlice({
           state.status = "SUCCESS";
           state.loggedIn = true;
         }
-        
       })
       .addCase(registerUser.rejected, (state) => {
         state.status = "FAILED";
@@ -224,18 +267,19 @@ const userSlice = createSlice({
       .addCase(forgotPassword.pending, (state) => {
         state.status = "LOADING";
       })
-      .addCase(forgotPassword.fulfilled, (state, action: PayloadAction<any>) => {
-        console.log("Redux payload:", action.payload);
+      .addCase(
+        forgotPassword.fulfilled,
+        (state, action: PayloadAction<any>) => {
+          console.log("Redux payload:", action.payload);
 
-        const userData = action.payload;
+          const userData = action.payload;
 
-        if (userData)
-        {
-          state.forgotToken = userData.forgotToken || null;
-          state.status = "SUCCESS"
-          
-        }
-      })
+          if (userData) {
+            state.forgotToken = userData.forgotToken || null;
+            state.status = "SUCCESS";
+          }
+        },
+      )
       .addCase(forgotPassword.rejected, (state) => {
         state.status = "FAILED";
       })
@@ -248,10 +292,9 @@ const userSlice = createSlice({
 
         const userData = action.payload;
 
-        if (userData)
-        {
+        if (userData) {
           state.resetToken = userData.resetToken || null;
-          state.status = "SUCCESS"
+          state.status = "SUCCESS";
         }
       })
       .addCase(confirmOTP.rejected, (state) => {
@@ -266,8 +309,7 @@ const userSlice = createSlice({
 
         const userData = action.payload;
 
-        if (userData)
-        {
+        if (userData) {
           state.userId = userData.userId || null;
           state.role = userData.role || null;
           state.accessToken = userData.accessToken || null;
@@ -282,18 +324,20 @@ const userSlice = createSlice({
       .addCase(changePassword.pending, (state) => {
         state.status = "LOADING";
       })
-      .addCase(changePassword.fulfilled, (state, action: PayloadAction<any>) => {
-        console.log("Redux payload:", action.payload);
+      .addCase(
+        changePassword.fulfilled,
+        (state, action: PayloadAction<any>) => {
+          console.log("Redux payload:", action.payload);
 
-        const userData = action.payload;
+          const userData = action.payload;
 
-        if (userData)
-        {
-          state.accessToken = userData.accessToken || null;
-          state.refreshToken = userData.refreshToken || null;
-          state.status = "SUCCESS";
-        }
-      })
+          if (userData) {
+            state.accessToken = userData.accessToken || null;
+            state.refreshToken = userData.refreshToken || null;
+            state.status = "SUCCESS";
+          }
+        },
+      )
       .addCase(changePassword.rejected, (state) => {
         state.status = "FAILED";
       });
@@ -301,4 +345,5 @@ const userSlice = createSlice({
 });
 
 export default userSlice.reducer;
-export const { logOut, setEmail, setPassword, setUserDetailsOnRegister } = userSlice.actions;
+export const { logOut, setEmail, setPassword, setUserDetailsOnRegister } =
+  userSlice.actions;
