@@ -70,16 +70,20 @@ function SignUpInformation() {
             //     email: emailText,
             //     password: passText
             // }
-            const recaptchaChecked = window.grecaptcha.getResponse();
-            if (recaptchaChecked !== "")
-            {
 
-                // Set access token in the local storage        
-                navigate("/UserDetails", { state: { email: emailText, password: passText } });            }
-            else
-            {
-                setShowErrorRecaptcha(true);
-            }
+            // TO BE UNCOMMENTED
+            // const recaptchaChecked = window.grecaptcha.getResponse();
+            // if (recaptchaChecked !== "")
+            // {
+
+            //     // Set access token in the local storage        
+            //     navigate("/UserDetails", { state: { email: emailText, password: passText } });            }
+            // else
+            // {
+            //     setShowErrorRecaptcha(true);
+            // }
+            navigate("/UserDetails", { state: { email: emailText, password: passText } });
+
         }
     }
 
@@ -91,8 +95,9 @@ function SignUpInformation() {
 
             <Checkbox labelText="Remember me" />
 
-            <div id="recaptcha-container" className="g-recaptcha" data-sitekey="6Le48PQqAAAAABGnl1yAsKhhNuTnArdIGeRyuQoV"></div>
-            {showErrorRecaptcha && <p data-testid="errorRECAPTCHA" className="text-red-800 text-[12px]">Please complete the reCAPTCHA.</p>}
+            {/* Recaptcha Validation */}
+            {/*<div id="recaptcha-container" className="g-recaptcha" data-sitekey="6Le48PQqAAAAABGnl1yAsKhhNuTnArdIGeRyuQoV"></div>
+            {showErrorRecaptcha && <p data-testid="errorRECAPTCHA" className="text-red-800 text-[12px]">Please complete the reCAPTCHA.</p>}*/}
 
             <div className="flex w-full flex-col items-center justify-center">
                 <div className="text-[12px] text-mutedSilver mb-3">By clicking Agree & Join or Continue, you agree to the JobLinc's <span className="text-softRosewood font-semibold">User Agreement</span>, <span className="text-softRosewood font-semibold">Privacy Policy</span>, and <span className="text-softRosewood font-semibold">Cookie Policy.</span></div>
