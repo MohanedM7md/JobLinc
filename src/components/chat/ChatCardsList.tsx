@@ -3,6 +3,8 @@ import ChatCard from "./ChatCard";
 import { fetchChats } from "../../services/api/chatServices";
 import { useUser } from "./mockUse";
 import { ChatCardInterface } from "./interfaces/Chat.interfaces";
+import { subscribeToChats } from "@services/api/ChatSocket";
+import useChatId from "@context/ChatIdProvider";
 
 const ChatCardsList = ({
   onCardClick,
@@ -33,6 +35,15 @@ const ChatCardsList = ({
       }
     };
     fetchData();
+    subscribeToChats(
+      (UpdatedChatCard) =>
+        setChats((prev) =>
+          prev.map((chat) =>
+            chat.chatId == UpdatedChatCard.chatId ? UpdatedChatCard : chat,
+          ),
+        ),
+      (newChatCard) => setChats((prev) => [...prev, newChatCard]),
+    );
   }, []);
   if (isLoading) return null;
   return (
@@ -41,13 +52,7 @@ const ChatCardsList = ({
         chats.map((chatCard) => (
           <ChatCard
             key={chatCard.chatId}
-            chatId={chatCard.chatId}
-            chatPicture={chatCard.chatPicture}
-            chatName={chatCard.chatName}
-            lastMessage={chatCard.lastMessage}
-            sentDate={chatCard.sentDate}
-            unseenCount={chatCard.unseenCount}
-            isRead={chatCard.isRead}
+            {...chatCard}
             onClick={() => onCardClick(chatCard.chatId)}
           />
         ))

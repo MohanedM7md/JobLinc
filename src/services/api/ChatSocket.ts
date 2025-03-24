@@ -1,6 +1,7 @@
 import { connectSocket } from "./api";
 import { RecievedMessage } from "@chatComponent/interfaces/Message.interfaces";
-import { User } from "@chatComponent/interfaces/User.interfaces";
+import { ChatCardInterface } from "@chatComponent/interfaces/Chat.interfaces";
+
 let ChatSocket: SocketIOClient.Socket | null = null;
 
 export const connectToChat = () => {
@@ -66,4 +67,18 @@ export const disconnectChatSocket = () => {
     ChatSocket.disconnect();
   }
 };
+export const subscribeToChats = (
+  onChatUpdate: (chatCard: ChatCardInterface) => void,
+  onNewChat: (chatCard: ChatCardInterface) => void,
+) => {
+  ChatSocket?.on("cardUpdate", (chatCard: ChatCardInterface) => {
+    console.log("📩 Received modified chatCard:", chatCard);
+    onChatUpdate(chatCard);
+  });
+  ChatSocket?.on("newChat", (chatCard: ChatCardInterface) => {
+    console.log("📩 Received new chatCard:", chatCard);
+    onNewChat(chatCard);
+  });
+};
+
 export default connectToChat;

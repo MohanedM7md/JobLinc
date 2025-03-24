@@ -119,7 +119,8 @@ function ChatContent({ className }: { className?: string }) {
           />
         ))}
         {messages[messages.length - 1] != undefined &&
-          typingUsers.length == 0 && (
+          typingUsers.length == 0 &&
+          messages[messages.length - 1].senderId === user && (
             <Status
               className="text-sm pl-2 bg-gray-100 text-gray-600"
               lastMessage={messages[messages.length - 1]}
