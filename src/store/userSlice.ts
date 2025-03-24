@@ -7,8 +7,6 @@ interface UserState {
   role: string | null;
   accessToken: string | null;
   refreshToken: string | null;
-  forgotToken: string | null;
-  resetToken: string | null;
   confirmed: boolean | null;
   status: "IDLE" | "LOADING" | "SUCCESS" | "FAILED";
   loggedIn: boolean;
@@ -22,8 +20,6 @@ const initialState: UserState = {
   loggedIn: false,
   accessToken: null, // leave it as it is
   refreshToken: null, // Local Storage
-  forgotToken: null, // no need to even store it
-  resetToken: null, // no need to even store it
 
 };
 
@@ -152,8 +148,6 @@ const userSlice = createSlice({
       state.loggedIn = false;
       state.accessToken = null;
       state.refreshToken = null; {/* TO BE REMOVED WHEN HTTP COOKIE IS AVAILABLE*/}
-      state.forgotToken = null; // To be removed
-      state.resetToken = null; // To be removed
     },
   },
   extraReducers: (builder) => {
@@ -169,7 +163,8 @@ const userSlice = createSlice({
           state.userId = userData.userID || null;
           state.role = userData.role || null;
           state.accessToken = userData.accessToken || null;
-          state.refreshToken = userData.refreshToken || null;
+          // state.refreshToken = userData.refreshToken || null;
+          localStorage.setItem("refreshToken", userData.refreshToken);
           state.confirmed = userData.confirmed || null;
           state.status = "SUCCESS";
           state.loggedIn = true;
@@ -192,7 +187,8 @@ const userSlice = createSlice({
           state.userId = userData.userID || null;
           state.role = userData.role || null;
           state.accessToken = userData.accessToken || null;
-          state.refreshToken = userData.refreshToken || null;
+          localStorage.setItem("refreshToken", userData.refreshToken);
+          // state.refreshToken = userData.refreshToken || null;
           state.confirmed = userData.confirmed || false;
           state.status = "SUCCESS";
           state.loggedIn = true;
@@ -211,7 +207,7 @@ const userSlice = createSlice({
 
         if (userData)
         {
-          state.forgotToken = userData.forgotToken || null;
+          // state.forgotToken = userData.forgotToken || null;
           state.status = "SUCCESS"
         }
       })
@@ -227,7 +223,7 @@ const userSlice = createSlice({
 
         if (userData)
         {
-          state.resetToken = userData.resetToken || null;
+          // state.resetToken = userData.resetToken || null;
           state.status = "SUCCESS"
         }
       })
@@ -246,7 +242,8 @@ const userSlice = createSlice({
           state.userId = userData.userId || null;
           state.role = userData.role || null;
           state.accessToken = userData.accessToken || null;
-          state.refreshToken = userData.refreshToken || null;
+          // state.refreshToken = userData.refreshToken || null;
+          localStorage.setItem("refreshToken", userData.refreshToken);
           state.status = "SUCCESS";
         }
       })
@@ -263,7 +260,8 @@ const userSlice = createSlice({
         if (userData)
         {
           state.accessToken = userData.accessToken || null;
-          state.refreshToken = userData.refreshToken || null;
+          // state.refreshToken = userData.refreshToken || null;
+          localStorage.setItem("refreshToken", userData.refreshToken);
           state.status = "SUCCESS";
         }
       })
@@ -322,7 +320,8 @@ const userSlice = createSlice({
           state.userId = userData.userID;
           state.role = userData.role;
           state.accessToken = userData.accessToken;
-          state.refreshToken = userData.refreshToken;
+          // state.refreshToken = userData.refreshToken;
+          localStorage.setItem("refreshToken", userData.refreshToken);
           state.confirmed = userData.confirmed;
         }
         else 

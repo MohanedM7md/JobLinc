@@ -116,7 +116,6 @@ function UserDetails(props: UserDetailsProps) {
             //retrieveUser(userData.email, userData.password);
             
             if (registerUser.fulfilled.match(resultAction)) {
-                localStorage.setItem("token", store.getState().user.accessToken || "");
                 navigate("/MainPage");
             }
             else

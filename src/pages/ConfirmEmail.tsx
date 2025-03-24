@@ -13,7 +13,7 @@ interface ConfirmEmailProps
 }
 
 
-function ConfirmEmail(props: ConfirmEmailProps)
+function ConfirmEmail()
 {
     
     const location = useLocation();
