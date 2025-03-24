@@ -2,10 +2,11 @@ import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthenticationSignInButton } from "./AuthenticationButtons";
 import { useDispatch } from "react-redux";
-import { setEmail, setPassword } from "../../store/userSlice";
 import EmailFieldNormal from "./Utilities/EmailFieldNormal";
 import PasswordFieldNormal from "./Utilities/PasswordFieldNormal";
 import Checkbox from "./Utilities/Checkbox";
+import store from "../../store/store";
+import { isValidEmail, isValidPassword } from "./Utilities/Validations";
 function SignUpInformation() {
 
     const [emailText, setEmailText] = useState("");
@@ -57,7 +58,7 @@ function SignUpInformation() {
     function isValidSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
 
-        if (!showErrorPassInvalid && !showErrorEmailInvalid)
+        if (isValidEmail(emailText) && isValidPassword(passText))
         {
             // Now we can take the First Name and Last Name
             // Navigate to Another Page
@@ -72,10 +73,9 @@ function SignUpInformation() {
             const recaptchaChecked = window.grecaptcha.getResponse();
             if (recaptchaChecked !== "")
             {
-                dispatch(setEmail({email: emailText}));
-                dispatch(setPassword({password: passText}));
-                navigate("/UserDetails");
-            }
+
+                // Set access token in the local storage        
+                navigate("/UserDetails", { state: { email: emailText, password: passText } });            }
             else
             {
                 setShowErrorRecaptcha(true);

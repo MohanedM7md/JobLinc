@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { AuthenticationSignInButton } from "./AuthenticationButtons";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../store/store";
-import { loginUser, setPassword } from "../../store/userSlice"; // New login thunk
+import { loginUser } from "../../store/userSlice"; // New login thunk
 import Modal from "./Modal";
 import store from "../../store/store";
 import Checkbox from "./Utilities/Checkbox";
@@ -73,11 +73,12 @@ function SignInInformation() {
                 const recaptchaChecked = window.grecaptcha.getResponse();
                 if (recaptchaChecked !== "") {
                     const userData = { email: emailText, password: passText };
-                    dispatch(setPassword({password: passText})); 
                     console.log("store data before sign in: " + JSON.stringify(store.getState().user));
                     const resultAction = await dispatch(loginUser(userData));
                     //retrieveUser(userData.email, userData.password);
                     if (loginUser.fulfilled.match(resultAction)) {
+                        // Setting the access token in the local storage
+                        localStorage.setItem("token", store.getState().user.accessToken || "");
                         navigate("/MainPage");
                     }
                     else
