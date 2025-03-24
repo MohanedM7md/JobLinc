@@ -2,7 +2,7 @@ import axios from "axios";
 import store from "../../store/store";
 axios.defaults.baseURL;
 const api = axios.create({
-  baseURL: "http://joblinc.me/api/",
+  baseURL: "https://joblinc.me:3000/api/",
   headers: {
     "Content-Type": "application/json",
   },
