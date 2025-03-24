@@ -30,26 +30,40 @@ const initialState: UserState = {
 // Fetch User Profile (Placeholder API)
 export const loginUser = createAsyncThunk(
   "user/login",
-  async (userData: { email: string; password: string }, { rejectWithValue }) => {
+  async (
+    userData: { email: string; password: string },
+    { rejectWithValue },
+  ) => {
     try {
       const response = await api.post("auth/login", userData);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data || "Login failed");
     }
-  }
+  },
 );
 
 export const registerUser = createAsyncThunk(
   "user/register",
-  async (userData: { firstname:string, lastname:string, email: string; password: string, country: string, city: string, phoneNumber: string }, { rejectWithValue }) => {
+  async (
+    userData: {
+      firstname: string;
+      lastname: string;
+      email: string;
+      password: string;
+      country: string;
+      city: string;
+      phoneNumber: string;
+    },
+    { rejectWithValue },
+  ) => {
     try {
       const response = await api.post("auth/register", userData);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data || "Register failed");
     }
-  }
+  },
 );
 
 export const forgotPassword = createAsyncThunk(
@@ -61,24 +75,30 @@ export const forgotPassword = createAsyncThunk(
     } catch (error: any) {
       return rejectWithValue(error.response?.data || "Forgot password failed");
     }
-  }
+  },
 );
 
 export const resetPassword = createAsyncThunk(
   "user/resetPassword",
-  async (userData: { email: string, newPassword: string, resetToken: string }, { rejectWithValue }) => {
+  async (
+    userData: { email: string; newPassword: string; resetToken: string },
+    { rejectWithValue },
+  ) => {
     try {
       const response = await api.post("auth/reset-password", userData);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data || "Forgot password failed");
     }
-  }
+  },
 );
 
 export const confirmOTP = createAsyncThunk(
   "user/confirmOTP",
-  async (userData: { email: string; forgotToken: string, otp: string }, { rejectWithValue }) => {
+  async (
+    userData: { email: string; forgotToken: string; otp: string },
+    { rejectWithValue },
+  ) => {
     try {
       console.log("from userSlice: " + userData);
       const response = await api.post("auth/confirm-otp", userData);
@@ -86,12 +106,19 @@ export const confirmOTP = createAsyncThunk(
     } catch (error: any) {
       return rejectWithValue(error.response?.data || "Confirm OTP failed");
     }
-  }
+  },
 );
 
 export const changePassword = createAsyncThunk(
   "user/changePassword",
-  async (userData: { oldPassword: string, newPassword: string, refreshToken: string }, { rejectWithValue }) => {
+  async (
+    userData: {
+      oldPassword: string;
+      newPassword: string;
+      refreshToken: string;
+    },
+    { rejectWithValue },
+  ) => {
     try {
       console.log("from userSlice: " + userData);
       const response = await api.post("auth/change-password", userData);
@@ -158,7 +185,7 @@ const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-        // login user
+      // login user
       .addCase(loginUser.pending, (state) => {
         state.status = "LOADING";
       })
@@ -187,8 +214,7 @@ const userSlice = createSlice({
       .addCase(registerUser.fulfilled, (state, action: PayloadAction<any>) => {
         const userData = action.payload;
 
-        if (userData)
-        {
+        if (userData) {
           state.userId = userData.userID || null;
           state.role = userData.role || null;
           state.accessToken = userData.accessToken || null;
@@ -197,7 +223,6 @@ const userSlice = createSlice({
           state.status = "SUCCESS";
           state.loggedIn = true;
         }
-        
       })
       .addCase(registerUser.rejected, (state) => {
         state.status = "FAILED";
@@ -225,10 +250,9 @@ const userSlice = createSlice({
       .addCase(confirmOTP.fulfilled, (state, action: PayloadAction<any>) => {
         const userData = action.payload;
 
-        if (userData)
-        {
+        if (userData) {
           state.resetToken = userData.resetToken || null;
-          state.status = "SUCCESS"
+          state.status = "SUCCESS";
         }
       })
       .addCase(confirmOTP.rejected, (state) => {
@@ -241,8 +265,7 @@ const userSlice = createSlice({
       .addCase(resetPassword.fulfilled, (state, action: PayloadAction<any>) => {
         const userData = action.payload;
 
-        if (userData)
-        {
+        if (userData) {
           state.userId = userData.userId || null;
           state.role = userData.role || null;
           state.accessToken = userData.accessToken || null;
