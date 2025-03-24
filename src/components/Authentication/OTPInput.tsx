@@ -1,17 +1,28 @@
 import { useState, useRef, useEffect } from "react";
 
-const OTPInput = ({ length = 6, onComplete }: { length?: number; onComplete: (otp: string) => void }) => {
-  const [otp, setOtp] = useState<string[]>(new Array(length).fill(""));
-  const [showErrorOTP, setShowErrorOTP] = useState(false);
+interface OTPInputProps {
+  length?: number;
+  onComplete: (otp: string) => void;
+  clear: boolean; // New prop to clear the input
+}
 
+const OTPInput = ({ length = 6, onComplete, clear }: OTPInputProps) => {
+  const [otp, setOtp] = useState<string[]>(new Array(length).fill(""));
   const inputRefs = useRef<(HTMLInputElement | null)[]>(new Array(length).fill(null));
 
-    useEffect(() => {
+  useEffect(() => {
     if (inputRefs.current[0]) {
       inputRefs.current[0].focus();
     }
-    }, []);
-    
+  }, []);
+
+  useEffect(() => {
+    if (clear) {
+      setOtp(new Array(length).fill(""));
+      inputRefs.current[0]?.focus();
+    }
+  }, [clear, length]);
+
   const handleChange = (index: number, value: string) => {
     if (!/^[0-9]?$/.test(value)) return;
     const newOtp = [...otp];
@@ -38,7 +49,7 @@ const OTPInput = ({ length = 6, onComplete }: { length?: number; onComplete: (ot
       {otp.map((digit, index) => (
         <input
           key={index}
-          ref={(el) => { inputRefs.current[index] = el; }}  // ✅ Fix: No return value
+          ref={(el) => { inputRefs.current[index] = el; }}
           type="text"
           maxLength={1}
           value={digit}
