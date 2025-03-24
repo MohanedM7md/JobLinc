@@ -19,6 +19,7 @@
     "axios": "^1.8.1",
     "classnames": "^2.5.1",
     "firebase": "^11.4.0",
+    "framer-motion": "^12.5.0",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.479.0",
     "material-icons": "^1.13.14",

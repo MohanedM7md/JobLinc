@@ -7,10 +7,11 @@ import { EllipsisVertical } from "lucide-react";
 import SearchBar from "@chatComponent/UI/SearchBar";
 import NetWorksChatList from "@chatComponent/NetWorksChatList";
 import useNetworkUserId from "@context/NetworkUserIdProvider";
+import ConnectionsDropdown from "@chatComponent/ConnectionsDropdown";
 
 function PageChatSystem() {
   const { setChatId } = useChatId();
-  const { setUserId } = useNetworkUserId();
+  const { setUsersId } = useNetworkUserId();
   console.log("Page System");
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const onFocusedToggler = () => {
@@ -22,11 +23,11 @@ function PageChatSystem() {
     console.log(value);
   }, []);
   const handleConversationClick = useCallback((chatId: string) => {
-    setUserId("");
+    setUsersId([]);
     setChatId(chatId);
   }, []);
   const handleNetWorkUserClick = useCallback((userId: string) => {
-    setUserId(userId);
+    setUsersId([userId]);
     setChatId("");
   }, []);
 
@@ -36,29 +37,32 @@ function PageChatSystem() {
   }, []);
   return (
     <>
-      <div className="flex items-center justify-between bg-gray-100 p-3 rounded-lg shadow-md">
-        <h2 className="font-semibold text-lg text-gray-800">Messaging</h2>
+      <header className="flex items-center justify-between bg-gray-100 p-3 rounded-lg shadow-md">
+        <h2 className=" hidden md:block font-semibold text-lg text-gray-800">
+          Messaging
+        </h2>
 
         <div className="flex items-center gap-3">
           <SearchBar
             FocusToggler={onFocusedToggler}
             onChange={handleSearchChange}
-            className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2"
+            className="md:w-xl "
           />
+          <ConnectionsDropdown className="  right-0 mt-2 w-30 md:w-lg" />
           <button className="p-2 rounded-full hover:bg-gray-200">
             <EllipsisVertical className="w-6 h-6 text-gray-600" />
           </button>
         </div>
-      </div>
+      </header>
       <div className="flex h-screen w-full">
         <div className="w-1/3 border-r bg-charcoalWhite border-gray-300 p-4 overflow-y-auto">
           {isFocused ? (
-            <ChatCardsList className="" onCardClick={handleConversationClick} />
-          ) : (
             <NetWorksChatList
               className=""
               onCardClick={handleNetWorkUserClick}
             />
+          ) : (
+            <ChatCardsList className="" onCardClick={handleConversationClick} />
           )}
         </div>
         <PageMessageWindow className="flex-grow flex flex-col justify-end" />

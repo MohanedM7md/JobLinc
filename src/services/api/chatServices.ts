@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosApi = axios.create({
-  baseURL: "http://localhost:4000/api",
+  baseURL: "/api",
 });
 
 export const fetchChats = async (userId: string) => {
@@ -39,12 +39,12 @@ export const fetchChatData = async (chatId: string) => {
 };
 
 export const createChat = async ({
-  userId,
+  usersId,
   myId,
 }: {
-  userId: string;
+  usersId: string[];
   myId: string;
 }) => {
-  const response = await axiosApi.post(`/messages`, { userId, myId });
+  const response = await axiosApi.post(`/messages`, { usersId, myId });
   return response.data;
 };

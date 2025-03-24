@@ -1,25 +1,25 @@
 import React, { createContext, useContext, useState } from "react";
 
 interface ChatIdContextType {
-  userId: string;
-  setUserId: React.Dispatch<React.SetStateAction<string>>;
+  usersId: string[];
+  setUsersId: React.Dispatch<React.SetStateAction<string[]>>;
 }
 export const ChatsIdContext = createContext<ChatIdContextType>({
-  userId: "",
-  setUserId: () => {},
+  usersId: [],
+  setUsersId: () => {},
 });
 
 export function NetworkUserIdProvider({
   children,
-  id,
+  ids,
 }: {
   children: React.ReactNode;
-  id?: string;
+  ids?: string[];
 }) {
-  const [userId, setUserId] = useState(id ? id : "");
+  const [usersId, setUsersId] = useState<string[]>(ids ?? []);
 
   return (
-    <ChatsIdContext.Provider value={{ userId, setUserId }}>
+    <ChatsIdContext.Provider value={{ usersId, setUsersId }}>
       {children}
     </ChatsIdContext.Provider>
   );

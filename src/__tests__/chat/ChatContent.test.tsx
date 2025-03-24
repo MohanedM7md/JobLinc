@@ -19,7 +19,7 @@ describe("ChatContent", () => {
       </UserProvider>,
     );
 
-    container = renderResult.container; // ✅ Correct way to get container
+    container = renderResult.container;
     sendButton = screen.getByRole("button", { name: /send/i });
     textArea = screen.getByPlaceholderText(/write a message/i);
   });

@@ -9,18 +9,7 @@ describe("FloatingChatSidebar", () => {
   beforeEach(() => {
     localStorage.clear();
   });
-
-  test("renders FloatingChatSidebar correctly", () => {
-    render(
-      <UserProvider userId={"0"}>
-        <ChatProvider>
-          <FloatingChatSidebar />
-        </ChatProvider>
-      </UserProvider>,
-    );
-    expect(screen.getByText("Messaging")).toBeInTheDocument();
-  });
-  test("renders searchbar UI", () => {
+  beforeAll(() => {
     render(
       <UserProvider userId={"4"}>
         <ChatProvider>
@@ -28,6 +17,11 @@ describe("FloatingChatSidebar", () => {
         </ChatProvider>
       </UserProvider>,
     );
+  });
+  test("renders FloatingChatSidebar correctly", () => {
+    expect(screen.getByText("Messaging")).toBeInTheDocument();
+  });
+  test("renders searchbar UI", () => {
     expect(screen.getByPlaceholderText("Search...")).toBeInTheDocument();
   });
   test("renders filter UI", () => {
@@ -43,14 +37,6 @@ describe("FloatingChatSidebar", () => {
     expect(screen.getByTestId("test-filter-icon")).toBeInTheDocument();
   });
   test("should toggle sidebar when header is clicked", async () => {
-    render(
-      <UserProvider userId={"4"}>
-        <ChatProvider>
-          <FloatingChatSidebar />
-        </ChatProvider>
-      </UserProvider>,
-    );
-
     const header = screen.getByText("Messaging");
     await userEvent.click(header);
     expect(localStorage.getItem("chatSidebarActive")).toBe("true");

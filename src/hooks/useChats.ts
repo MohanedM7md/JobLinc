@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { ChatsIdContext } from "../context/ChatsIdProvider";
+import { ChatsIdContext } from "@context/ChatsIdProvider";
 
 export default function useChats() {
   const context = useContext(ChatsIdContext);

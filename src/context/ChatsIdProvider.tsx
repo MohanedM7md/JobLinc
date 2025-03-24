@@ -1,6 +1,6 @@
 import React, { createContext, useState } from "react";
 
-type ChatEntry = { chatId: string; userId: string };
+type ChatEntry = { chatId: string; usersId: string[] };
 
 type ChatsIdContextType = {
   opnedChats: ChatEntry[];

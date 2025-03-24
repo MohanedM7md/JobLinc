@@ -44,6 +44,7 @@ const NetWorksChatList = ({
             userId={user.userId}
             chatPicture={user.chatPicture}
             chatName={user.chatName}
+            className="md:bg-charcoalWhite md:hover:bg-gray-200 bg-gray-100"
             onClick={() => onCardClick(user.userId)}
           />
         ))

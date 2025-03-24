@@ -10,7 +10,8 @@ export default function NetworkCard({
     <div
       onClick={onClick}
       id={userId}
-      className={`${className} bg-charcoalWhite hover:bg-gray-200 flex items-center p-2 cursor-pointer `}
+      className={`
+        flex items-center justify-center p-2 mb-1 cursor-pointer  rounded-2xl ${className}`}
     >
       <div className="relative w-12 h-12 group grid grid-cols-1 grid-rows-1 items-center">
         <img
@@ -19,10 +20,8 @@ export default function NetworkCard({
           src={chatPicture}
         />
       </div>
-      <div className="font-medium flex-1 ml-3">
-        <div>
-          <div className="">{chatName}</div>
-        </div>
+      <div className="hidden md:block font-medium flex-1 ml-3">
+        <div className="">{chatName}</div>
       </div>
     </div>
   );

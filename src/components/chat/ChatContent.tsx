@@ -24,7 +24,7 @@ function ChatContent({ className }: { className?: string }) {
   const [users, setUsers] = useState<User[]>([]);
   const [messages, setMessages] = useState<RecievedMessage[]>([]);
   const { chatId, setChatId } = useChatid();
-  const { userId } = useNetworkUserId();
+  const { usersId } = useNetworkUserId();
   const { user } = useUser();
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const [typingUsers, setTypingUsers] = useState<string[]>([]);
@@ -34,8 +34,8 @@ function ChatContent({ className }: { className?: string }) {
   }, [messages]);
   useEffect(() => {
     const fetchData = async () => {
-      if (userId && !chatId) {
-        const data = await createChat({ userId, myId: user });
+      if (usersId.length && !chatId) {
+        const data = await createChat({ usersId, myId: user });
         setUsers(data.users);
         setMessages(data.messages);
         setChatId(data.chatId);

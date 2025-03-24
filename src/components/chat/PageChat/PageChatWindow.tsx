@@ -11,15 +11,15 @@ const chatTitle = {
 
 function PageChatWindow({ className }: { className: string }) {
   const { chatId } = useChatId();
-  const { userId } = useNetworkUserId();
+  const { usersId } = useNetworkUserId();
   console.log("--------------PageChatWindow rendered--------------id:", chatId);
-  console.log("User Id", userId);
+  console.log("User Id", usersId);
   return (
     <div
       className={`${className} w-2/3 flex flex-col`}
       data-testid="test-PageWindow"
     >
-      {chatId || userId ? (
+      {chatId || usersId.length ? (
         <>
           <PageChatHeader name={chatTitle.name} status={chatTitle.status} />
           <ChatContent />

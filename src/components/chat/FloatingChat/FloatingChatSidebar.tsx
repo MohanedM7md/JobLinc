@@ -1,25 +1,21 @@
 import { useCallback, useEffect, useState } from "react";
 import ChatCardsList from "../ChatCardsList";
 import NetWorksChatList from "@chatComponent/NetWorksChatList";
-import useChatId from "@context/ChatIdProvider";
-import useNetworkUserId from "@context/NetworkUserIdProvider";
 import SearchBar from "@chatComponent/UI/SearchBar";
 import { EllipsisVertical } from "lucide-react";
 import connectToChat, { disconnectChatSocket } from "@services/api/ChatSocket";
 import useChats from "@hooks/useChats";
-
+import ConnectionsDropdown from "@chatComponent/ConnectionsDropdown";
 function FloatingChatSidebar() {
   const [isActive, setActive] = useState<boolean>(() => {
     return localStorage.getItem("chatSidebarActive") === "true" || false;
   });
-
-  const { setOpnedChats } = useChats();
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
+  const { setOpnedChats } = useChats();
+
   const onFocusedToggler = () => {
-    setTimeout(() => {
-      setIsFocused(!isFocused);
-    }, 100);
+    setTimeout(() => setIsFocused(!isFocused), 200);
   };
 
   const handleSearchChange = useCallback((value: string) => {
@@ -29,14 +25,15 @@ function FloatingChatSidebar() {
   const handleConversationClick = (chatId: string) => {
     setOpnedChats((prevChats) => {
       if (prevChats.some((chat) => chat.chatId === chatId)) return prevChats;
-      return [...prevChats, { chatId, userId: "" }];
+      return [...prevChats, { chatId, usersId: [] }];
     });
   };
 
   const handleNetWorkUserClick = (userId: string) => {
     setOpnedChats((prevChats) => {
-      if (prevChats.some((chat) => chat.userId === userId)) return prevChats;
-      return [...prevChats, { chatId: "", userId }];
+      if (prevChats.some((chat) => chat.usersId[0] === userId))
+        return prevChats;
+      return [...prevChats, { chatId: "", usersId: [userId] }];
     });
   };
 
@@ -70,12 +67,14 @@ function FloatingChatSidebar() {
         <h2 className="font-semibold text-gray-800 dark:text-white flex-grow">
           Messaging
         </h2>
+
         <button className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
           <EllipsisVertical className="w-6 h-6 text-gray-600 dark:text-gray-300" />
         </button>
       </header>
 
       <div className="flex items-center gap-3 p-3 bg-gray-100 dark:bg-gray-800 border-b border-gray-300">
+        <ConnectionsDropdown className="  right-14 -top-20 w-30 md:w-sm" />
         <SearchBar
           FocusToggler={onFocusedToggler}
           onChange={handleSearchChange}
@@ -83,12 +82,15 @@ function FloatingChatSidebar() {
       </div>
 
       {isFocused ? (
+        <NetWorksChatList
+          onCardClick={handleNetWorkUserClick}
+          className="max-h-[60vh]"
+        />
+      ) : (
         <ChatCardsList
           onCardClick={handleConversationClick}
           className="max-h-[60vh]"
         />
-      ) : (
-        <NetWorksChatList onCardClick={handleNetWorkUserClick} />
       )}
     </div>
   );

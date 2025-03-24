@@ -18,17 +18,17 @@ function FloatingChatWindow({
   className?: string;
 }) {
   const { chatId } = useChatid();
-  const { userId } = useNetworkUserId();
+  const { usersId } = useNetworkUserId();
   const [isActive, setActive] = useState<boolean>(true);
   const activeToggler = () => {
     setActive((prevIsActive) => !prevIsActive);
   };
   const { setOpnedChats } = useChats();
-  const CloseChat = (chatId?: string, userId?: string) => {
+  const CloseChat = (chatId?: string, userId?: string[]) => {
     setOpnedChats((prevChats) => {
-      return prevChats.filter(
-        (chat) => chat.chatId !== chatId && chat.userId !== userId,
-      );
+      return chatId
+        ? prevChats.filter((chat) => chat.chatId !== chatId)
+        : prevChats.filter((chat) => chat.usersId[0] !== userId![0]);
     });
   };
 
@@ -43,7 +43,7 @@ function FloatingChatWindow({
       <FloatingChatHeader
         onClick={activeToggler}
         floatingHeaderData={mockInfo}
-        onClose={() => CloseChat(chatId, userId)}
+        onClose={() => CloseChat(chatId, usersId)}
       />
       <ChatContent />
     </div>
