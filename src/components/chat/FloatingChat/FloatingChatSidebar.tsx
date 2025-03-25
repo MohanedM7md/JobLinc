@@ -5,7 +5,7 @@ import SearchBar from "@chatComponent/UI/SearchBar";
 import { EllipsisVertical } from "lucide-react";
 import connectToChat, { disconnectChatSocket } from "@services/api/ChatSocket";
 import useChats from "@hooks/useChats";
-import ConnectionsDropdown from "@chatComponent/ConnectionsDropdown";
+import ConnectionsDropdown from "@chatComponent/FloatingChat/ConnectionsDropdown";
 function FloatingChatSidebar() {
   const [isActive, setActive] = useState<boolean>(() => {
     return localStorage.getItem("chatSidebarActive") === "true" || false;
@@ -74,7 +74,7 @@ function FloatingChatSidebar() {
       </header>
 
       <div className="flex items-center gap-3 p-3 bg-gray-100 dark:bg-gray-800 border-b border-gray-300">
-        <ConnectionsDropdown className="  right-14 -top-20 w-30 md:w-sm" />
+        <ConnectionsDropdown className="  right-14 -bottom-10 w-30 md:w-sm" />
         <SearchBar
           FocusToggler={onFocusedToggler}
           onChange={handleSearchChange}

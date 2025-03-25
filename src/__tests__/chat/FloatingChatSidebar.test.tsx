@@ -24,14 +24,7 @@ describe("FloatingChatSidebar", () => {
   test("renders searchbar UI", () => {
     expect(screen.getByPlaceholderText("Search...")).toBeInTheDocument();
   });
-  test("renders filter UI", () => {
-    render(
-      <UserProvider userId={"0"}>
-        <ChatProvider>
-          <FloatingChatSidebar />
-        </ChatProvider>
-      </UserProvider>,
-    );
+  test("renders UIs", () => {
     expect(screen.getByPlaceholderText("Search...")).toBeInTheDocument();
     expect(screen.getByTestId("test-search-icon")).toBeInTheDocument();
     expect(screen.getByTestId("test-filter-icon")).toBeInTheDocument();

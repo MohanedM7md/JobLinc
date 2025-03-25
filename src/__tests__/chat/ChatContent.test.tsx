@@ -1,9 +1,9 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import ChatProvider from "../../context/ChatsIdProvider";
+import { ChatIdProvider } from "@context/ChatIdProvider";
 import ChatContent from "@chatComponent/ChatContent";
 import { UserProvider } from "../../components/chat/mockUse";
-import { expect, it, describe, beforeEach } from "vitest";
+import { expect, it, describe, beforeEach, vi } from "vitest";
 
 describe("ChatContent", () => {
   let sendButton: HTMLButtonElement;
@@ -13,9 +13,9 @@ describe("ChatContent", () => {
   beforeEach(() => {
     const renderResult = render(
       <UserProvider userId={"4"}>
-        <ChatProvider>
+        <ChatIdProvider id="chat-1">
           <ChatContent />
-        </ChatProvider>
+        </ChatIdProvider>
       </UserProvider>,
     );
 
@@ -34,6 +34,7 @@ describe("ChatContent", () => {
   });
 
   it("sends a message and displays it correctly", async () => {
+    window.HTMLElement.prototype.scrollIntoView = vi.fn();
     await userEvent.type(textArea, "Hello, world!");
     await userEvent.click(sendButton);
 

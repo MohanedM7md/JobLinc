@@ -50,4 +50,12 @@ describe("ChatCard Component", () => {
     const johnChat = screen.getByTestId(mockProps.chatId);
     expect(johnChat).toHaveClass("bg-SoftRed");
   });
+  it("triggers onClick when clicked", async () => {
+    render(<ChatCard {...mockProps} />);
+
+    const card = screen.getByText(mockProps.chatName);
+    await userEvent.click(card);
+
+    expect(mockProps.onClick).toHaveBeenCalledTimes(1);
+  });
 });

@@ -7,13 +7,15 @@ import { EllipsisVertical } from "lucide-react";
 import SearchBar from "@chatComponent/UI/SearchBar";
 import NetWorksChatList from "@chatComponent/NetWorksChatList";
 import useNetworkUserId from "@context/NetworkUserIdProvider";
-import ConnectionsDropdown from "@chatComponent/ConnectionsDropdown";
+import ConnectionsSidebar from "@chatComponent/PageChat/ConnectionsSidebar";
+import { Users2 } from "lucide-react";
 
 function PageChatSystem() {
   const { setChatId } = useChatId();
   const { setUsersId } = useNetworkUserId();
   console.log("Page System");
   const [isFocused, setIsFocused] = useState<boolean>(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
   const onFocusedToggler = () => {
     setTimeout(() => {
       setIsFocused(!isFocused);
@@ -48,7 +50,18 @@ function PageChatSystem() {
             onChange={handleSearchChange}
             className="md:w-xl "
           />
-          <ConnectionsDropdown className="  right-0 mt-2 w-30 md:w-lg" />
+          <button
+            onClick={() => setIsSidebarOpen(true)}
+            className="p-2 rounded-full hover:bg-gray-200 transition"
+          >
+            <Users2 />
+          </button>
+          {isSidebarOpen && (
+            <ConnectionsSidebar
+              isOpen={isSidebarOpen}
+              onClose={() => setIsSidebarOpen(false)}
+            />
+          )}
           <button className="p-2 rounded-full hover:bg-gray-200">
             <EllipsisVertical className="w-6 h-6 text-gray-600" />
           </button>
