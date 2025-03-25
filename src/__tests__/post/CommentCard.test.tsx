@@ -1,19 +1,19 @@
 import { render, screen, cleanup } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import CommentCard from "./CommentCard";
-import { CommentInterface } from "../../../interfaces/postInterfaces";
-import * as api from "../../../api/api";
+import CommentCard from "../../components/Posts/Comments/CommentCard";
+import { CommentInterface } from "../../interfaces/postInterfaces";
+import * as api from "../../services/api/postServices"
 import "@testing-library/jest-dom/vitest";
 
-vi.mock("../../../api/api");
+vi.mock("../../services/api/postServices");
 
 const mockComment: CommentInterface = {
-  postID: "1",
-  commentID: "1",
-  userID: "1",
-  firstName: "John",
-  lastName: "Doe",
+  postId: "1",
+  commentId: "1",
+  userId: "1",
+  firstname: "John",
+  lastname: "Doe",
   headline: "Developer",
   profilePicture: "https://example.com/profile.jpg",
   commentText: "This is a comment",
@@ -28,19 +28,25 @@ describe("CommentCard", () => {
     cleanup();
   });
 
-  it("renders CommentCard component", () => {
+  it("renders component", () => {
     expect(screen.getByText("John Doe")).toBeInTheDocument();
     expect(screen.getByText("This is a comment")).toBeInTheDocument();
+  });
+
+  it("registers a like", async () => {
+    const likeButton = screen.getByText("Like");
+    await userEvent.click(likeButton);
+    expect(screen.getByText("Liked")).toBeInTheDocument();
   });
 
   it("shows replies when Reply button is clicked", async () => {
     const mockReplies = [
       {
-        replyID: "1",
+        replyId: "1",
         replyText: "This is a reply",
-        userID: "2",
-        firstName: "Jane",
-        lastName: "Doe",
+        userId: "2",
+        firstname: "Jane",
+        lastname: "Doe",
         profilePicture: "https://example.com/profile2.jpg",
       },
     ];
@@ -56,11 +62,11 @@ describe("CommentCard", () => {
   it("adds a new reply", async () => {
     const mockReplies = [
       {
-        replyID: "1",
+        replyId: "1",
         replyText: "This is a reply",
-        userID: "2",
-        firstName: "Jane",
-        lastName: "Doe",
+        userId: "2",
+        firstname: "Jane",
+        lastname: "Doe",
         profilePicture: "https://example.com/profile2.jpg",
       },
     ];

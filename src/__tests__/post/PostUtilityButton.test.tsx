@@ -1,9 +1,10 @@
 import { render, cleanup, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import PostUtilityButton from "./PostUtilityButton";
+import PostUtilityButton from "../../components/Posts/PostUtilityButton";
 import { PostInterface } from "../../interfaces/postInterfaces";
 import "@testing-library/jest-dom/vitest";
+import { BrowserRouter } from "react-router-dom";
 
 describe("PostUtilityButton", () => {
   let mockDelete: () => void;
@@ -12,19 +13,27 @@ describe("PostUtilityButton", () => {
   beforeEach(() => {
     mockDelete = vi.fn();
     mockPost = {
-      postID: "1",
-      userID: "1",
-      firstName: "John",
-      lastName: "Doe",
+      postId: "1",
+      userId: "1",
+      firstname: "John",
+      lastname: "Doe",
       headline: "Software Engineer",
       profilePicture: "https://example.com/profile.jpg",
       text: "This is a post",
       pics: [],
       likes: 10,
-      commentsNum: 5,
+      comments: 5,
       reposts: 2,
     };
-    render(<PostUtilityButton delete={mockDelete} post={mockPost} />);
+    render(
+      <BrowserRouter>
+        <PostUtilityButton
+          delete={mockDelete}
+          postId={mockPost.postId}
+          postText={mockPost.text}
+        />
+      </BrowserRouter>,
+    );
   });
 
   afterEach(() => {

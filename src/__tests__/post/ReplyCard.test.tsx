@@ -2,20 +2,22 @@ import { render, screen, cleanup } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import ReplyCard from "./ReplyCard";
-import { RepliesInterface } from "../../../interfaces/postInterfaces";
+import ReplyCard from "../../components/Posts/Comments/ReplyCard";
+import { RepliesInterface } from "../../interfaces/postInterfaces";
 
 const mockReply: RepliesInterface = {
-  replyID: "1",
-  userID: "user1",
-  firstName: "John",
-  lastName: "Doe",
+  replyId: "1",
+  postId: "0",
+  commentId: "0",
+  userId: "user1",
+  firstname: "John",
+  lastname: "Doe",
   headline: "Software Engineer",
   profilePicture: "path/to/profile.jpg",
   replyText: "This is a reply",
 };
 
-describe("ReplyCard Component", () => {
+describe("ReplyCard", () => {
   beforeEach(() => {
     render(<ReplyCard reply={mockReply} />);
   });
@@ -30,15 +32,9 @@ describe("ReplyCard Component", () => {
     expect(screen.getByText("This is a reply")).toBeInTheDocument();
   });
 
-  it("should have a like button", () => {
-    const likeButton = screen.getByText("Like");
-    expect(likeButton).toBeInTheDocument();
-  });
-
-  it("should trigger event on like button click", async () => {
+  it("registers a like", async () => {
     const likeButton = screen.getByText("Like");
     await userEvent.click(likeButton);
-    expect(likeButton).toBeEnabled();
-    //like button still doesn't have its functionality implemented so just checking the button is there
+    expect(screen.getByText("Liked")).toBeInTheDocument();
   });
 });

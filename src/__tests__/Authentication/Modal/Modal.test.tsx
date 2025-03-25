@@ -1,5 +1,5 @@
 import Modal from "../../../components/Authentication/Modal";
-import { render, screen, cleanup, waitFor, fireEvent} from "@testing-library/react";
+import { render, screen, cleanup, waitFor} from "@testing-library/react";
 import {describe, it, expect, vi, afterEach} from "vitest";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom/vitest";
@@ -24,7 +24,6 @@ describe("Modal Component", () => {
     
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     });
-
 
     it("closes when clicking the close button", async () => {
         const onCloseMock = vi.fn();
@@ -54,24 +53,23 @@ describe("Modal Component", () => {
       });
 
 
-      {/* Not Working Yet */}
-    //   it("closes when clicking outside the modal", async () => { 
-    //     const onCloseMock = vi.fn();
-    //     render(
-    //       <Modal isOpen={true} onClose={onCloseMock}>
-    //         <p>Modal Content</p>
-    //       </Modal>
-    //     );
+      it("closes when clicking outside the modal", async () => { 
+        const onCloseMock = vi.fn();
+        render(
+          <Modal isOpen={true} onClose={onCloseMock}>
+            <p>Modal Content</p>
+          </Modal>
+        );
       
-    //     const overlay = screen.getByTestId("modal-overlay");
+
+        const user = userEvent.setup();
         
-    //     const { top } = overlay.getBoundingClientRect();
-
-    //     await fireEvent.click(overlay, { clientY: top + 1000 });
+        const backgroundOverlay = screen.getByTestId("modal-overlay");
+        await user.click(backgroundOverlay);
 
       
-    //     // Wait and verify the mock function was called
-    //     await waitFor(() => expect(onCloseMock).toHaveBeenCalled());
-    //   });
+
+        await waitFor(() => expect(onCloseMock).toHaveBeenCalled());
+      });
 
   });

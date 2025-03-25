@@ -1,10 +1,9 @@
 import axios from "axios";
-import io from "socket.io-client";
-
+import store from "../../store/store";
 const SERVER_URL = "http://localhost:4000";
 axios.defaults.baseURL;
-export const api = axios.create({
-  baseURL: "/api", //in future will use baseURL constant
+const api = axios.create({
+  baseURL: "https://joblinc.me:3000/api/",
   headers: {
     "Content-Type": "application/json",
   },
@@ -13,6 +12,8 @@ export const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
+    // const token = store.getState().user.accessToken;
+    console.log("token: ", token);
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

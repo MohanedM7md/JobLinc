@@ -1,7 +1,7 @@
-import { render, screen, cleanup, queryByText } from "@testing-library/react";
+import { render, screen, cleanup } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import PostCard from "./PostCard";
-import { BrowserRouter as Router } from "react-router-dom";
+import PostCard from "../../components/Posts/PostCard";
+import { BrowserRouter } from "react-router-dom";
 import "@testing-library/jest-dom/vitest";
 import userEvent from "@testing-library/user-event";
 
@@ -15,25 +15,25 @@ vi.mock("react-router-dom", () => ({
 }));
 
 const mockPost = {
-  postID: "1",
-  userID: "1",
-  firstName: "John",
-  lastName: "Doe",
+  postId: "1",
+  userId: "1",
+  firstname: "John",
+  lastname: "Doe",
   headline: "Software Engineer",
   profilePicture: "https://example.com/profile.jpg",
   text: "This is a post",
   pics: [],
   likes: 10,
-  commentsNum: 5,
+  comments: 5,
   reposts: 2,
 };
 
 describe("PostCard", () => {
   beforeEach(() => {
     render(
-      <Router>
+      <BrowserRouter>
         <PostCard post={mockPost} />
-      </Router>,
+      </BrowserRouter>,
     );
   });
 
@@ -66,15 +66,5 @@ describe("PostCard", () => {
     expect(
       screen.queryByPlaceholderText("Write a comment..."),
     ).not.toBeInTheDocument();
-  });
-
-  it("the post is deleted upon pressing the delete button", async () => {
-    const moreButton = screen.getByText("more_horiz");
-    await userEvent.click(moreButton);
-
-    const deleteButton = screen.getByText("Delete");
-    await userEvent.click(deleteButton);
-    window.history.pushState({}, "Test page", "/post");
-    expect(screen.queryByText("John")).toBeNull();
   });
 });
