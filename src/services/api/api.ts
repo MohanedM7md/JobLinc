@@ -1,8 +1,9 @@
 import axios from "axios";
 import store from "../../store/store";
+import io from "socket.io-client";
 const SERVER_URL = "http://localhost:4000";
 axios.defaults.baseURL;
-const api = axios.create({
+export const api = axios.create({
   baseURL: "https://joblinc.me:3000/api/",
   headers: {
     "Content-Type": "application/json",

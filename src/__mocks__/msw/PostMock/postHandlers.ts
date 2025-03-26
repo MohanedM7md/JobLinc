@@ -2,19 +2,11 @@ import { http, HttpResponse } from "msw";
 import {
   CommentInterface,
   RepliesInterface,
-<<<<<<< HEAD:src/__mocks__/msw/handlers.ts
-} from "../../interfaces/postInterfaces";
-import { postsResponse } from "../PostsMock/postsDB";
-import { commentsResponse } from "../PostsMock/commentsDB";
-import { repliesResponse } from "../PostsMock/repliesDB";
-
-=======
   PostInterface,
 } from "../../../interfaces/postInterfaces";
 import { postsResponse } from "./postsDB";
 import { commentsResponse } from "./commentsDB";
 import { repliesResponse } from "./repliesDB";
->>>>>>> main:src/__mocks__/msw/PostMock/postHandlers.ts
 
 interface AddPostParams {}
 

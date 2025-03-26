@@ -6,12 +6,12 @@ import { EllipsisVertical } from "lucide-react";
 import connectToChat, { disconnectChatSocket } from "@services/api/ChatSocket";
 import useChats from "@hooks/useChats";
 import ConnectionsDropdown from "@chatComponent/FloatingChat/ConnectionsDropdown";
+
 function FloatingChatSidebar() {
   const [isActive, setActive] = useState<boolean>(() => {
     return localStorage.getItem("chatSidebarActive") === "true" || false;
   });
   const [isFocused, setIsFocused] = useState<boolean>(false);
-
   const { setOpnedChats } = useChats();
 
   const onFocusedToggler = () => {
@@ -22,18 +22,29 @@ function FloatingChatSidebar() {
     console.log(value);
   }, []);
 
-  const handleConversationClick = (chatId: string) => {
+  const handleConversationClick = (
+    chatId: string,
+    chatName: string,
+    chatImage: string[],
+  ) => {
     setOpnedChats((prevChats) => {
       if (prevChats.some((chat) => chat.chatId === chatId)) return prevChats;
-      return [...prevChats, { chatId, usersId: [] }];
+      return [...prevChats, { chatId, usersId: [], chatName, chatImage }];
     });
   };
 
-  const handleNetWorkUserClick = (userId: string) => {
+  const handleNetWorkUserClick = (
+    userId: string,
+    chatName: string,
+    chatImage: string,
+  ) => {
     setOpnedChats((prevChats) => {
       if (prevChats.some((chat) => chat.usersId[0] === userId))
         return prevChats;
-      return [...prevChats, { chatId: "", usersId: [userId] }];
+      return [
+        ...prevChats,
+        { chatId: "", usersId: [userId], chatName, chatImage: [chatImage] },
+      ];
     });
   };
 

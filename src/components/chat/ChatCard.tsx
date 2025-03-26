@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { EllipsisVertical } from "lucide-react";
 import Checkbox from "./UI/CheckBox";
 import { ChatCardProps } from "./interfaces/Chat.interfaces";
-
+import ChatAvatarGrid from "./ChatAvatarGrid";
 export default function ChatCard({
   chatId,
   chatPicture,
@@ -40,11 +40,7 @@ export default function ChatCard({
                 ${!markAsRead ? "bg-SoftRed hover:bg-hoverSoftRed" : "bg-charcoalWhite hover:bg-gray-200"} `}
     >
       <div className="relative w-12 h-12 shrink-0 group">
-        <img
-          className="rounded-full w-full h-full object-cover"
-          alt={chatName}
-          src={chatPicture}
-        />
+        <ChatAvatarGrid chatName={chatName} chatPicture={chatPicture} />
         <div
           className="absolute inset-0 flex items-center justify-center 
             bg-darkGray bg-opacity-50 rounded-full opacity-0 hover:opacity-100 transition-all"

@@ -10,7 +10,7 @@ const ChatCardsList = ({
   onCardClick,
   className = "",
 }: {
-  onCardClick: (id: string) => void;
+  onCardClick: (id: string, chatName: string, chatPicture: string[]) => void;
   className?: string;
 }) => {
   const [chats, setChats] = useState<ChatCardInterface[]>([]);
@@ -53,7 +53,13 @@ const ChatCardsList = ({
           <ChatCard
             key={chatCard.chatId}
             {...chatCard}
-            onClick={() => onCardClick(chatCard.chatId)}
+            onClick={() =>
+              onCardClick(
+                chatCard.chatId,
+                chatCard.chatName,
+                chatCard.chatPicture,
+              )
+            }
           />
         ))
       ) : (

@@ -27,7 +27,6 @@ function ConnectionsSidebar({
       </div>
 
       <ConnectionsList
-        isOpen={isOpen}
         onClose={onClose}
         containerClass="h-full"
         buttonClass="w-full"

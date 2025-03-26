@@ -9,15 +9,15 @@ import useNetworkUserId from "@context/NetworkUserIdProvider";
 import useChatId from "@context/ChatIdProvider";
 
 interface ConnectionsListProps {
-  isOpen: boolean;
   onClose?: () => void;
+  onCreate?: (usersId: string[]) => void;
   containerClass?: string;
   buttonClass?: string;
 }
 
 function ConnectionsList({
-  isOpen,
   onClose,
+  onCreate,
   containerClass,
   buttonClass,
 }: ConnectionsListProps) {
@@ -37,54 +37,20 @@ function ConnectionsList({
         console.error("Error fetching connections:", error);
       }
     };
-
-    if (isOpen) fetchData();
-    else {
-      setUsers([]);
-      setSelectedUsers([]);
-    }
-  }, [isOpen, user]);
+    fetchData();
+  }, [user]);
 
   return (
     <div className={`p-3 ${containerClass}`}>
-      {selectedUsers.length > 0 && (
-        <div className="flex flex-wrap gap-2">
-          <AnimatePresence>
-            {selectedUsers.map((user) => (
-              <motion.div
-                key={user.userId}
-                layout
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.3 }}
-              >
-                <SelectedUserBox
-                  chatName={user.chatName}
-                  onClick={() => {
-                    setSelectedUsers((prev) =>
-                      prev.filter((u) => u.userId !== user.userId),
-                    );
-                    setUsers((prev) => [...prev, user]);
-                  }}
-                  className="bg-gray-200 p-2 rounded-md"
-                />
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </div>
-      )}
-
       <div className="max-h-[60vh] overflow-y-auto space-y-2 mt-4">
         <AnimatePresence>
           {users.length > 0 ? (
             users.map((user) => (
               <motion.div
                 key={user.userId}
-                layout
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
+                exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
               >
                 <NetworkCard
@@ -108,18 +74,36 @@ function ConnectionsList({
               </motion.div>
             ))
           ) : (
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="text-gray-500 text-center"
-            >
-              No connections found
-            </motion.p>
+            <div>No connections found</div>
           )}
         </AnimatePresence>
       </div>
-
+      {selectedUsers.length > 0 && (
+        <div className="flex flex-wrap gap-2">
+          <AnimatePresence>
+            {selectedUsers.map((user) => (
+              <motion.div
+                key={user.userId}
+                layout
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <SelectedUserBox
+                  chatName={user.chatName}
+                  onClick={() => {
+                    setSelectedUsers((prev) =>
+                      prev.filter((u) => u.userId !== user.userId),
+                    );
+                    setUsers((prev) => [...prev, user]);
+                  }}
+                  className="bg-gray-200 p-2 rounded-md"
+                />
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </div>
+      )}
       <div className="mt-4 flex justify-end">
         <button
           className={`px-4 py-2 rounded-md font-medium transition duration-200 ${buttonClass} ${
@@ -131,6 +115,7 @@ function ConnectionsList({
             if (selectedUsers.length === 0) return;
             setChatId("");
             setUsersId(selectedUsers.map((user) => user.userId));
+            onCreate?.(selectedUsers.map((user) => user.userId));
             onClose?.();
           }}
           disabled={selectedUsers.length === 0}

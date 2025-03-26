@@ -30,7 +30,7 @@ export const msghandlers = [
         userId: participant.userId,
         firstname: participant.firstname,
         lastname: participant.lastname,
-        profilePicture: participant.profilePicture,
+        profilePicture: [participant.profilePicture],
       }));
     return new HttpResponse(JSON.stringify(chatCards), { status: 200 });
   }),
@@ -49,7 +49,7 @@ export const msghandlers = [
         return {
           chatId: chat.chatId,
           chatName: otherUser?.firstname || "Unknown",
-          chatPicture: otherUser?.profilePicture || "",
+          chatPicture: chat.chatPicture,
           lastMessage: chat.lastMessage,
           unseenCount: chat.unseenCount,
           isRead: chat.isRead,

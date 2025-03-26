@@ -15,7 +15,7 @@ function FloatingChatSystem() {
     <>
       <FloatingChatSidebar />
       {opnedChats.map((opnedChat, index) => {
-        const { chatId, usersId } = opnedChat;
+        const { chatId, usersId, chatName, chatImage } = opnedChat;
 
         return (
           <ChatIdProvider key={chatId} id={chatId}>
@@ -23,6 +23,8 @@ function FloatingChatSystem() {
               <FloatingChatWindow
                 key={chatId}
                 style={{ right: `${index * 410 + 330}px` }}
+                chatName={chatName}
+                chatPicture={chatImage}
               />
             </NetworkUserIdProvider>
           </ChatIdProvider>

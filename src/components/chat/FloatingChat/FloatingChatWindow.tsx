@@ -1,22 +1,17 @@
 import React, { useState, memo } from "react";
 import FloatingChatHeader from "./FloatingChatHeader";
 import ChatContent from "../ChatContent";
-import useChats from "../../../hooks/useChats";
-import useChatid from "../../../context/ChatIdProvider";
+import useChats from "@hooks/useChats";
+import useChatid from "@context/ChatIdProvider";
 import useNetworkUserId from "@context/NetworkUserIdProvider";
-const mockInfo: any = {
-  title: "string",
-  profilePicture: "https://randomuser.me/api/portraits/men/2.jpg",
-  status: "online",
-};
+import { FloatingChatWindowProps } from "@chatComponent/interfaces/Chat.interfaces";
 
 function FloatingChatWindow({
   style,
   className,
-}: {
-  style?: React.CSSProperties;
-  className?: string;
-}) {
+  chatName,
+  chatPicture,
+}: FloatingChatWindowProps) {
   const { chatId } = useChatid();
   const { usersId } = useNetworkUserId();
   const [isActive, setActive] = useState<boolean>(true);
@@ -24,11 +19,12 @@ function FloatingChatWindow({
     setActive((prevIsActive) => !prevIsActive);
   };
   const { setOpnedChats } = useChats();
-  const CloseChat = (chatId?: string, userId?: string[]) => {
+  const CloseChat = (chatId?: string, usersId?: string[]) => {
+    console.log("onclode", chatId);
     setOpnedChats((prevChats) => {
-      return chatId
-        ? prevChats.filter((chat) => chat.chatId !== chatId)
-        : prevChats.filter((chat) => chat.usersId[0] !== userId![0]);
+      return usersId?.length
+        ? prevChats.filter((chat) => chat.usersId !== usersId!)
+        : prevChats.filter((chat) => chat.chatId !== chatId);
     });
   };
 
@@ -42,7 +38,8 @@ function FloatingChatWindow({
     >
       <FloatingChatHeader
         onClick={activeToggler}
-        floatingHeaderData={mockInfo}
+        title={chatName}
+        chatPicture={chatPicture}
         onClose={() => CloseChat(chatId, usersId)}
       />
       <ChatContent />

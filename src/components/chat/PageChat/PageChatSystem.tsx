@@ -16,6 +16,7 @@ function PageChatSystem() {
   console.log("Page System");
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
+  const [opnedChatName, setOpnedChatName] = useState<string>("");
   const onFocusedToggler = () => {
     setTimeout(() => {
       setIsFocused(!isFocused);
@@ -24,14 +25,22 @@ function PageChatSystem() {
   const handleSearchChange = useCallback((value: string) => {
     console.log(value);
   }, []);
-  const handleConversationClick = useCallback((chatId: string) => {
-    setUsersId([]);
-    setChatId(chatId);
-  }, []);
-  const handleNetWorkUserClick = useCallback((userId: string) => {
-    setUsersId([userId]);
-    setChatId("");
-  }, []);
+  const handleConversationClick = useCallback(
+    (chatId: string, chatName: string) => {
+      setUsersId([]);
+      setChatId(chatId);
+      setOpnedChatName(chatName);
+    },
+    [],
+  );
+  const handleNetWorkUserClick = useCallback(
+    (userId: string, chatName: string) => {
+      setUsersId([userId]);
+      setOpnedChatName(chatName);
+      setChatId("");
+    },
+    [],
+  );
 
   useEffect(() => {
     connectToChat();
@@ -68,17 +77,16 @@ function PageChatSystem() {
         </div>
       </header>
       <div className="flex h-screen w-full">
-        <div className="w-1/3 border-r bg-charcoalWhite border-gray-300 p-4 overflow-y-auto">
-          {isFocused ? (
-            <NetWorksChatList
-              className=""
-              onCardClick={handleNetWorkUserClick}
-            />
-          ) : (
-            <ChatCardsList className="" onCardClick={handleConversationClick} />
-          )}
-        </div>
-        <PageMessageWindow className="flex-grow flex flex-col justify-end" />
+        {isFocused ? (
+          <NetWorksChatList className="" onCardClick={handleNetWorkUserClick} />
+        ) : (
+          <ChatCardsList
+            className="w-1/3 border-r bg-charcoalWhite border-gray-300 p-4"
+            onCardClick={handleConversationClick}
+          />
+        )}
+
+        <PageMessageWindow chatName={opnedChatName} />
       </div>
     </>
   );

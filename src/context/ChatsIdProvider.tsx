@@ -1,11 +1,16 @@
 import React, { createContext, useState } from "react";
 
-type ChatEntry = { chatId: string; usersId: string[] };
+interface ChatEntry {
+  chatId: string;
+  usersId: string[];
+  chatName: string;
+  chatImage: string[];
+}
 
-type ChatsIdContextType = {
+interface ChatsIdContextType {
   opnedChats: ChatEntry[];
   setOpnedChats: React.Dispatch<React.SetStateAction<ChatEntry[]>>;
-};
+}
 
 export const ChatsIdContext = createContext<ChatsIdContextType>({
   opnedChats: [],

@@ -8,7 +8,7 @@ const NetWorksChatList = ({
   onCardClick,
   className,
 }: {
-  onCardClick: (id: string) => void;
+  onCardClick: (id: string, chatName: string, chatPicture: string) => void;
   className?: string;
 }) => {
   const [users, setUsers] = useState<NetWorkCard[]>([]);
@@ -45,7 +45,9 @@ const NetWorksChatList = ({
             chatPicture={user.chatPicture}
             chatName={user.chatName}
             className="md:bg-charcoalWhite md:hover:bg-gray-200 bg-gray-100"
-            onClick={() => onCardClick(user.userId)}
+            onClick={() =>
+              onCardClick(user.userId, user.chatName, user.chatPicture)
+            }
           />
         ))
       ) : (

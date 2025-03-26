@@ -1,15 +1,10 @@
 import ChatContent from "../ChatContent";
 import PageChatHeader from "./PageChatHeader";
-import { useState } from "react";
 import useChatId from "@context/ChatIdProvider";
 import useNetworkUserId from "@context/NetworkUserIdProvider";
+import { PageChatWindowProps } from "@chatComponent/interfaces/Chat.interfaces";
 
-const chatTitle = {
-  name: "Mohaned",
-  status: "Naime",
-};
-
-function PageChatWindow({ className }: { className: string }) {
+function PageChatWindow({ className, chatName }: PageChatWindowProps) {
   const { chatId } = useChatId();
   const { usersId } = useNetworkUserId();
   console.log("--------------PageChatWindow rendered--------------id:", chatId);
@@ -21,7 +16,7 @@ function PageChatWindow({ className }: { className: string }) {
     >
       {chatId || usersId.length ? (
         <>
-          <PageChatHeader name={chatTitle.name} status={chatTitle.status} />
+          <PageChatHeader name={chatName} status={""} />
           <ChatContent />
         </>
       ) : (

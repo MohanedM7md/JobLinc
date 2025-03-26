@@ -11,6 +11,7 @@ interface Conversation {
   participants: string[];
   lastMessage: string;
   unseenCount: number;
+  chatPicture: string[];
   isRead: boolean;
 }
 
@@ -252,6 +253,7 @@ const db: Database = {
       lastMessage: "That was a great match!",
       unseenCount: 3,
       isRead: false,
+      chatPicture: ["https://randomuser.me/api/portraits/men/1.jpg"],
     },
     {
       chatId: "chat-2",
@@ -259,6 +261,7 @@ const db: Database = {
       lastMessage: "Hey Ahmed, how are you?",
       unseenCount: 2,
       isRead: false,
+      chatPicture: ["https://randomuser.me/api/portraits/men/4.jpg"],
     },
     {
       chatId: "chat-3",
@@ -266,6 +269,11 @@ const db: Database = {
       lastMessage: "Sounds good! See you then.",
       unseenCount: 1,
       isRead: false,
+      chatPicture: [
+        "https://randomuser.me/api/portraits/men/5.jpg",
+        "https://randomuser.me/api/portraits/men/6.jpg",
+        "https://randomuser.me/api/portraits/men/2.jpg",
+      ],
     },
     {
       chatId: "chat-4",
@@ -273,6 +281,12 @@ const db: Database = {
       lastMessage: "Hey Jane, need help with the project?",
       unseenCount: 5,
       isRead: false,
+      chatPicture: [
+        "https://randomuser.me/api/portraits/men/7.jpg",
+        "https://randomuser.me/api/portraits/men/8.jpg",
+        "https://randomuser.me/api/portraits/men/5.jpg",
+        "https://randomuser.me/api/portraits/men/6.jpg",
+      ],
     },
     {
       chatId: "chat-5",
@@ -280,6 +294,14 @@ const db: Database = {
       lastMessage: "Let's play football this weekend!",
       unseenCount: 0,
       isRead: true,
+      chatPicture: [
+        "https://randomuser.me/api/portraits/men/9.jpg",
+        "https://randomuser.me/api/portraits/men/10.jpg",
+        "https://randomuser.me/api/portraits/men/7.jpg",
+        "https://randomuser.me/api/portraits/men/8.jpg",
+        "https://randomuser.me/api/portraits/men/5.jpg",
+        "https://randomuser.me/api/portraits/men/6.jpg",
+      ],
     },
     {
       chatId: "chat-6",
@@ -287,6 +309,10 @@ const db: Database = {
       lastMessage: "I will update you soon!",
       unseenCount: 4,
       isRead: false,
+      chatPicture: [
+        "https://randomuser.me/api/portraits/men/11.jpg",
+        "https://randomuser.me/api/portraits/men/12.jpg",
+      ],
     },
     {
       chatId: "chat-7",
@@ -294,6 +320,10 @@ const db: Database = {
       lastMessage: "Did you check the new tech updates?",
       unseenCount: 2,
       isRead: false,
+      chatPicture: [
+        "https://randomuser.me/api/portraits/men/13.jpg",
+        "https://randomuser.me/api/portraits/men/14.jpg",
+      ],
     },
     {
       chatId: "chat-8",
@@ -301,6 +331,10 @@ const db: Database = {
       lastMessage: "Don't forget our meeting!",
       unseenCount: 3,
       isRead: false,
+      chatPicture: [
+        "https://randomuser.me/api/portraits/men/15.jpg",
+        "https://randomuser.me/api/portraits/men/16.jpg",
+      ],
     },
     {
       chatId: "chat-9",
@@ -308,6 +342,10 @@ const db: Database = {
       lastMessage: "Where are you now?",
       unseenCount: 1,
       isRead: false,
+      chatPicture: [
+        "https://randomuser.me/api/portraits/men/17.jpg",
+        "https://randomuser.me/api/portraits/men/18.jpg",
+      ],
     },
     {
       chatId: "chat-10",
@@ -315,6 +353,10 @@ const db: Database = {
       lastMessage: "Let's catch up soon!",
       unseenCount: 6,
       isRead: false,
+      chatPicture: [
+        "https://randomuser.me/api/portraits/men/19.jpg",
+        "https://randomuser.me/api/portraits/men/20.jpg",
+      ],
     },
     {
       chatId: "chat-11",
@@ -322,6 +364,10 @@ const db: Database = {
       lastMessage: "How's the project going?",
       unseenCount: 2,
       isRead: false,
+      chatPicture: [
+        "https://randomuser.me/api/portraits/men/21.jpg",
+        "https://randomuser.me/api/portraits/men/22.jpg",
+      ],
     },
     {
       chatId: "chat-12",
@@ -329,6 +375,10 @@ const db: Database = {
       lastMessage: "See you at the meeting!",
       unseenCount: 3,
       isRead: false,
+      chatPicture: [
+        "https://randomuser.me/api/portraits/men/23.jpg",
+        "https://randomuser.me/api/portraits/men/24.jpg",
+      ],
     },
     {
       chatId: "chat-13",
@@ -336,6 +386,10 @@ const db: Database = {
       lastMessage: "Let's discuss the details.",
       unseenCount: 4,
       isRead: false,
+      chatPicture: [
+        "https://randomuser.me/api/portraits/men/25.jpg",
+        "https://randomuser.me/api/portraits/men/26.jpg",
+      ],
     },
     {
       chatId: "chat-14",
@@ -343,6 +397,10 @@ const db: Database = {
       lastMessage: "Can you send me the files?",
       unseenCount: 1,
       isRead: false,
+      chatPicture: [
+        "https://randomuser.me/api/portraits/men/27.jpg",
+        "https://randomuser.me/api/portraits/men/28.jpg",
+      ],
     },
     {
       chatId: "chat-15",
@@ -350,6 +408,10 @@ const db: Database = {
       lastMessage: "Looking forward to it!",
       unseenCount: 2,
       isRead: false,
+      chatPicture: [
+        "https://randomuser.me/api/portraits/men/29.jpg",
+        "https://randomuser.me/api/portraits/men/30.jpg",
+      ],
     },
     {
       chatId: "chat-16",
@@ -357,6 +419,10 @@ const db: Database = {
       lastMessage: "I'll get back to you soon.",
       unseenCount: 0,
       isRead: true,
+      chatPicture: [
+        "https://randomuser.me/api/portraits/men/31.jpg",
+        "https://randomuser.me/api/portraits/men/32.jpg",
+      ],
     },
     {
       chatId: "chat-17",
@@ -364,6 +430,10 @@ const db: Database = {
       lastMessage: "Let's meet up tomorrow.",
       unseenCount: 3,
       isRead: false,
+      chatPicture: [
+        "https://randomuser.me/api/portraits/men/33.jpg",
+        "https://randomuser.me/api/portraits/men/34.jpg",
+      ],
     },
     {
       chatId: "chat-18",
@@ -371,6 +441,10 @@ const db: Database = {
       lastMessage: "Thanks for the update!",
       unseenCount: 1,
       isRead: false,
+      chatPicture: [
+        "https://randomuser.me/api/portraits/men/35.jpg",
+        "https://randomuser.me/api/portraits/men/36.jpg",
+      ],
     },
     {
       chatId: "chat-19",
@@ -378,6 +452,10 @@ const db: Database = {
       lastMessage: "I'll send you the details.",
       unseenCount: 5,
       isRead: false,
+      chatPicture: [
+        "https://randomuser.me/api/portraits/men/37.jpg",
+        "https://randomuser.me/api/portraits/men/38.jpg",
+      ],
     },
     {
       chatId: "chat-20",
@@ -385,6 +463,10 @@ const db: Database = {
       lastMessage: "Let's work on it together.",
       unseenCount: 4,
       isRead: false,
+      chatPicture: [
+        "https://randomuser.me/api/portraits/men/39.jpg",
+        "https://randomuser.me/api/portraits/men/40.jpg",
+      ],
     },
     {
       chatId: "chat-21",
@@ -392,6 +474,10 @@ const db: Database = {
       lastMessage: "I'll call you later.",
       unseenCount: 1,
       isRead: false,
+      chatPicture: [
+        "https://randomuser.me/api/portraits/men/41.jpg",
+        "https://randomuser.me/api/portraits/men/42.jpg",
+      ],
     },
     {
       chatId: "chat-22",
@@ -399,6 +485,10 @@ const db: Database = {
       lastMessage: "Can we reschedule?",
       unseenCount: 2,
       isRead: false,
+      chatPicture: [
+        "https://randomuser.me/api/portraits/men/43.jpg",
+        "https://randomuser.me/api/portraits/men/44.jpg",
+      ],
     },
     {
       chatId: "chat-23",
@@ -406,6 +496,10 @@ const db: Database = {
       lastMessage: "I'll be there soon.",
       unseenCount: 3,
       isRead: false,
+      chatPicture: [
+        "https://randomuser.me/api/portraits/men/45.jpg",
+        "https://randomuser.me/api/portraits/men/46.jpg",
+      ],
     },
     {
       chatId: "chat-24",
@@ -413,6 +507,10 @@ const db: Database = {
       lastMessage: "Let's finalize the plan.",
       unseenCount: 2,
       isRead: false,
+      chatPicture: [
+        "https://randomuser.me/api/portraits/men/47.jpg",
+        "https://randomuser.me/api/portraits/men/48.jpg",
+      ],
     },
     {
       chatId: "chat-25",
@@ -420,6 +518,10 @@ const db: Database = {
       lastMessage: "I'll update you tomorrow.",
       unseenCount: 4,
       isRead: false,
+      chatPicture: [
+        "https://randomuser.me/api/portraits/men/49.jpg",
+        "https://randomuser.me/api/portraits/men/50.jpg",
+      ],
     },
     {
       chatId: "chat-26",
@@ -427,6 +529,10 @@ const db: Database = {
       lastMessage: "Can you review this?",
       unseenCount: 1,
       isRead: false,
+      chatPicture: [
+        "https://randomuser.me/api/portraits/men/51.jpg",
+        "https://randomuser.me/api/portraits/men/52.jpg",
+      ],
     },
     {
       chatId: "chat-27",
@@ -434,6 +540,10 @@ const db: Database = {
       lastMessage: "Let's discuss it further.",
       unseenCount: 2,
       isRead: false,
+      chatPicture: [
+        "https://randomuser.me/api/portraits/men/53.jpg",
+        "https://randomuser.me/api/portraits/men/54.jpg",
+      ],
     },
     {
       chatId: "chat-28",
@@ -441,6 +551,10 @@ const db: Database = {
       lastMessage: "I'll send you the report.",
       unseenCount: 3,
       isRead: false,
+      chatPicture: [
+        "https://randomuser.me/api/portraits/men/55.jpg",
+        "https://randomuser.me/api/portraits/men/56.jpg",
+      ],
     },
     {
       chatId: "chat-29",
@@ -448,6 +562,10 @@ const db: Database = {
       lastMessage: "Let's catch up soon!",
       unseenCount: 5,
       isRead: false,
+      chatPicture: [
+        "https://randomuser.me/api/portraits/men/57.jpg",
+        "https://randomuser.me/api/portraits/men/58.jpg",
+      ],
     },
     {
       chatId: "chat-30",
@@ -455,6 +573,10 @@ const db: Database = {
       lastMessage: "Haha, alright! Talk soon.",
       unseenCount: 2,
       isRead: false,
+      chatPicture: [
+        "https://randomuser.me/api/portraits/men/59.jpg",
+        "https://randomuser.me/api/portraits/men/60.jpg",
+      ],
     },
     {
       chatId: "chat-31",
@@ -462,6 +584,10 @@ const db: Database = {
       lastMessage: "Check your email, I sent you the files.",
       unseenCount: 1,
       isRead: false,
+      chatPicture: [
+        "https://randomuser.me/api/portraits/men/61.jpg",
+        "https://randomuser.me/api/portraits/men/62.jpg",
+      ],
     },
     {
       chatId: "chat-32",
@@ -469,6 +595,10 @@ const db: Database = {
       lastMessage: "Let's meet tomorrow at 5 PM.",
       unseenCount: 3,
       isRead: false,
+      chatPicture: [
+        "https://randomuser.me/api/portraits/men/63.jpg",
+        "https://randomuser.me/api/portraits/men/64.jpg",
+      ],
     },
     {
       chatId: "chat-33",
@@ -476,6 +606,10 @@ const db: Database = {
       lastMessage: "I'll send the report soon.",
       unseenCount: 4,
       isRead: false,
+      chatPicture: [
+        "https://randomuser.me/api/portraits/men/65.jpg",
+        "https://randomuser.me/api/portraits/men/66.jpg",
+      ],
     },
     {
       chatId: "chat-34",
@@ -483,6 +617,10 @@ const db: Database = {
       lastMessage: "Where are you now?",
       unseenCount: 2,
       isRead: false,
+      chatPicture: [
+        "https://randomuser.me/api/portraits/men/67.jpg",
+        "https://randomuser.me/api/portraits/men/68.jpg",
+      ],
     },
     {
       chatId: "chat-35",
@@ -490,6 +628,10 @@ const db: Database = {
       lastMessage: "Happy birthday bro!",
       unseenCount: 3,
       isRead: false,
+      chatPicture: [
+        "https://randomuser.me/api/portraits/men/69.jpg",
+        "https://randomuser.me/api/portraits/men/70.jpg",
+      ],
     },
     {
       chatId: "chat-36",
@@ -497,6 +639,10 @@ const db: Database = {
       lastMessage: "See you in class tomorrow!",
       unseenCount: 1,
       isRead: false,
+      chatPicture: [
+        "https://randomuser.me/api/portraits/men/71.jpg",
+        "https://randomuser.me/api/portraits/men/72.jpg",
+      ],
     },
     {
       chatId: "chat-37",
@@ -504,6 +650,10 @@ const db: Database = {
       lastMessage: "Let's collaborate on that project.",
       unseenCount: 5,
       isRead: false,
+      chatPicture: [
+        "https://randomuser.me/api/portraits/men/73.jpg",
+        "https://randomuser.me/api/portraits/men/74.jpg",
+      ],
     },
   ],
 

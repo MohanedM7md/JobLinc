@@ -14,13 +14,15 @@ export function MessagingPage() {
   return (
     <>
       {userId ? (
-        <UserProvider userId={userId}>
-          <ChatIdProvider>
-            <NetworkUserIdProvider>
-              <PageChatSystem />
-            </NetworkUserIdProvider>
-          </ChatIdProvider>
-        </UserProvider>
+        <div className="h-[100vh] overflow-hidden">
+          <UserProvider userId={userId}>
+            <ChatIdProvider>
+              <NetworkUserIdProvider>
+                <PageChatSystem />
+              </NetworkUserIdProvider>
+            </ChatIdProvider>
+          </UserProvider>
+        </div>
       ) : (
         <div
           style={{
