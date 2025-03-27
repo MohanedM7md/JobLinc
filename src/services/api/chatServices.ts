@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosApi = axios.create({
-  baseURL: "/api",
+  baseURL: "http://localhost:4000/api",
 });
 
 export const fetchChats = async (userId: string) => {
@@ -9,14 +9,6 @@ export const fetchChats = async (userId: string) => {
 
   return response.data;
 };
-
-export interface NetWorkCard {
-  userId: string;
-  chatPicture: string;
-  chatName: string;
-  onClick: () => void;
-  className?: string;
-}
 
 export const fetchNetWorks = async (Id: string) => {
   const response = await axiosApi.get(`/Networks/${Id}`);

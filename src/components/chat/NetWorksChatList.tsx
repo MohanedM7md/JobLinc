@@ -36,7 +36,7 @@ const NetWorksChatList = ({
   }, [user]);
   if (isLoading) return null;
   return (
-    <div className={`${className} max-h-[60vh] overflow-auto`}>
+    <div className={`${className} overflow-auto`}>
       {users.length != 0 ? (
         users.map((user) => (
           <NetworkCard

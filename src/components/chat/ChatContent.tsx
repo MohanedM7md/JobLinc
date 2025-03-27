@@ -107,8 +107,8 @@ function ChatContent({ className }: { className?: string }) {
     }
   };
   return (
-    <div className={`${className} flex flex-col flex-1 overflow-y-hidden `}>
-      <div className="flex-1 max-h-[50vh] overflow-y-auto">
+    <div className={`${className} flex flex-col flex-1 overflow-y-hidden`}>
+      <div className="h-8/12 overflow-y-auto">
         <ChatMessages users={users} messages={messages} />
         {typingUsers.map((typingUserId) => (
           <UserTypingIndicator
@@ -124,7 +124,6 @@ function ChatContent({ className }: { className?: string }) {
             <Status
               className="text-sm pl-2 bg-gray-100 text-gray-600"
               lastMessage={messages[messages.length - 1]}
-              ref={messagesEndRef}
             />
           )}
       </div>
@@ -132,6 +131,7 @@ function ChatContent({ className }: { className?: string }) {
         chatId={chatId}
         onSendMessage={handleSendMessage}
         onTypingMessage={handleTypingMessage}
+        className=""
       />
     </div>
   );

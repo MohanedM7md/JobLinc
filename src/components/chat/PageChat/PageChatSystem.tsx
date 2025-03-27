@@ -16,6 +16,7 @@ function PageChatSystem() {
   console.log("Page System");
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
+  const [isChatSidebarOpen, setIsChatSidebarOpen] = useState<boolean>(false);
   const [opnedChatName, setOpnedChatName] = useState<string>("");
   const onFocusedToggler = () => {
     setTimeout(() => {
@@ -47,17 +48,17 @@ function PageChatSystem() {
     return () => disconnectChatSocket();
   }, []);
   return (
-    <>
+    <div className="h-full">
       <header className="flex items-center justify-between bg-gray-100 p-3 rounded-lg shadow-md">
         <h2 className=" hidden md:block font-semibold text-lg text-gray-800">
           Messaging
         </h2>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 w-full justify-between md:justify-end">
           <SearchBar
             FocusToggler={onFocusedToggler}
             onChange={handleSearchChange}
-            className="md:w-xl "
+            className="sm:w-lg md:w-xl "
           />
           <button
             onClick={() => setIsSidebarOpen(true)}
@@ -78,17 +79,20 @@ function PageChatSystem() {
       </header>
       <div className="flex h-screen w-full">
         {isFocused ? (
-          <NetWorksChatList className="" onCardClick={handleNetWorkUserClick} />
+          <NetWorksChatList
+            className="w-2/5  pb-20 md:w-1/3 border-r  bg-charcoalWhite border-gray-300 p-4"
+            onCardClick={handleNetWorkUserClick}
+          />
         ) : (
           <ChatCardsList
-            className="w-1/3 border-r bg-charcoalWhite border-gray-300 p-4"
+            className="w-2/5  pb-20 md:w-1/3 border-r bg-charcoalWhite border-gray-300 p-4"
             onCardClick={handleConversationClick}
           />
         )}
 
         <PageMessageWindow chatName={opnedChatName} />
       </div>
-    </>
+    </div>
   );
 }
 

@@ -26,6 +26,7 @@ export interface ChatCardProps extends ChatCardInterface {
 
 export interface ChatInputProps {
   chatId: string;
+  className?: string;
   onSendMessage: (message: string) => void;
   onTypingMessage: (isTyping: boolean) => void;
 }
@@ -44,7 +45,6 @@ export interface PageChatWindowProps {
 }
 
 export interface FloatingChatWindowProps {
-  style?: React.CSSProperties;
   className?: string;
   chatName: string;
   chatPicture: string[];

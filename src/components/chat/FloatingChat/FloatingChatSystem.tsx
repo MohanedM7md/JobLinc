@@ -12,7 +12,7 @@ function FloatingChatSystem() {
     return () => disconnectChatSocket();
   }, []);
   return (
-    <>
+    <div className="flex flex-row-reverse fixed bottom-0 right-0">
       <FloatingChatSidebar />
       {opnedChats.map((opnedChat, index) => {
         const { chatId, usersId, chatName, chatImage } = opnedChat;
@@ -22,7 +22,6 @@ function FloatingChatSystem() {
             <NetworkUserIdProvider key={usersId[0]} ids={usersId}>
               <FloatingChatWindow
                 key={chatId}
-                style={{ right: `${index * 410 + 330}px` }}
                 chatName={chatName}
                 chatPicture={chatImage}
               />
@@ -30,7 +29,7 @@ function FloatingChatSystem() {
           </ChatIdProvider>
         );
       })}
-    </>
+    </div>
   );
 }
 

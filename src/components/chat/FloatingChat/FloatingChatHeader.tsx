@@ -1,6 +1,7 @@
 import { MoreHorizontal, X } from "lucide-react";
 import { FlaotingHeaderProbs } from "../interfaces/Chat.interfaces";
 import ChatAvatarGrid from "@chatComponent/ChatAvatarGrid";
+import { memo } from "react";
 function FloatingChatHeader({
   onClick,
   title,
@@ -50,4 +51,4 @@ function FloatingChatHeader({
   );
 }
 
-export default FloatingChatHeader;
+export default memo(FloatingChatHeader);

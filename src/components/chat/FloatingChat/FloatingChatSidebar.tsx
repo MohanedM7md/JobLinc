@@ -63,7 +63,7 @@ function FloatingChatSidebar() {
 
   return (
     <div
-      className={`w-72 shadow-lg rounded-t-lg md:block hidden fixed bottom-0 right-0 mr-8 transition-transform duration-300
+      className={`w-72 shadow-lg rounded-t-lg md:block hidden mr-8 transition-transform duration-300
         dark:bg-darkGray bg-white cursor-pointer ${isActive ? "translate-y-0" : "translate-y-[calc(100%-56px)]"}`}
     >
       <header

@@ -11,7 +11,7 @@ function PageChatWindow({ className, chatName }: PageChatWindowProps) {
   console.log("User Id", usersId);
   return (
     <div
-      className={`${className} w-2/3 flex flex-col`}
+      className={`${className} w-full flex flex-col`}
       data-testid="test-PageWindow"
     >
       {chatId || usersId.length ? (

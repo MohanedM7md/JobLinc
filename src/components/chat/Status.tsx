@@ -4,15 +4,13 @@ import React from "react";
 
 function Status({
   lastMessage,
-  ref,
+
   className,
 }: {
   lastMessage: RecievedMessage;
-  ref: React.RefObject<HTMLDivElement | null>;
+
   className?: string;
 }) {
-  const { user } = useUser();
-
   const statusString = (() => {
     switch (lastMessage.status) {
       case 0:
@@ -26,11 +24,7 @@ function Status({
     }
   })();
 
-  return (
-    <div className={className} ref={ref}>
-      {statusString}
-    </div>
-  );
+  return <div className={className}>{statusString}</div>;
 }
 
 export default Status;

@@ -2,7 +2,12 @@ import { useState, useEffect } from "react";
 import { Paperclip, Image, Smile } from "lucide-react";
 import { ChatInputProps } from "./interfaces/Chat.interfaces";
 
-function ChatInput({ chatId, onSendMessage, onTypingMessage }: ChatInputProps) {
+function ChatInput({
+  chatId,
+  onSendMessage,
+  onTypingMessage,
+  className,
+}: ChatInputProps) {
   const [message, setMessage] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
@@ -25,8 +30,8 @@ function ChatInput({ chatId, onSendMessage, onTypingMessage }: ChatInputProps) {
 
   return (
     <div
-      className="flex flex-col items-center p-3
-     bg-charcoalWhite dark:bg-warmBlack border-t border-gray-200 relative"
+      className={`flex flex-col items-center p-3 ${className}
+     bg-charcoalWhite dark:bg-warmBlack border-t border-gray-200 relative`}
     >
       <textarea
         name="msg"

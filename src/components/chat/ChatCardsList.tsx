@@ -47,7 +47,7 @@ const ChatCardsList = ({
   }, []);
   if (isLoading) return null;
   return (
-    <div className={`${className} overflow-auto`}>
+    <div className={`${className}  overflow-y-auto`}>
       {chats.length > 0 ? (
         chats.map((chatCard) => (
           <ChatCard
