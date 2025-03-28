@@ -15,7 +15,7 @@ const handleClick = () => {
     setIsClicked(!isClicked);
 };
     return(
-        <div className="border-2 border-gray-200 rounded-xl flex-col w-70 h-80 justify-center items-center cursor-pointer">
+        <div className="border-2 border-gray-200 rounded-xl flex-col w-57 h-80 justify-center items-center cursor-pointer">
             <div className="relative flex flex-col w-full h-7/20 justify-center items-center">
                 {/* <UserProfile.Image
                 photoUrl={props.profilePicture}

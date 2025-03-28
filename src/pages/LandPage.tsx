@@ -5,7 +5,7 @@ import { AuthenticationGoogleButton, AuthenticationMicrosoftButton, Authenticati
 import ExploreButtons, { buttonsArticles, buttonsJobs, buttonsMoreJobs, buttonsSoftware, buttonsGames } from "../components/Helpers/ExploreButtons";
 import Features from "../components/Helpers/ImportantFeatures";
 import { ChevronDownIcon, ChevronUpIcon, ChevronLeftIcon, ChevronRightIcon } from "lucide-react"; // Import Heroicons
-import Logo from "../components/Logo";
+import Logo from "../components/NavigationBar/Logo";
 
 function LandPage() {
     const navigate = useNavigate();
@@ -158,7 +158,7 @@ function LandPage() {
             {/* Browse more */}
             <div className="w-full flex justify-center items-stretch gap-15 p-15 bg-lightGray">
                 <div className="mr-50 flex-shrink-0">
-                    <Logo />
+                    <Logo id="landpagelogoIcon"/>
                 </div>
                 <div className="flex flex-col gap-5">
                     <strong>General</strong>
@@ -209,7 +209,7 @@ function LandPage() {
 
             {/* Footer */}
             <footer className="w-full p-10 flex gap-5 justify-center items-center font-semibold">
-                <Logo />
+                <Logo id="landpagelogoIcon2"/>
                 <p>&copy; {currentYear}</p>
                 <Link to="/">About</Link>
                 <Link to="/">Accessibility</Link>
