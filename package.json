@@ -13,9 +13,12 @@
     "test": "vitest"
   },
   "dependencies": {
+    "@heroicons/react": "^2.2.0",
     "@reduxjs/toolkit": "^2.6.1",
     "@tailwindcss/vite": "^4.0.10",
+    "@types/path-browserify": "^1.0.3",
     "axios": "^1.8.1",
+    "classnames": "^2.5.1",
     "firebase": "^11.4.0",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.479.0",
@@ -27,14 +30,18 @@
     "react-image": "^4.1.0",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.2.0",
-    "socket.io-client": "^4.8.1"
+    "socket.io-client": "^4.8.1",
+    "tailwindcss-motion": "^1.1.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
     "@mswjs/socket.io-binding": "^0.1.1",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.2.0",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/classnames": "^2.3.0",
     "@types/jest": "^29.5.14",
+    "@types/node": "^22.13.10",
     "@types/prop-types": "^15.7.14",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
@@ -58,7 +65,7 @@
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.24.1",
     "vite": "^6.2.0",
-    "vitest": "^3.0.7"
+    "vitest": "^3.0.8"
   },
   "msw": {
     "workerDirectory": [

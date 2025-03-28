@@ -1,53 +1,43 @@
 import React, { useEffect, useState, memo } from "react";
 import ChatCard from "./ChatCard";
-import { fetchChats } from "../../api/api";
-import { connectChatSocket } from "../../api/socket";
+import { fetchChats } from "../../services/api/chatServices";
+import { connectChatSocket } from "../../services/api/socket";
+import { useUser } from "./mockUse";
+import { ChatCardInterface } from "./interfaces/Chat.interfaces";
 
-interface ChatCardType {
-  chatId: string;
-  chatName: string;
-  imageUrl: string;
-  lastMessage: string;
-  sentDate: string;
-  unreadCount: number;
-}
-
-interface ChatCardsListType {
+const ChatCardsList = ({
+  onCardClick,
+}: {
   onCardClick: (id: string) => void;
-}
+}) => {
+  const [chats, setChats] = useState<ChatCardInterface[]>([]);
+  const { user } = useUser();
 
-const ChatCardsList = ({ onCardClick }: ChatCardsListType) => {
-  const [chats, setChats] = useState<ChatCardType[]>([]);
-  const chatSocket = connectChatSocket();
-  console.log("----------------ChatCardsList----------------");
+  console.log(
+    "----------------ChatCardsList---------------- for userID: ",
+    user,
+  );
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await fetchChats("1");
+        if (!user) return;
+        const data = await fetchChats(user);
+
         setChats(data);
       } catch (error) {
         console.error("Error fetching chat data:", error);
       }
     };
     fetchData();
-
-    chatSocket.on("ChatsUpdate", (newChat: ChatCardType) => {
-      setChats((prev) => [...prev, newChat]);
-    });
-
-    return () => {
-      chatSocket.off("ChatsUpdate");
-    };
-  }, []);
-
+  }, [user]);
   return (
     <div className="mt-4">
       {chats.length > 0 ? (
         chats.map((chatCard) => (
           <ChatCard
             key={chatCard.chatId}
-            id={chatCard.chatId}
-            imageUrl={chatCard.imageUrl}
+            chatId={chatCard.chatId}
+            chatPicture={chatCard.chatPicture}
             chatName={chatCard.chatName}
             lastMessage={chatCard.lastMessage}
             sentDate={chatCard.sentDate}

@@ -1,0 +1,301 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`ChatContent 
+ > Should ChatContent 1`] = `
+<div>
+  <div
+    class="flex flex-col flex-1 overflow-hidden"
+  >
+    <div
+      class="flex-1 overflow-y-auto"
+    >
+      <div
+        class="bg-gray-100 flex flex-col overflow-hidden"
+      >
+        <div
+          class="flex-1 overflow-y-auto space-y-2"
+        >
+          <div
+            class="text-gray-500 text-center mt-4"
+          >
+            No messages found
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="flex flex-col items-center p-3
+     bg-charcoalWhite dark:bg-warmBlack border-t-1 border-gray-200"
+    >
+      <textarea
+        class="flex-1 w-full bg-warmWhite dark:bg-darkGray text-charcoalBlack
+         dark:text-charcoalWhite p-2 rounded-lg resize-none h-10 focus:outline-none
+          shadow-inner focus:ring-1 focus:ring-gray-400"
+        name="msg"
+        placeholder="Write a message..."
+      />
+      <div
+        class="flex justify-between w-full pt-4 "
+      >
+        <div>
+          <button
+            class="text-mutedSilver dark:text-charcoalWhite
+           hover:text-charcoalBlack dark:hover:text-warmWhite p-2"
+          >
+            <svg
+              class="lucide lucide-paperclip"
+              fill="none"
+              height="20"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M13.234 20.252 21 12.3"
+              />
+              <path
+                d="m16 6-8.414 8.586a2 2 0 0 0 0 2.828 2 2 0 0 0 2.828 0l8.414-8.586a4 4 0 0 0 0-5.656 4 4 0 0 0-5.656 0l-8.415 8.585a6 6 0 1 0 8.486 8.486"
+              />
+            </svg>
+          </button>
+          <button
+            class="text-mutedSilver dark:text-charcoalWhite
+           hover:text-charcoalBlack dark:hover:text-warmWhite p-2"
+          >
+            <svg
+              class="lucide lucide-image"
+              fill="none"
+              height="20"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect
+                height="18"
+                rx="2"
+                ry="2"
+                width="18"
+                x="3"
+                y="3"
+              />
+              <circle
+                cx="9"
+                cy="9"
+                r="2"
+              />
+              <path
+                d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"
+              />
+            </svg>
+          </button>
+          <button
+            class="text-mutedSilver dark:text-charcoalWhite
+           hover:text-charcoalBlack dark:hover:text-warmWhite p-2"
+          >
+            <svg
+              class="lucide lucide-smile"
+              fill="none"
+              height="20"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="10"
+              />
+              <path
+                d="M8 14s1.5 2 4 2 4-2 4-2"
+              />
+              <line
+                x1="9"
+                x2="9.01"
+                y1="9"
+                y2="9"
+              />
+              <line
+                x1="15"
+                x2="15.01"
+                y1="9"
+                y2="9"
+              />
+            </svg>
+          </button>
+        </div>
+        <button
+          class="ml-2 p-1 rounded-l-full font-bold rounded-r-full transition-colors
+            bg-mutedSilver text-charcoalBlack cursor-not-allowed
+        w-15 md:w-20"
+          disabled=""
+          id="send-msg-btn"
+        >
+          Send
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`FloatingChatSystem 
+ > Should RenderChatSystem 1`] = `
+<div>
+  <div
+    class="flex flex-col flex-1 overflow-hidden"
+  >
+    <div
+      class="flex-1 overflow-y-auto"
+    >
+      <div
+        class="bg-gray-100 flex flex-col overflow-hidden"
+      >
+        <div
+          class="flex-1 overflow-y-auto space-y-2"
+        >
+          <div
+            class="text-gray-500 text-center mt-4"
+          >
+            No messages found
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="flex flex-col items-center p-3
+     bg-charcoalWhite dark:bg-warmBlack border-t-1 border-gray-200"
+    >
+      <textarea
+        class="flex-1 w-full bg-warmWhite dark:bg-darkGray text-charcoalBlack
+         dark:text-charcoalWhite p-2 rounded-lg resize-none h-10 focus:outline-none
+          shadow-inner focus:ring-1 focus:ring-gray-400"
+        name="msg"
+        placeholder="Write a message..."
+      />
+      <div
+        class="flex justify-between w-full pt-4 "
+      >
+        <div>
+          <button
+            class="text-mutedSilver dark:text-charcoalWhite
+           hover:text-charcoalBlack dark:hover:text-warmWhite p-2"
+          >
+            <svg
+              class="lucide lucide-paperclip"
+              fill="none"
+              height="20"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M13.234 20.252 21 12.3"
+              />
+              <path
+                d="m16 6-8.414 8.586a2 2 0 0 0 0 2.828 2 2 0 0 0 2.828 0l8.414-8.586a4 4 0 0 0 0-5.656 4 4 0 0 0-5.656 0l-8.415 8.585a6 6 0 1 0 8.486 8.486"
+              />
+            </svg>
+          </button>
+          <button
+            class="text-mutedSilver dark:text-charcoalWhite
+           hover:text-charcoalBlack dark:hover:text-warmWhite p-2"
+          >
+            <svg
+              class="lucide lucide-image"
+              fill="none"
+              height="20"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect
+                height="18"
+                rx="2"
+                ry="2"
+                width="18"
+                x="3"
+                y="3"
+              />
+              <circle
+                cx="9"
+                cy="9"
+                r="2"
+              />
+              <path
+                d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"
+              />
+            </svg>
+          </button>
+          <button
+            class="text-mutedSilver dark:text-charcoalWhite
+           hover:text-charcoalBlack dark:hover:text-warmWhite p-2"
+          >
+            <svg
+              class="lucide lucide-smile"
+              fill="none"
+              height="20"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="10"
+              />
+              <path
+                d="M8 14s1.5 2 4 2 4-2 4-2"
+              />
+              <line
+                x1="9"
+                x2="9.01"
+                y1="9"
+                y2="9"
+              />
+              <line
+                x1="15"
+                x2="15.01"
+                y1="9"
+                y2="9"
+              />
+            </svg>
+          </button>
+        </div>
+        <button
+          class="ml-2 p-1 rounded-l-full font-bold rounded-r-full transition-colors
+            bg-mutedSilver text-charcoalBlack cursor-not-allowed
+        w-15 md:w-20"
+          disabled=""
+          id="send-msg-btn"
+        >
+          Send
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;

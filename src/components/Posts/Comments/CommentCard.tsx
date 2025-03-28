@@ -1,9 +1,12 @@
 import CommentContent from "./CommentContent";
 import CommenterDetails from "./CommenterDetails";
-import { CommentInterface } from "../../../interfaces/postInterfaces";
-import { useState } from "react";
+import {
+  CommentInterface,
+  RepliesInterface,
+} from "../../../interfaces/postInterfaces";
+import { useEffect, useState } from "react";
 import ReplyCard from "./ReplyCard";
-import { repliesResponse } from "../../../__mocks__/PostsMock/repliesDB";
+import { createReply, getReplies } from "../../../services/api/postServices";
 
 interface CommentCardProps {
   comment: CommentInterface;
@@ -11,40 +14,37 @@ interface CommentCardProps {
 
 export default function CommentCard(props: CommentCardProps) {
   const [showReplies, setShowReplies] = useState(false);
+  const [replies, setReplies] = useState<RepliesInterface[]>([]);
   const [newReply, setNewReply] = useState<string>("");
+  const [isLike, setIsLike] = useState<boolean>(false);
+  const like = !isLike ? "Like" : "Liked";
 
-  function fetchReplies() { //Placeholder till Replies API is up
-    const replies = repliesResponse;
-    return replies;
-  }
+  useEffect(() => {
+    if (showReplies) {
+      const response = getReplies(
+        props.comment.postId,
+        props.comment.commentId,
+      );
+      response.then((data) => setReplies(data));
+    }
+  }, [showReplies]);
 
-  function addReply(text: string) {
-    const replyID = fetchReplies().length.toString();
-    const userID = "0"; //Should be logged in userID, same thing for all the other user info
-    const firstName = "Tyrone";
-    const lastName = "Biggums";
-    const profilePicture =
-      "https://images.ctfassets.net/h6goo9gw1hh6/2sNZtFAWOdP1lmQ33VwRN3/24e953b920a9cd0ff2e1d587742a2472/1-intro-photo-final.jpg?w=1200&h=992&q=70&fm=webp";
-    const headline = "I smoke rocks";
-    const replyText = text;
-    fetchReplies().push({
-      replyID,
-      userID,
-      firstName,
-      lastName,
-      profilePicture,
-      headline,
-      replyText,
-    });
+  function addReply() {
+    createReply(props.comment.postId, props.comment.commentId, newReply).then(
+      () =>
+        getReplies(props.comment.postId, props.comment.commentId).then((data) =>
+          setReplies(data),
+        ),
+    );
   }
 
   return (
     <div className="flex flex-wrap w-1/1 bg-lightGray rounded-xl relative py-2">
       <div className="flex flex-row w-1/1 px-2">
         <CommenterDetails
-          key={`Details of Commenter ${props.comment.userID}`}
-          userID={props.comment.userID}
-          name={props.comment.firstName + " " + props.comment.lastName}
+          key={`Details of Commenter ${props.comment.userId}`}
+          userID={props.comment.userId}
+          name={props.comment.firstname + " " + props.comment.lastname}
           headline={props.comment.headline}
           profilePicture={props.comment.profilePicture}
         />
@@ -55,12 +55,19 @@ export default function CommentCard(props: CommentCardProps) {
         </div>
       </div>
       <CommentContent
-        key={`comment ${props.comment.commentID} details`}
+        key={`comment ${props.comment.commentId} details`}
         commentText={props.comment.commentText}
       />
       <div className="ml-14.5">
-        <button className="cursor-pointer text-sm font-medium px-2 text-mutedSilver hover:bg-gray-200 rounded-lg">
-          Like
+        <button
+          onClick={()=> setIsLike(!isLike)}
+          className={
+            isLike
+              ? "transition cursor-pointer text-sm font-medium px-2 text-blue-500 hover:bg-blue-100 rounded-lg"
+              : "transition cursor-pointer text-sm font-medium px-2 text-mutedSilver hover:bg-gray-200 rounded-lg"
+          }
+        >
+          {like}
         </button>
         <span className="text-mutedSilver font-medium text-sm">|</span>
         <button
@@ -88,18 +95,21 @@ export default function CommentCard(props: CommentCardProps) {
                 placeholder="Write a reply..."
                 className="outline-[0.7px] outline-gray-300 text-[14px] text-charcoalBlack h-8 w-12/12 px-2 mt-1 rounded-3xl hover:cursor-text hover:outline-[1px] hover:bg-gray-100 focus:outline-black focus:outline-[1.5px]"
               ></input>
-              <button 
+              <button
                 onClick={() => {
-                  addReply(newReply)
-                  setNewReply("")
+                  if (newReply != "") {
+                    addReply();
+                    setNewReply("");
+                  }
                 }}
-                className="material-icons-round cursor-pointer rounded-full p-1 mt-1 mx-2 text-gray-500 hover:bg-gray-200 h-fit">
+                className="material-icons-round cursor-pointer rounded-full p-1 mt-1 mx-2 text-gray-500 hover:bg-gray-200 h-fit"
+              >
                 send
               </button>
             </div>
-            {fetchReplies().map((reply) => (
-              <ReplyCard key={reply.replyID} reply={reply} />
-            ))}
+            {replies ? replies.map((reply) => (
+              <ReplyCard key={reply.replyId} reply={reply} />
+            )) : null}
           </>
         ) : null}
       </div>

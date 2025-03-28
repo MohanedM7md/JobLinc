@@ -2,36 +2,23 @@ import React from "react";
 import { Img } from "react-image";
 import UserProfile from "../UserProfile";
 import { isRTL } from "../../utils/IsArabic";
+import { MessageBubbleInterface } from "./interfaces/Message.interfaces";
 
-interface MessageInterface {
-  sender: {
-    id: string;
-    name: string;
-    profilePicture: string;
-  };
-  time: Date;
-  content: {
-    text?: string;
-    image?: string;
-    video?: string;
-    document?: string;
-  };
-}
-
-function MessageBubble({ message }: { message: MessageInterface }) {
+function MessageBubble({ message }: { message: MessageBubbleInterface }) {
   const rtl = isRTL(message.content.text);
   console.log("_______________MessageBubble_____________");
+
   return (
-    <div className="flex flex-col pl-1">
+    <div data-testid={message.messageId} className="flex flex-col pl-1">
       <UserProfile.Image
-        alt={message.sender.name}
+        alt={message.sender.firstName}
         photoUrl={message.sender.profilePicture}
         className="w-10 h-10 rounded-full absolute inline"
       />
 
       <div className=" w-full">
         <UserProfile.Name
-          name={message.sender.name}
+          name={message.sender.firstName}
           className="pl-12 text-lg font-semibold text-gray-800"
         />
 
