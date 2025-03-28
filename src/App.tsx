@@ -16,7 +16,10 @@ import MyNetwork from "./pages/MyNetworkPage";
 import PostContainer from "./components/Posts/PostContainer";
 import PostCreate from "./components/Posts/PostCreate";
 import PostEdit from "./components/Posts/PostEdit";
-import { UserProvider } from "./components/chat/mockUse";
+import ChangePassword from "./pages/ChangePassword";
+import ResetPassword from "./pages/ResetPassword";
+import UpdateEmail from "./pages/UpdateEmail";
+import UpdateUsername from "./pages/UpdateUsername";
 
 function App() {
   return (
@@ -33,6 +36,10 @@ function App() {
         <Route path="/Signup" element={<SignUpPage />} />
         <Route path="/Signin" element={<SignInPage />} />
         <Route path="/Signin/ForgotPassword" element={<ForgotPassword />} />
+        <Route path="/ResetPassword" element={<ResetPassword />} />
+        <Route path="/ChangePassword" element={<ChangePassword />}></Route>
+        <Route path="/UpdateEmail" element={<UpdateEmail />} />
+        <Route path="/UpdateUsername" element={<UpdateUsername />} />
 
         <Route path="/messaging" element={<MessagingPage />} />
         <Route path="/Home" element={<HomePage />} />
@@ -41,7 +48,7 @@ function App() {
         <Route path="/UserDetails" element={<UserDetails />} />
         <Route path="/post/create" element={<PostCreate />} />
         <Route path="/post" element={<PostContainer />} />
-        <Route path="/post/:postID/edit" element={<PostEdit />} />
+        <Route path="/post/:postId/edit" element={<PostEdit />} />
         <Route
           path="/playground"
           element={
