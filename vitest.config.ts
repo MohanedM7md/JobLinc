@@ -2,6 +2,17 @@
 import { defineConfig } from "vite";
 
 export default defineConfig({
+  resolve: {
+    alias: {
+      "@chatComponent": "/src/components/chat", // Remove path.resolve and /*
+      "@context": "/src/context", // Use absolute paths starting with /
+      "@hooks": "/src/hooks",
+      "@pages": "/src/pages",
+      "@services": "/src/services",
+      "@utils": "/src/utils",
+      "@store": "/src/store",
+    },
+  },
   test: {
     globals: true,
     setupFiles: "./test/setupTests.ts",

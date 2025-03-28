@@ -2,7 +2,7 @@ import SignHeader from "../components/Authentication/SignHeader";
 import { AuthenticationSignInButton } from "../components/Authentication/AuthenticationButtons";
 import { useState, useEffect } from "react";
 import store from "../store/store";
-import { changePassword, setPassword } from "../store/userSlice";
+import { changePassword } from "../store/userSlice";
 
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store/store";
@@ -62,7 +62,6 @@ function ChangePassword()
                     refreshToken: store.getState().user.refreshToken || ""
                 };
                 console.log("store status before changing password: " + JSON.stringify(store.getState().user));
-                dispatch(setPassword({password: newPassText}));
                 const response = await dispatch(changePassword(userData));
                 
                 console.log("response: " + JSON.stringify(response));
