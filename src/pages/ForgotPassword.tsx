@@ -107,7 +107,7 @@ function ForgotPassword()
 
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
                 <div className="flex flex-col gap-2">
-                    <h2 className="font-bold text-[18px]">Email sent successfully!</h2>
+                    <h2 data-testid="success-message" className="font-bold text-[18px]">Email sent successfully!</h2>
                     <p className="font-semibold text-[15px]">Kindly check your email for the verification code</p>
                     <div className="">
                         <OTPInput clear={false} onComplete={handleOTPCompletion}/>

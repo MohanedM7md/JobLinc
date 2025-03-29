@@ -5,6 +5,7 @@ import {describe, it, expect, afterEach} from "vitest";
 import userEvent from "@testing-library/user-event";
 import { Provider } from "react-redux";
 import store from "../../../store/store";
+import { vi } from "vitest"
 
 import "@testing-library/jest-dom/vitest";
 import { cleanup } from "@testing-library/react";
@@ -14,6 +15,17 @@ describe("UserDetails Component", () => {
       afterEach(() => {
         cleanup();
       });
+
+      vi.mock("react-router-dom", async () => {
+        const actual = await vi.importActual("react-router-dom");
+        return {
+          ...actual,
+          useLocation: () => ({
+            state: { email: "test@example.com", password: "securepassword123" },
+          }),
+        };
+      });
+      
 
       it("renders the form and inputs correctly", () => {
         render(
@@ -26,8 +38,8 @@ describe("UserDetails Component", () => {
     
         // Check if header, form, and labels are present
         expect(screen.getByText("Make the most of your professional life")).toBeInTheDocument();
-        expect(screen.getByLabelText("First name")).toBeInTheDocument();
-        expect(screen.getByLabelText("Last name")).toBeInTheDocument();
+        expect(screen.getByLabelText("First Name *")).toBeInTheDocument();
+        expect(screen.getByLabelText("Last Name *")).toBeInTheDocument();
         expect(screen.getByText("Continue")).toBeInTheDocument(); // Submit button
       });
 
@@ -40,8 +52,8 @@ describe("UserDetails Component", () => {
           </MemoryRouter>
         );
       
-        const firstNameInput = screen.getByLabelText(/first name/i);
-        const lastNameInput = screen.getByLabelText(/last name/i);
+        const firstNameInput = screen.getByLabelText("First Name *");
+        const lastNameInput = screen.getByLabelText("Last Name *");
         const continueButton = screen.getAllByText("Continue")[0];
       
         // Type invalid names (numbers in this case)
@@ -52,8 +64,8 @@ describe("UserDetails Component", () => {
         await userEvent.click(continueButton);
       
         // Ensure validation messages appear for invalid input
-        expect(screen.getByText("Please enter a valid first name.")).toBeVisible();
-        expect(screen.getByText("Please enter a valid last name.")).toBeVisible();
+        expect(screen.getByText("Please enter a valid firstname.")).toBeVisible();
+        expect(screen.getByText("Please enter a valid lastname.")).toBeVisible();
       });
 
       it("shows validation error for invalid first and last name", async () => {
@@ -65,8 +77,8 @@ describe("UserDetails Component", () => {
           </MemoryRouter>
         );
     
-        const firstNameInput = screen.getByLabelText("First name");
-        const lastNameInput = screen.getByLabelText("Last name");
+        const firstNameInput = screen.getByLabelText("First Name *");
+        const lastNameInput = screen.getByLabelText("Last Name *");
         const continueButton = screen.getAllByText("Continue")[0];
     
         // Enter invalid names
@@ -81,8 +93,8 @@ describe("UserDetails Component", () => {
         await userEvent.click(continueButton);
     
         // Ensure validation messages appear
-        expect(screen.getByText("Please enter a valid first name.")).toBeInTheDocument();
-        expect(screen.getByText("Please enter a valid last name.")).toBeInTheDocument();
+        expect(screen.getByText("Please enter a valid firstname.")).toBeInTheDocument();
+        expect(screen.getByText("Please enter a valid lastname.")).toBeInTheDocument();
       });
 
       it("opens modal on valid form submission", async () => {
@@ -94,8 +106,8 @@ describe("UserDetails Component", () => {
           </MemoryRouter>,
         );
       
-        const firstNameInput = screen.getByLabelText("First name");
-        const lastNameInput = screen.getByLabelText("Last name");
+        const firstNameInput = screen.getByLabelText("First Name *");
+        const lastNameInput = screen.getByLabelText("Last Name *");
         const continueButton = screen.getAllByText("Continue")[0];
       
         // Enter valid names
@@ -107,8 +119,8 @@ describe("UserDetails Component", () => {
       
         // Ensure no validation errors exist in the DOM
         await waitFor(() => {
-          expect(screen.queryByTestId("errorFirstName")).not.toBeInTheDocument();
-          expect(screen.queryByTestId("errorLastName")).not.toBeInTheDocument();
+          expect(screen.queryByText("Please enter a valid firstname.")).not.toBeInTheDocument();
+          expect(screen.queryByText("Please enter a valid lastname.")).not.toBeInTheDocument();
         });
       
         // Ensure modal appears
@@ -128,8 +140,8 @@ describe("UserDetails Component", () => {
         );
     
         // Open the modal
-        const firstNameInput = screen.getByLabelText("First name");
-        const lastNameInput = screen.getByLabelText("Last name");
+        const firstNameInput = screen.getByLabelText("First Name *");
+        const lastNameInput = screen.getByLabelText("Last Name *");
         await userEvent.type(firstNameInput, "John");
         await userEvent.type(lastNameInput, "Doe");
         await userEvent.click(screen.getAllByText("Continue")[0]);
@@ -158,8 +170,8 @@ describe("UserDetails Component", () => {
         );
     
         // Open the modal
-        await userEvent.type(screen.getByLabelText("First name"), "John");
-        await userEvent.type(screen.getByLabelText("Last name"), "Doe");
+        await userEvent.type(screen.getByLabelText("First Name *"), "John");
+        await userEvent.type(screen.getByLabelText("Last Name *"), "Doe");
         await userEvent.click(screen.getAllByText("Continue")[0]);
     
         await waitFor(() => screen.getByText("Security Verification"));

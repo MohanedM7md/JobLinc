@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../store/store";
 import { loginUser } from "../../store/userSlice"; // New login thunk
 import Modal from "./Modal";
-import store from "../../store/store";
+// import store from "../../store/store";
 import Checkbox from "./Utilities/Checkbox";
 import Navigate_Component from "./Utilities/Navigate_Component";
 import PasswordFieldWithMovingLabel from "./Utilities/PasswordFieldWIthMovingLabel";
@@ -93,7 +93,7 @@ function SignInInformation() {
                 // }
 
                 const userData = { email: emailText, password: passText };
-                console.log("store data before sign in: " + JSON.stringify(store.getState().user));
+                // console.log("store data before sign in: " + JSON.stringify(store.getState().user));
                 const resultAction = await dispatch(loginUser(userData));
                 //retrieveUser(userData.email, userData.password);
                 if (loginUser.fulfilled.match(resultAction)) {
@@ -133,7 +133,7 @@ function SignInInformation() {
                 <AuthenticationSignInButton id="sign-in-btn" text="Sign in" />
             </div>
 
-            <Modal isOpen={isWrongEmailOrPassword} onClose={() => setIsWrongEmailOrPassword(false)}>
+            <Modal data-testid="wrong-email-or-password" isOpen={isWrongEmailOrPassword} onClose={() => setIsWrongEmailOrPassword(false)}>
                 <div className="flex flex-col items-start gap-4 w-full">
                     <h2 className="font-bold text-[18px]">Wrong Email or Password.</h2>
                     <p className="text-[18px]">Please try again.</p>
