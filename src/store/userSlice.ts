@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import api from "../services/api/api";
-
+import { api } from "@services/api/api";
 
 interface UserState {
   userId: number | null;
@@ -18,7 +17,6 @@ const initialState: UserState = {
   status: "IDLE",
   loggedIn: false,
   accessToken: null, // leave it as it is
-
 };
 
 // Fetch User Profile (Placeholder API)
@@ -120,9 +118,8 @@ export const changePassword = createAsyncThunk(
     } catch (error: any) {
       return rejectWithValue(error.response?.data || "Change Password failed");
     }
-  }
+  },
 );
-
 
 export const getUserDetails = createAsyncThunk(
   "user/getUserDetails",
@@ -131,11 +128,12 @@ export const getUserDetails = createAsyncThunk(
       const response = await api.get("user/me");
       return response.data;
     } catch (error: any) {
-      return rejectWithValue(error.response?.data || "User details fetch failed");
+      return rejectWithValue(
+        error.response?.data || "User details fetch failed",
+      );
     }
-  } 
+  },
 );
-
 
 export const sendConfirmationEmail = createAsyncThunk(
   "user/sendConfirmationEmail",
@@ -144,21 +142,26 @@ export const sendConfirmationEmail = createAsyncThunk(
       const response = await api.post("auth/send-confirmation-email", userData);
       return response.data;
     } catch (error: any) {
-      return rejectWithValue(error.response?.data || "Send Confirmation Email failed");
+      return rejectWithValue(
+        error.response?.data || "Send Confirmation Email failed",
+      );
     }
-  }
+  },
 );
 
 export const confirmEmail = createAsyncThunk(
   "user/confirmEmail",
-  async (userData: { email: string, token: string, otp: string }, { rejectWithValue }) => {
+  async (
+    userData: { email: string; token: string; otp: string },
+    { rejectWithValue },
+  ) => {
     try {
       const response = await api.post("auth/confirm-email", userData);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data || "Confirm Email failed");
     }
-  }
+  },
 );
 // Create Redux Slice
 const userSlice = createSlice({
@@ -222,14 +225,16 @@ const userSlice = createSlice({
       .addCase(forgotPassword.pending, (state) => {
         state.status = "LOADING";
       })
-      .addCase(forgotPassword.fulfilled, (state, action: PayloadAction<any>) => {
-        const userData = action.payload;
+      .addCase(
+        forgotPassword.fulfilled,
+        (state, action: PayloadAction<any>) => {
+          const userData = action.payload;
 
-        if (userData)
-        {
-          state.status = "SUCCESS"
-        }
-      })
+          if (userData) {
+            state.status = "SUCCESS";
+          }
+        },
+      )
       .addCase(forgotPassword.rejected, (state) => {
         state.status = "FAILED";
       })
@@ -240,10 +245,9 @@ const userSlice = createSlice({
       .addCase(confirmOTP.fulfilled, (state, action: PayloadAction<any>) => {
         const userData = action.payload;
 
-        if (userData)
-        {
+        if (userData) {
           // state.resetToken = userData.resetToken || null;
-          state.status = "SUCCESS"
+          state.status = "SUCCESS";
         }
       })
       .addCase(confirmOTP.rejected, (state) => {
@@ -271,16 +275,18 @@ const userSlice = createSlice({
       .addCase(changePassword.pending, (state) => {
         state.status = "LOADING";
       })
-      .addCase(changePassword.fulfilled, (state, action: PayloadAction<any>) => {
-        const userData = action.payload;
+      .addCase(
+        changePassword.fulfilled,
+        (state, action: PayloadAction<any>) => {
+          const userData = action.payload;
 
-        if (userData)
-        {
-          state.accessToken = userData.accessToken || null;
-          localStorage.setItem("refreshToken", userData.refreshToken);
-          state.status = "SUCCESS";
-        }
-      })
+          if (userData) {
+            state.accessToken = userData.accessToken || null;
+            localStorage.setItem("refreshToken", userData.refreshToken);
+            state.status = "SUCCESS";
+          }
+        },
+      )
       .addCase(changePassword.rejected, (state) => {
         state.status = "FAILED";
       })
@@ -288,19 +294,19 @@ const userSlice = createSlice({
       .addCase(getUserDetails.pending, (state) => {
         state.status = "LOADING";
       })
-      .addCase(getUserDetails.fulfilled, (state, action: PayloadAction<any>) => {
-        const userData = action.payload;
+      .addCase(
+        getUserDetails.fulfilled,
+        (state, action: PayloadAction<any>) => {
+          const userData = action.payload;
 
-        if (userData)
-        {
-          state.userId = userData.userId || null;
-          state.status = "SUCCESS";
-        }
-        else 
-        {
-          console.error("User data missing in API response:", action.payload);
-        }
-      })
+          if (userData) {
+            state.userId = userData.userId || null;
+            state.status = "SUCCESS";
+          } else {
+            console.error("User data missing in API response:", action.payload);
+          }
+        },
+      )
       .addCase(getUserDetails.rejected, (state) => {
         state.status = "FAILED";
       })
@@ -308,18 +314,18 @@ const userSlice = createSlice({
       .addCase(sendConfirmationEmail.pending, (state) => {
         state.status = "LOADING";
       })
-      .addCase(sendConfirmationEmail.fulfilled, (state, action: PayloadAction<any>) => {
-        const userData = action.payload;
+      .addCase(
+        sendConfirmationEmail.fulfilled,
+        (state, action: PayloadAction<any>) => {
+          const userData = action.payload;
 
-        if (userData)
-        {
-          state.status = "SUCCESS";
-        }
-        else 
-        {
-          console.error("User data missing in API response:", action.payload);
-        }
-      })
+          if (userData) {
+            state.status = "SUCCESS";
+          } else {
+            console.error("User data missing in API response:", action.payload);
+          }
+        },
+      )
       .addCase(sendConfirmationEmail.rejected, (state) => {
         state.status = "FAILED";
       })
@@ -330,17 +336,14 @@ const userSlice = createSlice({
       .addCase(confirmEmail.fulfilled, (state, action: PayloadAction<any>) => {
         const userData = action.payload;
         console.log("Redux Payload: " + JSON.stringify(action.payload));
-        if (userData)
-        {
+        if (userData) {
           state.status = "SUCCESS";
           state.userId = userData.userID;
           state.role = userData.role;
           state.accessToken = userData.accessToken;
           localStorage.setItem("refreshToken", userData.refreshToken);
           state.confirmed = userData.confirmed;
-        }
-        else 
-        {
+        } else {
           console.error("User data missing in API response:", action.payload);
         }
       })

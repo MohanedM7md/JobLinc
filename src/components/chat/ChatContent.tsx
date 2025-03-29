@@ -1,51 +1,74 @@
-import React, { useState, useEffect } from "react";
+import { memo, useState, useEffect, useRef } from "react";
 import ChatMessages from "./ChatMessages";
 import ChatInput from "./ChatInput";
-
-import { connectChatSocket } from "../../services/api/socket";
+import {
+  subscribeToMessages,
+  unsubscribeFromMessages,
+  sendMessage,
+  typing,
+  stopTyping,
+} from "@services/api/ChatSocket";
 import {
   RecievedMessage,
   MessageStatus,
 } from "./interfaces/Message.interfaces";
 import { User } from "./interfaces/User.interfaces";
 import { useUser } from "./mockUse";
-import { fetchChatData } from "../../services/api/chatServices";
+import { fetchChatData, createChat } from "@services/api/chatServices";
+import useChatid from "@context/ChatIdProvider";
+import useNetworkUserId from "@context/NetworkUserIdProvider";
+import UserTypingIndicator from "./UserTyping";
 
-function ChatContent({ chatId }: { chatId: string }) {
+function ChatContent({ className }: { className?: string }) {
   const [users, setUsers] = useState<User[]>([]);
   const [messages, setMessages] = useState<RecievedMessage[]>([]);
-  const chatSocket = connectChatSocket();
+  const { chatId, setChatId } = useChatid();
+  const { usersId } = useNetworkUserId();
   const { user } = useUser();
-
-  console.log("______________ChatContent_______________");
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const [typingUsers, setTypingUsers] = useState<string[]>([]);
+  console.log("typing triggers update");
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
   useEffect(() => {
     const fetchData = async () => {
-      const data = await fetchChatData(chatId);
-
-      setUsers(data.users);
-      setMessages(data.messages);
+      if (usersId.length && !chatId) {
+        const data = await createChat(usersId);
+        setUsers(data.users);
+        setMessages(data.messages);
+        setChatId(data.chatId);
+      } else {
+        const data = await fetchChatData(chatId);
+        setUsers(data.users);
+        setMessages(data.messages);
+      }
     };
-    fetchData();
 
-    chatSocket.emit("openChat", chatId, user);
-    chatSocket.on("receiveMessage", (message: RecievedMessage) => {
-      console.log("recieved Message: ", message);
-      setMessages((prev) => [...prev, message]);
-      chatSocket.emit("messageRecieved", chatId, message.messageId);
-    });
-    chatSocket.on("messageRead", () => {
-      console.log("Message Read: ");
-      setMessages((prev) =>
-        prev.map((msg) => ({
-          ...msg,
-          status: MessageStatus.Read,
-        })),
-      );
-    });
+    fetchData();
+    subscribeToMessages(
+      chatId,
+      user,
+      (message) => setMessages((prev) => [...prev, message]),
+      () =>
+        setMessages((prev) =>
+          prev.map((msg) => ({ ...msg, status: MessageStatus.Read })),
+        ),
+      (userId) =>
+        setTypingUsers((prevTypingUsers) => {
+          console.log("Before update:", prevTypingUsers);
+          if (!prevTypingUsers.includes(userId)) {
+            console.log("Adding user:", userId);
+            return [...prevTypingUsers, userId];
+          }
+          return prevTypingUsers;
+        }),
+      (userId) =>
+        setTypingUsers((prev) => prev.filter((preUser) => preUser != userId)),
+    );
 
     return () => {
-      chatSocket.off("receiveMessage");
-      chatSocket.off("messageRead");
+      unsubscribeFromMessages(chatId);
     };
   }, [chatId]);
 
@@ -57,29 +80,52 @@ function ChatContent({ chatId }: { chatId: string }) {
       status: MessageStatus.Sent,
       content: { text: message },
     };
+
     setMessages((prevMsgs) => [...prevMsgs, newMessage]);
+
     if (chatId) {
-      chatSocket?.emit("sendMessage", { ...newMessage, chatId }, () => {
-        console.log("call back called: msg delivered");
+      sendMessage(chatId, newMessage, () => {
+        console.log("✅ Message delivered");
         setMessages((prevMsgs) => {
-          prevMsgs.pop;
+          prevMsgs.pop();
           newMessage.status = MessageStatus.Delivered;
           return [...prevMsgs, newMessage];
         });
       });
     }
   };
+  const handleTypingMessage = (isTyping: boolean) => {
+    if (!chatId || !user) return;
+    switch (isTyping) {
+      case true:
+        typing(chatId, user);
+        break;
+      case false:
+        stopTyping(chatId, user);
+        break;
+    }
+  };
   return (
-    <div className="flex flex-col flex-1 overflow-hidden">
-      <div className="flex-1 overflow-y-auto">
+    <div className={`${className} flex flex-col flex-1 overflow-y-hidden`}>
+      <div className="h-8/12 overflow-y-auto">
         <ChatMessages users={users} messages={messages} />
-        {messages.length > 0 && (
-          <div>{JSON.stringify(messages[messages.length - 1].status)}</div>
-        )}
+        {typingUsers.map((typingUserId) => (
+          <UserTypingIndicator
+            key={typingUserId}
+            userImage={
+              users.find((user) => user.userId == typingUserId)?.profilePicture
+            }
+          />
+        ))}
       </div>
-      <ChatInput chatId={chatId} onSendMessage={handleSendMessage} />
+      <ChatInput
+        chatId={chatId}
+        onSendMessage={handleSendMessage}
+        onTypingMessage={handleTypingMessage}
+        className=""
+      />
     </div>
   );
 }
 
-export default ChatContent;
+export default memo(ChatContent);

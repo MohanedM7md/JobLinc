@@ -1,12 +1,7 @@
-export interface FloatingHeaderData {
-  title: string;
-  profilePicture: string;
-  status: "online" | "offline";
-}
-
 export interface FlaotingHeaderProbs {
   onClick?: () => void;
-  floatingHeaderData: FloatingHeaderData; //(title, profile picture, status)
+  title: string | undefined;
+  chatPicture: string[] | undefined;
   onClose: () => void;
 }
 
@@ -20,13 +15,9 @@ export interface PageChatWindowInterface {
   chatId: string;
 }
 
-export interface ChatCardInterface {
+export interface ChatSession {
   chatId: string;
-  chatName: string;
-  chatPicture: string;
-  lastMessage: string;
-  sentDate: string;
-  unseenCount?: number;
+  userId: string;
 }
 export interface ChatCardProps extends ChatCardInterface {
   onClick: () => void;
@@ -35,5 +26,35 @@ export interface ChatCardProps extends ChatCardInterface {
 
 export interface ChatInputProps {
   chatId: string;
+  className?: string;
   onSendMessage: (message: string) => void;
+  onTypingMessage: (isTyping: boolean) => void;
+}
+
+export interface NetWorkCard {
+  userId: string;
+  chatPicture: string;
+  chatName: string;
+  onClick: () => void;
+  className?: string;
+}
+
+export interface PageChatWindowProps {
+  className?: string;
+  chatName: string;
+}
+
+export interface FloatingChatWindowProps {
+  className?: string;
+  chatName: string;
+  chatPicture: string[];
+}
+export interface ChatCardInterface {
+  chatId: string;
+  chatName: string;
+  chatPicture: string[];
+  lastMessage: string;
+  sentDate: string;
+  unseenCount: number;
+  isRead: boolean;
 }

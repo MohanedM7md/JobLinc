@@ -18,7 +18,7 @@ export interface MessageBase {
 }
 export interface RecievedMessage extends MessageBase {
   senderId: string;
-  status: MessageStatus;
+  seenBy: string[];
 }
 
 export interface MessageBubbleInterface extends MessageBase {
