@@ -1,4 +1,4 @@
-import { useUser } from "./mockUse";
+/* import { useUser } from "./mockUse";
 import { RecievedMessage } from "@chatComponent/interfaces/Message.interfaces";
 import React from "react";
 
@@ -28,3 +28,4 @@ function Status({
 }
 
 export default Status;
+ */

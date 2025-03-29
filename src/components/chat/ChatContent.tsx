@@ -17,7 +17,6 @@ import { useUser } from "./mockUse";
 import { fetchChatData, createChat } from "@services/api/chatServices";
 import useChatid from "@context/ChatIdProvider";
 import useNetworkUserId from "@context/NetworkUserIdProvider";
-import Status from "./Status";
 import UserTypingIndicator from "./UserTyping";
 
 function ChatContent({ className }: { className?: string }) {
@@ -35,7 +34,7 @@ function ChatContent({ className }: { className?: string }) {
   useEffect(() => {
     const fetchData = async () => {
       if (usersId.length && !chatId) {
-        const data = await createChat({ usersId, myId: user });
+        const data = await createChat(usersId);
         setUsers(data.users);
         setMessages(data.messages);
         setChatId(data.chatId);
@@ -118,14 +117,6 @@ function ChatContent({ className }: { className?: string }) {
             }
           />
         ))}
-        {messages[messages.length - 1] != undefined &&
-          typingUsers.length == 0 &&
-          messages[messages.length - 1].senderId === user && (
-            <Status
-              className="text-sm pl-2 bg-gray-100 text-gray-600"
-              lastMessage={messages[messages.length - 1]}
-            />
-          )}
       </div>
       <ChatInput
         chatId={chatId}

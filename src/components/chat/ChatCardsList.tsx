@@ -26,7 +26,7 @@ const ChatCardsList = ({
     const fetchData = async () => {
       try {
         if (!user) return;
-        const data = await fetchChats(user);
+        const data = await fetchChats();
         setChats(data);
       } catch (error) {
         console.error("Error fetching chat data:", error);
