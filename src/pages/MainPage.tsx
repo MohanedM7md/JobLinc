@@ -75,7 +75,7 @@ function MainPage() {
         // send a post request to the backend to send a token
         
         console.log("email to confirm: " + userDetails.email);
-        const response = dispatch(sendConfirmationEmail({ email: userDetails.email })).unwrap()
+        dispatch(sendConfirmationEmail({ email: userDetails.email })).unwrap()
         .then((data) => {
             console.log("Token of confirmation: ", JSON.stringify(data));  
             navigate("/ConfirmEmail", { state: { email: userDetails.email, token: data.token }});

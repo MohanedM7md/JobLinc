@@ -41,21 +41,38 @@ describe("SignMain Component", () => {
     const peopleLink = screen.getByText("People").closest("a");
     const learningLink = screen.getByText("Learning").closest("a");
     const jobsLink = screen.getByText("Jobs").closest("a");
+    const gamesLink = screen.getByText("Games").closest("a");
+    const getTheAppLink = screen.getByText("Get the app").closest("a");
+    const businessesLink = screen.getByText("Businesses").closest("a");
+
 
     expect(articlesLink).toHaveAttribute("href", "/Home");
     expect(peopleLink).toHaveAttribute("href", "/Home");
     expect(learningLink).toHaveAttribute("href", "/Home");
     expect(jobsLink).toHaveAttribute("href", "/Home");
+    expect(gamesLink).toHaveAttribute("href", "/Home");
+    expect(getTheAppLink).toHaveAttribute("href", "/Home");
+    expect(businessesLink).toHaveAttribute("href", "/Home");
+
 
     await act(async () => {
       await user.click(articlesLink as HTMLElement);
       await user.click(peopleLink as HTMLElement);
       await user.click(learningLink as HTMLElement);
       await user.click(jobsLink as HTMLElement);
+      await user.click(gamesLink as HTMLElement);
+      await user.click(getTheAppLink as HTMLElement);
+      await user.click(businessesLink as HTMLElement);
     });
 
     await waitFor(() => {
       expect(articlesLink).toHaveAttribute("href", "/Home");
+      expect(peopleLink).toHaveAttribute("href", "/Home");
+      expect(learningLink).toHaveAttribute("href", "/Home");
+      expect(jobsLink).toHaveAttribute("href", "/Home");
+      expect(gamesLink).toHaveAttribute("href", "/Home");
+      expect(getTheAppLink).toHaveAttribute("href", "/Home");
+      expect(businessesLink).toHaveAttribute("href", "/Home");
     });
   });
 });

@@ -13,7 +13,7 @@ function ExploreButtons(props: ExploreButtonsProps) {
 
     return (
         <Link to={buttonLink} className="no-underline" target={text === "Simon Says" ? "_blank" : "_self"}>
-            <button className={`rounded-3xl bg-warmWhite text-[18px] font-semibold outline-3 text-warmBlack outline-black px-6 py-3 hover:cursor-pointer ${text === "Show all" ? "outline-4 text-softRosewood outline-softRosewood" : ""}`}>
+            <button data-testid={text ? text.toLowerCase().trim().replace(/\s+/g, "") : "default"} className={`rounded-3xl bg-warmWhite text-[18px] font-semibold outline-3 text-warmBlack outline-black px-6 py-3 hover:cursor-pointer ${text === "Show all" ? "outline-4 text-softRosewood outline-softRosewood" : ""}`}>
                 {text ?? "Default"}
             </button>
         </Link>

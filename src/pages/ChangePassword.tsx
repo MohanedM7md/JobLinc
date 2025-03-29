@@ -52,14 +52,11 @@ function ChangePassword()
         {
             if (oldPassText !== newPassText)
             {
-                // Check that OldPassword is the correct password stored in the DB
-                // If it is, then update the password to the new password
-                // Else, show an error message --> Use Modal Component
+
                 const userData = {
                     oldPassword: oldPassText,
                     newPassword: newPassText,
-                    // accessToken: store.getState().user.accessToken || "",
-                    refreshToken: store.getState().user.refreshToken || ""
+                    refreshToken: localStorage.getItem("refreshToken") || ""
                 };
                 console.log("store status before changing password: " + JSON.stringify(store.getState().user));
                 const response = await dispatch(changePassword(userData));
@@ -82,9 +79,6 @@ function ChangePassword()
             }
         }
     }
-
-
-
 
     return (
         <div className="flex h-screen w-full bg-charcoalWhite items-center justify-center">

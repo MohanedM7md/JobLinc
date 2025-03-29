@@ -6,7 +6,6 @@ import Modal from "../components/Authentication/Modal";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@store/store";
 import { forgotPassword, confirmOTP } from "../store/userSlice";
-import store from "../store/store";
 import OTPInput from "../components/Authentication/OTPInput";
 import EmalFieldWithMovingLabel from "../components/Authentication/Utilities/EmailFieldWithMovingLabel";
 import { isValidEmail } from "../components/Authentication/Utilities/Validations";
@@ -14,6 +13,8 @@ import { isValidEmail } from "../components/Authentication/Utilities/Validations
 function ForgotPassword()
 {
     const [emailText, setEmailText] = useState("");
+    const [forgotToken, setForgotToken] = useState("");
+
     const [showErrorEmailInvalid, setshowErrorEmailInvalid] = useState(false);
 
     const [showErrorOTP, setShowErrorOTP] = useState(false);
@@ -39,12 +40,10 @@ function ForgotPassword()
             // Send to the BE a post request to send an email to this email
             const userData = {email: emailText}
             const resultAction = await dispatch(forgotPassword(userData));
-            // Display a success message
-
-            console.log("Redux state: " + JSON.stringify(store.getState().user));
-            
+            // Display a success message            
 
             if (forgotPassword.fulfilled.match(resultAction)) {
+                setForgotToken(resultAction.payload.forgotToken);
                 setIsModalOpen(true);
             } 
             else {
@@ -64,19 +63,18 @@ function ForgotPassword()
                 
         const userData = {
             email: emailText || "",
-            forgotToken: store.getState().user.forgotToken || "",
+            forgotToken: forgotToken,
             otp: otp
         }
 
         const resultAction = await dispatch(confirmOTP(userData))
-        console.log("R: " + JSON.stringify(resultAction));
-        console.log("State now: " + JSON.stringify(store.getState().user));
+
 
         if (confirmOTP.fulfilled.match(resultAction))
         {
             // Navigate the user to reset password page
             setShowErrorOTP(false);
-            navigate("/ResetPassword");
+            navigate("/ResetPassword", {state: {email: emailText, resetToken: resultAction.payload.resetToken}});
         }
         else
         {
@@ -97,7 +95,7 @@ function ForgotPassword()
                     
                     <AuthenticationSignInButton id="next-btn" text="Next"/>
                     
-                    <button onClick={handleBackBtn} className="w-full bg-crimsonRed py-2 text-charcoalBlack font-semibold rounded-3xl mb-4 hover:bg-softRosewood hover:cursor-pointer">Back</button>
+                    <button onClick={handleBackBtn} id="back-btn" className="w-full bg-crimsonRed py-2 text-charcoalBlack font-semibold rounded-3xl mb-4 hover:bg-softRosewood hover:cursor-pointer">Back</button>
                 </div>
             </form>
 
@@ -109,7 +107,7 @@ function ForgotPassword()
 
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
                 <div className="flex flex-col gap-2">
-                    <h2 className="font-bold text-[18px]">Email sent successfully!</h2>
+                    <h2 data-testid="success-message" className="font-bold text-[18px]">Email sent successfully!</h2>
                     <p className="font-semibold text-[15px]">Kindly check your email for the verification code</p>
                     <div className="">
                         <OTPInput clear={false} onComplete={handleOTPCompletion}/>
