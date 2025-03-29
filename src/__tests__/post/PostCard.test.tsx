@@ -15,16 +15,16 @@ vi.mock("react-router-dom", () => ({
 }));
 
 const mockPost = {
-  postID: "1",
-  userID: "1",
-  firstName: "John",
-  lastName: "Doe",
+  postId: "1",
+  userId: "1",
+  firstname: "John",
+  lastname: "Doe",
   headline: "Software Engineer",
   profilePicture: "https://example.com/profile.jpg",
   text: "This is a post",
   pics: [],
   likes: 10,
-  commentsNum: 5,
+  comments: 5,
   reposts: 2,
 };
 

@@ -17,7 +17,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
         className="absolute inset-0 bg-black opacity-50"
         onClick={(event) => {
           if (event.target === event.currentTarget) {
-            onClose(); // ✅ Only close when clicking directly on the overlay
+            onClose();
           }
         }}
       />
