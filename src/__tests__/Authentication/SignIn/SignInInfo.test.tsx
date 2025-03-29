@@ -1,4 +1,4 @@
-import { MemoryRouter, Routes, Route } from "react-router-dom";
+import { MemoryRouter, Routes, Route, useNavigate } from "react-router-dom";
 import { render, screen, waitFor } from "@testing-library/react";
 import {describe, it, expect, vi, beforeAll, afterEach} from "vitest";
 import SignInInformation from "../../../components/Authentication/SignInInformation";
@@ -12,15 +12,22 @@ import MainPage from "../../../pages/MainPage";
 import "@testing-library/jest-dom/vitest";
 
 
-const mockNavigate = vi.fn();
-    vi.mock("react-router-dom", async () => {
+// const mockNavigate = vi.fn();
+//     vi.mock("react-router-dom", async () => {
+//     const actual = await vi.importActual("react-router-dom");
+//     return {
+//         ...actual,
+//         useNavigate: () => mockNavigate,
+//     };
+// });
+
+vi.mock("react-router-dom", async () => {
     const actual = await vi.importActual("react-router-dom");
     return {
         ...actual,
-        useNavigate: () => mockNavigate,
+        useNavigate: vi.fn(),
     };
 });
-
 
 describe("SignInInformation Component", () => {
     
@@ -130,11 +137,11 @@ describe("SignInInformation Component", () => {
     });
 
     it("shows error modal for wrong email/password", async () => {
-        global.window.grecaptcha.getResponse = vi.fn(() => "valid-recaptcha-response");
+        // global.window.grecaptcha.getResponse = vi.fn(() => "valid-recaptcha-response");
 
         vi.spyOn(api, "post").mockResolvedValue({
-            success: false,
-            message: "Invalid email or password",
+            status: "FAILED",
+            // message: "Invalid email or password",
         });
         render(
             <Provider store={store}>
@@ -149,14 +156,15 @@ describe("SignInInformation Component", () => {
         const signInButton = screen.getAllByText("Sign in")[0];
 
         
-        await userEvent.type(emailInput, "test@example.com");
+        await userEvent.type(emailInput, "tf@example.com");
         await userEvent.type(passwordInput, "password123");
         await userEvent.click(signInButton);
 
         await waitFor(() => {
-            expect(screen.getByText("Wrong Email or Password.")).toBeInTheDocument();
+            expect(screen.getByTestId("wrong-email-or-password")).toBeInTheDocument();
         });
     });
+
 
     it("logs in the user and navigates to /MainPage", async () => {
         global.window.grecaptcha.getResponse = vi.fn(() => "valid-recaptcha-response");
@@ -166,6 +174,9 @@ describe("SignInInformation Component", () => {
             data: { token: "fake-jwt-token" },
         });
     
+        const navigate = vi.fn();
+        vi.mocked(useNavigate).mockReturnValue(navigate);
+
         render(
             <Provider store={store}>
                 <MemoryRouter initialEntries={["/signin"]}> 
@@ -186,7 +197,7 @@ describe("SignInInformation Component", () => {
         await userEvent.click(signInButton);
         
         await waitFor(() => {
-            expect(mockNavigate).toHaveBeenCalledWith("/MainPage");
+            expect(navigate).toHaveBeenCalledWith("/MainPage");
         });
 
         
