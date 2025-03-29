@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { AuthenticationSignInButton } from "./AuthenticationButtons";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../store/store";
-import { loginUser } from "../../store/userSlice"; // New login thunk
+import { loginUser, setPassword } from "../../store/userSlice"; // New login thunk
 import Modal from "./Modal";
 import store from "../../store/store";
 import Checkbox from "./Utilities/Checkbox";
@@ -70,42 +70,25 @@ function SignInInformation() {
 
         if (isValidEmail(emailText)) {
             if (isValidPassword(passText)) {
-                // TO BE UNCOMMENTED
-                // const recaptchaChecked = window.grecaptcha.getResponse();
-                // if (recaptchaChecked !== "") {
-                //     const userData = { email: emailText, password: passText };
-                //     console.log("store data before sign in: " + JSON.stringify(store.getState().user));
-                //     const resultAction = await dispatch(loginUser(userData));
-                //     //retrieveUser(userData.email, userData.password);
-                //     if (loginUser.fulfilled.match(resultAction)) {
-                //         // Setting the access token in the local storage
-                //         localStorage.setItem("token", store.getState().user.accessToken || "");
-                //         navigate("/MainPage");
-                //     }
-                //     else
-                //     {
-                //         // Render a component to say wrong email or password
-                //         setIsWrongEmailOrPassword(true);
-                //     }
-                // }
-                // else
-                // {
-                //     setShowErrorRecaptcha(true);
-                // }
-
-                const userData = { email: emailText, password: passText };
-                console.log("store data before sign in: " + JSON.stringify(store.getState().user));
-                const resultAction = await dispatch(loginUser(userData));
-                //retrieveUser(userData.email, userData.password);
-                if (loginUser.fulfilled.match(resultAction)) {
-                    // Setting the access token in the local storage
-                    localStorage.setItem("token", store.getState().user.accessToken || "");
-                    navigate("/MainPage");
+                const recaptchaChecked = window.grecaptcha.getResponse();
+                if (recaptchaChecked !== "") {
+                    const userData = { email: emailText, password: passText };
+                    dispatch(setPassword({password: passText})); 
+                    console.log("store data before sign in: " + JSON.stringify(store.getState().user));
+                    const resultAction = await dispatch(loginUser(userData));
+                    //retrieveUser(userData.email, userData.password);
+                    if (loginUser.fulfilled.match(resultAction)) {
+                        navigate("/MainPage");
+                    }
+                    else
+                    {
+                        // Render a component to say wrong email or password
+                        setIsWrongEmailOrPassword(true);
+                    }
                 }
                 else
                 {
-                    // Render a component to say wrong email or password
-                    setIsWrongEmailOrPassword(true);
+                    setShowErrorRecaptcha(true);
                 }
                 
             } else {
@@ -122,10 +105,8 @@ function SignInInformation() {
 
             <PasswordFieldWithMovingLabel passText={passText} setPassText={setPassText} showErrorPassInvalid={showErrorPassInvalid} setshowErrorPassInvalid={setshowErrorPassInvalid} />
             
-            
-            {/* Recaptcha Validation */}
-            {/*<div id="recaptcha-container" className="g-recaptcha" data-sitekey="6Le48PQqAAAAABGnl1yAsKhhNuTnArdIGeRyuQoV"></div>
-            {showErrorRecaptcha && <p data-testid="errorRECAPTCHA" className="text-red-800 text-[12px]">Please complete the reCAPTCHA.</p>}*/}
+            <div id="recaptcha-container" className="g-recaptcha" data-sitekey="6Le48PQqAAAAABGnl1yAsKhhNuTnArdIGeRyuQoV"></div>
+            {showErrorRecaptcha && <p data-testid="errorRECAPTCHA" className="text-red-800 text-[12px]">Please complete the reCAPTCHA.</p>}
 
             <Navigate_Component labelText="Forgot password?" navigateTo="/Signin/ForgotPassword" />
 

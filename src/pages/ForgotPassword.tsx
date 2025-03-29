@@ -5,7 +5,7 @@ import SignHeader from "../components/Authentication/SignHeader";
 import Modal from "../components/Authentication/Modal";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@store/store";
-import { forgotPassword, confirmOTP } from "../store/userSlice";
+import { forgotPassword, confirmOTP, setEmail } from "../store/userSlice";
 import store from "../store/store";
 import OTPInput from "../components/Authentication/OTPInput";
 import EmalFieldWithMovingLabel from "../components/Authentication/Utilities/EmailFieldWithMovingLabel";
@@ -38,6 +38,7 @@ function ForgotPassword()
             
             // Send to the BE a post request to send an email to this email
             const userData = {email: emailText}
+            dispatch(setEmail( {email: emailText} ))           
             const resultAction = await dispatch(forgotPassword(userData));
             // Display a success message
 
@@ -63,7 +64,7 @@ function ForgotPassword()
     {
                 
         const userData = {
-            email: emailText || "",
+            email: store.getState().user.email || "",
             forgotToken: store.getState().user.forgotToken || "",
             otp: otp
         }
@@ -112,7 +113,7 @@ function ForgotPassword()
                     <h2 className="font-bold text-[18px]">Email sent successfully!</h2>
                     <p className="font-semibold text-[15px]">Kindly check your email for the verification code</p>
                     <div className="">
-                        <OTPInput clear={false} onComplete={handleOTPCompletion}/>
+                        <OTPInput onComplete={handleOTPCompletion}/>
                     </div>
                     {showErrorOTP && <p className="text-[15px] text-warmBlack">Wrong OTP entered. Kindly check your email again to verify OTP.</p>}
                     {showErrorOTP && <p className="text-[15px] text-warmBlack hover:cursor-pointer hover:underline">Get a new OTP</p>}

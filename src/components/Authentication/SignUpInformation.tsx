@@ -2,11 +2,10 @@ import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthenticationSignInButton } from "./AuthenticationButtons";
 import { useDispatch } from "react-redux";
+import { setEmail, setPassword } from "../../store/userSlice";
 import EmailFieldNormal from "./Utilities/EmailFieldNormal";
 import PasswordFieldNormal from "./Utilities/PasswordFieldNormal";
 import Checkbox from "./Utilities/Checkbox";
-import store from "../../store/store";
-import { isValidEmail, isValidPassword } from "./Utilities/Validations";
 function SignUpInformation() {
 
     const [emailText, setEmailText] = useState("");
@@ -58,7 +57,7 @@ function SignUpInformation() {
     function isValidSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
 
-        if (isValidEmail(emailText) && isValidPassword(passText))
+        if (!showErrorPassInvalid && !showErrorEmailInvalid)
         {
             // Now we can take the First Name and Last Name
             // Navigate to Another Page
@@ -70,20 +69,17 @@ function SignUpInformation() {
             //     email: emailText,
             //     password: passText
             // }
-
-            // TO BE UNCOMMENTED
-            // const recaptchaChecked = window.grecaptcha.getResponse();
-            // if (recaptchaChecked !== "")
-            // {
-
-            //     // Set access token in the local storage        
-            //     navigate("/UserDetails", { state: { email: emailText, password: passText } });            }
-            // else
-            // {
-            //     setShowErrorRecaptcha(true);
-            // }
-            navigate("/UserDetails", { state: { email: emailText, password: passText } });
-
+            const recaptchaChecked = window.grecaptcha.getResponse();
+            if (recaptchaChecked !== "")
+            {
+                dispatch(setEmail({email: emailText}));
+                dispatch(setPassword({password: passText}));
+                navigate("/UserDetails");
+            }
+            else
+            {
+                setShowErrorRecaptcha(true);
+            }
         }
     }
 
@@ -95,9 +91,8 @@ function SignUpInformation() {
 
             <Checkbox labelText="Remember me" />
 
-            {/* Recaptcha Validation */}
-            {/*<div id="recaptcha-container" className="g-recaptcha" data-sitekey="6Le48PQqAAAAABGnl1yAsKhhNuTnArdIGeRyuQoV"></div>
-            {showErrorRecaptcha && <p data-testid="errorRECAPTCHA" className="text-red-800 text-[12px]">Please complete the reCAPTCHA.</p>}*/}
+            <div id="recaptcha-container" className="g-recaptcha" data-sitekey="6Le48PQqAAAAABGnl1yAsKhhNuTnArdIGeRyuQoV"></div>
+            {showErrorRecaptcha && <p data-testid="errorRECAPTCHA" className="text-red-800 text-[12px]">Please complete the reCAPTCHA.</p>}
 
             <div className="flex w-full flex-col items-center justify-center">
                 <div className="text-[12px] text-mutedSilver mb-3">By clicking Agree & Join or Continue, you agree to the JobLinc's <span className="text-softRosewood font-semibold">User Agreement</span>, <span className="text-softRosewood font-semibold">Privacy Policy</span>, and <span className="text-softRosewood font-semibold">Cookie Policy.</span></div>
