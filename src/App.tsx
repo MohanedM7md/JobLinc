@@ -20,7 +20,6 @@ import ChangePassword from "./pages/ChangePassword";
 import ResetPassword from "./pages/ResetPassword";
 import UpdateEmail from "./pages/UpdateEmail";
 import UpdateUsername from "./pages/UpdateUsername";
-import ConfirmEmail from "./pages/ConfirmEmail";
 
 function App() {
   return (
@@ -46,8 +45,7 @@ function App() {
         <Route path="/Home" element={<HomePage />} />
         <Route path="/MyNetwork" element={<MyNetwork />} />
         <Route path="/MainPage" element={<MainPage />} />
-        <Route path="/UserDetails" element={<UserDetails email="" password="" />} />
-        <Route path="/ConfirmEmail" element={<ConfirmEmail email="" token=""/>} />
+        <Route path="/UserDetails" element={<UserDetails />} />
         <Route path="/post/create" element={<PostCreate />} />
         <Route path="/post" element={<PostContainer />} />
         <Route path="/post/:postId/edit" element={<PostEdit />} />

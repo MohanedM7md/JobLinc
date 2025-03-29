@@ -3,26 +3,17 @@ import { AuthenticationSignInButton } from "./AuthenticationButtons";
 import SignHeader from "./SignHeader";
 import Modal from "./Modal";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { registerUser } from "../../store/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { registerUser, setUserDetailsOnRegister } from "../../store/userSlice";
 import type { AppDispatch } from "../../store/store";  // Import the correct type
+import { RootState } from "../../store/store";
 import NameFieldNormal from "./Utilities/NameFieldNormal";
 import { isValidName } from "./Utilities/Validations";
-import store from "../../store/store";
-import { useLocation } from "react-router-dom";
 
 
-interface UserDetailsProps {
-    email: string;
-    password: string;
-}
 
-function UserDetails(props: UserDetailsProps) {
+function UserDetails() {
     //const [userDetails, setUserDetails] = useState({ firstName: "", lastName: "" });
-    const location = useLocation();
-    const { email, password } = location.state as UserDetailsProps;
-    console.log("email " + email + " password " + password);
-
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     
@@ -33,7 +24,6 @@ function UserDetails(props: UserDetailsProps) {
     const [showErrorLastNameInvalid, setShowErrorLastNameInvalid] = useState(false);
     
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isModalOpenError, setIsModalOpenError] = useState(false);
     
     const [selectedCountry, setSelectedCountry] = useState("Egypt"); // Default country
     const [selectedCity, setSelectedCity] = useState("Cairo");
@@ -41,10 +31,10 @@ function UserDetails(props: UserDetailsProps) {
     const [phoneNumber, setPhoneNumber] = useState("");
     const [isValidPhone, setIsValidPhone] = useState(true);
     
+    const user = useSelector((state: RootState) => state.user);
 
 
-    const dispatch = useDispatch<AppDispatch>();    
-    const navigate = useNavigate();
+    const dispatch = useDispatch<AppDispatch>();    const navigate = useNavigate();
 
     const countryCities: Record<string, string[]> = {
         "Egypt": ["Cairo", "Alexandria", "Giza", "Luxor"],
@@ -98,16 +88,27 @@ function UserDetails(props: UserDetailsProps) {
         event.preventDefault();        
         if (isValidPhoneNo(selectedCountry, phoneNumber) || phoneNumber.length === 0) {
             // Do Something here with the valid phone number
+
+            dispatch(setUserDetailsOnRegister({
+                firstname: firstName,
+                lastname: lastName,
+                country: selectedCountry,
+                city: selectedCity,
+                phoneNumber: phoneNumber.length > 0 ? phoneNumber : ""
+            }));
+
+
+
             const userData: { firstname: string; lastname: string; email: string; password: string; country: string; city: string; phoneNumber: string } = {
                 firstname: firstName,
                 lastname: lastName,
-                email: email || "",
-                password: password || "",
+                email: user.email || "",
+                password: user.password || "",
                 country: selectedCountry,
                 city: selectedCity,
                 phoneNumber: phoneNumber.length > 0 ? phoneNumber : ""
             };
-            console.log("data before fetch: " + JSON.stringify(userData));
+            console.log("data before fetch: " + userData);
             
             const resultAction = await dispatch(registerUser({firstname: userData.firstname, lastname: userData.lastname, email: userData.email, 
                                                               password: userData.password, country: userData.country, city: userData.city, phoneNumber: userData.phoneNumber}));
@@ -116,15 +117,12 @@ function UserDetails(props: UserDetailsProps) {
             //retrieveUser(userData.email, userData.password);
             
             if (registerUser.fulfilled.match(resultAction)) {
-                localStorage.setItem("token", store.getState().user.accessToken || "");
                 navigate("/MainPage");
             }
             else
             {
                 // Render a component to say wrong email or password
-                // alert("An error Occurred, please try again later.");
-                setIsModalOpenError(true);
-
+                alert("An error Occurred, please try again later.");
             }
             // console.log("dispatched and will nav");
         }
@@ -222,13 +220,6 @@ function UserDetails(props: UserDetailsProps) {
 
                     <AuthenticationSignInButton id="submit-phone-no-btn" text="Continue"/>
                 </form>
-            </Modal>
-
-            <Modal isOpen={isModalOpenError} onClose={() => setIsModalOpenError(false)}>
-                <div className="flex flex-col items-start gap-4 w-full">
-                        <h2 className="font-bold text-[18px]">This email is already registered.</h2>
-                        <p className="text-[18px]">Did you forget your password? <Link to="/Signin/ForgotPassword" className="text-warmBlack font-bold hover:underline hover:cursor-pointer">Forgot password</Link></p>
-                </div>          
             </Modal>
         </div>
     );
