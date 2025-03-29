@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getUserDetails } from "../store/userSlice";
 import { sendConfirmationEmail } from "../store/userSlice";
+import { ReceiptRussianRuble } from "lucide-react";
 // import api from "../services/api/api";
 
 function MainPage() {
@@ -48,8 +49,9 @@ function MainPage() {
     // }, [navigate, dispatch]);
 
     useEffect(() => {
-        if (!localStorage.getItem("token")) {
+        if (!localStorage.getItem("refreshToken")) {
             navigate("/Signin");
+            return;
         } else {
             dispatch(getUserDetails())
             .unwrap()
@@ -64,10 +66,11 @@ function MainPage() {
             })
             .catch((error) => {
                 console.error("Error fetching user data: ", error);
+                localStorage.removeItem("refreshToken");
                 navigate("/Signin");
             });
         }
-    }, []);
+    }, [navigate, dispatch]);
 
     
     function ConfirmationEmail(){
@@ -92,7 +95,7 @@ function MainPage() {
         <div className="flex flex-col items-center justify-center min-h-screen">
             <h1 data-testid="welcome" className="text-2xl font-bold">Welcome to the Main Page</h1>
 
-            {localStorage.getItem("token") ? (
+            {localStorage.getItem("refreshToken") ? (
                 <div className="flex flex-col mt-4 p-4 border rounded-lg shadow-md">
                     <p><strong>First name:</strong> {userDetails.firstname}</p>
                     <p><strong>Last name:</strong> {userDetails.lastname}</p>
