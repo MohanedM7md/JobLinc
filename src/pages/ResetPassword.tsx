@@ -1,13 +1,19 @@
 import SignHeader from "../components/Authentication/SignHeader";
 import { AuthenticationSignInButton } from "../components/Authentication/AuthenticationButtons";
-import { useState } from "react";
-import store from "../store/store";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store/store";
 import { resetPassword } from "../store/userSlice";
 import Modal from "../components/Authentication/Modal";
 import PasswordFieldNormal from "../components/Authentication/Utilities/PasswordFieldNormal";
+import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
+
+interface ResetPasswordProps {
+    email: string;
+    resetToken: string;
+}
 
 function ResetPassword()
 {
@@ -20,9 +26,20 @@ function ResetPassword()
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isModalErrorOpen, setIsModalErrorOpen] = useState(false);
 
-
-
+    const location = useLocation();
     const dispatch = useDispatch<AppDispatch>();
+
+    const {email, resetToken} = location.state as ResetPasswordProps;
+
+    const navigate = useNavigate();
+    useEffect(() => {
+        if (isModalOpen)
+        {
+            setTimeout(() => {
+                navigate("/MainPage")
+            }, 2000)
+        }
+    }, [isModalOpen])
 
     function isValidPassword(pass: string) : boolean
     {
@@ -36,9 +53,9 @@ function ResetPassword()
         if (isValidPassword(passText))
         {   
             const userData = {
-                email: store.getState().user.email || "",
+                email: email || "",
                 newPassword: passText,
-                resetToken: store.getState().user.resetToken || ""
+                resetToken: resetToken || ""
             };
 
             const resultAction = await dispatch(resetPassword(userData));

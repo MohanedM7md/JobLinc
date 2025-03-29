@@ -8,7 +8,7 @@ import store from "../../../store/store";
 import UserDetails from "../../../components/Authentication/UserDetails";
 import "@testing-library/jest-dom/vitest";
 import { cleanup } from "@testing-library/react";
-
+import api from "@services/api/api";
 
 
 const mockNavigate = vi.fn();
@@ -23,14 +23,14 @@ const mockNavigate = vi.fn();
 
 describe("SignInInformation Component", () => {
     
-    beforeAll(() => {
-        global.window.grecaptcha = {
-            ready: vi.fn((cb) => cb()),
-            getResponse: vi.fn(() => ""),
-            render: vi.fn(() => "mocked-recaptcha-widget"),
-            reset: vi.fn(),
-        };
-    });
+    // beforeAll(() => {
+    //     global.window.grecaptcha = {
+    //         ready: vi.fn((cb) => cb()),
+    //         getResponse: vi.fn(() => ""),
+    //         render: vi.fn(() => "mocked-recaptcha-widget"),
+    //         reset: vi.fn(),
+    //     };
+    // });
 
     
     afterEach(() => {
@@ -48,8 +48,8 @@ describe("SignInInformation Component", () => {
             
         );
 
-        expect(screen.getByLabelText("Email")).toBeInTheDocument();
-        expect(screen.getByLabelText("Password")).toBeInTheDocument();
+        expect(screen.getByLabelText("Email *")).toBeInTheDocument();
+        expect(screen.getByLabelText("Password *")).toBeInTheDocument();
         expect(screen.getByText("Agree & Join")).toBeInTheDocument();
     });
 
@@ -63,8 +63,8 @@ describe("SignInInformation Component", () => {
             </Provider>
         );
 
-        const emailInput = screen.getByLabelText("Email");
-        const passInput = screen.getByLabelText("Password");
+        const emailInput = screen.getByLabelText("Email *");
+        const passInput = screen.getByLabelText("Password *");
 
         const signInButton = screen.getAllByText("Agree & Join")[0];
 
@@ -89,8 +89,8 @@ describe("SignInInformation Component", () => {
             </Provider>
         );
 
-        const emailInput = screen.getByLabelText("Email");
-        const passwordInput = screen.getByLabelText("Password");
+        const emailInput = screen.getByLabelText("Email *");
+        const passwordInput = screen.getByLabelText("Password *");
         const signInButton = screen.getAllByText("Agree & Join")[0];
 
         
@@ -117,8 +117,8 @@ describe("SignInInformation Component", () => {
             </Provider>
         );
 
-        const emailInput = screen.getByLabelText("Email");
-        const passwordInput = screen.getByLabelText("Password");
+        const emailInput = screen.getByLabelText("Email *");
+        const passwordInput = screen.getByLabelText("Password *");
         const signInButton = screen.getAllByText("Agree & Join")[0];
 
         
@@ -132,8 +132,8 @@ describe("SignInInformation Component", () => {
     });
 
     it("renders modal to take first name and last name, and navigates to /UserDetails", async () => {
-        global.window.grecaptcha.getResponse = vi.fn(() => "valid-recaptcha-response");
-
+        // global.window.grecaptcha.getResponse = vi.fn(() => "valid-recaptcha-response");
+        
         render(
             <Provider store={store}>
                 <MemoryRouter initialEntries={["/signup"]}>
@@ -145,16 +145,16 @@ describe("SignInInformation Component", () => {
             </Provider>
         );
 
-        const emailInput = screen.getByLabelText("Email");
-        const passwordInput = screen.getByLabelText("Password");
+        const emailInput = screen.getByLabelText("Email *");
+        const passwordInput = screen.getByLabelText("Password *");
         const signInButton = screen.getAllByText("Agree & Join")[0];
 
-        await userEvent.type(emailInput, "test@example.com");
-        await userEvent.type(passwordInput, "password123");
+        await userEvent.type(emailInput, "omar.ashrafofficial1@gmail.com");
+        await userEvent.type(passwordInput, "pass123");
         await userEvent.click(signInButton);
 
         await waitFor(() => {
-            expect(mockNavigate).toHaveBeenCalledWith("/UserDetails");
+            expect(screen.getByLabelText("First Name *"));
         });
 
 

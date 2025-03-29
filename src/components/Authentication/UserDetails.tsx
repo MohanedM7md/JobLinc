@@ -8,16 +8,15 @@ import { registerUser } from "../../store/userSlice";
 import type { AppDispatch } from "../../store/store";  // Import the correct type
 import NameFieldNormal from "./Utilities/NameFieldNormal";
 import { isValidName } from "./Utilities/Validations";
-import store from "../../store/store";
 import { useLocation } from "react-router-dom";
-
+import { isValidPhoneNo } from "./Utilities/Validations";
 
 interface UserDetailsProps {
     email: string;
     password: string;
 }
 
-function UserDetails(props: UserDetailsProps) {
+function UserDetails() {
     //const [userDetails, setUserDetails] = useState({ firstName: "", lastName: "" });
     const location = useLocation();
     const { email, password } = location.state as UserDetailsProps;
@@ -41,8 +40,6 @@ function UserDetails(props: UserDetailsProps) {
     const [phoneNumber, setPhoneNumber] = useState("");
     const [isValidPhone, setIsValidPhone] = useState(true);
     
-
-
     const dispatch = useDispatch<AppDispatch>();    
     const navigate = useNavigate();
 
@@ -56,11 +53,7 @@ function UserDetails(props: UserDetailsProps) {
         "Palestine": "+970"
     };
 
-    const countryPhoneRegex: { [key: string]: RegExp } = {
-        "Egypt": /^(\+20)?1[0-9]{9}$/,   // Egypt: Starts with +20 (optional) followed by 10 digits (mobile numbers start with 1)
-        "Palestine": /^(\+970)?5[6-9][0-9]{7}$/ // Palestine: Starts with +970 (optional) followed by 9 digits (mobile starts with 56-59)
-    };
-
+    
     function handleCountryChange(event: React.ChangeEvent<HTMLSelectElement>) {
         const country = event.target.value;
         setSelectedCountry(country);
@@ -69,10 +62,7 @@ function UserDetails(props: UserDetailsProps) {
 
 
 
-    function isValidPhoneNo(country: string, phoneNumber: string): boolean {
-        const regex = countryPhoneRegex[country];
-        return regex.test(phoneNumber);
-    }
+    
 
     
 
@@ -116,7 +106,6 @@ function UserDetails(props: UserDetailsProps) {
             //retrieveUser(userData.email, userData.password);
             
             if (registerUser.fulfilled.match(resultAction)) {
-                localStorage.setItem("token", store.getState().user.accessToken || "");
                 navigate("/MainPage");
             }
             else
