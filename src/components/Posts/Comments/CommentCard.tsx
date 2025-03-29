@@ -22,17 +22,17 @@ export default function CommentCard(props: CommentCardProps) {
   useEffect(() => {
     if (showReplies) {
       const response = getReplies(
-        props.comment.postId,
-        props.comment.commentId,
+        props.comment.postID,
+        props.comment.commentID,
       );
       response.then((data) => setReplies(data));
     }
   }, [showReplies]);
 
   function addReply() {
-    createReply(props.comment.postId, props.comment.commentId, newReply).then(
+    createReply(props.comment.postID, props.comment.commentID, newReply).then(
       () =>
-        getReplies(props.comment.postId, props.comment.commentId).then((data) =>
+        getReplies(props.comment.postID, props.comment.commentID).then((data) =>
           setReplies(data),
         ),
     );
@@ -42,9 +42,9 @@ export default function CommentCard(props: CommentCardProps) {
     <div className="flex flex-wrap w-1/1 bg-lightGray rounded-xl relative py-2">
       <div className="flex flex-row w-1/1 px-2">
         <CommenterDetails
-          key={`Details of Commenter ${props.comment.userId}`}
-          userID={props.comment.userId}
-          name={props.comment.firstname + " " + props.comment.lastname}
+          key={`Details of Commenter ${props.comment.userID}`}
+          userID={props.comment.userID}
+          name={props.comment.firstName + " " + props.comment.lastName}
           headline={props.comment.headline}
           profilePicture={props.comment.profilePicture}
         />
@@ -55,7 +55,7 @@ export default function CommentCard(props: CommentCardProps) {
         </div>
       </div>
       <CommentContent
-        key={`comment ${props.comment.commentId} details`}
+        key={`comment ${props.comment.commentID} details`}
         commentText={props.comment.commentText}
       />
       <div className="ml-14.5">
@@ -108,7 +108,7 @@ export default function CommentCard(props: CommentCardProps) {
               </button>
             </div>
             {replies ? replies.map((reply) => (
-              <ReplyCard key={reply.replyId} reply={reply} />
+              <ReplyCard key={reply.replyID} reply={reply} />
             )) : null}
           </>
         ) : null}

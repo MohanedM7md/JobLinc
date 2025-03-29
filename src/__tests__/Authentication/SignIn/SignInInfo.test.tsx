@@ -49,7 +49,7 @@ describe("SignInInformation Component", () => {
             
         );
 
-        expect(screen.getByLabelText("Email")).toBeInTheDocument();
+        expect(screen.getByLabelText("Email or phone")).toBeInTheDocument();
         expect(screen.getByLabelText("Password")).toBeInTheDocument();
         expect(screen.getByText("Sign in")).toBeInTheDocument();
     });
@@ -63,7 +63,7 @@ describe("SignInInformation Component", () => {
             </Provider>
         );
 
-        const emailInput = screen.getByLabelText("Email");
+        const emailInput = screen.getByLabelText("Email or phone");
         const passInput = screen.getByLabelText("Password");
 
         const signInButton = screen.getAllByText("Sign in")[0];
@@ -88,7 +88,7 @@ describe("SignInInformation Component", () => {
             </Provider>
         );
 
-        const emailInput = screen.getByLabelText("Email");
+        const emailInput = screen.getByLabelText("Email or phone");
         const passwordInput = screen.getByLabelText("Password");
         const signInButton = screen.getAllByText("Sign in")[0];
 
@@ -115,7 +115,7 @@ describe("SignInInformation Component", () => {
             </Provider>
         );
 
-        const emailInput = screen.getByLabelText("Email");
+        const emailInput = screen.getByLabelText("Email or phone");
         const passwordInput = screen.getByLabelText("Password");
         const signInButton = screen.getAllByText("Sign in")[0];
 
@@ -144,7 +144,7 @@ describe("SignInInformation Component", () => {
             </Provider>
         );
 
-        const emailInput = screen.getByLabelText("Email");
+        const emailInput = screen.getByLabelText("Email or phone");
         const passwordInput = screen.getByLabelText("Password");
         const signInButton = screen.getAllByText("Sign in")[0];
 
@@ -177,7 +177,7 @@ describe("SignInInformation Component", () => {
             </Provider>
         );
     
-        const emailInput = screen.getByLabelText("Email");
+        const emailInput = screen.getByLabelText("Email or phone");
         const passwordInput = screen.getByLabelText("Password");
         const signInButton = screen.getAllByText("Sign in")[0];
     

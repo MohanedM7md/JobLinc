@@ -29,49 +29,41 @@ export default function Post(props: PostProps) {
   const [newComment, setNewComment] = useState<string>("");
   const navigate = useNavigate();
 
-  const posterId: string = props.post.userId ?? props.post.companyId ?? "0";
-  const name: string = props.post.firstname !== "" ?  props.post.firstname + " " + props.post.lastname : props.post.companyName ?? "Company Name";
-  const posterPic: string = props.post.profilePicture ?? props.post.companyLogo ?? "NotFound"
-
   useEffect(() => {
     if (showComment) {
-      const response = getComments(props.post.postId);
+      const response = getComments(props.post.postID);
       response.then((data) => setComments(data));
     }
   }, [showComment]);
 
   function addComment() {
-    createComment(props.post.postId, newComment).then(() =>
-      getComments(props.post.postId).then((data) => setComments(data)),
+    createComment(props.post.postID, newComment).then(() =>
+      getComments(props.post.postID).then((data) => setComments(data)),
     );
   }
 
   function postDelete() {
-    deletePost(props.post.postId).then(() => navigate("/"));
+    deletePost(props.post.postID).then(() => navigate("/"));
   }
 
   return !hide ? (
     <div className="flex flex-wrap w-1/1 bg-lightGray rounded-xl relative">
       <div className="flex flex-row w-1/1">
         <ProfileDetails
-          key={`Details of poster ${posterId}`}
-          id={posterId}
-          name={name}
+          key={`Details of user ${props.post.userID}`}
+          id={props.post.userID}
+          name={props.post.firstName + " " + props.post.lastName}
           headline={props.post.headline}
-          profilePicture={posterPic}
+          profilePicture={props.post.profilePicture}
           isFollowing={false}
         />
-        <div className="">
+        <div className="" onBlur={() => setShowUtility(false)}>
           {showUtility ? (
-            <PostUtilityButton
-              postId={props.post.postId}
-              postText={props.post.text}
-              delete={() => postDelete()}
-            />
+            <PostUtilityButton postID={props.post.postID} postText={props.post.text} delete={() => postDelete()} />
           ) : null}
         </div>
         <button
-          data-testid={`Options ${props.post.postId}`}
+          data-testid={`Options ${props.post.postID}`}
           onClick={() => setShowUtility(!showUtility)}
           className="material-icons-round cursor-pointer mr-1 text-mutedSilver hover:bg-gray-200 h-fit"
         >
@@ -85,15 +77,17 @@ export default function Post(props: PostProps) {
         </button>
       </div>
       <PostDetails
-        key={`Details of post ${props.post.postId}`}
+        key={`Details of post ${props.post.postID}`}
         text={props.post.text}
-        media={props.post.media}
+        media={props.post.pics}
       />
       <div className="flex flex-row m-auto py-2 w-11/12 border-b-1 border-gray-300">
         <span className="text-blue-500 material-icons">thumb_up</span>
         <span className="text-mutedSilver ml-2">{props.post.likes}</span>
         <div className="flex flex-row justify-end w-1/1">
-          <span className="text-mutedSilver ml-2">{props.post.comments}</span>
+          <span className="text-mutedSilver ml-2">
+            {props.post.commentsNum}
+          </span>
           <span className="text-mutedSilver ml-2">Comments</span>
           <span className="text-mutedSilver ml-2">•</span>
           <span className="text-mutedSilver ml-2">{props.post.reposts}</span>
@@ -162,11 +156,10 @@ export default function Post(props: PostProps) {
               send
             </button>
           </div>
-          {comments
-            ? comments.map((comment) => (
-                <CommentCard key={comment.commentId} comment={comment} />
-              ))
-            : null}
+          {comments ? 
+          comments.map((comment) => (
+            <CommentCard key={comment.commentID} comment={comment} />
+          )) : null}
         </>
       ) : null}
     </div>

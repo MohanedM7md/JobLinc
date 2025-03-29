@@ -1,12 +1,12 @@
 import { http, HttpResponse } from "msw";
 import {
   CommentInterface,
-  RepliesInterface,
   PostInterface,
+  RepliesInterface,
 } from "../../../interfaces/postInterfaces";
-import { postsResponse } from "./postsDB";
-import { commentsResponse } from "./commentsDB";
-import { repliesResponse } from "./repliesDB";
+import { postsResponse } from "../../PostsMock/postsDB";
+import { commentsResponse } from "../../PostsMock/commentsDB";
+import { repliesResponse } from "../../PostsMock/repliesDB";
 
 interface AddPostParams {}
 
@@ -15,11 +15,11 @@ interface PostRequestBody {
 }
 
 interface PostParams {
-  postId: string;
+  postID: string;
 }
 
 interface AddCommentParams {
-  postId: string;
+  postID: string;
 }
 
 interface AddCommentRequestBody {
@@ -27,8 +27,8 @@ interface AddCommentRequestBody {
 }
 
 interface AddReplyParams {
-  postId: string;
-  commentId: string;
+  postID: string;
+  commentID: string;
 }
 
 interface AddReplyRequestBody {
@@ -48,10 +48,10 @@ export const postHandler = [
   }),
 
   //get post comments handler
-  http.get(`${baseURL}post/:postId/comment`, async ({ params }) => {
-    const { postId } = params;
+  http.get(`${baseURL}post/:postID/comment`, async ({ params }) => {
+    const { postID } = params;
     const comments = commentsResponse.filter(
-      (comment) => comment.postId === postId,
+      (comment) => comment.postID === postID,
     );
     return HttpResponse.json<CommentInterface[]>(comments, {
       status: 200,
@@ -61,12 +61,12 @@ export const postHandler = [
 
   //get comment replies handler
   http.get(
-    `${baseURL}post/:postId/comment/:commentId/replies`,
+    `${baseURL}post/:postID/comment/:commentID/replies`,
     async ({ params }) => {
-      const { postId } = params;
-      const { commentId } = params;
+      const { postID } = params;
+      const { commentID } = params;
       const replies = repliesResponse.filter(
-        (reply) => reply.postId === postId && reply.commentId === commentId,
+        (reply) => reply.postID === postID && reply.commentID === commentID,
       );
       return HttpResponse.json<RepliesInterface[]>(replies, {
         status: 200,
@@ -83,22 +83,18 @@ export const postHandler = [
       console.log(text);
       const post: PostInterface = {
         //user data are hard coded for now
-        postId: postsResponse.length.toString(),
-        userId: "0",
-        firstname: "Anime",
-        lastname: "Protagonist",
-        companyId: null,
-        companyName: null,
-        companyLogo: null,
+        postID: postsResponse.length.toString(),
+        userID: "0",
+        firstName: "Anime",
+        lastName: "Protagonist",
         profilePicture:
           "https://i.pinimg.com/550x/04/bb/21/04bb2164bbfa3684118a442c17d086bf.jpg",
         headline: "I am the main character",
         text: text,
-        time: new Date(),
         likes: 0,
-        comments: 0,
+        commentsNum: 0,
         reposts: 0,
-        media: [],
+        pics: [],
       };
       postsResponse.push(post);
       return HttpResponse.json({ status: 200, statusText: "OK" });
@@ -107,11 +103,11 @@ export const postHandler = [
 
   //edit post handler
   http.post<PostParams, PostRequestBody>(
-    `${baseURL}post/:postId/edit`,
+    `${baseURL}post/:postID/edit`,
     async ({ params, request }) => {
-      const { postId } = params;
+      const { postID } = params;
       const { text } = await request.json();
-      const editedPost = postsResponse.find((post) => post.postId === postId);
+      let editedPost = postsResponse.find((post) => post.postID === postID);
       if (editedPost) {
         editedPost.text = text;
         return HttpResponse.json({ status: 200, statusText: "OK" });
@@ -121,11 +117,11 @@ export const postHandler = [
   ),
 
   http.delete<PostParams>(
-    `${baseURL}post/:postId/delete`,
+    `${baseURL}post/:postID/delete`,
     async ({ params }) => {
-      const { postId } = params;
+      const { postID } = params;
       const deletedPost = postsResponse.findIndex(
-        (post) => post.postId === postId,
+        (post) => (post.postID = postID),
       );
       if (deletedPost != -1) {
         console.log(postsResponse);
@@ -139,16 +135,16 @@ export const postHandler = [
 
   //add comment handler
   http.post<AddCommentParams, AddCommentRequestBody>(
-    `${baseURL}post/:postId/comment`,
+    `${baseURL}post/:postID/comment`,
     async ({ params, request }) => {
-      const { postId } = params;
+      const { postID } = params;
       const { commentText } = await request.json();
       const comment: CommentInterface = {
-        commentId: commentsResponse.length.toString(),
-        postId: postId,
-        userId: "0",
-        firstname: "Anime",
-        lastname: "Protagonist",
+        commentID: commentsResponse.length.toString(),
+        postID: postID,
+        userID: "0",
+        firstName: "Anime",
+        lastName: "Protagonist",
         profilePicture:
           "https://i.pinimg.com/550x/04/bb/21/04bb2164bbfa3684118a442c17d086bf.jpg",
         headline: "I am the main character",
@@ -161,18 +157,18 @@ export const postHandler = [
 
   //add reply handler
   http.post<AddReplyParams, AddReplyRequestBody>(
-    `${baseURL}post/:postId/comment/:commentId/reply`,
+    `${baseURL}post/:postID/comment/:commentID/reply`,
     async ({ params, request }) => {
-      const { postId } = params;
-      const { commentId } = params;
+      const { postID } = params;
+      const { commentID } = params;
       const { replyText } = await request.json();
       const reply: RepliesInterface = {
-        replyId: repliesResponse.length.toString(),
-        userId: "0",
-        postId: postId,
-        commentId: commentId,
-        firstname: "Anime",
-        lastname: "Protagonist",
+        replyID: repliesResponse.length.toString(),
+        userID: "0",
+        postID: postID,
+        commentID: commentID,
+        firstName: "Anime",
+        lastName: "Protagonist",
         profilePicture:
           "https://i.pinimg.com/550x/04/bb/21/04bb2164bbfa3684118a442c17d086bf.jpg",
         headline: "I am the main character",

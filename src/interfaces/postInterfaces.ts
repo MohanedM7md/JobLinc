@@ -1,40 +1,36 @@
 export interface CommentInterface {
-  commentId: string;
-  postId: string;
-  userId: string;
-  firstname: string;
-  lastname: string;
+  commentID: string;
+  postID: string;
+  userID: string;
+  firstName: string;
+  lastName: string;
   profilePicture: string;
   headline: string;
   commentText: string;
 }
 
 export interface RepliesInterface {
-  replyId: string;
-  commentId: string;
-  postId: string;
-  userId: string;
-  firstname: string;
-  lastname: string;
+  replyID: string;
+  commentID: string;
+  postID: string;
+  userID: string;
+  firstName: string;
+  lastName: string;
   profilePicture: string;
   headline: string;
   replyText: string;
 }
 
 export interface PostInterface {
-  postId: string;
-  userId: string | null;
-  firstname: string;
-  lastname: string;
-  profilePicture: string | null;
-  companyId: string | null;
-  companyName: string | null;
-  companyLogo: string | null;
+  postID: string;
+  userID: string;
+  firstName: string;
+  lastName: string;
+  profilePicture: string;
   headline: string;
   text: string;
-  time: Date;
   likes: number;
-  comments: number;
+  commentsNum: number;
   reposts: number;
-  media: string[];
+  pics: string[];
 }

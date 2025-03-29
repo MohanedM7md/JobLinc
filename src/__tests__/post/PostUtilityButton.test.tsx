@@ -13,23 +13,23 @@ describe("PostUtilityButton", () => {
   beforeEach(() => {
     mockDelete = vi.fn();
     mockPost = {
-      postId: "1",
-      userId: "1",
-      firstname: "John",
-      lastname: "Doe",
+      postID: "1",
+      userID: "1",
+      firstName: "John",
+      lastName: "Doe",
       headline: "Software Engineer",
       profilePicture: "https://example.com/profile.jpg",
       text: "This is a post",
       pics: [],
       likes: 10,
-      comments: 5,
+      commentsNum: 5,
       reposts: 2,
     };
     render(
       <BrowserRouter>
         <PostUtilityButton
           delete={mockDelete}
-          postId={mockPost.postId}
+          postID={mockPost.postID}
           postText={mockPost.text}
         />
       </BrowserRouter>,

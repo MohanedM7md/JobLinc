@@ -5,7 +5,7 @@ import "@testing-library/jest-dom/vitest";
 
 describe("CommenterDetails", () => {
   const props = {
-    userId: "123",
+    userID: "123",
     name: "John Doe",
     profilePicture: "https://example.com/profile.jpg",
     headline: "Software Engineer",

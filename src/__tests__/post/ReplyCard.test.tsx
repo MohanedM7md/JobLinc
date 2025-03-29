@@ -6,12 +6,12 @@ import ReplyCard from "../../components/Posts/Comments/ReplyCard";
 import { RepliesInterface } from "../../interfaces/postInterfaces";
 
 const mockReply: RepliesInterface = {
-  replyId: "1",
-  postId: "0",
-  commentId: "0",
-  userId: "user1",
-  firstname: "John",
-  lastname: "Doe",
+  replyID: "1",
+  postID: "0",
+  commentID: "0",
+  userID: "user1",
+  firstName: "John",
+  lastName: "Doe",
   headline: "Software Engineer",
   profilePicture: "path/to/profile.jpg",
   replyText: "This is a reply",

@@ -9,11 +9,11 @@ import "@testing-library/jest-dom/vitest";
 vi.mock("../../services/api/postServices");
 
 const mockComment: CommentInterface = {
-  postId: "1",
-  commentId: "1",
-  userId: "1",
-  firstname: "John",
-  lastname: "Doe",
+  postID: "1",
+  commentID: "1",
+  userID: "1",
+  firstName: "John",
+  lastName: "Doe",
   headline: "Developer",
   profilePicture: "https://example.com/profile.jpg",
   commentText: "This is a comment",
@@ -42,11 +42,11 @@ describe("CommentCard", () => {
   it("shows replies when Reply button is clicked", async () => {
     const mockReplies = [
       {
-        replyId: "1",
+        replyID: "1",
         replyText: "This is a reply",
-        userId: "2",
-        firstname: "Jane",
-        lastname: "Doe",
+        userID: "2",
+        firstName: "Jane",
+        lastName: "Doe",
         profilePicture: "https://example.com/profile2.jpg",
       },
     ];
@@ -62,11 +62,11 @@ describe("CommentCard", () => {
   it("adds a new reply", async () => {
     const mockReplies = [
       {
-        replyId: "1",
+        replyID: "1",
         replyText: "This is a reply",
-        userId: "2",
-        firstname: "Jane",
-        lastname: "Doe",
+        userID: "2",
+        firstName: "Jane",
+        lastName: "Doe",
         profilePicture: "https://example.com/profile2.jpg",
       },
     ];

@@ -15,9 +15,9 @@ export default function ReplyCard(props: ReplyCardProps) {
     <div className="flex flex-wrap w-11/12 relative">
       <div className="flex flex-row w-1/1 pr-2">
         <CommenterDetails
-          key={`Details of Commenter ${props.reply.userId}`}
-          userID={props.reply.userId}
-          name={props.reply.firstname + " " + props.reply.lastname}
+          key={`Details of Commenter ${props.reply.userID}`}
+          userID={props.reply.userID}
+          name={props.reply.firstName + " " + props.reply.lastName}
           headline={props.reply.headline}
           profilePicture={props.reply.profilePicture}
         />
@@ -28,7 +28,7 @@ export default function ReplyCard(props: ReplyCardProps) {
         </div>
       </div>
       <CommentContent
-        key={`Comment ${props.reply.replyId} details`}
+        key={`Comment ${props.reply.replyID} details`}
         commentText={props.reply.replyText}
       />
       <div className="ml-14.5">
