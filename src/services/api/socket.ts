@@ -1,5 +1,5 @@
 import SERVER_URL from "./config";
-
+import io from "socket.io-client";
 export const connectSocket = (namespace: string) => {
   const socket = io(`${SERVER_URL}/${namespace}`, {
     reconnection: true,
