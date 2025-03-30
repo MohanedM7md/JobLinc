@@ -44,8 +44,7 @@ function App() {
             <Route element={<Layout />}>
               <Route path="/home" element={<Home />} />
               <Route path="/my-network" element={<MyNetwork />} />
-{/*               <Route path="/messaging" element={<MessagingPage />} />
- */}
+              <Route path="/messaging" element={<MessagingPage />} />
               <Route path="/change-password" element={<ChangePassword />} />
               <Route path="/update-email" element={<UpdateEmail />} />
               <Route path="/update-username" element={<UpdateUsername />} />
