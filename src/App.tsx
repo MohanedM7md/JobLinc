@@ -22,6 +22,7 @@ import ConfirmEmail from "./pages/ConfirmEmail";
 import Error404 from "@pages/Eror404";
 import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Jobs_And_Hiring from "components/Jobs&hiring/Jobs_And_Hiring";
 
 function App() {
   return (
@@ -60,6 +61,7 @@ function App() {
 
             <Route path="/playground" element={<PlayGround />} />
           </Route>
+          <Route path="/Jobs_And_Hiring" element={<Jobs_And_Hiring />} />
 
           <Route path="*" element={<Error404 />} />
         </Routes>
