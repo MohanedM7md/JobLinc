@@ -36,7 +36,7 @@ function ResetPassword()
         if (isModalOpen)
         {
             setTimeout(() => {
-                navigate("/MainPage")
+                navigate("/home")
             }, 2000)
         }
     }, [isModalOpen])

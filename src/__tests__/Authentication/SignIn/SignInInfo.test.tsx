@@ -8,7 +8,7 @@ import store from "../../../store/store";
 import api from "../../../services/api/api";
 import { cleanup } from "@testing-library/react";
 
-import MainPage from "../../../pages/MainPage";
+import MainPage from "../../../pages/Main";
 import "@testing-library/jest-dom/vitest";
 
 
