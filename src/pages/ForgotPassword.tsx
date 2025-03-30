@@ -74,7 +74,7 @@ function ForgotPassword()
         {
             // Navigate the user to reset password page
             setShowErrorOTP(false);
-            navigate("/ResetPassword", {state: {email: emailText, resetToken: resultAction.payload.resetToken}});
+            navigate("/reset-password", {state: {email: emailText, resetToken: resultAction.payload.resetToken}});
         }
         else
         {

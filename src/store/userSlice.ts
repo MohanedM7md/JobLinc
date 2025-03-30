@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { api } from "@services/api/api";
 
 interface UserState {
-  userId: number | null;
+  userId: string | null;
   role: string | null;
   accessToken: string | null;
   confirmed: boolean | null;
@@ -10,14 +10,22 @@ interface UserState {
   loggedIn: boolean;
 }
 
-const initialState: UserState = {
-  userId: null,
-  role: null,
-  confirmed: null,
-  status: "IDLE",
-  loggedIn: false,
-  accessToken: null, // leave it as it is
-};
+const storedUser = localStorage.getItem("user");
+const initialState: UserState = storedUser
+  ? {
+      ...JSON.parse(storedUser),
+      accessToken: null,
+      status: "IDLE",
+      loggedIn: false,
+    }
+  : {
+      userId: null,
+      role: null,
+      confirmed: null,
+      status: "IDLE",
+      loggedIn: false,
+      accessToken: null, // leave it as it is
+    };
 
 // Fetch User Profile (Placeholder API)
 export const loginUser = createAsyncThunk(
@@ -187,13 +195,22 @@ const userSlice = createSlice({
         const userData = action.payload; // Extract user object from response
 
         if (userData) {
+          console.log("Login Response Payload:", userData);
           state.userId = userData.userID || null;
           state.role = userData.role || null;
           state.accessToken = userData.accessToken || null;
-          localStorage.setItem("refreshToken", userData.refreshToken);
           state.confirmed = userData.confirmed || null;
           state.status = "SUCCESS";
           state.loggedIn = true;
+          localStorage.setItem("accessToken", userData.accessToken);
+          localStorage.setItem(
+            "user",
+            JSON.stringify({
+              userId: userData.userID,
+              role: userData.role,
+              refreshToken: userData.refreshToken,
+            }),
+          );
         } else {
           console.error("User data missing in API response:", action.payload);
         }
@@ -209,13 +226,22 @@ const userSlice = createSlice({
         const userData = action.payload;
 
         if (userData) {
-          state.userId = userData.userID || null;
+          state.userId = userData.userId || null;
           state.role = userData.role || null;
           state.accessToken = userData.accessToken || null;
+          localStorage.setItem("accessToken", userData.accessToken);
           localStorage.setItem("refreshToken", userData.refreshToken);
           state.confirmed = userData.confirmed || false;
           state.status = "SUCCESS";
           state.loggedIn = true;
+          localStorage.setItem(
+            "user",
+            JSON.stringify({
+              userId: userData.userID,
+              role: userData.role,
+              refreshToken: userData.refreshToken,
+            }),
+          );
         }
       })
       .addCase(registerUser.rejected, (state) => {
@@ -266,6 +292,14 @@ const userSlice = createSlice({
           state.accessToken = userData.accessToken || null;
           localStorage.setItem("refreshToken", userData.refreshToken);
           state.status = "SUCCESS";
+          localStorage.setItem(
+            "user",
+            JSON.stringify({
+              userId: userData.userID,
+              role: userData.role,
+              refreshToken: userData.refreshToken,
+            }),
+          );
         }
       })
       .addCase(resetPassword.rejected, (state) => {

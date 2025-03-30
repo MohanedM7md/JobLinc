@@ -7,7 +7,7 @@ import Navigate_Component from "../../../components/Authentication/Utilities/Nav
 describe("Navigate_Component", () => {
     it("renders the navigation link correctly", () => {
         const labelText = "Forgot password?";
-        const navigateTo = "/Signin/ForgotPassword";
+        const navigateTo = "/Signin/forgot-password";
 
         render(
             <MemoryRouter>

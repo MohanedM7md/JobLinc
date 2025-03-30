@@ -1,10 +1,14 @@
 import axios from "axios";
 import store from "../../store/store";
-import io from "socket.io-client";
-const SERVER_URL = "http://localhost:4000";
+import SERVER_URL from "./config";
+interface user {
+  userId: string;
+  role: string;
+  refreshToken: string;
+}
 axios.defaults.baseURL;
 export const api = axios.create({
-  baseURL: "https://joblinc.me:3000/api/",
+  baseURL: SERVER_URL,
   headers: {
     "Content-Type": "application/json",
   },
@@ -12,8 +16,10 @@ export const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
-    const token = store.getState().user.accessToken;
+    const token = localStorage.getItem("accessToken");
     console.log("token: ", token);
+    console.log("store: ", store.getState());
+
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -22,22 +28,43 @@ api.interceptors.request.use(
   (error) => Promise.reject(error),
 );
 
-export const connectSocket = (namespace: string) => {
-  const socket = io(`${SERVER_URL}/${namespace}`, {
-    reconnection: true,
-    reconnectionAttempts: 5,
-    reconnectionDelay: 2000,
-    auth: {
-      token: store.getState().user.accessToken,
-    },
-  });
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+    if (
+      error.response &&
+      error.response.status === 401 &&
+      !originalRequest._retry
+    ) {
+      originalRequest._retry = true;
 
-  socket.on("connect", () => {
-    console.log(`Connected to ${namespace}`);
-  });
+      try {
+        const user: user = JSON.parse(localStorage.getItem("user") || "{}");
 
-  socket.on("disconnect", () => {
-    console.log(`Disconnected from ${namespace}`);
-  });
-  return socket;
-};
+        if (!user.refreshToken) {
+          console.log("No refresh token found, logging out...");
+          localStorage.removeItem("user");
+
+          window.location.href = "/";
+          return Promise.reject(error);
+        }
+        const { data } = await api.post("auth/refresh-token", {
+          userId: user.userId,
+          refreshToken: user.refreshToken,
+        });
+        localStorage.setItem("accessToken", data.accessToken);
+
+        originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
+        return api(originalRequest);
+      } catch (refreshError) {
+        console.log("Refresh token expired, logging out...");
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("user");
+        window.location.href = "/signin";
+        return Promise.reject(refreshError);
+      }
+    }
+    return Promise.reject(error);
+  },
+);

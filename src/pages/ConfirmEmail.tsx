@@ -38,7 +38,7 @@ function ConfirmEmail()
             
             setRedirecting(true);
             setTimeout(() => {
-                navigate("/MainPage");
+                navigate("/home");
             }, 2000);
         }
         else

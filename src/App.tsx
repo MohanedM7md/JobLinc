@@ -2,16 +2,13 @@ import { Route, Routes } from "react-router-dom";
 import PlayGround from "./pages/PlayGround";
 import "./context/ThemeProvider";
 import { ThemeProvider } from "./context/ThemeProvider";
-import LandPage from "./pages/LandPage";
-import SignUpPage from "./pages/SignUpPage";
-import SignInPage from "./pages/SignInPage";
+import LandPage from "./pages/Land";
+import SignUpPage from "./pages/SignUp";
+import SignInPage from "./pages/SignIn";
 import ForgotPassword from "./pages/ForgotPassword";
-import MainPage from "./pages/MainPage";
 import UserDetails from "./components/Authentication/UserDetails";
-import { Provider } from "react-redux";
-import store from "./store/store";
 import MessagingPage from "./pages/Messaging";
-import HomePage from "./pages/HomePage";
+import Home from "./pages/Home";
 import MyNetwork from "./pages/MyNetworkPage";
 import PostContainer from "./components/Posts/PostContainer";
 import PostCreate from "./components/Posts/PostCreate";
@@ -21,52 +18,50 @@ import ResetPassword from "./pages/ResetPassword";
 import UpdateEmail from "./pages/UpdateEmail";
 import UpdateUsername from "./pages/UpdateUsername";
 import ConfirmEmail from "./pages/ConfirmEmail";
+import Error404 from "@pages/Eror404";
+import Layout from "./components/Layout";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
     <>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <ThemeProvider>
-              <LandPage />
-            </ThemeProvider>
-          }
-        />
-        <Route path="/Signup" element={<SignUpPage />} />
-        <Route path="/Signin" element={<SignInPage />} />
-        <Route path="/Signin/ForgotPassword" element={<ForgotPassword />} />
-        <Route path="/ResetPassword" element={<ResetPassword />} />
-        <Route path="/ChangePassword" element={<ChangePassword />}></Route>
-        <Route path="/UpdateEmail" element={<UpdateEmail />} />
-        <Route path="/UpdateUsername" element={<UpdateUsername />} />
+      <ThemeProvider>
+        <Routes>
+          <Route path="/" element={<LandPage />} />
+          <Route path="/signup" element={<SignUpPage />} />
+          <Route path="/signin" element={<SignInPage />} />
+          <Route
+            path="/user-details"
+            element={<UserDetails email="" password="" />}
+          />
+          <Route path="/signin/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route
+            path="/confirm-email"
+            element={<ConfirmEmail email="" token="" />}
+          />
+          <Route element={<ProtectedRoute />}>
+            <Route element={<Layout />}>
+              <Route path="/home" element={<Home />} />
+              <Route path="/my-network" element={<MyNetwork />} />
+{/*               <Route path="/messaging" element={<MessagingPage />} />
+ */}
+              <Route path="/change-password" element={<ChangePassword />} />
+              <Route path="/update-email" element={<UpdateEmail />} />
+              <Route path="/update-username" element={<UpdateUsername />} />
+              <Route path="/post">
+                <Route index element={<PostContainer />} />
+                <Route path="create" element={<PostCreate />} />
+                <Route path=":postId/edit" element={<PostEdit />} />
+              </Route>
+            </Route>
 
-        <Route path="/messaging" element={<MessagingPage />} />
-        <Route path="/Home" element={<HomePage />} />
-        <Route path="/MyNetwork" element={<MyNetwork />} />
-        <Route path="/MainPage" element={<MainPage />} />
-        <Route path="/UserDetails" element={<UserDetails email="" password="" />} />
-        <Route path="/ConfirmEmail" element={<ConfirmEmail email="" token=""/>} />
-        <Route path="/post/create" element={<PostCreate />} />
-        <Route path="/post" element={<PostContainer />} />
-        <Route path="/post/:postId/edit" element={<PostEdit />} />
-        <Route
-          path="/playground"
-          element={
-            <ThemeProvider>
-              <Provider store={store}>
-                <PlayGround />
-              </Provider>
-            </ThemeProvider>
-          }
-        />
+            <Route path="/playground" element={<PlayGround />} />
+          </Route>
 
-        <Route
-          path="/*"
-          element={<div className="text-red-500">Error 404</div>}
-        />
-      </Routes>
+          <Route path="*" element={<Error404 />} />
+        </Routes>
+      </ThemeProvider>
     </>
   );
 }
