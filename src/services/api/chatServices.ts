@@ -22,7 +22,7 @@ export const fetchNetWorks = async (Id: string) => {
   return users;
 };
 export const fetchChatData = async (chatId: string) => {
-  const response = await api.get(`/chat/c/{chatId}
+  const response = await api.get(`/chat/c/${chatId}
 /${chatId}`);
   return response.data;
 };

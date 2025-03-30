@@ -6,7 +6,7 @@ export const connectSocket = (namespace: string) => {
     reconnectionAttempts: 5,
     reconnectionDelay: 2000,
     auth: {
-      token: localStorage.getItem("accessToken"),
+      authrization: localStorage.getItem("accessToken"),
     },
   });
 
