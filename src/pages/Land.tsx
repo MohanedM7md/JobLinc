@@ -20,7 +20,7 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
 } from "lucide-react"; // Import Heroicons
-import Logo from "../components/Logo";
+import Logo from "../components/NavigationBar/Logo"; // Update the path to the correct location
 
 function LandPage() {
   const navigate = useNavigate();

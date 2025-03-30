@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import NavIcon from "../NavigationBar/NavIcon";
-import Logo from "../../components/Logo";
+import Logo from "../../components/NavigationBar/Logo";
 
 function SignMain() {
   return (
