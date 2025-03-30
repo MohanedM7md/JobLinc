@@ -22,7 +22,7 @@ import ConfirmEmail from "./pages/ConfirmEmail";
 import Error404 from "@pages/Eror404";
 import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
-
+import AuthRoute from "./components/AuthRoute";
 function App() {
   return (
     <>
@@ -46,6 +46,7 @@ function App() {
               element={<ConfirmEmail /* email="" token="" */ />}
             />
           </Route>
+
           <Route element={<ProtectedRoute />}>
             <Route element={<Layout />}>
               <Route path="/home" element={<Home />} />
