@@ -3,7 +3,7 @@ import api from "../services/api/api";
 
 
 interface UserState {
-  userId: number | null;
+  userId: string | null;
   role: string | null;
   accessToken: string | null;
   confirmed: boolean | null;
@@ -136,6 +136,24 @@ export const getUserDetails = createAsyncThunk(
   } 
 );
 
+export const getNewRefreshToken = createAsyncThunk(
+  "user/getNewRefreshToken",
+  async(
+    userData: {
+    userId: string | null,
+    // companyId: number | null,
+    refreshToken: string | null,
+
+  },
+   { rejectWithValue }) => {
+    try {
+      const response = await api.post("auth/refresh-token", userData);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data || "trying to get a new refresh token failed");
+    }
+  }
+);
 
 export const sendConfirmationEmail = createAsyncThunk(
   "user/sendConfirmationEmail",
@@ -184,9 +202,11 @@ const userSlice = createSlice({
         const userData = action.payload; // Extract user object from response
 
         if (userData) {
-          state.userId = userData.userID || null;
+          state.userId = userData.userId || null;
           state.role = userData.role || null;
           state.accessToken = userData.accessToken || null;
+          localStorage.setItem("userId", userData.userId);
+          localStorage.setItem("accessToken", userData.accessToken);
           localStorage.setItem("refreshToken", userData.refreshToken);
           state.confirmed = userData.confirmed || null;
           state.status = "SUCCESS";
@@ -206,9 +226,11 @@ const userSlice = createSlice({
         const userData = action.payload;
 
         if (userData) {
-          state.userId = userData.userID || null;
+          state.userId = userData.userId || null;
           state.role = userData.role || null;
           state.accessToken = userData.accessToken || null;
+          localStorage.setItem("userId", userData.userId);
+          localStorage.setItem("accessToken", userData.accessToken);
           localStorage.setItem("refreshToken", userData.refreshToken);
           state.confirmed = userData.confirmed || false;
           state.status = "SUCCESS";
@@ -302,6 +324,23 @@ const userSlice = createSlice({
         }
       })
       .addCase(getUserDetails.rejected, (state) => {
+        state.status = "FAILED";
+      })
+      // get a new refresh token
+      .addCase(getNewRefreshToken.pending, (state) => {
+        state.status = "LOADING";
+      })
+      .addCase(getNewRefreshToken.fulfilled, (state, action: PayloadAction<any>) => {
+        const userData = action.payload;
+
+        if (userData)
+        {
+          state.accessToken = userData.accessToken;
+          localStorage.setItem("accessToken", userData.accessToken);
+          localStorage.setItem("refreshToken", userData.refreshToken);
+        }
+      })
+      .addCase(getNewRefreshToken.rejected, (state) => {
         state.status = "FAILED";
       })
       // Send Confirmation Email
