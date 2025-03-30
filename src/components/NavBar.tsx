@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import Searchbar from "../components/SearchBar";
 import NavIcon from "../components/NavIcon";
 import Logo from "../components/Logo";
-import { Outlet } from "react-router-dom";
 function NavBar() {
   const [isLargeScreen, setIsLargeScreen] = useState<boolean>(
     window.innerWidth > 1280,
@@ -40,7 +39,7 @@ function NavBar() {
           <NavIcon
             Icon="fa-solid fa-user-group"
             Name={isLargeScreen ? "My Network" : "Network"}
-            pagePath="/MyNetwork"
+            pagePath="/my-network"
           />
           <NavIcon Icon="fa-solid fa-briefcase" Name="Jobs" pagePath="/" />
           <NavIcon

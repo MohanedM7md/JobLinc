@@ -10,14 +10,22 @@ interface UserState {
   loggedIn: boolean;
 }
 
-const initialState: UserState = {
-  userId: null,
-  role: null,
-  confirmed: null,
-  status: "IDLE",
-  loggedIn: false,
-  accessToken: null, // leave it as it is
-};
+const storedUser = localStorage.getItem("user");
+const initialState: UserState = storedUser
+  ? {
+      ...JSON.parse(storedUser),
+      accessToken: null,
+      status: "IDLE",
+      loggedIn: false,
+    }
+  : {
+      userId: null,
+      role: null,
+      confirmed: null,
+      status: "IDLE",
+      loggedIn: false,
+      accessToken: null, // leave it as it is
+    };
 
 // Fetch User Profile (Placeholder API)
 export const loginUser = createAsyncThunk(
@@ -191,10 +199,10 @@ const userSlice = createSlice({
           state.userId = userData.userID || null;
           state.role = userData.role || null;
           state.accessToken = userData.accessToken || null;
-          localStorage.setItem("accessToken", userData.accessToken);
           state.confirmed = userData.confirmed || null;
           state.status = "SUCCESS";
           state.loggedIn = true;
+          localStorage.setItem("accessToken", userData.accessToken);
           localStorage.setItem(
             "user",
             JSON.stringify({
@@ -226,6 +234,14 @@ const userSlice = createSlice({
           state.confirmed = userData.confirmed || false;
           state.status = "SUCCESS";
           state.loggedIn = true;
+          localStorage.setItem(
+            "user",
+            JSON.stringify({
+              userId: userData.userID,
+              role: userData.role,
+              refreshToken: userData.refreshToken,
+            }),
+          );
         }
       })
       .addCase(registerUser.rejected, (state) => {
@@ -276,6 +292,14 @@ const userSlice = createSlice({
           state.accessToken = userData.accessToken || null;
           localStorage.setItem("refreshToken", userData.refreshToken);
           state.status = "SUCCESS";
+          localStorage.setItem(
+            "user",
+            JSON.stringify({
+              userId: userData.userID,
+              role: userData.role,
+              refreshToken: userData.refreshToken,
+            }),
+          );
         }
       })
       .addCase(resetPassword.rejected, (state) => {

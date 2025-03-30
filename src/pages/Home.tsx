@@ -89,18 +89,16 @@ function Home() {
         });
       });
   }
-
   if (loading) {
     return <p>Loading...</p>;
   }
-
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
       <h1 data-testid="welcome" className="text-2xl font-bold">
         Welcome to the Main Page
       </h1>
 
-      {localStorage.getItem("refreshToken") ? (
+      {user.loggedIn ? (
         <div className="flex flex-col mt-4 p-4 border rounded-lg shadow-md">
           <p>
             <strong>First name:</strong> {userDetails.firstname}

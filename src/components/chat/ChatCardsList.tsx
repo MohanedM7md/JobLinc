@@ -1,7 +1,6 @@
 import { useEffect, useState, memo } from "react";
 import ChatCard from "./ChatCard";
 import { fetchChats } from "../../services/api/chatServices";
-import { useUser } from "./mockUse";
 import { ChatCardInterface } from "./interfaces/Chat.interfaces";
 import { subscribeToChats } from "@services/api/ChatSocket";
 import useChatId from "@context/ChatIdProvider";
@@ -15,17 +14,12 @@ const ChatCardsList = ({
 }) => {
   const [chats, setChats] = useState<ChatCardInterface[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const { user } = useUser();
 
-  console.log(
-    "----------------ChatCardsList---------------- for userID: ",
-    user,
-  );
+  console.log("----------------ChatCardsList---------------- for userID: ");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (!user) return;
         const data = await fetchChats();
         setChats(data);
       } catch (error) {
