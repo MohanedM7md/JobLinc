@@ -9,7 +9,7 @@ import { ReceiptRussianRuble } from "lucide-react";
 import { useAppSelector } from "@store/hooks";
 // import api from "../services/api/api";
 
-function MainPage() {
+function Home() {
   const user1 = useAppSelector((state) => state.user);
   console.log("User 1 print", user1);
   const navigate = useNavigate();
@@ -148,4 +148,4 @@ function MainPage() {
   );
 }
 
-export default MainPage;
+export default Home;

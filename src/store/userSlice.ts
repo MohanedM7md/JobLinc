@@ -187,13 +187,22 @@ const userSlice = createSlice({
         const userData = action.payload; // Extract user object from response
 
         if (userData) {
+          console.log("Login Response Payload:", userData);
           state.userId = userData.userID || null;
           state.role = userData.role || null;
           state.accessToken = userData.accessToken || null;
-          localStorage.setItem("refreshToken", userData.refreshToken);
+          localStorage.setItem("accessToken", userData.accessToken);
           state.confirmed = userData.confirmed || null;
           state.status = "SUCCESS";
           state.loggedIn = true;
+          localStorage.setItem(
+            "user",
+            JSON.stringify({
+              userId: userData.userID,
+              role: userData.role,
+              refreshToken: userData.refreshToken,
+            }),
+          );
         } else {
           console.error("User data missing in API response:", action.payload);
         }
@@ -212,6 +221,7 @@ const userSlice = createSlice({
           state.userId = userData.userID || null;
           state.role = userData.role || null;
           state.accessToken = userData.accessToken || null;
+          localStorage.setItem("accessToken", userData.accessToken);
           localStorage.setItem("refreshToken", userData.refreshToken);
           state.confirmed = userData.confirmed || false;
           state.status = "SUCCESS";
