@@ -2,9 +2,9 @@ import { Route, Routes } from "react-router-dom";
 import PlayGround from "./pages/PlayGround";
 import "./context/ThemeProvider";
 import { ThemeProvider } from "./context/ThemeProvider";
-import LandPage from "./pages/LandPage";
-import SignUpPage from "./pages/SignUpPage";
-import SignInPage from "./pages/SignInPage";
+import LandPage from "./pages/Land";
+import SignUpPage from "./pages/SignUp";
+import SignInPage from "./pages/SignIn";
 import ForgotPassword from "./pages/ForgotPassword";
 import UserDetails from "./components/Authentication/UserDetails";
 import MessagingPage from "./pages/Messaging";
@@ -44,8 +44,8 @@ function App() {
             <Route element={<Layout />}>
               <Route path="/home" element={<Home />} />
               <Route path="/my-network" element={<MyNetwork />} />
-              <Route path="/messaging" element={<MessagingPage />} />
-
+{/*               <Route path="/messaging" element={<MessagingPage />} />
+ */}
               <Route path="/change-password" element={<ChangePassword />} />
               <Route path="/update-email" element={<UpdateEmail />} />
               <Route path="/update-username" element={<UpdateUsername />} />

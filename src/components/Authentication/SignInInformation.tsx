@@ -141,7 +141,7 @@ function SignInInformation() {
 
       <Navigate_Component
         labelText="Forgot password?"
-        navigateTo="/Signin/ForgotPassword"
+        navigateTo="/Signin/forgot-password"
       />
 
       <Checkbox labelText="Keep me logged in" />
