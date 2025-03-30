@@ -21,6 +21,7 @@ import UpdateUsername from "./pages/UpdateUsername";
 import ConfirmEmail from "./pages/ConfirmEmail";
 import Error404 from "@pages/Eror404";
 import Layout from "./components/Layout";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
@@ -30,34 +31,33 @@ function App() {
           <Route path="/" element={<LandPage />} />
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/signin" element={<SignInPage />} />
+          <Route
+            path="/user-details"
+            element={<UserDetails email="" password="" />}
+          />
           <Route path="/signin/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route
             path="/confirm-email"
             element={<ConfirmEmail email="" token="" />}
           />
+          <Route element={<ProtectedRoute />}>
+            <Route element={<Layout />}>
+              <Route path="/home" element={<Home />} />
+              <Route path="/my-network" element={<MyNetwork />} />
+              <Route path="/messaging" element={<MessagingPage />} />
+              <Route path="/main" element={<MainPage />} />
 
-          <Route element={<Layout />}>
-            <Route path="/home" element={<Home />} />
-            <Route path="/my-network" element={<MyNetwork />} />
-            <Route path="/messaging" element={<MessagingPage />} />
-            <Route path="/main" element={<MainPage />} />
-            <Route
-              path="/user-details"
-              element={<UserDetails email="" password="" />}
-            />
-            <Route path="/change-password" element={<ChangePassword />} />
-            <Route path="/update-email" element={<UpdateEmail />} />
-            <Route path="/update-username" element={<UpdateUsername />} />
-
-            {/* Posts */}
-            <Route path="/post">
-              <Route index element={<PostContainer />} />
-              <Route path="create" element={<PostCreate />} />
-              <Route path=":postId/edit" element={<PostEdit />} />
+              <Route path="/change-password" element={<ChangePassword />} />
+              <Route path="/update-email" element={<UpdateEmail />} />
+              <Route path="/update-username" element={<UpdateUsername />} />
+              <Route path="/post">
+                <Route index element={<PostContainer />} />
+                <Route path="create" element={<PostCreate />} />
+                <Route path=":postId/edit" element={<PostEdit />} />
+              </Route>
             </Route>
 
-            {/* Playground */}
             <Route path="/playground" element={<PlayGround />} />
           </Route>
 
