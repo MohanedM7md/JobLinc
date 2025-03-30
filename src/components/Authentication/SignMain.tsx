@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import NavIcon from "../../components/NavIcon";
+import NavIcon from "../NavigationBar/NavIcon";
 import Logo from "../../components/Logo";
 
 function SignMain() {

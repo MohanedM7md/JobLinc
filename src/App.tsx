@@ -41,7 +41,7 @@ function App() {
             path="/confirm-email"
             element={<ConfirmEmail email="" token="" />}
           />
-          <Route element={<ProtectedRoute />}>
+          {/* <Route element={<ProtectedRoute />}> */}
             <Route element={<Layout />}>
               <Route path="/home" element={<Home />} />
               <Route path="/my-network" element={<MyNetwork />} />
@@ -56,7 +56,7 @@ function App() {
                 <Route path="create" element={<PostCreate />} />
                 <Route path=":postId/edit" element={<PostEdit />} />
               </Route>
-            </Route>
+            {/* </Route> */}
 
             <Route path="/playground" element={<PlayGround />} />
           </Route>

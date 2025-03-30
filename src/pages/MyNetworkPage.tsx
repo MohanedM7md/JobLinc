@@ -1,6 +1,6 @@
 import ConnectCard from "../components/ConnectCard";
 import ManageNetworkCard from "../components/ManageNetworkCard";
-import NavBar from "../components/NavBar";
+import NavBar from "../components/NavigationBar/NavBar";
 
 function MyNetwork(){
     return(
