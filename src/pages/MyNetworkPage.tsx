@@ -9,7 +9,7 @@ function MyNetwork(){
     const mockInvitations = [
         {
           profilePicture: "src/assets/Tyrone.jpg",
-          userName: "Ben Dover",
+          userName: "Ben allen",
           userBio: "Frontend Developer at Tech Inc.",
           Mutuals: "5 mutual connections",
           ignoreButtonid: "ignore-1",
