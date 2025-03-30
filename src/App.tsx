@@ -1,13 +1,14 @@
 import { Route, Routes } from "react-router-dom";
-import PlayGround from "./pages/PlayGround";
 import "./context/ThemeProvider";
+import { lazy } from "react";
+import PlayGround from "./pages/PlayGround";
 import { ThemeProvider } from "./context/ThemeProvider";
 import LandPage from "./pages/Land";
 import SignUpPage from "./pages/SignUp";
 import SignInPage from "./pages/SignIn";
 import ForgotPassword from "./pages/ForgotPassword";
 import UserDetails from "./components/Authentication/UserDetails";
-import MessagingPage from "./pages/Messaging";
+const Messaging = lazy(() => import("./pages/Messaging"));
 import Home from "./pages/Home";
 import MyNetwork from "./pages/MyNetworkPage";
 import PostContainer from "./components/Posts/PostContainer";
@@ -27,24 +28,29 @@ function App() {
     <>
       <ThemeProvider>
         <Routes>
-          <Route path="/" element={<LandPage />} />
-          <Route path="/signup" element={<SignUpPage />} />
-          <Route path="/signin" element={<SignInPage />} />
-          <Route
-            path="/user-details"
-            element={<UserDetails email="" password="" />}
-          />
-          <Route path="/signin/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
-          <Route
-            path="/confirm-email"
-            element={<ConfirmEmail email="" token="" />}
-          />
+          <Route element={<AuthRoute />}>
+            <Route path="/" element={<LandPage />} />
+            <Route path="/signup" element={<SignUpPage />} />
+            <Route path="/signin" element={<SignInPage />} />
+            <Route
+              path="/user-details"
+              element={<UserDetails /* email="" password="" */ />}
+            />
+            <Route
+              path="/signin/forgot-password"
+              element={<ForgotPassword />}
+            />
+            <Route path="/reset-password" element={<ResetPassword />} />
+            <Route
+              path="/confirm-email"
+              element={<ConfirmEmail /* email="" token="" */ />}
+            />
+          </Route>
           <Route element={<ProtectedRoute />}>
             <Route element={<Layout />}>
               <Route path="/home" element={<Home />} />
               <Route path="/my-network" element={<MyNetwork />} />
-              <Route path="/messaging" element={<MessagingPage />} />
+              <Route path="/messaging" element={<Messaging />} />
               <Route path="/change-password" element={<ChangePassword />} />
               <Route path="/update-email" element={<UpdateEmail />} />
               <Route path="/update-username" element={<UpdateUsername />} />
