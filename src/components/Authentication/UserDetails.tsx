@@ -106,7 +106,7 @@ function UserDetails() {
             //retrieveUser(userData.email, userData.password);
             
             if (registerUser.fulfilled.match(resultAction)) {
-                navigate("/MainPage");
+                navigate("/home");
             }
             else
             {
@@ -216,7 +216,7 @@ function UserDetails() {
             <Modal isOpen={isModalOpenError} onClose={() => setIsModalOpenError(false)}>
                 <div className="flex flex-col items-start gap-4 w-full">
                         <h2 className="font-bold text-[18px]">This email is already registered.</h2>
-                        <p className="text-[18px]">Did you forget your password? <Link to="/Signin/ForgotPassword" className="text-warmBlack font-bold hover:underline hover:cursor-pointer">Forgot password</Link></p>
+                        <p className="text-[18px]">Did you forget your password? <Link to="/Signin/forgot-password" className="text-warmBlack font-bold hover:underline hover:cursor-pointer">Forgot password</Link></p>
                 </div>          
             </Modal>
         </div>
