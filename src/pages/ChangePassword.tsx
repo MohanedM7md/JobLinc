@@ -40,7 +40,7 @@ function ChangePassword()
         {
             setTimeout(() => {
                 setIsModalSuccessOpen(false);
-                navigate("/MainPage");
+                navigate("/home");
             }, 2000);
         }
     },[isModalSuccessOpen]);
@@ -103,7 +103,7 @@ function ChangePassword()
             <Modal isOpen={isModalErrorOpen} onClose={() => {setIsModalErrorOpen(false)}}>
                 <div className="flex flex-col items-center">
                     <h1 className="text-warmBlack text-[20px] font-bold">Old password is incorrect</h1>
-                    <strong>Did you forget your password? <Link to="/Signin/ForgotPassword" className="text-[16px] text-warmBlack hover:underline">Forgot password</Link></strong>
+                    <strong>Did you forget your password? <Link to="/Signin/forgot-password" className="text-[16px] text-warmBlack hover:underline">Forgot password</Link></strong>
                 </div>
             </Modal>
         </div>

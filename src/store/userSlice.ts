@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { api } from "@services/api/api";
 
 interface UserState {
-  userId: number | null;
+  userId: string | null;
   role: string | null;
   accessToken: string | null;
   confirmed: boolean | null;
@@ -226,7 +226,7 @@ const userSlice = createSlice({
         const userData = action.payload;
 
         if (userData) {
-          state.userId = userData.userID || null;
+          state.userId = userData.userId || null;
           state.role = userData.role || null;
           state.accessToken = userData.accessToken || null;
           localStorage.setItem("accessToken", userData.accessToken);

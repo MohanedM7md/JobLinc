@@ -1,4 +1,4 @@
-import { connectSocket } from "./api";
+import { connectSocket } from "./socket";
 import { RecievedMessage } from "@chatComponent/interfaces/Message.interfaces";
 import { ChatCardInterface } from "@chatComponent/interfaces/Chat.interfaces";
 

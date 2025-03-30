@@ -84,7 +84,7 @@ function Home() {
       .unwrap()
       .then((data) => {
         console.log("Token of confirmation: ", JSON.stringify(data));
-        navigate("/ConfirmEmail", {
+        navigate("/confirm-email", {
           state: { email: userDetails.email, token: data.token },
         });
       });
@@ -109,19 +109,19 @@ function Home() {
 
           <Link
             className="text-[16px] text-warmBlack font-semibold hover:underline"
-            to="/ChangePassword"
+            to="/change-password"
           >
             Change password
           </Link>
           <Link
             className="text-[16px] text-warmBlack font-semibold hover:underline"
-            to="/UpdateEmail"
+            to="/update-email"
           >
             Update email
           </Link>
           <Link
             className="text-[16px] text-warmBlack font-semibold hover:underline"
-            to="/UpdateUsername"
+            to="/update-username"
           >
             Update username
           </Link>
