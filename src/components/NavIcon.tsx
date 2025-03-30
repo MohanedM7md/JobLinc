@@ -4,7 +4,7 @@ interface NavIconProps {
   Icon: string;
   Name: string;
   Dropdown?: string;
-  Link:string;
+  pagePath: string;
 }
 // const navigate = useNavigate();
 
@@ -13,16 +13,24 @@ interface NavIconProps {
 //   navigate(path);
 // };
 
-function NavIcon(props: NavIconProps) {
+function NavIcon({
+  rightBorder,
+  Icon,
+  Name,
+  Dropdown,
+  pagePath,
+}: NavIconProps) {
   return (
-      <Link to={props.Link}
-      className={`group flex flex-col items-center justify-center w-[calc(100%/7)] sm:w-1/2 cursor-pointer ${props.rightBorder}`}>
-      <i className={`${props.Icon} group-hover:text-black text-gray-600 text-lg`}></i>
+    <Link
+      to={pagePath}
+      className={`group flex flex-col items-center justify-center w-[calc(100%/7)] sm:w-1/2 cursor-pointer ${rightBorder}`}
+    >
+      <i className={`${Icon} group-hover:text-black text-gray-600 text-lg`}></i>
       <span className="items-center text-xs group-hover:text-black text-gray-600 ml-1 hidden sm:flex">
-        {props.Name}
-        {props.Dropdown && <i className={`ml-1 ${props.Dropdown}`}></i>}
+        {Name}
+        {Dropdown && <i className={`ml-1 ${Dropdown}`}></i>}
       </span>
-      </Link>
+    </Link>
   );
 }
 

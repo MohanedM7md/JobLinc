@@ -1,16 +1,33 @@
-import axios from "axios";
+import { api } from "./api";
 
-const axiosApi = axios.create({
-  baseURL: "/api",
-});
-
-export const fetchChats = async (userId: string) => {
-  const response = await axiosApi.get(`/chats/${userId}`);
-
+export const fetchChats = async () => {
+  const response = await api.get(`/chat/all
+`);
   return response.data;
 };
 
+export const fetchNetWorks = async (Id: string) => {
+  const response = await api.get(`/Networks/${Id}`);
+  const users = response.data.map(
+    ({
+      userId,
+      firstname: chatName,
+      profilePicture: chatPicture,
+    }: {
+      userId: string;
+      firstname: string;
+      profilePicture: string;
+    }) => ({ userId, chatName, chatPicture }),
+  );
+  return users;
+};
 export const fetchChatData = async (chatId: string) => {
-  const response = await axiosApi.get(`/messages/${chatId}`);
+  const response = await api.get(`/chat/c/{chatId}
+/${chatId}`);
+  return response.data;
+};
+
+export const createChat = async (recievers: string[]) => {
+  const response = await api.post(`/chat/openChat`, { recievers });
   return response.data;
 };

@@ -1,25 +1,24 @@
 import ChatContent from "../ChatContent";
 import PageChatHeader from "./PageChatHeader";
-import { PageChatWindowInterface } from "../interfaces/Chat.interfaces";
+import useChatId from "@context/ChatIdProvider";
+import useNetworkUserId from "@context/NetworkUserIdProvider";
+import { PageChatWindowProps } from "@chatComponent/interfaces/Chat.interfaces";
 
-const chatTitle = {
-  name: "Mohaned",
-  status: "Naime",
-};
-
-function PageChatWindow({ className, chatId }: PageChatWindowInterface) {
+function PageChatWindow({ className, chatName }: PageChatWindowProps) {
+  const { chatId } = useChatId();
+  const { usersId } = useNetworkUserId();
   console.log("--------------PageChatWindow rendered--------------id:", chatId);
-
+  console.log("User Id", usersId);
   return (
     <div
-      className={`${className} w-2/3 flex flex-col`}
+      className={`${className} w-full flex flex-col`}
       data-testid="test-PageWindow"
     >
-      {chatId ? (
-        <div>
-          <PageChatHeader name={chatTitle.name} status={chatTitle.status} />
-          <ChatContent chatId={chatId} />
-        </div>
+      {chatId || usersId.length ? (
+        <>
+          <PageChatHeader name={chatName} status={""} />
+          <ChatContent />
+        </>
       ) : (
         <div className="flex-grow flex items-center justify-center">
           <h2 className="text-gray-500">Choose a chat to start messaging</h2>

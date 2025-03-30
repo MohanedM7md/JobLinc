@@ -1,11 +1,14 @@
 import { MoreHorizontal, X } from "lucide-react";
 import { FlaotingHeaderProbs } from "../interfaces/Chat.interfaces";
-
+import ChatAvatarGrid from "@chatComponent/ChatAvatarGrid";
+import { memo } from "react";
 function FloatingChatHeader({
   onClick,
-  floatingHeaderData,
+  title,
+  chatPicture,
   onClose,
 }: FlaotingHeaderProbs) {
+  console.log(chatPicture);
   return (
     <div
       className={`flex items-center justify-between bg-charcoalWhite dark:bg-darkGray 
@@ -16,25 +19,18 @@ function FloatingChatHeader({
     >
       <div className="flex items-center space-x-3">
         <div className="relative">
-          <img
-            src={floatingHeaderData.profilePicture}
-            alt={floatingHeaderData.title}
-            className="w-10 h-10 rounded-full"
-          />
-
+          <ChatAvatarGrid chatName={title!} chatPicture={chatPicture!} />
           <span
             className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 ${
-              floatingHeaderData.status === "online"
-                ? "bg-green-500"
-                : "bg-mutedSilver"
+              "online" === "online" ? "bg-green-500" : "bg-mutedSilver"
             }`}
           />
         </div>
 
         <div>
-          <p className="text-lg font-semibold">{floatingHeaderData.title}</p>
+          <p className="text-lg font-semibold">{title}</p>
           <p className="text-sm text-mutedSilver">
-            {floatingHeaderData.status === "online" ? "Available" : "Offline"}
+            {"online" === "online" ? "Available" : "Offline"}
           </p>
         </div>
       </div>
@@ -55,4 +51,4 @@ function FloatingChatHeader({
   );
 }
 
-export default FloatingChatHeader;
+export default memo(FloatingChatHeader);

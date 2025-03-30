@@ -8,103 +8,139 @@ import Checkbox from "./Utilities/Checkbox";
 import store from "../../store/store";
 import { isValidEmail, isValidPassword } from "./Utilities/Validations";
 function SignUpInformation() {
+  const [emailText, setEmailText] = useState("");
+  const [passText, setPassText] = useState("");
+  const [showErrorEmailEmpty, setshowErrorEmailEmpty] = useState(false);
+  const [showErrorEmailInvalid, setshowErrorEmailInvalid] = useState(false);
 
-    const [emailText, setEmailText] = useState("");
-    const [passText, setPassText] = useState("");
-    const [showErrorEmailEmpty, setshowErrorEmailEmpty] = useState(false);
-    const [showErrorEmailInvalid, setshowErrorEmailInvalid] = useState(false);
+  const [showErrorPassEmpty, setshowErrorPassEmpty] = useState(false);
+  const [showErrorPassInvalid, setshowErrorPassInvalid] = useState(false);
 
-    const [showErrorPassEmpty, setshowErrorPassEmpty] = useState(false);
-    const [showErrorPassInvalid, setshowErrorPassInvalid] = useState(false);
+  const [showErrorRecaptcha, setShowErrorRecaptcha] = useState(false);
+  const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
+  const recaptchaRendered = useRef(false);
 
-    const [showErrorRecaptcha, setShowErrorRecaptcha] = useState(false);
-    const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
-    const recaptchaRendered = useRef(false);
-    
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-    useEffect(() => {
-        // Load script only once
-        if (!document.querySelector("script[src='https://www.google.com/recaptcha/api.js']")) {
-            const script = document.createElement("script");
-            script.src = "https://www.google.com/recaptcha/api.js";
-            script.async = true;
-            script.defer = true;
-            document.body.appendChild(script);
-        }
-
-        // Ensure reCAPTCHA renders only once
-        if (window.grecaptcha) {
-            window.grecaptcha.ready(() => {
-                if (!recaptchaRendered.current) {
-                    recaptchaRendered.current = true;
-                    const recaptchaElement = document.getElementById("recaptcha-container");
-
-                    if (recaptchaElement && recaptchaElement.childNodes.length === 0) {
-                        window.grecaptcha.render(recaptchaElement, {
-                            sitekey: "6Le48PQqAAAAABGnl1yAsKhhNuTnArdIGeRyuQoV",
-                            callback: (token: string) => {
-                                setRecaptchaToken(token);
-                                setShowErrorRecaptcha(false);
-                            },
-                        });
-                    }
-                }
-            });
-        }
-    }, []);
-
-    function isValidSubmit(event: React.FormEvent<HTMLFormElement>) {
-        event.preventDefault();
-
-        if (isValidEmail(emailText) && isValidPassword(passText))
-        {
-            // Now we can take the First Name and Last Name
-            // Navigate to Another Page
-
-            // Now I have email and password, I need to put them in the store
-            // and take more details about the user in upcoming pages
-
-            // const userData = {
-            //     email: emailText,
-            //     password: passText
-            // }
-
-            // TO BE UNCOMMENTED
-            // const recaptchaChecked = window.grecaptcha.getResponse();
-            // if (recaptchaChecked !== "")
-            // {
-
-            //     // Set access token in the local storage        
-            //     navigate("/UserDetails", { state: { email: emailText, password: passText } });            }
-            // else
-            // {
-            //     setShowErrorRecaptcha(true);
-            // }
-            navigate("/UserDetails", { state: { email: emailText, password: passText } });
-
-        }
+  useEffect(() => {
+    // Load script only once
+    if (
+      !document.querySelector(
+        "script[src='https://www.google.com/recaptcha/api.js']",
+      )
+    ) {
+      const script = document.createElement("script");
+      script.src = "https://www.google.com/recaptcha/api.js";
+      script.async = true;
+      script.defer = true;
+      document.body.appendChild(script);
     }
 
-    return (
-        <form onSubmit={isValidSubmit} className="flex flex-col w-80 items-start gap-3 mb-3">
-            <EmailFieldNormal emailText={emailText} setEmailText={setEmailText} showErrorEmailEmpty={showErrorEmailEmpty} setshowErrorEmailEmpty={setshowErrorEmailEmpty} showErrorEmailInvalid={showErrorEmailInvalid} setshowErrorEmailInvalid={setshowErrorEmailInvalid} />
-            
-            <PasswordFieldNormal labelText="Password *" passwordText={passText} setPasswordText={setPassText} showErrorPassEmpty={showErrorPassEmpty} setshowErrorPassEmpty={setshowErrorPassEmpty} showErrorPassInvalid={showErrorPassInvalid} setshowErrorPassInvalid={setshowErrorPassInvalid} />
+    // Ensure reCAPTCHA renders only once
+    if (window.grecaptcha) {
+      window.grecaptcha.ready(() => {
+        if (!recaptchaRendered.current) {
+          recaptchaRendered.current = true;
+          const recaptchaElement = document.getElementById(
+            "recaptcha-container",
+          );
 
-            <Checkbox labelText="Remember me" />
+          if (recaptchaElement && recaptchaElement.childNodes.length === 0) {
+            window.grecaptcha.render(recaptchaElement, {
+              sitekey: "6Le48PQqAAAAABGnl1yAsKhhNuTnArdIGeRyuQoV",
+              callback: (token: string) => {
+                setRecaptchaToken(token);
+                setShowErrorRecaptcha(false);
+              },
+            });
+          }
+        }
+      });
+    }
+  }, []);
 
-            {/* Recaptcha Validation */}
-            {/*<div id="recaptcha-container" className="g-recaptcha" data-sitekey="6Le48PQqAAAAABGnl1yAsKhhNuTnArdIGeRyuQoV"></div>
+  function isValidSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    if (isValidEmail(emailText) && isValidPassword(passText)) {
+      // Now we can take the First Name and Last Name
+      // Navigate to Another Page
+
+      // Now I have email and password, I need to put them in the store
+      // and take more details about the user in upcoming pages
+
+      // const userData = {
+      //     email: emailText,
+      //     password: passText
+      // }
+
+      // TO BE UNCOMMENTED
+      // const recaptchaChecked = window.grecaptcha.getResponse();
+      // if (recaptchaChecked !== "")
+      // {
+
+      //     // Set access token in the local storage
+      //     navigate("/UserDetails", { state: { email: emailText, password: passText } });            }
+      // else
+      // {
+      //     setShowErrorRecaptcha(true);
+      // }
+      navigate("/user-details", {
+        state: { email: emailText, password: passText },
+      });
+    }
+  }
+
+  return (
+    <form
+      onSubmit={isValidSubmit}
+      className="flex flex-col w-80 items-start gap-3 mb-3"
+    >
+      <EmailFieldNormal
+        emailText={emailText}
+        setEmailText={setEmailText}
+        showErrorEmailEmpty={showErrorEmailEmpty}
+        setshowErrorEmailEmpty={setshowErrorEmailEmpty}
+        showErrorEmailInvalid={showErrorEmailInvalid}
+        setshowErrorEmailInvalid={setshowErrorEmailInvalid}
+      />
+
+      <PasswordFieldNormal
+        labelText="Password *"
+        passwordText={passText}
+        setPasswordText={setPassText}
+        showErrorPassEmpty={showErrorPassEmpty}
+        setshowErrorPassEmpty={setshowErrorPassEmpty}
+        showErrorPassInvalid={showErrorPassInvalid}
+        setshowErrorPassInvalid={setshowErrorPassInvalid}
+      />
+
+      <Checkbox labelText="Remember me" />
+
+      {/* Recaptcha Validation */}
+      {/*<div id="recaptcha-container" className="g-recaptcha" data-sitekey="6Le48PQqAAAAABGnl1yAsKhhNuTnArdIGeRyuQoV"></div>
             {showErrorRecaptcha && <p data-testid="errorRECAPTCHA" className="text-red-800 text-[12px]">Please complete the reCAPTCHA.</p>}*/}
 
-            <div className="flex w-full flex-col items-center justify-center">
-                <div className="text-[12px] text-mutedSilver mb-3">By clicking Agree & Join or Continue, you agree to the JobLinc's <span className="text-softRosewood font-semibold">User Agreement</span>, <span className="text-softRosewood font-semibold">Privacy Policy</span>, and <span className="text-softRosewood font-semibold">Cookie Policy.</span></div>
-                <AuthenticationSignInButton id="sign-up-btn" text="Agree & Join"/>
-            </div>
-        </form>
-    );
+      <div className="flex w-full flex-col items-center justify-center">
+        <div className="text-[12px] text-mutedSilver mb-3">
+          By clicking Agree & Join or Continue, you agree to the JobLinc's{" "}
+          <span className="text-softRosewood font-semibold">
+            User Agreement
+          </span>
+          ,{" "}
+          <span className="text-softRosewood font-semibold">
+            Privacy Policy
+          </span>
+          , and{" "}
+          <span className="text-softRosewood font-semibold">
+            Cookie Policy.
+          </span>
+        </div>
+        <AuthenticationSignInButton id="sign-up-btn" text="Agree & Join" />
+      </div>
+    </form>
+  );
 }
 
 export default SignUpInformation;

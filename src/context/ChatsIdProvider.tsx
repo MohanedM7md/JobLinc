@@ -1,11 +1,20 @@
 import React, { createContext, useState } from "react";
-type ChatsIdContextType = {
-  opnedChatsId: string[];
-  setOpnedChatsId: React.Dispatch<React.SetStateAction<string[]>>;
-};
+
+interface ChatEntry {
+  chatId: string;
+  usersId: string[];
+  chatName: string;
+  chatImage: string[];
+}
+
+interface ChatsIdContextType {
+  opnedChats: ChatEntry[];
+  setOpnedChats: React.Dispatch<React.SetStateAction<ChatEntry[]>>;
+}
+
 export const ChatsIdContext = createContext<ChatsIdContextType>({
-  opnedChatsId: [],
-  setOpnedChatsId: () => {},
+  opnedChats: [],
+  setOpnedChats: () => {},
 });
 
 export default function ChatProvider({
@@ -13,10 +22,10 @@ export default function ChatProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [opnedChatsId, setOpnedChatsId] = useState<string[]>([]);
+  const [opnedChats, setOpnedChats] = useState<ChatEntry[]>([]);
 
   return (
-    <ChatsIdContext.Provider value={{ opnedChatsId, setOpnedChatsId }}>
+    <ChatsIdContext.Provider value={{ opnedChats, setOpnedChats }}>
       {children}
     </ChatsIdContext.Provider>
   );

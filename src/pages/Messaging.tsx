@@ -1,15 +1,28 @@
 import { useEffect, useState } from "react";
-import PageChatSystem from "../components/chat/PageChat/PageChatSystem";
-import { UserProvider } from "../components/chat/mockUse"; // Adjust the import path as necessary
+import PageChatSystem from "@chatComponent/PageChat/PageChatSystem";
+import { UserProvider } from "@chatComponent/mockUse"; // Adjust the import path as necessary
+import { ChatIdProvider } from "@context/ChatIdProvider";
+import { NetworkUserIdProvider } from "@context/NetworkUserIdProvider";
+import { useAppSelector } from "@store/hooks";
 
 export function MessagingPage() {
-  const [userId, _] = useState(window.prompt("Enter Chat ID:") || "1");
-
+  const [userId, setUserId] = useState("");
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUserId(e.target.value);
+  };
+  const user = useAppSelector((state) => state.user);
+  console.log("Redux store in messaginh", user);
   return (
     <>
-      <UserProvider userId={userId}>
-        <PageChatSystem />
-      </UserProvider>
+      <div className="h-[100vh] overflow-hidden">
+        <UserProvider userId={userId}>
+          <ChatIdProvider>
+            <NetworkUserIdProvider>
+              <PageChatSystem />
+            </NetworkUserIdProvider>
+          </ChatIdProvider>
+        </UserProvider>
+      </div>
     </>
   );
 }

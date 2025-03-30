@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import api from "../services/api/api";
-
+import { api } from "@services/api/api";
 
 interface UserState {
   userId: string | null;
@@ -11,15 +10,22 @@ interface UserState {
   loggedIn: boolean;
 }
 
-const initialState: UserState = {
-  userId: null,
-  role: null,
-  confirmed: null,
-  status: "IDLE",
-  loggedIn: false,
-  accessToken: null, // leave it as it is
-
-};
+const storedUser = localStorage.getItem("user");
+const initialState: UserState = storedUser
+  ? {
+      ...JSON.parse(storedUser),
+      accessToken: null,
+      status: "IDLE",
+      loggedIn: false,
+    }
+  : {
+      userId: null,
+      role: null,
+      confirmed: null,
+      status: "IDLE",
+      loggedIn: false,
+      accessToken: null, // leave it as it is
+    };
 
 // Fetch User Profile (Placeholder API)
 export const loginUser = createAsyncThunk(
@@ -120,9 +126,8 @@ export const changePassword = createAsyncThunk(
     } catch (error: any) {
       return rejectWithValue(error.response?.data || "Change Password failed");
     }
-  }
+  },
 );
-
 
 export const getUserDetails = createAsyncThunk(
   "user/getUserDetails",
@@ -131,28 +136,11 @@ export const getUserDetails = createAsyncThunk(
       const response = await api.get("user/me");
       return response.data;
     } catch (error: any) {
-      return rejectWithValue(error.response?.data || "User details fetch failed");
+      return rejectWithValue(
+        error.response?.data || "User details fetch failed",
+      );
     }
-  } 
-);
-
-export const getNewRefreshToken = createAsyncThunk(
-  "user/getNewRefreshToken",
-  async(
-    userData: {
-    userId: string | null,
-    // companyId: number | null,
-    refreshToken: string | null,
-
   },
-   { rejectWithValue }) => {
-    try {
-      const response = await api.post("auth/refresh-token", userData);
-      return response.data;
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data || "trying to get a new refresh token failed");
-    }
-  }
 );
 
 export const sendConfirmationEmail = createAsyncThunk(
@@ -162,21 +150,26 @@ export const sendConfirmationEmail = createAsyncThunk(
       const response = await api.post("auth/send-confirmation-email", userData);
       return response.data;
     } catch (error: any) {
-      return rejectWithValue(error.response?.data || "Send Confirmation Email failed");
+      return rejectWithValue(
+        error.response?.data || "Send Confirmation Email failed",
+      );
     }
-  }
+  },
 );
 
 export const confirmEmail = createAsyncThunk(
   "user/confirmEmail",
-  async (userData: { email: string, token: string, otp: string }, { rejectWithValue }) => {
+  async (
+    userData: { email: string; token: string; otp: string },
+    { rejectWithValue },
+  ) => {
     try {
       const response = await api.post("auth/confirm-email", userData);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data || "Confirm Email failed");
     }
-  }
+  },
 );
 // Create Redux Slice
 const userSlice = createSlice({
@@ -202,15 +195,22 @@ const userSlice = createSlice({
         const userData = action.payload; // Extract user object from response
 
         if (userData) {
-          state.userId = userData.userId || null;
+          console.log("Login Response Payload:", userData);
+          state.userId = userData.userID || null;
           state.role = userData.role || null;
           state.accessToken = userData.accessToken || null;
-          localStorage.setItem("userId", userData.userId);
-          localStorage.setItem("accessToken", userData.accessToken);
-          localStorage.setItem("refreshToken", userData.refreshToken);
           state.confirmed = userData.confirmed || null;
           state.status = "SUCCESS";
           state.loggedIn = true;
+          localStorage.setItem("accessToken", userData.accessToken);
+          localStorage.setItem(
+            "user",
+            JSON.stringify({
+              userId: userData.userID,
+              role: userData.role,
+              refreshToken: userData.refreshToken,
+            }),
+          );
         } else {
           console.error("User data missing in API response:", action.payload);
         }
@@ -229,12 +229,19 @@ const userSlice = createSlice({
           state.userId = userData.userId || null;
           state.role = userData.role || null;
           state.accessToken = userData.accessToken || null;
-          localStorage.setItem("userId", userData.userId);
           localStorage.setItem("accessToken", userData.accessToken);
           localStorage.setItem("refreshToken", userData.refreshToken);
           state.confirmed = userData.confirmed || false;
           state.status = "SUCCESS";
           state.loggedIn = true;
+          localStorage.setItem(
+            "user",
+            JSON.stringify({
+              userId: userData.userID,
+              role: userData.role,
+              refreshToken: userData.refreshToken,
+            }),
+          );
         }
       })
       .addCase(registerUser.rejected, (state) => {
@@ -244,14 +251,16 @@ const userSlice = createSlice({
       .addCase(forgotPassword.pending, (state) => {
         state.status = "LOADING";
       })
-      .addCase(forgotPassword.fulfilled, (state, action: PayloadAction<any>) => {
-        const userData = action.payload;
+      .addCase(
+        forgotPassword.fulfilled,
+        (state, action: PayloadAction<any>) => {
+          const userData = action.payload;
 
-        if (userData)
-        {
-          state.status = "SUCCESS"
-        }
-      })
+          if (userData) {
+            state.status = "SUCCESS";
+          }
+        },
+      )
       .addCase(forgotPassword.rejected, (state) => {
         state.status = "FAILED";
       })
@@ -262,10 +271,9 @@ const userSlice = createSlice({
       .addCase(confirmOTP.fulfilled, (state, action: PayloadAction<any>) => {
         const userData = action.payload;
 
-        if (userData)
-        {
+        if (userData) {
           // state.resetToken = userData.resetToken || null;
-          state.status = "SUCCESS"
+          state.status = "SUCCESS";
         }
       })
       .addCase(confirmOTP.rejected, (state) => {
@@ -284,6 +292,14 @@ const userSlice = createSlice({
           state.accessToken = userData.accessToken || null;
           localStorage.setItem("refreshToken", userData.refreshToken);
           state.status = "SUCCESS";
+          localStorage.setItem(
+            "user",
+            JSON.stringify({
+              userId: userData.userID,
+              role: userData.role,
+              refreshToken: userData.refreshToken,
+            }),
+          );
         }
       })
       .addCase(resetPassword.rejected, (state) => {
@@ -293,16 +309,18 @@ const userSlice = createSlice({
       .addCase(changePassword.pending, (state) => {
         state.status = "LOADING";
       })
-      .addCase(changePassword.fulfilled, (state, action: PayloadAction<any>) => {
-        const userData = action.payload;
+      .addCase(
+        changePassword.fulfilled,
+        (state, action: PayloadAction<any>) => {
+          const userData = action.payload;
 
-        if (userData)
-        {
-          state.accessToken = userData.accessToken || null;
-          localStorage.setItem("refreshToken", userData.refreshToken);
-          state.status = "SUCCESS";
-        }
-      })
+          if (userData) {
+            state.accessToken = userData.accessToken || null;
+            localStorage.setItem("refreshToken", userData.refreshToken);
+            state.status = "SUCCESS";
+          }
+        },
+      )
       .addCase(changePassword.rejected, (state) => {
         state.status = "FAILED";
       })
@@ -310,55 +328,38 @@ const userSlice = createSlice({
       .addCase(getUserDetails.pending, (state) => {
         state.status = "LOADING";
       })
-      .addCase(getUserDetails.fulfilled, (state, action: PayloadAction<any>) => {
-        const userData = action.payload;
+      .addCase(
+        getUserDetails.fulfilled,
+        (state, action: PayloadAction<any>) => {
+          const userData = action.payload;
 
-        if (userData)
-        {
-          state.userId = userData.userId || null;
-          state.status = "SUCCESS";
-        }
-        else 
-        {
-          console.error("User data missing in API response:", action.payload);
-        }
-      })
+          if (userData) {
+            state.userId = userData.userId || null;
+            state.status = "SUCCESS";
+          } else {
+            console.error("User data missing in API response:", action.payload);
+          }
+        },
+      )
       .addCase(getUserDetails.rejected, (state) => {
-        state.status = "FAILED";
-      })
-      // get a new refresh token
-      .addCase(getNewRefreshToken.pending, (state) => {
-        state.status = "LOADING";
-      })
-      .addCase(getNewRefreshToken.fulfilled, (state, action: PayloadAction<any>) => {
-        const userData = action.payload;
-
-        if (userData)
-        {
-          state.accessToken = userData.accessToken;
-          localStorage.setItem("accessToken", userData.accessToken);
-          localStorage.setItem("refreshToken", userData.refreshToken);
-        }
-      })
-      .addCase(getNewRefreshToken.rejected, (state) => {
         state.status = "FAILED";
       })
       // Send Confirmation Email
       .addCase(sendConfirmationEmail.pending, (state) => {
         state.status = "LOADING";
       })
-      .addCase(sendConfirmationEmail.fulfilled, (state, action: PayloadAction<any>) => {
-        const userData = action.payload;
+      .addCase(
+        sendConfirmationEmail.fulfilled,
+        (state, action: PayloadAction<any>) => {
+          const userData = action.payload;
 
-        if (userData)
-        {
-          state.status = "SUCCESS";
-        }
-        else 
-        {
-          console.error("User data missing in API response:", action.payload);
-        }
-      })
+          if (userData) {
+            state.status = "SUCCESS";
+          } else {
+            console.error("User data missing in API response:", action.payload);
+          }
+        },
+      )
       .addCase(sendConfirmationEmail.rejected, (state) => {
         state.status = "FAILED";
       })
@@ -369,17 +370,14 @@ const userSlice = createSlice({
       .addCase(confirmEmail.fulfilled, (state, action: PayloadAction<any>) => {
         const userData = action.payload;
         console.log("Redux Payload: " + JSON.stringify(action.payload));
-        if (userData)
-        {
+        if (userData) {
           state.status = "SUCCESS";
           state.userId = userData.userID;
           state.role = userData.role;
           state.accessToken = userData.accessToken;
           localStorage.setItem("refreshToken", userData.refreshToken);
           state.confirmed = userData.confirmed;
-        }
-        else 
-        {
+        } else {
           console.error("User data missing in API response:", action.payload);
         }
       })

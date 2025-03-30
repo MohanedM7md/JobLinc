@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 
 interface ChatIdContextType {
   chatId: string;
@@ -14,9 +14,10 @@ export function ChatIdProvider({
   id,
 }: {
   children: React.ReactNode;
-  id: string;
+  id?: string;
 }) {
-  const [chatId, setChatId] = useState(id);
+  const [chatId, setChatId] = useState(id ? id : "");
+
   return (
     <ChatsIdContext.Provider value={{ chatId, setChatId }}>
       {children}
