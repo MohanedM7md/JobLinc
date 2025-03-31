@@ -1,88 +1,197 @@
-import { useState } from "react";
-
-interface Invitation {
-  profilePicture: string;
-  userName: string;
-  userBio: string;
-  Mutuals: string;
-  ignoreButtonid: string;
-  acceptButtonid: string;
-}
+import { useState, useEffect } from "react";
+import { invitationInterface } from "interfaces/networkInterfaces";
+import { getPendingInvitations } from "../../services/api/networkServices";
+import NetworkModal from "./NetworkModal";
 
 interface PendingInvitationsCardProps {
   manageButtonid: string;
-  invitations: Invitation[];
 }
 
-function PendingInvitationsCard(props: PendingInvitationsCardProps) {
-  // State to manage the invitations
-  const [invitations, setInvitations] = useState(props.invitations);
-  
-  // Function to handle accepting an invitation
+function PendingInvitationsCard({ manageButtonid }: PendingInvitationsCardProps) {
+  const [invitations, setInvitations] = useState<invitationInterface[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const fetchData = async () => {
+      try {
+        const response = await getPendingInvitations(5, controller.signal);
+        console.log(response);
+        setInvitations(Array.isArray(response) ? response : []);
+      } catch (error) {
+        console.error("Error fetching network feed:", error);
+      }
+    };
+    fetchData();
+
+    return () => {
+      controller.abort();
+    };
+  }, []);
+
   const handleAccept = (index: number) => {
     setInvitations((prevInvitations) =>
-      prevInvitations.filter((_, i) => i !== index)
+      prevInvitations.map((invitation, i) =>
+        i === index
+          ? {
+              ...invitation,
+              acknowledged: true,
+            }
+          : invitation
+      )
     );
   };
+
   const handleReject = (index: number) => {
     setInvitations((prevInvitations) =>
       prevInvitations.filter((_, i) => i !== index)
     );
   };
 
+  const handleRemoveAcknowledgment = (index: number) => {
+    setInvitations((prevInvitations) =>
+      prevInvitations.filter((_, i) => i !== index)
+    );
+  };
+
+  const handleShowAll = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <div className="bg-white rounded-md border-2 border-gray-200">
       <div className="flex justify-between items-center m-2">
-        <h2>Invitations ({invitations.length})</h2>
+        <h2>Invitations ({invitations.filter((inv) => !inv.acknowledged).length}) {invitations.length>0 ? "" : "(No pending invitations)"}</h2>
         <button
-          id={props.manageButtonid}
+          id={manageButtonid}
           className="font-semibold hover:bg-gray-100 hover:text-black text-darkGray p-1 rounded-md"
+          onClick={handleShowAll}
         >
-        {invitations.length > 0 ? "Show All" : "Manage"}
+          {invitations.length > 0 ? "Show All" : "Manage"}
         </button>
       </div>
+
+      {/* Invitations List */}
       <ul>
-        {invitations.length > 0 ? (
-          invitations.map((invitation, index) => (
-            <li key={index} className="m-2">
+        {invitations.slice(0, 3).map((invitation, index) => (
+          <li key={index} className="m-2">
+            {invitation.acknowledged ? (
+              // Acknowledgment message
+              <div className="flex items-center bg-gray-100 p-2 rounded-md">
+                <img
+                  src={invitation.profilePicture}
+                  alt="Profile Picture"
+                  className="w-10 h-10 rounded-full object-cover"
+                />
+                <div className="ml-4 flex-grow">
+                  <p className="font-semibold">
+                    {invitation.userName} is now a connection!
+                  </p>
+                </div>
+                <button
+                  className="text-red-600 hover:text-red-800 hover:cursor-pointer"
+                  onClick={() => handleRemoveAcknowledgment(index)}
+                >
+                  &times;
+                </button>
+              </div>
+            ) : (
+              // Invitation message
               <div className="flex items-center">
+                <img
+                  src={invitation.profilePicture}
+                  alt="Profile Picture"
+                  className="w-15 h-15 rounded-full object-cover"
+                />
+                <div className="ml-4 flex-grow">
+                  <h3 className="font-semibold">{invitation.userName}</h3>
+                  <p className="text-gray-500">{invitation.userBio}</p>
+                  <p className="text-xs text-gray-500">{invitation.Mutuals}</p>
+                </div>
                 <div>
+                  <button
+                    className="text-darkGray font-semibold hover:bg-lightGray p-1 rounded-md m-1 mx-2"
+                    onClick={() => handleReject(index)}
+                  >
+                    Ignore
+                  </button>
+                  <button
+                    className="text-crimsonRed border-crimsonRed border-2 hover:outline-1 hover:bg-lightGray font-semibold py-0.5 px-5 rounded-full m-1 mx-2"
+                    onClick={() => handleAccept(index)}
+                  >
+                    Accept
+                  </button>
+                </div>
+              </div>
+            )}
+          </li>
+        ))}
+      </ul> 
+
+      {/* Modal */}
+      <NetworkModal isOpen={isModalOpen} onClose={handleCloseModal}>
+        <h2 className="font-semibold mb-4">All Invitations </h2>
+        <p className="text-center text-gray-500">{invitations.length>0 ? "" : "No pending invitations"}</p>
+        <ul>
+          {invitations.map((invitation, index) => (
+            <li key={index} className="mb-4 flex items-center">
+              {invitation.acknowledged ? (
+                // Acknowledgment message inside modal
+                <div className="flex items-center bg-gray-100 p-2 rounded-md w-full">
+                <img
+                  src={invitation.profilePicture}
+                  alt="Profile Picture"
+                  className="w-10 h-10 rounded-full object-cover"
+                />
+                <div className="ml-4 flex-grow">
+                  <p className="font-semibold">
+                    {invitation.userName} is now a connection!
+                  </p>
+                </div>
+                <button
+                  className="text-red-600 hover:text-red-800 hover:cursor-pointer"
+                  onClick={() => handleRemoveAcknowledgment(index)}
+                >
+                  &times;
+                </button>
+              </div>
+              ) : (
+                // Regular invitation message inside modal
+                <div className="flex items-center w-full">
                   <img
                     src={invitation.profilePicture}
                     alt="Profile Picture"
-                    className="w-15 h-15 rounded-full object-cover"
+                    className="w-10 h-10 rounded-full object-cover"
                   />
-                </div>
-                <div className="flex justify-between items-center w-full">
-                  <div className="ml-4">
+                  <div className="ml-4 flex-grow">
                     <h3 className="font-semibold">{invitation.userName}</h3>
                     <p className="text-gray-500">{invitation.userBio}</p>
                     <p className="text-xs text-gray-500">{invitation.Mutuals}</p>
                   </div>
                   <div>
                     <button
-                      id={invitation.ignoreButtonid}
-                      className="text-darkGray font-semibold hover:bg-lightGray p-1 rounded-md m-1 mx-2"
-                      onClick={() => handleReject(index)} // Remove invitation on click
+                      className="text-crimsonRed border-crimsonRed border hover:outline hover:bg-lightGray font-semibold py-0.5 px-3 rounded-full m-1 text-sm"
+                      onClick={() => handleAccept(index)}
                     >
-                    Ignore
+                      Accept
                     </button>
                     <button
-                      id={invitation.acceptButtonid}
-                      className="text-crimsonRed border-crimsonRed border-2 hover:outline-1 hover:bg-lightGray font-semibold py-0.5 px-5 rounded-full m-1 mx-2"
-                      onClick={() => handleAccept(index)} // Remove invitation on click
+                      className="text-darkGray font-semibold hover:bg-lightGray p-1 rounded-md m-1 text-sm"
+                      onClick={() => handleReject(index)}
                     >
-                    Accept
+                      Ignore
                     </button>
                   </div>
                 </div>
-              </div>
+              )}
             </li>
-          ))
-        ) : (
-          <p className="text-center text-gray-500 m-4">No Pending Invitations</p>
-        )}
-      </ul>
+          ))}
+        </ul>
+      </NetworkModal>
     </div>
   );
 }
