@@ -18,6 +18,7 @@ function PageChatSystem() {
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
   const [isChatSidebarOpen, setIsChatSidebarOpen] = useState<boolean>(false);
   const [opnedChatName, setOpnedChatName] = useState<string>("");
+  const [isConnected, setIsConnected] = useState<boolean>(false);
   const onFocusedToggler = () => {
     setTimeout(() => {
       setIsFocused(!isFocused);
@@ -44,7 +45,12 @@ function PageChatSystem() {
   );
 
   useEffect(() => {
-    connectToChat();
+    const initializeChat = async () => {
+      await connectToChat();
+      setIsConnected(true);
+    };
+
+    initializeChat();
     return () => disconnectChatSocket();
   }, []);
   return (
@@ -77,21 +83,23 @@ function PageChatSystem() {
           </button>
         </div>
       </header>
-      <div className="flex h-screen w-full">
-        {isFocused ? (
-          <NetWorksChatList
-            className="w-2/5  pb-20 md:w-1/3 border-r  bg-charcoalWhite border-gray-300 p-4"
-            onCardClick={handleNetWorkUserClick}
-          />
-        ) : (
-          <ChatCardsList
-            className="w-2/5  pb-20 md:w-1/3 border-r bg-charcoalWhite border-gray-300 p-4"
-            onCardClick={handleConversationClick}
-          />
-        )}
+      {isConnected && (
+        <div className="flex h-screen w-full">
+          {isFocused ? (
+            <NetWorksChatList
+              className="w-2/5  pb-20 md:w-1/3 border-r  bg-charcoalWhite border-gray-300 p-4"
+              onCardClick={handleNetWorkUserClick}
+            />
+          ) : (
+            <ChatCardsList
+              className="w-2/5  pb-20 md:w-1/3 border-r bg-charcoalWhite border-gray-300 p-4"
+              onCardClick={handleConversationClick}
+            />
+          )}
 
-        <PageMessageWindow chatName={opnedChatName} />
-      </div>
+          <PageMessageWindow chatName={opnedChatName} />
+        </div>
+      )}
     </div>
   );
 }

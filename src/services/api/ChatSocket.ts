@@ -6,6 +6,7 @@ let ChatSocket: SocketIOClient.Socket | null = null;
 
 export const connectToChat = () => {
   ChatSocket = connectSocket("chat");
+  return ChatSocket;
 };
 
 export const subscribeToMessages = (
@@ -70,11 +71,11 @@ export const subscribeToChats = (
   onChatUpdate: (chatCard: ChatCardInterface) => void,
   onNewChat: (chatCard: ChatCardInterface) => void,
 ) => {
-  ChatSocket?.on("cardUpdate", (chatCard: ChatCardInterface) => {
+  ChatSocket.on("cardUpdate", (chatCard: ChatCardInterface) => {
     console.log("📩 Received modified chatCard:", chatCard);
     onChatUpdate(chatCard);
   });
-  ChatSocket?.on("newChat", (chatCard: ChatCardInterface) => {
+  ChatSocket.on("newChat", (chatCard: ChatCardInterface) => {
     console.log("📩 Received new chatCard:", chatCard);
     onNewChat(chatCard);
   });
