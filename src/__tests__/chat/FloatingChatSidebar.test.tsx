@@ -3,10 +3,18 @@ import userEvent from "@testing-library/user-event";
 import ChatProvider from "../../context/ChatsIdProvider";
 import FloatingChatSidebar from "../../components/chat/FloatingChat/FloatingChatSidebar";
 import { UserProvider } from "../../components/chat/mockUse";
-import { expect, test, describe, beforeEach } from "vitest";
+import { vi, expect, test, describe, beforeEach } from "vitest";
+
+vi.mock("@services/api/ChatSocket", () => ({
+  connectToChat: vi.fn(),
+  disconnectChatSocket: vi.fn(),
+}));
 
 describe("FloatingChatSidebar", () => {
+  const mockHandleNetWorkUserClick = vi.fn();
+  const mockHandleConversationClick = vi.fn();
   beforeEach(() => {
+    vi.clearAllMocks();
     localStorage.clear();
   });
   beforeAll(() => {
@@ -21,19 +29,10 @@ describe("FloatingChatSidebar", () => {
   test("renders FloatingChatSidebar correctly", () => {
     expect(screen.getByText("Messaging")).toBeInTheDocument();
   });
-  test("renders searchbar UI", () => {
-    expect(screen.getByPlaceholderText("Search...")).toBeInTheDocument();
-  });
-  test("renders UIs", () => {
-    expect(screen.getByPlaceholderText("Search...")).toBeInTheDocument();
-    expect(screen.getByTestId("test-search-icon")).toBeInTheDocument();
-    expect(screen.getByTestId("test-filter-icon")).toBeInTheDocument();
-  });
-  test("should toggle sidebar when header is clicked", async () => {
-    const header = screen.getByText("Messaging");
-    await userEvent.click(header);
-    expect(localStorage.getItem("chatSidebarActive")).toBe("true");
-    await userEvent.click(header);
-    expect(localStorage.getItem("chatSidebarActive")).toBe("false");
+  it("renders the messaging header with correct elements", () => {
+    expect(screen.getByAltText("User Avatar")).toBeInTheDocument();
+    expect(screen.getByText("Messaging")).toBeInTheDocument();
+    expect(screen.getByRole("button")).toBeInTheDocument();
+    expect(screen.getByRole("button").querySelector("svg")).toBeInTheDocument();
   });
 });

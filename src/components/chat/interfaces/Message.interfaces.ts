@@ -32,7 +32,7 @@ export interface MessageBubbleInterface extends MessageBase {
 
 export interface ChatMessagesProbs {
   users: User[];
-  messages: RecievedMessage[] | [];
+  messages: RecievedMessage[];
   className?: string;
 }
 

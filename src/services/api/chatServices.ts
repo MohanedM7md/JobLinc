@@ -1,8 +1,13 @@
 import { api } from "./api";
 
 export const fetchChats = async () => {
-  const response = await api.get(`/chat/all
-`);
+  const response = await api.get(
+    `/chat/all
+`,
+    {
+      params: { userId: "1" },
+    },
+  );
   return response.data;
 };
 
@@ -22,8 +27,7 @@ export const fetchNetWorks = async (Id: string) => {
   return users;
 };
 export const fetchChatData = async (chatId: string) => {
-  const response = await api.get(`/chat/c/${chatId}
-/${chatId}`);
+  const response = await api.get(`/chat/c/${chatId}`);
   return response.data;
 };
 

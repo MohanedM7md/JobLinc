@@ -11,7 +11,7 @@ export const connectToChat = () => {
 export const subscribeToMessages = (
   chatId: string,
   onMessageReceived: (message: RecievedMessage) => void,
-  onMessageRead: () => void,
+  onMessageRead: (senderId: string) => void,
   onUserTyping: (userId: string) => void,
   onStopUserTyping: (userId: string) => void,
 ) => {
@@ -24,9 +24,9 @@ export const subscribeToMessages = (
     ChatSocket?.emit("messageRecieved", chatId, message.messageId);
   });
 
-  ChatSocket.on("messageRead", () => {
+  ChatSocket.on("messageRead", (senderId: string) => {
     console.log("📖 Message Read");
-    onMessageRead();
+    onMessageRead(senderId);
   });
   ChatSocket.on("messageTyping", (userId: string) => {
     console.log("📖 Other User is typing :", userId);

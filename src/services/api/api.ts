@@ -1,11 +1,11 @@
 import axios from "axios";
 import store from "@store/store";
-import SERVER_URL from "./config";
+import { API_URL } from "./config";
 import { logOut, updateAccessToken } from "@store/user/userSlice";
 
 axios.defaults.baseURL;
 export const api = axios.create({
-  baseURL: SERVER_URL,
+  baseURL: API_URL,
   headers: {
     "Content-Type": "application/json",
   },

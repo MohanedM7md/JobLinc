@@ -18,15 +18,18 @@ import { fetchChatData, createChat } from "@services/api/chatServices";
 import useChatid from "@context/ChatIdProvider";
 import useNetworkUserId from "@context/NetworkUserIdProvider";
 import UserTypingIndicator from "./UserTyping";
+import { useAppSelector } from "@store/hooks";
 
 function ChatContent({ className }: { className?: string }) {
   const [users, setUsers] = useState<User[]>([]);
+  const myData = useRef<User | undefined>(undefined);
   const [messages, setMessages] = useState<RecievedMessage[]>([]);
   const { chatId, setChatId } = useChatid();
   const { usersId } = useNetworkUserId();
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const [typingUsers, setTypingUsers] = useState<string[]>([]);
+
   console.log("typing triggers update");
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -35,23 +38,28 @@ function ChatContent({ className }: { className?: string }) {
     const fetchData = async () => {
       if (usersId.length && !chatId) {
         const data = await createChat(usersId);
-        setUsers(data.users);
+        setUsers(data.participants);
+        myData.current = data.participants.find(
+          (part: User) =>
+            part.userId == useAppSelector((state) => state.user.userId),
+        );
         setMessages(data.messages);
         setChatId(data.chatId);
       } else {
         const data = await fetchChatData(chatId);
-        setUsers(data.users);
+        setUsers(data.participants);
         setMessages(data.messages);
       }
     };
 
     fetchData();
+
     subscribeToMessages(
       chatId,
       (message) => setMessages((prev) => [...prev, message]),
-      () =>
+      (userId) =>
         setMessages((prev) =>
-          prev.map((msg) => ({ ...msg, status: MessageStatus.Read })),
+          prev.map((msg) => ({ ...msg, seenBy: [...msg.seenBy, userId] })),
         ),
       (userId) =>
         setTypingUsers((prevTypingUsers) => {
@@ -71,10 +79,13 @@ function ChatContent({ className }: { className?: string }) {
     };
   }, [chatId]);
 
-  const handleSendMessage = (message: string) => {
+  const handleSendMessage = (message: string | File, type: string) => {
+    console.log("Sender Id", myData.current?.userId);
     const newMessage: any = {
       messageId: `${10}-${new Date().getTime()}`,
       time: new Date(),
+      type: type,
+      sendId: myData.current?.userId,
       status: MessageStatus.Sent,
       content: { text: message },
     };

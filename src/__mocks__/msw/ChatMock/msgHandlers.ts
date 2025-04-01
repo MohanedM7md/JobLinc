@@ -1,19 +1,20 @@
 import { http, HttpResponse } from "msw";
 import db from "./db"; // Import the mock database
+import { API_URL } from "@services/api/config";
 
 export const msghandlers = [
-  http.get("http://localhost:4000/socket.io/", () => {
+  http.get(`${API_URL}/socket.io/`, () => {
     return new HttpResponse(JSON.stringify({ sid: "mock-socket-id" }), {
       status: 200,
     });
   }),
-  http.post("http://localhost:4000/socket.io/", () => {
+  http.post(`${API_URL}/socket.io/`, () => {
     return new HttpResponse(JSON.stringify({ sid: "mock-socket-id" }), {
       status: 200,
     });
   }),
   // Fetch user's network (friends list)
-  http.get("/api/Networks/:userId", async ({ params }) => {
+  http.get(`${API_URL}/api/Networks/:userId`, async ({ params }) => {
     const { userId } = params;
     const user = db.participants.find(
       (participant) => participant.userId === userId,
@@ -36,13 +37,12 @@ export const msghandlers = [
   }),
 
   // Fetch user chats
-  http.get("/api/chats/:userId", async ({ params }) => {
-    const { userId } = params;
-    console.log("Mock: Fetching chats for user:", userId);
+  http.get(`${API_URL}/api/all`, async ({ params }) => {
+    console.log("Mock: Fetching chats for user:", "1");
     const chats = db.conversations
-      .filter((chat) => chat.participants.includes(userId))
+      .filter((chat) => chat.participants.includes("1"))
       .map((chat) => {
-        const otherUserId = chat.participants.find((id) => id !== userId);
+        const otherUserId = chat.participants.find((id) => id !== "1");
         const otherUser = db.participants.find(
           (user) => user.userId === otherUserId,
         );
@@ -60,7 +60,7 @@ export const msghandlers = [
   }),
 
   // Fetch messages of a chat
-  http.get("/api/messages/:chatId", async ({ params }) => {
+  http.get(`${API_URL}/api/c/chat/:chatId`, async ({ params }) => {
     const { chatId } = params;
     console.log("Mock: Fetching messages for chat:", chatId);
     const chat = db.conversations.find((chat) => chat.chatId === chatId);
@@ -99,7 +99,7 @@ export const msghandlers = [
   }),
 
   // Create or fetch chat messages
-  http.post("/api/messages", async ({ request }) => {
+  http.post(`${API_URL}/api/messages`, async ({ request }) => {
     const { usersId, myId } = await request.json();
     console.log(`Mock: Chat created for users: ${usersId} and ${myId}`);
     let chat = db.conversations.find(
