@@ -3,7 +3,6 @@ import ChatCard from "./ChatCard";
 import { fetchChats } from "../../services/api/chatServices";
 import { ChatCardInterface } from "./interfaces/Chat.interfaces";
 import { subscribeToChats } from "@services/api/ChatSocket";
-import useChatId from "@context/ChatIdProvider";
 
 const ChatCardsList = ({
   onCardClick,

@@ -26,9 +26,9 @@ export interface ChatCardProps extends ChatCardInterface {
 
 export interface ChatInputProps {
   chatId: string;
-  className?: string;
-  onSendMessage: (message: string) => void;
+  onSendMessage: (message: string | File, type: "text" | "media") => void;
   onTypingMessage: (isTyping: boolean) => void;
+  className?: string;
 }
 
 export interface NetWorkCard {

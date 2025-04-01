@@ -9,6 +9,7 @@ import SignInPage from "./pages/SignIn";
 import ForgotPassword from "./pages/ForgotPassword";
 import UserDetails from "./components/Authentication/UserDetails";
 const Messaging = lazy(() => import("./pages/Messaging"));
+const UserProfile = lazy(() => import("./pages/UserProfile"));
 import Home from "./pages/Home";
 import MyNetwork from "./pages/MyNetworkPage";
 import PostContainer from "./components/Posts/PostContainer";
@@ -47,23 +48,24 @@ function App() {
             />
           </Route>
 
-          <Route element={<ProtectedRoute />}>
-            <Route element={<Layout />}>
-              <Route path="/home" element={<Home />} />
-              <Route path="/my-network" element={<MyNetwork />} />
-              <Route path="/messaging" element={<Messaging />} />
-              <Route path="/change-password" element={<ChangePassword />} />
-              <Route path="/update-email" element={<UpdateEmail />} />
-              <Route path="/update-username" element={<UpdateUsername />} />
-              <Route path="/post">
-                <Route index element={<PostContainer />} />
-                <Route path="create" element={<PostCreate />} />
-                <Route path=":postId/edit" element={<PostEdit />} />
-              </Route>
+          {/*   <Route element={<ProtectedRoute />}> */}
+          <Route element={<Layout />}>
+            <Route path="/home" element={<Home />} />
+            <Route path="/my-network" element={<MyNetwork />} />
+            <Route path="/messaging" element={<Messaging />} />
+            <Route path="/change-password" element={<ChangePassword />} />
+            <Route path="/update-email" element={<UpdateEmail />} />
+            <Route path="/update-username" element={<UpdateUsername />} />
+            <Route path="/in" element={<UserProfile />}></Route>
+            <Route path="/post">
+              <Route index element={<PostContainer />} />
+              <Route path="create" element={<PostCreate />} />
+              <Route path=":postId/edit" element={<PostEdit />} />
             </Route>
-
-            <Route path="/playground" element={<PlayGround />} />
           </Route>
+
+          <Route path="/playground" element={<PlayGround />} />
+          {/* </Route> */}
 
           <Route path="*" element={<Error404 />} />
         </Routes>

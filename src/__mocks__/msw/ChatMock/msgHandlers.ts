@@ -1,20 +1,20 @@
 import { http, HttpResponse } from "msw";
 import db from "./db"; // Import the mock database
-import SERVER_URL from "@services/api/config";
+import { API_URL } from "@services/api/config";
 
 export const msghandlers = [
-  http.get(`${SERVER_URL}/socket.io/`, () => {
+  http.get(`${API_URL}/socket.io/`, () => {
     return new HttpResponse(JSON.stringify({ sid: "mock-socket-id" }), {
       status: 200,
     });
   }),
-  http.post(`${SERVER_URL}/socket.io/`, () => {
+  http.post(`${API_URL}/socket.io/`, () => {
     return new HttpResponse(JSON.stringify({ sid: "mock-socket-id" }), {
       status: 200,
     });
   }),
   // Fetch user's network (friends list)
-  http.get(`${SERVER_URL}/api/Networks/:userId`, async ({ params }) => {
+  http.get(`${API_URL}/api/Networks/:userId`, async ({ params }) => {
     const { userId } = params;
     const user = db.participants.find(
       (participant) => participant.userId === userId,
@@ -37,7 +37,7 @@ export const msghandlers = [
   }),
 
   // Fetch user chats
-  http.get(`${SERVER_URL}/api/all`, async ({ params }) => {
+  http.get(`${API_URL}/api/all`, async ({ params }) => {
     console.log("Mock: Fetching chats for user:", "1");
     const chats = db.conversations
       .filter((chat) => chat.participants.includes("1"))
@@ -60,7 +60,7 @@ export const msghandlers = [
   }),
 
   // Fetch messages of a chat
-  http.get(`${SERVER_URL}/api/c/chat/:chatId`, async ({ params }) => {
+  http.get(`${API_URL}/api/c/chat/:chatId`, async ({ params }) => {
     const { chatId } = params;
     console.log("Mock: Fetching messages for chat:", chatId);
     const chat = db.conversations.find((chat) => chat.chatId === chatId);
@@ -99,7 +99,7 @@ export const msghandlers = [
   }),
 
   // Create or fetch chat messages
-  http.post(`${SERVER_URL}/api/messages`, async ({ request }) => {
+  http.post(`${API_URL}/api/messages`, async ({ request }) => {
     const { usersId, myId } = await request.json();
     console.log(`Mock: Chat created for users: ${usersId} and ${myId}`);
     let chat = db.conversations.find(
