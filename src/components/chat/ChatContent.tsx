@@ -39,10 +39,6 @@ function ChatContent({ className }: { className?: string }) {
       if (usersId.length && !chatId) {
         const data = await createChat(usersId);
         setUsers(data.participants);
-        myData.current = data.participants.find(
-          (part: User) =>
-            part.userId == useAppSelector((state) => state.user.userId),
-        );
         setMessages(data.messages);
         setChatId(data.chatId);
       } else {
@@ -82,11 +78,10 @@ function ChatContent({ className }: { className?: string }) {
   const handleSendMessage = (message: string | File, type: string) => {
     console.log("Sender Id", myData.current?.userId);
     const newMessage: any = {
-      messageId: `${10}-${new Date().getTime()}`,
       time: new Date(),
-      type: type,
-      sendId: myData.current?.userId,
+      senderId: useAppSelector((state) => state.user.userId),
       status: MessageStatus.Sent,
+      seenBy: [useAppSelector((state) => state.user.userId)],
       content: { text: message },
     };
 
@@ -95,11 +90,6 @@ function ChatContent({ className }: { className?: string }) {
     if (chatId) {
       sendMessage(chatId, newMessage, () => {
         console.log("✅ Message delivered");
-        setMessages((prevMsgs) => {
-          prevMsgs.pop();
-          newMessage.status = MessageStatus.Delivered;
-          return [...prevMsgs, newMessage];
-        });
       });
     }
   };
