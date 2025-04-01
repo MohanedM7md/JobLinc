@@ -10,7 +10,6 @@ export const connectToChat = () => {
 
 export const subscribeToMessages = (
   chatId: string,
-  userId: string,
   onMessageReceived: (message: RecievedMessage) => void,
   onMessageRead: () => void,
   onUserTyping: (userId: string) => void,
@@ -18,7 +17,7 @@ export const subscribeToMessages = (
 ) => {
   if (!ChatSocket) return;
 
-  ChatSocket.emit("openChat", chatId, userId);
+  ChatSocket.emit("openChat", chatId);
   ChatSocket.on("receiveMessage", (message: RecievedMessage) => {
     console.log("📩 Received Message:", message);
     onMessageReceived(message);
@@ -47,13 +46,13 @@ export const sendMessage = (
   if (!ChatSocket) return;
   ChatSocket.emit("sendMessage", { ...message, chatId }, callback);
 };
-export const typing = (chatId: string, user: string) => {
+export const typing = (chatId: string) => {
   if (!ChatSocket) return;
-  ChatSocket.emit("messageTyping", chatId, user);
+  ChatSocket.emit("messageTyping", chatId);
 };
-export const stopTyping = (chatId: string, user: string) => {
+export const stopTyping = (chatId: string) => {
   if (!ChatSocket) return;
-  ChatSocket.emit("stopTyping", chatId, user);
+  ChatSocket.emit("stopTyping", chatId);
 };
 export const unsubscribeFromMessages = (chatId: string) => {
   if (!ChatSocket) return;
