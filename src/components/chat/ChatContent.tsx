@@ -13,7 +13,7 @@ import {
   MessageStatus,
 } from "./interfaces/Message.interfaces";
 import { User } from "./interfaces/User.interfaces";
-import { useUser } from "./mockUse";
+
 import { fetchChatData, createChat } from "@services/api/chatServices";
 import useChatid from "@context/ChatIdProvider";
 import useNetworkUserId from "@context/NetworkUserIdProvider";
@@ -24,7 +24,7 @@ function ChatContent({ className }: { className?: string }) {
   const [messages, setMessages] = useState<RecievedMessage[]>([]);
   const { chatId, setChatId } = useChatid();
   const { usersId } = useNetworkUserId();
-  const { user } = useUser();
+
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const [typingUsers, setTypingUsers] = useState<string[]>([]);
   console.log("typing triggers update");
@@ -48,7 +48,6 @@ function ChatContent({ className }: { className?: string }) {
     fetchData();
     subscribeToMessages(
       chatId,
-      user,
       (message) => setMessages((prev) => [...prev, message]),
       () =>
         setMessages((prev) =>
@@ -74,8 +73,7 @@ function ChatContent({ className }: { className?: string }) {
 
   const handleSendMessage = (message: string) => {
     const newMessage: any = {
-      messageId: `${user}-${new Date().getTime()}`,
-      senderId: user,
+      messageId: `${10}-${new Date().getTime()}`,
       time: new Date(),
       status: MessageStatus.Sent,
       content: { text: message },
@@ -95,13 +93,13 @@ function ChatContent({ className }: { className?: string }) {
     }
   };
   const handleTypingMessage = (isTyping: boolean) => {
-    if (!chatId || !user) return;
+    if (!chatId) return;
     switch (isTyping) {
       case true:
-        typing(chatId, user);
+        typing(chatId);
         break;
       case false:
-        stopTyping(chatId, user);
+        stopTyping(chatId);
         break;
     }
   };
