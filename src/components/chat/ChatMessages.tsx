@@ -4,6 +4,7 @@ import MessageBubble from "./MessageBubble";
 import { ChatMessagesProbs } from "./interfaces/Message.interfaces";
 import { RecievedMessage } from "./interfaces/Message.interfaces";
 import { User } from "./interfaces/User.interfaces";
+import { useAppSelector } from "@store/hooks";
 function ChatMessages({ users, messages, className }: ChatMessagesProbs) {
   const lastSeenMessage: Record<string, RecievedMessage | null> = {};
   for (let i = messages.length - 1; i >= 0; i--) {
@@ -28,7 +29,8 @@ function ChatMessages({ users, messages, className }: ChatMessagesProbs) {
           };
           const seenByUsers = users.filter(
             (user) =>
-              lastSeenMessage[user.userId]?.messageId === message.messageId,
+              lastSeenMessage[user.userId]?.messageId === message.messageId &&
+              user.userId !== useAppSelector((state) => state.user.userId),
           );
           return (
             <>
