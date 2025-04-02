@@ -1,11 +1,11 @@
 import { api } from "./api";
-
+import store from "@store/store";
 export const fetchChats = async () => {
   const response = await api.get(
     `/chat/all
 `,
     {
-      params: { userId: "1" },
+      params: { userId: store.getState().user.userId },
     },
   );
   return response.data;
