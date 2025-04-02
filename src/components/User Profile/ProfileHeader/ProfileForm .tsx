@@ -24,9 +24,10 @@ interface ProfileFormProps {
     industry: string;
   };
   onSave: (updatedUser: any) => void;
+  close: (isModalOpen: boolean) => void;
 }
 
-const ProfileForm: React.FC<ProfileFormProps> = ({ user, onSave }) => {
+function ProfileForm({ user, onSave }: ProfileFormProps) {
   const [formData, setFormData] = useState({ ...user });
 
   const handleInputChange = (
@@ -264,15 +265,19 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user, onSave }) => {
           </div>
         ))}
       </div>
-
-      <button
-        type="submit"
-        className="bg-crimsonRed text-warmWhite px-4 py-2 rounded-lg"
-      >
-        Save Changes
-      </button>
+      <div className="flex space-x-2">
+        <button
+          type="submit"
+          className="bg-crimsonRed text-warmWhite px-4 py-2 rounded-lg"
+        >
+          Save Changes
+        </button>
+        <button className="bg-crimsonRed text-warmWhite px-4 py-2 rounded-lg">
+          close
+        </button>
+      </div>
     </form>
   );
-};
+}
 
 export default ProfileForm;
