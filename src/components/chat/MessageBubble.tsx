@@ -12,9 +12,9 @@ function MessageBubble({ message }: { message: MessageBubbleInterface }) {
       data-testid={message.messageId}
       className="flex items-start gap-3 pl-1"
     >
-      <UserProfile.Image
+      <img
         alt={message.sender.firstName}
-        photoUrl={message.sender.profilePicture}
+        src={message.sender.profilePicture}
         className="w-10 h-10 rounded-full flex-shrink-0"
       />
 

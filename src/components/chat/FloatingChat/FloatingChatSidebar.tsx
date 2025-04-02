@@ -64,7 +64,7 @@ function FloatingChatSidebar() {
   return (
     <div
       className={`w-72 shadow-lg rounded-t-lg md:block hidden mr-8 transition-transform duration-300
-        dark:bg-darkGray bg-white cursor-pointer ${isActive ? "translate-y-0" : "translate-y-[calc(100%-56px)]"}`}
+          dark:bg-darkGray bg-white cursor-pointer ${isActive ? "translate-y-0" : "translate-y-[calc(100%-56px)]"}`}
     >
       <header
         className="flex w-full h-14 bg-charcoalWhite dark:bg-darkGray items-center px-4 gap-4 border-b border-gray-300 rounded-t-lg"

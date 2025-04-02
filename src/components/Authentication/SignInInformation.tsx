@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthenticationSignInButton } from "./AuthenticationButtons";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../store/store";
-import { loginUser } from "../../store/userSlice"; // New login thunk
+import { useAppDispatch } from "@store/hooks";
+import { AppDispatch } from "@store/store";
+import { loginUser } from "@store/user/userThunks"; // New login thunk
 import Modal from "./Modal";
-// import store from "../../store/store";
+// import store from "@store/store";
 import Checkbox from "./Utilities/Checkbox";
 import Navigate_Component from "./Utilities/Navigate_Component";
 import PasswordFieldWithMovingLabel from "./Utilities/PasswordFieldWIthMovingLabel";
@@ -67,7 +67,7 @@ function SignInInformation() {
     }
   }, []);
 
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   async function isValidSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -100,6 +100,7 @@ function SignInInformation() {
         const userData = { email: emailText, password: passText };
         // console.log("store data before sign in: " + JSON.stringify(store.getState().user));
         const resultAction = await dispatch(loginUser(userData));
+        console.log("data fetched ", resultAction);
         //retrieveUser(userData.email, userData.password);
         if (loginUser.fulfilled.match(resultAction)) {
           // Setting the access token in the local storage
