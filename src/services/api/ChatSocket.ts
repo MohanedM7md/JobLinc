@@ -71,11 +71,11 @@ export const subscribeToChats = (
   onChatUpdate: (chatCard: ChatCardInterface) => void,
   onNewChat: (chatCard: ChatCardInterface) => void,
 ) => {
-  ChatSocket.on("cardUpdate", (chatCard: ChatCardInterface) => {
+  ChatSocket!.on("cardUpdate", (chatCard: ChatCardInterface) => {
     console.log("📩 Received modified chatCard:", chatCard);
     onChatUpdate(chatCard);
   });
-  ChatSocket.on("newChat", (chatCard: ChatCardInterface) => {
+  ChatSocket!.on("newChat", (chatCard: ChatCardInterface) => {
     console.log("📩 Received new chatCard:", chatCard);
     onNewChat(chatCard);
   });

@@ -15,7 +15,6 @@ function ChatInput({
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    console.log("typing happens", isTyping);
     onTypingMessage(isTyping);
   }, [isTyping]);
 

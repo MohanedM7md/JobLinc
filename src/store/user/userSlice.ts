@@ -50,7 +50,8 @@ const userSlice = createSlice({
           state.status = "SUCCESS";
           state.loggedIn = true;
           localStorage.setItem("refreshToken", userData.refreshToken);
-          saveState(state);
+          console.log(state);
+          saveState(userData);
         } else {
           console.error("User data missing in API response:", action.payload);
         }
@@ -73,7 +74,7 @@ const userSlice = createSlice({
           state.status = "SUCCESS";
           state.loggedIn = true;
           localStorage.setItem("refreshToken", userData.refreshToken);
-          saveState(state);
+          saveState(userData);
         }
       })
       .addCase(registerUser.rejected, (state) => {
@@ -124,7 +125,7 @@ const userSlice = createSlice({
           state.accessToken = userData.accessToken || null;
           state.status = "SUCCESS";
           localStorage.setItem("refreshToken", userData.refreshToken);
-          saveState(state);
+          saveState(userData);
         }
       })
       .addCase(resetPassword.rejected, (state) => {
@@ -202,7 +203,7 @@ const userSlice = createSlice({
           state.accessToken = userData.accessToken;
           state.confirmed = userData.confirmed;
           localStorage.setItem("refreshToken", userData.refreshToken);
-          saveState(state);
+          saveState(userData);
         } else {
           console.error("User data missing in API response:", action.payload);
         }

@@ -18,19 +18,16 @@ import { fetchChatData, createChat } from "@services/api/chatServices";
 import useChatid from "@context/ChatIdProvider";
 import useNetworkUserId from "@context/NetworkUserIdProvider";
 import UserTypingIndicator from "./UserTyping";
-import { useAppSelector } from "@store/hooks";
+import store from "@store/store";
 
 function ChatContent({ className }: { className?: string }) {
   const [users, setUsers] = useState<User[]>([]);
-  const myData = useRef<User | undefined>(undefined);
   const [messages, setMessages] = useState<RecievedMessage[]>([]);
   const { chatId, setChatId } = useChatid();
   const { usersId } = useNetworkUserId();
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const [typingUsers, setTypingUsers] = useState<string[]>([]);
-
-  console.log("typing triggers update");
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -59,9 +56,7 @@ function ChatContent({ className }: { className?: string }) {
         ),
       (userId) =>
         setTypingUsers((prevTypingUsers) => {
-          console.log("Before update:", prevTypingUsers);
           if (!prevTypingUsers.includes(userId)) {
-            console.log("Adding user:", userId);
             return [...prevTypingUsers, userId];
           }
           return prevTypingUsers;
@@ -76,12 +71,11 @@ function ChatContent({ className }: { className?: string }) {
   }, [chatId]);
 
   const handleSendMessage = (message: string | File, type: string) => {
-    console.log("Sender Id", myData.current?.userId);
     const newMessage: any = {
+      senderId: store.getState().user.userId,
       time: new Date(),
-      senderId: useAppSelector((state) => state.user.userId),
       status: MessageStatus.Sent,
-      seenBy: [useAppSelector((state) => state.user.userId)],
+      seenBy: [store.getState().user.userId],
       content: { text: message },
     };
 
