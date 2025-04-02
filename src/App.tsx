@@ -42,10 +42,7 @@ function App() {
               element={<ForgotPassword />}
             />
             <Route path="/reset-password" element={<ResetPassword />} />
-            <Route
-              path="/confirm-email"
-              element={<ConfirmEmail /* email="" token="" */ />}
-            />
+            
           </Route>
 
           {/*   <Route element={<ProtectedRoute />}> */}
@@ -54,6 +51,10 @@ function App() {
             <Route path="/my-network" element={<MyNetwork />} />
             <Route path="/messaging" element={<Messaging />} />
             <Route path="/change-password" element={<ChangePassword />} />
+            <Route
+              path="/confirm-email"
+              element={<ConfirmEmail />}
+            />
             <Route path="/update-email" element={<UpdateEmail />} />
             <Route path="/update-username" element={<UpdateUsername />} />
             <Route path="/in" element={<UserProfile />}></Route>

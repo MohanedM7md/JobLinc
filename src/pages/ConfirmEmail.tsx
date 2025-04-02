@@ -6,6 +6,7 @@ import { AppDispatch } from "@store/store";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Modal from "../components/Authentication/Modal";
+
 interface ConfirmEmailProps {
   email: string;
   token: string;

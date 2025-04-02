@@ -161,6 +161,7 @@ const userSlice = createSlice({
 
           if (userData) {
             state.userId = userData.userId || null;
+            state.loggedIn = true;
             state.status = "SUCCESS";
           } else {
             console.error("User data missing in API response:", action.payload);
