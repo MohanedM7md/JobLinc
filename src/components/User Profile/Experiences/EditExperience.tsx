@@ -1,29 +1,43 @@
 import { useEffect, useState } from "react";
 import { months } from "../../../utils/months";
-import { NewExperience } from "interfaces/userInterfaces";
-import { addExperience } from "@services/api/userProfileServices";
+import { ExperienceInterface } from "interfaces/userInterfaces";
+import { editExperience } from "@services/api/userProfileServices";
 
-export default function AddExperience() {
-  const [position, setPosition] = useState<string>("");
-  const [company, setCompany] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
-  const [startMonth, setStartMonth] = useState<number>(0);
-  const [startYear, setStartYear] = useState<number>(0);
-  const [endMonth, setEndMonth] = useState<number>(0);
-  const [endYear, setendYear] = useState<number>(0);
-  const [dateValidation, setDateValidation] = useState<boolean>(false);
+interface EditExperienceProps extends ExperienceInterface {
+  onClose: () => void;
+}
+
+export default function EditExperience(props: EditExperienceProps) {
+  const [position, setPosition] = useState<string>(props.position);
+  const [company, setCompany] = useState<string>(props.company);
+  const [description, setDescription] = useState<string>(props.description);
+  const [startMonth, setStartMonth] = useState<number>(
+    new Date(props.startDate).getMonth() + 1,
+  );
+  const [startYear, setStartYear] = useState<number>(
+    new Date(props.startDate).getFullYear(),
+  );
+  const [endMonth, setEndMonth] = useState<number>(
+    new Date(props.endDate).getMonth() + 1,
+  );
+  const [endYear, setendYear] = useState<number>(
+    new Date(props.endDate).getFullYear(),
+  );
+  const [dateValidation, setDateValidation] = useState<boolean>(true);
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (dateValidation) {
-      const newExperience: NewExperience = {
+      const editedExperience: ExperienceInterface = {
+        id: props.id,
         position: position,
         company: company,
         description: description,
         startDate: new Date(startYear, startMonth, 1),
         endDate: new Date(endYear, endMonth, 1),
-      }
-      addExperience(newExperience);
+      };
+      editExperience(editedExperience);
+      props.onClose();
     }
   }
 
@@ -157,7 +171,14 @@ export default function AddExperience() {
           type="submit"
           className="bg-crimsonRed text-warmWhite px-4 py-2 rounded-lg cursor-pointer hover:bg-red-700"
         >
-          Add
+          Save
+        </button>
+        <button
+          type="button"
+          onClick={props.onClose}
+          className="bg-gray-500 text-warmWhite px-4 py-2 rounded-lg cursor-pointer hover:bg-gray-700"
+        >
+          Cancel
         </button>
       </div>
     </form>

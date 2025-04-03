@@ -25,6 +25,7 @@ import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AuthRoute from "./components/AuthRoute";
 import ProfileContainer from "./components/User Profile/ProfileContainer";
+import FullExperiences from "./components/User Profile/Experiences/FullExperiences";
 function App() {
   return (
     <>
@@ -58,7 +59,10 @@ function App() {
             <Route path="/update-email" element={<UpdateEmail />} />
             <Route path="/update-username" element={<UpdateUsername />} />
             <Route path="/in" element={<UserProfile />}></Route>
-            <Route path="/profile" element={<ProfileContainer />} />
+            <Route path="/profile" >
+              <Route index element = {<ProfileContainer />} />
+              <Route path=":username/details/experiences" element={<FullExperiences />}/>
+            </Route>
             <Route path="/post">
               <Route index element={<PostContainer />} />
               <Route path="create" element={<PostCreate />} />
