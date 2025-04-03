@@ -44,7 +44,7 @@ function Settings() {
     ];
 
     return (
-        <div className="w-full min-h-screen flex justify-center bg-warmWhite">
+        <div className="w-full min-h-screen flex flex-col justify-between items-center gap-10 bg-warmWhite">
             <SignHeader />
 
             <div className="fixed left-0 bottom-0 top-[90px] w-[350px] flex flex-col bg-white gap-2">
@@ -75,26 +75,28 @@ function Settings() {
             </div>
 
             <div className="ml-[380px] mt-[70px] flex flex-col w-[1000px] gap-6">
-                {settingsComponents[selected]} {/* Render the selected component */}
-
-                <footer className="w-full bottom-0 p-10 flex flex-col justify-center items-center font-semibold">
-                    <div className="flex justify-between gap-5">
-                        <Link className="hover:underline" to="/">Help Center</Link>
-                        <Link className="hover:underline" to="/">Professional Community Policies</Link>
-                        <Link className="hover:underline" to="/">Language</Link>
-                        <Link className="hover:underline" to="/">Privacy Policy</Link>
-                        <Link className="hover:underline" to="/">Accessibility</Link>
-                        <Link className="hover:underline" to="/">Recommendation Transparency</Link>
-                    </div>
-                    <div className="flex justify-between gap-5">
-                        <Link className="hover:underline" to="/">User Agreement</Link>
-                        <Link className="hover:underline" to="/">End User License Agreement</Link>
-                    </div>
-                    <Logo />
-
-
-                </footer>
+                {settingsComponents[selected]} 
             </div>
+
+            <footer className="w-[1000px] ml-[380px] mb-12 flex flex-col justify-center items-center font-semibold">
+                
+                
+                <div className="flex justify-between gap-5">
+                    <Link className="hover:underline" to="/">Help Center</Link>
+                    <Link className="hover:underline" to="/">Professional Community Policies</Link>
+                    <Link className="hover:underline" to="/">Language</Link>
+                    <Link className="hover:underline" to="/">Privacy Policy</Link>
+                    <Link className="hover:underline" to="/">Accessibility</Link>
+                    <Link className="hover:underline" to="/">Recommendation Transparency</Link>
+                </div>
+                <div className="flex justify-between gap-5">
+                    <Link className="hover:underline" to="/">User Agreement</Link>
+                    <Link className="hover:underline" to="/">End User License Agreement</Link>
+                </div>
+                <Logo />
+
+
+            </footer>
 
             
 
