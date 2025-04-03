@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Outlet, Link, useNavigate } from "react-router-dom";
-import SignMain from "../components/Authentication/SignMain";
+import SignMain from "../components/Authentication/Headers/SignMain";
 import {
   AuthenticationGoogleButton,
   AuthenticationMicrosoftButton,
@@ -19,7 +19,7 @@ import {
   ChevronUpIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
-} from "lucide-react"; // Import Heroicons
+} from "lucide-react";
 import Logo from "../components/Logo";
 
 function LandPage() {

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { AuthenticationSignInButton } from "./AuthenticationButtons";
-import SignHeader from "./SignHeader";
+import SignHeader from "./Headers/SignHeader";
 import Modal from "./Modal";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";

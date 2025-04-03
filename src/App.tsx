@@ -24,6 +24,7 @@ import Error404 from "@pages/Eror404";
 import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AuthRoute from "./components/AuthRoute";
+import Settings from "@pages/Settings/Settings";
 function App() {
   return (
     <>
@@ -55,6 +56,7 @@ function App() {
               path="/confirm-email"
               element={<ConfirmEmail />}
             />
+            <Route path="/settings" element={<Settings />}></Route>
             <Route path="/update-email" element={<UpdateEmail />} />
             <Route path="/update-username" element={<UpdateUsername />} />
             <Route path="/in" element={<UserProfile />}></Route>
