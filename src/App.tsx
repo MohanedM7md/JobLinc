@@ -24,6 +24,7 @@ import Error404 from "@pages/Eror404";
 import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AuthRoute from "./components/AuthRoute";
+import ProfileContainer from "./components/User Profile/ProfileContainer";
 function App() {
   return (
     <>
@@ -57,6 +58,7 @@ function App() {
             <Route path="/update-email" element={<UpdateEmail />} />
             <Route path="/update-username" element={<UpdateUsername />} />
             <Route path="/in" element={<UserProfile />}></Route>
+            <Route path="/profile" element={<ProfileContainer />} />
             <Route path="/post">
               <Route index element={<PostContainer />} />
               <Route path="create" element={<PostCreate />} />
