@@ -13,7 +13,7 @@ export const connectSocket = (namespace: string) => {
   });
 
   socket.on("connect", () => {
-    socket.emit("userId", store.getState().user.userId);
+    
     console.log(`Connected to ${namespace}`);
   });
 
