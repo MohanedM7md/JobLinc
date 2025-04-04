@@ -1,4 +1,3 @@
-import { getMe } from "@services/api/userProfileServices";
 import { ExperienceInterface } from "interfaces/userInterfaces";
 import { useState } from "react";
 import UserExperience from "./UserExperience";

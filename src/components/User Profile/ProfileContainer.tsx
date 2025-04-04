@@ -42,7 +42,15 @@ function ProfileContainer() {
             >
               add
             </button>
-            <button className="material-icons font-medium text-2xl p-2 rounded-full hover:bg-gray-600">
+            <button
+              onClick={() =>
+                navigate(
+                  `/profile/${userData?.firstname}-${userData?.lastname}/details/experiences`,
+                  { state: { experiences: userData?.experience ?? [] } },
+                )
+              }
+              className="material-icons font-medium text-2xl p-2 rounded-full hover:bg-gray-600"
+            >
               edit
             </button>
           </div>
@@ -61,7 +69,12 @@ function ProfileContainer() {
             })}
             {userData.experience.length > 2 && (
               <button
-                onClick={() => navigate(`/profile/${userData.firstname}-${userData.lastname}/details/experiences`, {state: {experiences: userData.experience}})}
+                onClick={() =>
+                  navigate(
+                    `/profile/${userData.firstname}-${userData.lastname}/details/experiences`,
+                    { state: { experiences: userData.experience } },
+                  )
+                }
                 className="mt-2 px-4 py-1 border-1 border-crimsonRed rounded-3xl hover:bg-softRosewood font-medium"
               >
                 Show all {userData.experience.length} experiences
