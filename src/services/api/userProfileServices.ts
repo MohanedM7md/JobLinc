@@ -21,8 +21,7 @@ export async function getExperience() {
 
 export async function addExperience(experience: NewExperience) {
   try {
-    const response = await api.post("user/experience/add", experience);
-    console.log(response.data);
+    await api.post("user/experience/add", experience);
   } catch (error) {
     console.error("Error adding new experience:", error);
   }
@@ -30,9 +29,7 @@ export async function addExperience(experience: NewExperience) {
 
 export async function editExperience(experience: ExperienceInterface) {
   try {
-    console.log("Sent:", experience);
-    const response = await api.put(`user/experience/${experience.id}`,experience);
-    console.log(response.data);
+    await api.put(`user/experience/${experience.id}`,experience);
   } catch (error) {
     console.error("Error editing experience:", error);
   }
