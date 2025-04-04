@@ -1,4 +1,4 @@
-import { getMe } from "@services/api/userProfileServices";
+import { getMe, getExperience } from "@services/api/userProfileServices";
 import UserExperience from "./Experiences/UserExperience";
 import ProfileHeader from "./ProfileHeader/ProfileHeader";
 import { useEffect, useState } from "react";
@@ -18,6 +18,18 @@ function ProfileContainer() {
       console.log(data);
     });
   }, []);
+
+  async function updateExperiences() {
+    const updatedExperiences = await getExperience();
+    setUserData((prevData) =>
+      prevData
+        ? {
+            ...prevData,
+            experience: updatedExperiences,
+          }
+        : undefined
+    );
+  };
 
   return (
     <div className="profile-container p-4">
@@ -99,7 +111,11 @@ function ProfileContainer() {
         isOpen={addExperienceModal}
         onClose={() => setAddExperienceModal(false)}
       >
-        <AddExperience />
+        <AddExperience
+          key={`Adding Experience to ${userData?.firstname} ${userData?.lastname}`}
+          onUpdate={updateExperiences}
+          onClose={() => setAddExperienceModal(false)}
+        />
       </Modal>
     </div>
   );

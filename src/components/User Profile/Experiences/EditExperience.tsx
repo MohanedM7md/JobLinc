@@ -5,6 +5,7 @@ import { editExperience } from "@services/api/userProfileServices";
 
 interface EditExperienceProps extends ExperienceInterface {
   onClose: () => void;
+  onUpdate: () => void;
 }
 
 export default function EditExperience(props: EditExperienceProps) {
@@ -25,7 +26,7 @@ export default function EditExperience(props: EditExperienceProps) {
   );
   const [dateValidation, setDateValidation] = useState<boolean>(true);
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (dateValidation) {
       const editedExperience: ExperienceInterface = {
@@ -36,7 +37,8 @@ export default function EditExperience(props: EditExperienceProps) {
         startDate: new Date(startYear, startMonth, 1),
         endDate: new Date(endYear, endMonth, 1),
       };
-      editExperience(editedExperience);
+      await editExperience(editedExperience);
+      props.onUpdate();
       props.onClose();
     }
   }
@@ -61,7 +63,10 @@ export default function EditExperience(props: EditExperienceProps) {
   }, [startMonth, startYear, endMonth, endYear]);
 
   return (
-    <form onSubmit={handleSubmit} className="p-4 bg-lightGray rounded-lg text-charcoalBlack">
+    <form
+      onSubmit={handleSubmit}
+      className="p-4 bg-lightGray rounded-lg text-charcoalBlack"
+    >
       <div className="mb-4">
         <label className="text-sm font-medium text-charcoalBlack">Title</label>
         <input

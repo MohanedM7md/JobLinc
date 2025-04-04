@@ -3,7 +3,13 @@ import { months } from "../../../utils/months";
 import { NewExperience } from "interfaces/userInterfaces";
 import { addExperience } from "@services/api/userProfileServices";
 
-export default function AddExperience() {
+export default function AddExperience({
+  onUpdate,
+  onClose,
+}: {
+  onUpdate: () => void;
+  onClose: () => void;
+}) {
   const [position, setPosition] = useState<string>("");
   const [company, setCompany] = useState<string>("");
   const [description, setDescription] = useState<string>("");
@@ -22,8 +28,11 @@ export default function AddExperience() {
         description: description,
         startDate: new Date(startYear, startMonth, 1),
         endDate: new Date(endYear, endMonth, 1),
-      }
-      addExperience(newExperience);
+      };
+      addExperience(newExperience).then(() => {
+        onUpdate();
+        onClose();
+      });
     }
   }
 
@@ -47,7 +56,10 @@ export default function AddExperience() {
   }, [startMonth, startYear, endMonth, endYear]);
 
   return (
-    <form onSubmit={handleSubmit} className="p-4 bg-lightGray rounded-lg text-charcoalBlack">
+    <form
+      onSubmit={handleSubmit}
+      className="p-4 bg-lightGray rounded-lg text-charcoalBlack"
+    >
       <div className="mb-4">
         <label className="text-sm font-medium text-charcoalBlack">Title</label>
         <input

@@ -6,6 +6,7 @@ import "material-icons";
 import { useLocation } from "react-router-dom";
 import AddExperience from "./AddExperience";
 import Modal from "./../../Authentication/Modal";
+import { getExperience } from "@services/api/userProfileServices";
 
 export default function FullExperiences() {
   const location = useLocation();
@@ -15,6 +16,11 @@ export default function FullExperiences() {
   const [addExperienceModal, setAddExperienceModal] = useState<boolean>(false);
   const [editExperienceData, setEditExperienceData] =
     useState<ExperienceInterface | null>(null);
+
+  async function updateExperiences(){
+    const updatedExperiences = await getExperience();
+    setExperiences(updatedExperiences);
+  };
 
   return (
     <div className="bg-darkGray my-2 p-4 rounded-lg shadow-md relative text-white">
@@ -49,6 +55,7 @@ export default function FullExperiences() {
           <EditExperience
             {...editExperienceData}
             onClose={() => setEditExperienceData(null)}
+            onUpdate={updateExperiences}
           />
         )}
       </Modal>
@@ -56,7 +63,10 @@ export default function FullExperiences() {
         isOpen={addExperienceModal}
         onClose={() => setAddExperienceModal(false)}
       >
-        <AddExperience />
+        <AddExperience
+          onUpdate={updateExperiences}
+          onClose={() => setAddExperienceModal(false)}
+        />
       </Modal>
     </div>
   );
