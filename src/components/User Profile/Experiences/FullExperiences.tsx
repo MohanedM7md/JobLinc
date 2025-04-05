@@ -6,7 +6,11 @@ import "material-icons";
 import { useLocation } from "react-router-dom";
 import AddExperience from "./AddExperience";
 import Modal from "./../../Authentication/Modal";
-import { getExperience } from "@services/api/userProfileServices";
+import {
+  getExperience,
+  deleteExperience,
+} from "@services/api/userProfileServices";
+import ConfirmAction from "../../utils/ConfirmAction";
 
 export default function FullExperiences() {
   const location = useLocation();
@@ -16,11 +20,19 @@ export default function FullExperiences() {
   const [addExperienceModal, setAddExperienceModal] = useState<boolean>(false);
   const [editExperienceData, setEditExperienceData] =
     useState<ExperienceInterface | null>(null);
+  const [confirmDeleteData, setConfirmDeleteData] = useState<string | null>(
+    null,
+  );
 
-  async function updateExperiences(){
+  async function updateExperiences() {
     const updatedExperiences = await getExperience();
     setExperiences(updatedExperiences);
-  };
+  }
+
+  async function handleDeleteExperience(experienceId: string) {
+    await deleteExperience(experienceId);
+    updateExperiences();
+  }
 
   return (
     <div className="bg-darkGray my-2 p-4 rounded-lg shadow-md relative text-white">
@@ -42,11 +54,26 @@ export default function FullExperiences() {
           >
             edit
           </button>
+          <button
+            className="material-icons-outlined absolute top-0 right-15 text-crimsonRed text-xl p-1 rounded-full hover:bg-gray-600 mr-1"
+            onClick={() => setConfirmDeleteData(exp.id)}
+          >
+            delete
+          </button>
           {index < experiences.length - 1 && (
-            <div className="border-b border-gray-500 w-3/4 mx-auto mt-4"></div>
+            <div className="border-b border-gray-500 w-11/12 mx-auto mt-2 mb-3"></div>
           )}
         </div>
       ))}
+      {confirmDeleteData !== null && (
+        <ConfirmAction
+          action={() => {
+            handleDeleteExperience(confirmDeleteData);
+            setConfirmDeleteData(null);
+          }}
+          onClose={() => setConfirmDeleteData(null)}
+        />
+      )}
       <Modal
         isOpen={!!editExperienceData}
         onClose={() => setEditExperienceData(null)}

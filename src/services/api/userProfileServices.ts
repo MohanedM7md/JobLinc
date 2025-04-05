@@ -34,3 +34,11 @@ export async function editExperience(experience: ExperienceInterface) {
     console.error("Error editing experience:", error);
   }
 }
+
+export async function deleteExperience(experienceId: string) {
+  try {
+    await api.delete(`user/experience/${experienceId}`);
+  } catch (error) {
+    console.error("Error deleting experience:", error);
+  }
+}
