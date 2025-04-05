@@ -111,7 +111,7 @@ function ProfileContainer() {
                   onClick={() =>
                     navigate(`/profile/${userData.userId}/details/experiences`)
                   }
-                  className="mt-2 px-4 py-1 border-1 border-crimsonRed rounded-3xl hover:bg-softRosewood font-medium"
+                  className="mt-2 px-4 py-1.5 border-1 border-crimsonRed rounded-3xl hover:bg-softRosewood font-medium"
                 >
                   Show all {userData.experience.length} experiences
                 </button>
@@ -124,7 +124,7 @@ function ProfileContainer() {
               </h2>
               <button
                 onClick={() => setAddExperienceModal(true)}
-                className="cursor-pointer mt-2 px-4 py-1 border-1 border-crimsonRed rounded-3xl hover:bg-softRosewood font-medium"
+                className="cursor-pointer mt-2 px-4 py-1.5 border-1 border-crimsonRed rounded-3xl hover:bg-softRosewood font-medium"
               >
                 Add experience
               </button>
@@ -168,7 +168,7 @@ function ProfileContainer() {
                   onClick={() =>
                     navigate(`/profile/${userData.userId}/details/certificates`)
                   }
-                  className="mt-2 px-4 py-1 border-1 border-crimsonRed rounded-3xl hover:bg-softRosewood font-medium"
+                  className="mt-2 px-4 py-1.5 border-1 border-crimsonRed rounded-3xl hover:bg-softRosewood font-medium"
                 >
                   Show all {userData.certifications.length} certificates
                 </button>
@@ -181,7 +181,7 @@ function ProfileContainer() {
               </h2>
               <button
                 onClick={() => setAddCertificateModal(true)}
-                className="cursor-pointer mt-2 px-4 py-1 border-1 border-crimsonRed rounded-3xl hover:bg-softRosewood font-medium"
+                className="cursor-pointer mt-2 px-4 py-1.5 border-1 border-crimsonRed rounded-3xl hover:bg-softRosewood font-medium"
               >
                 Add certificate
               </button>
