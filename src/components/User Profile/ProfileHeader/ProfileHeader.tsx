@@ -4,6 +4,7 @@ import Modal from "../../Authentication/Modal";
 import { useState } from "react";
 import { ProfileUpdateInterface } from "interfaces/userInterfaces";
 import { updateMe } from "@services/api/userProfileServices";
+import EditProfilePicture from "./EditProfilePicture";
 
 interface ProfileProps {
   firstname: string;
@@ -19,6 +20,8 @@ interface ProfileProps {
 
 function ProfileHeader(props: ProfileProps) {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isEditPictureModalOpen, setIsEditPictureModalOpen] =
+    useState<boolean>(false);
 
   async function handleSave(updatedUser: ProfileUpdateInterface) {
     await updateMe(updatedUser);
@@ -42,7 +45,10 @@ function ProfileHeader(props: ProfileProps) {
             className="absolute w-full h-full inset-0 opacity-0 cursor-pointer z-10"
           />
         </div>
-        <div className="absolute -bottom-16 left-4 w-32 h-32">
+        <div
+          className="absolute -bottom-16 left-4 w-32 h-32 cursor-pointer"
+          onClick={() => setIsEditPictureModalOpen(true)}
+        >
           <img
             src={
               props.profilePicture === ""
@@ -51,11 +57,6 @@ function ProfileHeader(props: ProfileProps) {
             }
             alt="Profile"
             className="w-32 h-32 object-cover rounded-full border-4 border-warmWhite shadow-lg"
-          />
-          <input
-            type="file"
-            accept="image/*"
-            className="absolute inset-0 opacity-0 cursor-pointer"
           />
         </div>
       </div>
@@ -70,7 +71,9 @@ function ProfileHeader(props: ProfileProps) {
             <p className="text-mutedSilver">
               {props.city}, {props.country}
             </p>
-            <span className="text-crimsonRed font-medium cursor-pointer ml-2">Contant Info</span>
+            <span className="text-crimsonRed font-medium cursor-pointer ml-2">
+              Contant Info
+            </span>
           </div>
         </div>
         <div
@@ -108,6 +111,13 @@ function ProfileHeader(props: ProfileProps) {
           }}
           onSave={handleSave}
         />
+      </Modal>
+
+      <Modal
+        isOpen={isEditPictureModalOpen}
+        onClose={() => setIsEditPictureModalOpen(false)}
+      >
+        <EditProfilePicture profilePicture={props.profilePicture} />
       </Modal>
     </div>
   );
