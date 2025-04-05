@@ -22,16 +22,16 @@ export default function FullExperiences() {
     null,
   );
 
+   useEffect(() => {
+     updateExperiences();
+   }, [userId]);
+
   async function updateExperiences() {
     if (userId) {
       const updatedExperiences = await getExperience();
       setExperiences(updatedExperiences);
     }
   }
-
-  useEffect(() => {
-    updateExperiences();
-  }, [userId]);
 
   async function handleDeleteExperience(experienceId: string) {
     await deleteExperience(experienceId);

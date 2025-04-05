@@ -16,7 +16,6 @@ function ProfileHeader(props: ProfileProps) {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const handleSave = (updatedUser: any) => {
-    // Handle saving the updated user info
     console.log(updatedUser);
     setIsModalOpen(false);
   };
@@ -33,17 +32,23 @@ function ProfileHeader(props: ProfileProps) {
           <Camera />
           <input
             type="file"
+            accept="image/*"
             className="absolute w-full h-full inset-0 opacity-0 cursor-pointer z-10"
           />
         </div>
         <div className="absolute -bottom-16 left-4 w-32 h-32">
           <img
-            src={props.profilePicture}
+            src={
+              props.profilePicture === ""
+                ? "https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg"
+                : props.profilePicture
+            }
             alt="Profile"
             className="w-32 h-32 object-cover rounded-full border-4 border-warmWhite shadow-lg"
           />
           <input
             type="file"
+            accept="image/*"
             className="absolute inset-0 opacity-0 cursor-pointer"
           />
         </div>

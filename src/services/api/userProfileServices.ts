@@ -1,4 +1,9 @@
-import { ExperienceInterface, NewExperience } from "interfaces/userInterfaces";
+import {
+  CertificateInterface,
+  ExperienceInterface,
+  NewCertificate,
+  NewExperience,
+} from "interfaces/userInterfaces";
 import { api } from "./api";
 
 export async function getMe() {
@@ -29,7 +34,7 @@ export async function addExperience(experience: NewExperience) {
 
 export async function editExperience(experience: ExperienceInterface) {
   try {
-    await api.put(`user/experience/${experience.id}`,experience);
+    await api.put(`user/experience/${experience.id}`, experience);
   } catch (error) {
     console.error("Error editing experience:", error);
   }
@@ -40,5 +45,38 @@ export async function deleteExperience(experienceId: string) {
     await api.delete(`user/experience/${experienceId}`);
   } catch (error) {
     console.error("Error deleting experience:", error);
+  }
+}
+
+export async function getCertificate() {
+  try {
+    const response = await api.get("user/certificate");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching certificate data:", error);
+  }
+}
+
+export async function addCertificate(certificate: NewCertificate) {
+  try {
+    await api.post("user/certificate/add", certificate);
+  } catch (error) {
+    console.error("Error adding new certificate:", error);
+  }
+}
+
+export async function editCertificate(certificate: CertificateInterface) {
+  try {
+    await api.put(`user/certificate/${certificate.id}`, certificate);
+  } catch (error) {
+    console.error("Error editing certificate:", error);
+  }
+}
+
+export async function deleteCertificate(certificateId: string) {
+  try {
+    await api.delete(`user/certificate/${certificateId}`);
+  } catch (error) {
+    console.error("Error deleting certificate:", error);
   }
 }

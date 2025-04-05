@@ -1,50 +1,56 @@
-import { useEffect, useState } from "react";
-import { months } from "../../../utils/months";
-import { NewExperience } from "interfaces/userInterfaces";
-import { addExperience } from "@services/api/userProfileServices";
+import { useState, useEffect } from "react";
+import { CertificateInterface } from "interfaces/userInterfaces";
+import { editCertificate } from "@services/api/userProfileServices";
+import { months } from "@utils/months";
 
-interface AddExperienceProps {
-  onUpdate: () => void;
+interface EditCertificateProps extends CertificateInterface {
   onClose: () => void;
+  onUpdate: () => void;
 }
 
-export default function AddExperience(props: AddExperienceProps) {
-  const [position, setPosition] = useState<string>("");
-  const [company, setCompany] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
-  const [startMonth, setStartMonth] = useState<number>(0);
-  const [startYear, setStartYear] = useState<number>(0);
-  const [endMonth, setEndMonth] = useState<number>(0);
-  const [endYear, setendYear] = useState<number>(0);
-  const [dateValidation, setDateValidation] = useState<boolean>(false);
+export default function EditCertificate(props: EditCertificateProps) {
+  const [name, setName] = useState<string>(props.name);
+  const [organization, setOrganization] = useState<string>(props.organization);
+  const [issueMonth, setIssueMonth] = useState<number>(
+    new Date(props.issueDate).getMonth() + 1,
+  );
+  const [issueYear, setIssueYear] = useState<number>(
+    new Date(props.issueDate).getFullYear(),
+  );
+  const [expirationMonth, setExpirationMonth] = useState<number>(
+    new Date(props.expirationDate).getMonth() + 1,
+  );
+  const [expirationYear, setExpirationYear] = useState<number>(
+    new Date(props.expirationDate).getFullYear(),
+  );
+  const [dateValidation, setDateValidation] = useState<boolean>(true);
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (dateValidation) {
-      const newExperience: NewExperience = {
-        position: position,
-        company: company,
-        description: description,
-        startDate: new Date(startYear, startMonth, 1),
-        endDate: new Date(endYear, endMonth, 1),
+      const editedCertificate: CertificateInterface = {
+        id: props.id,
+        name,
+        organization,
+        issueDate: new Date(issueYear, issueMonth - 1, 1),
+        expirationDate: new Date(expirationYear, expirationMonth - 1, 1),
       };
-      addExperience(newExperience).then(() => {
-        props.onUpdate();
-        props.onClose();
-      });
+      await editCertificate(editedCertificate);
+      props.onUpdate();
+      props.onClose();
     }
   }
 
   useEffect(() => {
     if (
-      startMonth !== 0 &&
-      startYear !== 0 &&
-      endMonth !== 0 &&
-      endYear !== 0
+      issueMonth !== 0 &&
+      issueYear !== 0 &&
+      expirationMonth !== 0 &&
+      expirationYear !== 0
     ) {
-      if (startYear > endYear) {
+      if (issueYear > expirationYear) {
         setDateValidation(false);
-      } else if (startYear === endYear && startMonth > startYear) {
+      } else if (issueYear === expirationYear && issueMonth > expirationMonth) {
         setDateValidation(false);
       } else {
         setDateValidation(true);
@@ -52,7 +58,7 @@ export default function AddExperience(props: AddExperienceProps) {
     } else {
       setDateValidation(false);
     }
-  }, [startMonth, startYear, endMonth, endYear]);
+  }, [issueMonth, issueYear, expirationMonth, expirationYear]);
 
   return (
     <form
@@ -60,37 +66,35 @@ export default function AddExperience(props: AddExperienceProps) {
       className="p-4 bg-lightGray rounded-lg text-charcoalBlack"
     >
       <div className="mb-4">
-        <label className="text-sm font-medium text-charcoalBlack">Title</label>
+        <label className="text-sm font-medium text-charcoalBlack">Name</label>
         <input
           type="text"
-          name="title"
-          value={position}
-          onChange={(e) => setPosition(e.target.value)}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
           className="w-full px-2 py-1 border rounded-lg"
           required
         />
       </div>
       <div className="mb-4">
         <label className="text-sm font-medium text-charcoalBlack">
-          Company
+          Organization
         </label>
         <input
           type="text"
-          name="company"
-          value={company}
-          onChange={(e) => setCompany(e.target.value)}
+          value={organization}
+          onChange={(e) => setOrganization(e.target.value)}
           className="w-full px-2 py-1 border rounded-lg"
           required
         />
       </div>
       <div className="mb-4">
         <label className="text-sm font-medium text-charcoalBlack">
-          Start Date
+          Issue Date
         </label>
         <div className="flex gap-2">
           <select
-            value={startMonth}
-            onChange={(e) => setStartMonth(Number(e.target.value))}
+            value={issueMonth}
+            onChange={(e) => setIssueMonth(Number(e.target.value))}
             className="w-1/2 px-2 py-1 border rounded-lg"
           >
             <option value={0}>Month</option>
@@ -101,8 +105,8 @@ export default function AddExperience(props: AddExperienceProps) {
             ))}
           </select>
           <select
-            value={startYear}
-            onChange={(e) => setStartYear(Number(e.target.value))}
+            value={issueYear}
+            onChange={(e) => setIssueYear(Number(e.target.value))}
             className="w-1/2 px-2 py-1 border rounded-lg"
           >
             <option value={0}>Year</option>
@@ -119,13 +123,14 @@ export default function AddExperience(props: AddExperienceProps) {
       </div>
       <div className="mb-4">
         <label className="text-sm font-medium text-charcoalBlack">
-          End Date
+          Expiration Date
         </label>
         <div className="flex gap-2">
           <select
-            value={endMonth}
-            onChange={(e) => setEndMonth(Number(e.target.value))}
+            value={expirationMonth}
+            onChange={(e) => setExpirationMonth(Number(e.target.value))}
             className="w-1/2 px-2 py-1 border rounded-lg"
+            required
           >
             <option value={0}>Month</option>
             {months.map((month, index) => (
@@ -135,9 +140,10 @@ export default function AddExperience(props: AddExperienceProps) {
             ))}
           </select>
           <select
-            value={endYear}
-            onChange={(e) => setendYear(Number(e.target.value))}
+            value={expirationYear}
+            onChange={(e) => setExpirationYear(Number(e.target.value))}
             className="w-1/2 px-2 py-1 border rounded-lg"
+            required
           >
             <option value={0}>Year</option>
             {Array.from(
@@ -150,25 +156,13 @@ export default function AddExperience(props: AddExperienceProps) {
             ))}
           </select>
         </div>
-      </div>
-      <div className="mb-4">
-        <label className="text-sm font-medium text-charcoalBlack">
-          Description
-        </label>
-        <textarea
-          name="headline"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          className="w-full px-2 py-1 border rounded-lg"
-          rows={4}
-        />
       </div>
       <div className="flex space-x-2">
         <button
           type="submit"
           className="bg-crimsonRed text-warmWhite px-4 py-2 rounded-lg cursor-pointer hover:bg-red-700"
         >
-          Add
+          Save
         </button>
       </div>
     </form>

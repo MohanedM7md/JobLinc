@@ -1,6 +1,6 @@
 import { PostInterface } from "./postInterfaces";
 
-export interface UserProfile {
+export interface ProfileInterface {
   userId: string;
   firstname: string;
   lastname: string;
@@ -21,7 +21,7 @@ export interface UserProfile {
   skills: string[];
   education: EducationInterface[];
   experience: ExperienceInterface[];
-  certificates: CertificateInterface[];
+  certifications: CertificateInterface[];
 }
 
 export interface EducationInterface {
@@ -50,4 +50,17 @@ export interface NewExperience {
   description: string;
 }
 
-export interface CertificateInterface {}
+export interface CertificateInterface {
+  id: string;
+  name: string;
+  organization: string;
+  issueDate: Date;
+  expirationDate: Date;
+}
+
+export interface NewCertificate {
+  name: string;
+  organization: string;
+  issueDate: Date;
+  expirationDate: Date;
+}

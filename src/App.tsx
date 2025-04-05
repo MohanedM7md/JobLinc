@@ -26,6 +26,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import AuthRoute from "./components/AuthRoute";
 import ProfileContainer from "./components/User Profile/ProfileContainer";
 import FullExperiences from "./components/User Profile/Experiences/FullExperiences";
+import FullCertificates from "./components/User Profile/Certificates/FullCertificates";
 function App() {
   return (
     <>
@@ -64,6 +65,10 @@ function App() {
               <Route
                 path=":userId/details/experiences"
                 element={<FullExperiences />}
+              />
+              <Route
+                path=":userId/details/certificates"
+                element={<FullCertificates />}
               />
             </Route>
             <Route path="/post">
