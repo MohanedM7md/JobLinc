@@ -59,9 +59,12 @@ function App() {
             <Route path="/update-email" element={<UpdateEmail />} />
             <Route path="/update-username" element={<UpdateUsername />} />
             <Route path="/in" element={<UserProfile />}></Route>
-            <Route path="/profile" >
-              <Route index element = {<ProfileContainer />} />
-              <Route path=":username/details/experiences" element={<FullExperiences />}/>
+            <Route path="/profile">
+              <Route index element={<ProfileContainer />} />
+              <Route
+                path=":userId/details/experiences"
+                element={<FullExperiences />}
+              />
             </Route>
             <Route path="/post">
               <Route index element={<PostContainer />} />

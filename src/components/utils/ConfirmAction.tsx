@@ -21,12 +21,6 @@ export default function ConfirmAction(props: Action) {
           >
             Confirm
           </button>
-          <button
-            className="bg-gray-500 text-warmWhite px-4 py-2 rounded-lg cursor-pointer hover:bg-gray-700"
-            onClick={props.onClose}
-          >
-            Cancel
-          </button>
         </div>
       </div>
     </Modal>

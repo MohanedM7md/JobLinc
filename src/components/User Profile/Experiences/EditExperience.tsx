@@ -178,13 +178,6 @@ export default function EditExperience(props: EditExperienceProps) {
         >
           Save
         </button>
-        <button
-          type="button"
-          onClick={props.onClose}
-          className="bg-gray-500 text-warmWhite px-4 py-2 rounded-lg cursor-pointer hover:bg-gray-700"
-        >
-          Cancel
-        </button>
       </div>
     </form>
   );

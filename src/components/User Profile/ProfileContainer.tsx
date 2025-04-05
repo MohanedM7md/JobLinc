@@ -27,9 +27,9 @@ function ProfileContainer() {
             ...prevData,
             experience: updatedExperiences,
           }
-        : undefined
+        : undefined,
     );
-  };
+  }
 
   return (
     <div className="profile-container p-4">
@@ -56,10 +56,7 @@ function ProfileContainer() {
             </button>
             <button
               onClick={() =>
-                navigate(
-                  `/profile/${userData?.firstname}-${userData?.lastname}/details/experiences`,
-                  { state: { experiences: userData?.experience ?? [] } },
-                )
+                navigate(`/profile/${userData?.userId}/details/experiences`)
               }
               className="material-icons font-medium text-2xl p-2 rounded-full hover:bg-gray-600"
             >
@@ -82,10 +79,7 @@ function ProfileContainer() {
             {userData.experience.length > 2 && (
               <button
                 onClick={() =>
-                  navigate(
-                    `/profile/${userData.firstname}-${userData.lastname}/details/experiences`,
-                    { state: { experiences: userData.experience } },
-                  )
+                  navigate(`/profile/${userData.userId}/details/experiences`)
                 }
                 className="mt-2 px-4 py-1 border-1 border-crimsonRed rounded-3xl hover:bg-softRosewood font-medium"
               >

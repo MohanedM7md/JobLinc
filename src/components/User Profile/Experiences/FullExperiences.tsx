@@ -1,9 +1,9 @@
 import { ExperienceInterface } from "interfaces/userInterfaces";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import UserExperience from "./UserExperience";
 import EditExperience from "./EditExperience";
 import "material-icons";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import AddExperience from "./AddExperience";
 import Modal from "./../../Authentication/Modal";
 import {
@@ -13,10 +13,8 @@ import {
 import ConfirmAction from "../../utils/ConfirmAction";
 
 export default function FullExperiences() {
-  const location = useLocation();
-  const [experiences, setExperiences] = useState<ExperienceInterface[]>(
-    location.state.experiences,
-  );
+  const { userId } = useParams();
+  const [experiences, setExperiences] = useState<ExperienceInterface[]>([]);
   const [addExperienceModal, setAddExperienceModal] = useState<boolean>(false);
   const [editExperienceData, setEditExperienceData] =
     useState<ExperienceInterface | null>(null);
@@ -25,9 +23,15 @@ export default function FullExperiences() {
   );
 
   async function updateExperiences() {
-    const updatedExperiences = await getExperience();
-    setExperiences(updatedExperiences);
+    if (userId) {
+      const updatedExperiences = await getExperience();
+      setExperiences(updatedExperiences);
+    }
   }
+
+  useEffect(() => {
+    updateExperiences();
+  }, [userId]);
 
   async function handleDeleteExperience(experienceId: string) {
     await deleteExperience(experienceId);
