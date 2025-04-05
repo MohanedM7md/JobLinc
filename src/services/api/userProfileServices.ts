@@ -3,6 +3,7 @@ import {
   ExperienceInterface,
   NewCertificate,
   NewExperience,
+  ProfileUpdateInterface,
 } from "interfaces/userInterfaces";
 import { api } from "./api";
 
@@ -12,6 +13,15 @@ export async function getMe() {
     return response.data;
   } catch (error) {
     console.error("Error fetching user data:", error);
+  }
+}
+
+export async function updateMe(newProfile: ProfileUpdateInterface) {
+  try {
+    await api.put("user/edit/personal-info", newProfile);
+  }
+  catch (error) {
+    console.error("Error updating user data:", error);
   }
 }
 

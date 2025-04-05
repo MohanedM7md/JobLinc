@@ -24,6 +24,17 @@ export interface ProfileInterface {
   certifications: CertificateInterface[];
 }
 
+export interface ProfileUpdateInterface {
+  firstname: string;
+  lastname: string;
+  headline: string;
+  country: string;
+  city: string;
+  phoneNumber:string;
+  profilePicture: string;
+  biography: string;
+}
+
 export interface EducationInterface {
   educationId: string;
   school: string;

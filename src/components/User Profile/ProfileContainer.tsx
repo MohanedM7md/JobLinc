@@ -28,6 +28,11 @@ function ProfileContainer() {
     });
   }, []);
 
+  async function updateUser() {
+    const updatedUser = await getMe();
+    setUserData(updatedUser);
+  }
+
   async function updateExperiences() {
     const updatedExperiences = await getExperience();
     setUserData((prevData) =>
@@ -63,6 +68,9 @@ function ProfileContainer() {
           country={userData.country}
           city={userData.city}
           profilePicture={userData.profilePicture}
+          phoneNumber={userData.phoneNumber}
+          email={userData.email}
+          updateUser={updateUser}
         />
       )}
       {userData && (

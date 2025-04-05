@@ -7,7 +7,7 @@ interface ProfileFormProps {
     headline: string;
     country: string;
     city: string;
-    profilePicture: string;
+    phoneNumber: string;
   };
   onSave: (updatedUser: any) => void;
 }
@@ -75,7 +75,8 @@ function ProfileForm({ user, onSave }: ProfileFormProps) {
         </div>
 
         <div className="mb-4">
-          <label className="font-medium text-lg mb-5">Location</label><br/>
+          <label className="font-medium text-lg mb-5">Location</label>
+          <br />
           <label className="text-sm font-medium text-charcoalBlack">
             Country
           </label>
@@ -86,13 +87,24 @@ function ProfileForm({ user, onSave }: ProfileFormProps) {
             onChange={handleInputChange}
             className="w-full px-2 py-1 border rounded-lg"
           />
-          <label className="text-sm font-medium text-charcoalBlack">
-            City
-          </label>
+          <label className="text-sm font-medium text-charcoalBlack">City</label>
           <input
             type="text"
             name="city"
             value={formData.city}
+            onChange={handleInputChange}
+            className="w-full px-2 py-1 border rounded-lg"
+          />
+        </div>
+
+        <div className="mb-4">
+          <label className="text-sm font-medium text-charcoalBlack">
+            Phone Number
+          </label>
+          <input
+            type="text"
+            name="phonenumber"
+            value={formData.phoneNumber}
             onChange={handleInputChange}
             className="w-full px-2 py-1 border rounded-lg"
           />
@@ -114,7 +126,7 @@ function ProfileForm({ user, onSave }: ProfileFormProps) {
       <div className="flex space-x-2">
         <button
           type="submit"
-          className="bg-crimsonRed text-warmWhite px-4 py-2 rounded-lg"
+          className="bg-crimsonRed text-warmWhite px-4 py-2 rounded-3xl hover:bg-red-700 cursor-pointer"
         >
           Save Changes
         </button>

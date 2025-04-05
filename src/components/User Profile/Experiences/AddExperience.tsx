@@ -166,7 +166,7 @@ export default function AddExperience(props: AddExperienceProps) {
       <div className="flex space-x-2">
         <button
           type="submit"
-          className="bg-crimsonRed text-warmWhite px-4 py-2 rounded-lg cursor-pointer hover:bg-red-700"
+          className="bg-crimsonRed text-warmWhite px-4 py-1.5 rounded-3xl cursor-pointer hover:bg-red-700"
         >
           Add
         </button>

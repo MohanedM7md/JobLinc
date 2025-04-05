@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { CertificateInterface } from "interfaces/userInterfaces";
+import { NewCertificate } from "interfaces/userInterfaces";
 import { addCertificate } from "@services/api/userProfileServices";
 import { months } from "../../../utils/months";
 
@@ -20,8 +20,7 @@ export default function AddCertificate(props: AddCertificateProps) {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (dateValidation) {
-      const newCertificate: CertificateInterface = {
-        id: "",
+      const newCertificate: NewCertificate = {
         name,
         organization,
         issueDate: new Date(issueYear, issueMonth - 1, 1),
@@ -154,7 +153,7 @@ export default function AddCertificate(props: AddCertificateProps) {
       <div className="flex space-x-2">
         <button
           type="submit"
-          className="bg-crimsonRed text-warmWhite px-4 py-2 rounded-lg cursor-pointer hover:bg-red-700"
+          className="bg-crimsonRed text-warmWhite px-4 py-1.5 rounded-3xl cursor-pointer hover:bg-red-700"
         >
           Add
         </button>

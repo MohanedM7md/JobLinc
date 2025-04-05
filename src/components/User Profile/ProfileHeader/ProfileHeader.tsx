@@ -2,6 +2,8 @@ import { Camera, PenIcon } from "lucide-react";
 import ProfileForm from "./ProfileForm ";
 import Modal from "../../Authentication/Modal";
 import { useState } from "react";
+import { ProfileUpdateInterface } from "interfaces/userInterfaces";
+import { updateMe } from "@services/api/userProfileServices";
 
 interface ProfileProps {
   firstname: string;
@@ -10,15 +12,19 @@ interface ProfileProps {
   country: string;
   city: string;
   profilePicture: string;
+  phoneNumber: string;
+  email: string;
+  updateUser: () => Promise<void>;
 }
 
 function ProfileHeader(props: ProfileProps) {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
-  const handleSave = (updatedUser: any) => {
-    console.log(updatedUser);
+  async function handleSave(updatedUser: ProfileUpdateInterface) {
+    await updateMe(updatedUser);
+    await props.updateUser();
     setIsModalOpen(false);
-  };
+  }
 
   return (
     <div className="profile-header bg-darkGray p-4 rounded-lg shadow-md relative">
@@ -59,10 +65,13 @@ function ProfileHeader(props: ProfileProps) {
           <h1 className="text-2xl font-bold text-warmWhite">
             {props.firstname + " " + props.lastname}
           </h1>
-          <p className="text-mutedSilver">{props.headline}</p>
-          <p className="text-mutedSilver">
-            {props.city}, {props.country}
-          </p>
+          <p className="text-warmWhite">{props.headline}</p>
+          <div className="flex flex-row">
+            <p className="text-mutedSilver">
+              {props.city}, {props.country}
+            </p>
+            <span className="text-crimsonRed font-medium cursor-pointer ml-2">Contant Info</span>
+          </div>
         </div>
         <div
           className="text-white w-8 h-8 flex items-center justify-center bg-crimsonRed rounded-full cursor-pointer"
@@ -73,22 +82,32 @@ function ProfileHeader(props: ProfileProps) {
       </div>
 
       <div className="flex mt-4 space-x-2">
-        <button className="bg-crimsonRed text-warmWhite px-4 py-2 rounded-lg">
+        <button className="bg-crimsonRed text-warmWhite px-4 py-1.5 rounded-3xl">
           Open to Work
         </button>
-        <button className="bg-darkBurgundy text-warmWhite px-4 py-2 rounded-lg">
+        <button className="bg-darkBurgundy text-warmWhite px-4 py-1.5 rounded-3xl">
           Add Profile Section
         </button>
-        <button className="bg-darkBurgundy text-warmWhite px-4 py-2 rounded-lg">
+        <button className="bg-darkBurgundy text-warmWhite px-4 py-1.5 rounded-3xl">
           Enhance Profile
         </button>
-        <button className="bg-darkBurgundy text-warmWhite px-4 py-2 rounded-lg">
+        <button className="bg-darkBurgundy text-warmWhite px-4 py-1.5 rounded-3xl">
           Resources
         </button>
       </div>
 
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <ProfileForm user={props} onSave={handleSave} />
+        <ProfileForm
+          user={{
+            firstname: props.firstname,
+            lastname: props.lastname,
+            headline: props.headline,
+            country: props.country,
+            city: props.city,
+            phoneNumber: props.phoneNumber,
+          }}
+          onSave={handleSave}
+        />
       </Modal>
     </div>
   );
