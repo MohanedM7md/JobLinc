@@ -34,7 +34,7 @@ export interface EducationInterface {
 }
 
 export interface ExperienceInterface {
-  id: string;
+  _id: string;
   position: string;
   company: string;
   startDate: Date;
@@ -51,7 +51,7 @@ export interface NewExperience {
 }
 
 export interface CertificateInterface {
-  id: string;
+  _id: string;
   name: string;
   organization: string;
   issueDate: Date;

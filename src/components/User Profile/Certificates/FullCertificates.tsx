@@ -51,19 +51,13 @@ export default function FullCertificates() {
         </button>
       </div>
       {certificates.map((cert, index) => (
-        <div key={cert.id} className="relative">
+        <div key={cert._id} className="relative">
           <UserCertificate certificate={cert} />
           <button
             className="material-icons absolute top-0 right-0 text-xl p-1 rounded-full hover:bg-gray-600 mr-1"
             onClick={() => setEditCertificateData(cert)}
           >
             edit
-          </button>
-          <button
-            className="material-icons-outlined absolute top-0 right-15 text-crimsonRed text-xl p-1 rounded-full hover:bg-gray-600 mr-1"
-            onClick={() => setConfirmDeleteData(cert.id)}
-          >
-            delete
           </button>
           {index < certificates.length - 1 && (
             <div className="border-b border-gray-500 w-11/12 mx-auto mt-2 mb-3"></div>

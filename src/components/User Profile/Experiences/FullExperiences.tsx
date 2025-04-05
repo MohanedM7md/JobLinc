@@ -3,14 +3,10 @@ import { useState, useEffect } from "react";
 import UserExperience from "./UserExperience";
 import EditExperience from "./EditExperience";
 import "material-icons";
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import AddExperience from "./AddExperience";
 import Modal from "./../../Authentication/Modal";
-import {
-  getExperience,
-  deleteExperience,
-} from "@services/api/userProfileServices";
-import ConfirmAction from "../../utils/ConfirmAction";
+import { getExperience } from "@services/api/userProfileServices";
 
 export default function FullExperiences() {
   const { userId } = useParams();
@@ -18,24 +14,16 @@ export default function FullExperiences() {
   const [addExperienceModal, setAddExperienceModal] = useState<boolean>(false);
   const [editExperienceData, setEditExperienceData] =
     useState<ExperienceInterface | null>(null);
-  const [confirmDeleteData, setConfirmDeleteData] = useState<string | null>(
-    null,
-  );
 
-   useEffect(() => {
-     updateExperiences();
-   }, [userId]);
+  useEffect(() => {
+    updateExperiences();
+  }, [userId]);
 
   async function updateExperiences() {
     if (userId) {
       const updatedExperiences = await getExperience();
       setExperiences(updatedExperiences);
     }
-  }
-
-  async function handleDeleteExperience(experienceId: string) {
-    await deleteExperience(experienceId);
-    updateExperiences();
   }
 
   return (
@@ -50,7 +38,7 @@ export default function FullExperiences() {
         </button>
       </div>
       {experiences.map((exp, index) => (
-        <div key={exp.id} className="relative">
+        <div key={exp._id} className="relative">
           <UserExperience experience={exp} />
           <button
             className="material-icons absolute top-0 right-0 text-xl p-1 rounded-full hover:bg-gray-600 mr-1"
@@ -58,26 +46,11 @@ export default function FullExperiences() {
           >
             edit
           </button>
-          <button
-            className="material-icons-outlined absolute top-0 right-15 text-crimsonRed text-xl p-1 rounded-full hover:bg-gray-600 mr-1"
-            onClick={() => setConfirmDeleteData(exp.id)}
-          >
-            delete
-          </button>
           {index < experiences.length - 1 && (
             <div className="border-b border-gray-500 w-11/12 mx-auto mt-2 mb-3"></div>
           )}
         </div>
       ))}
-      {confirmDeleteData !== null && (
-        <ConfirmAction
-          action={() => {
-            handleDeleteExperience(confirmDeleteData);
-            setConfirmDeleteData(null);
-          }}
-          onClose={() => setConfirmDeleteData(null)}
-        />
-      )}
       <Modal
         isOpen={!!editExperienceData}
         onClose={() => setEditExperienceData(null)}

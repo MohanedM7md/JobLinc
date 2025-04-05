@@ -34,7 +34,7 @@ export async function addExperience(experience: NewExperience) {
 
 export async function editExperience(experience: ExperienceInterface) {
   try {
-    await api.put(`user/experience/${experience.id}`, experience);
+    await api.put(`user/experience/${experience._id}`, experience);
   } catch (error) {
     console.error("Error editing experience:", error);
   }
@@ -67,7 +67,7 @@ export async function addCertificate(certificate: NewCertificate) {
 
 export async function editCertificate(certificate: CertificateInterface) {
   try {
-    await api.put(`user/certificate/${certificate.id}`, certificate);
+    await api.put(`user/certificate/${certificate._id}`, certificate);
   } catch (error) {
     console.error("Error editing certificate:", error);
   }
