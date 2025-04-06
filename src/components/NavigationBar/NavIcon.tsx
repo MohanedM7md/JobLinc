@@ -8,12 +8,6 @@ interface NavIconProps {
   Link:string;
 
 }
-// const navigate = useNavigate();
-
-// const handleNavigate = (path: string) => {
-//   console.log(`Navigating to ${path}`);
-//   navigate(path);
-// };
 
 function NavIcon(props: NavIconProps) {
   return (

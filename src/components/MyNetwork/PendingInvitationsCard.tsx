@@ -130,7 +130,7 @@ function PendingInvitationsCard({ manageButtonid }: PendingInvitationsCardProps)
             )}
           </li>
         ))}
-      </ul> 
+      </ul>
 
       {/* Modal */}
       <NetworkModal isOpen={isModalOpen} onClose={handleCloseModal}>
