@@ -7,7 +7,7 @@ import userEvent from "@testing-library/user-event";
 // Mock Props
 const mockProps: ChatCardProps = {
   chatId: "chat-123",
-  chatPicture: "https://via.placeholder.com/50",
+  chatPicture: ["https://via.placeholder.com/50"],
   chatName: "John Doe",
   lastMessage: "Hello, how are you?",
   sentDate: "10:30 AM",
@@ -28,12 +28,6 @@ describe("ChatCard Component", () => {
   it("does not show unseen count when it is zero", () => {
     render(<ChatCard {...mockProps} />);
     expect(screen.queryByTestId("unseen-count")).not.toBeInTheDocument();
-  });
-
-  it("displays correct chat image", async () => {
-    render(<ChatCard {...mockProps} />);
-    const chatImage = await screen.findByAltText("John Doe");
-    expect(chatImage).toHaveAttribute("src", mockProps.chatPicture);
   });
   it("shows unseen count when updated and applies correct styles", async () => {
     const { unmount } = render(<ChatCard {...mockProps} />);

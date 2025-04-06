@@ -6,28 +6,28 @@ let ChatSocket: SocketIOClient.Socket | null = null;
 
 export const connectToChat = () => {
   ChatSocket = connectSocket("chat");
+  return ChatSocket;
 };
 
 export const subscribeToMessages = (
   chatId: string,
-  userId: string,
   onMessageReceived: (message: RecievedMessage) => void,
-  onMessageRead: () => void,
+  onMessageRead: (senderId: string) => void,
   onUserTyping: (userId: string) => void,
   onStopUserTyping: (userId: string) => void,
 ) => {
   if (!ChatSocket) return;
 
-  ChatSocket.emit("openChat", chatId, userId);
+  ChatSocket.emit("openChat", chatId);
   ChatSocket.on("receiveMessage", (message: RecievedMessage) => {
     console.log("📩 Received Message:", message);
     onMessageReceived(message);
     ChatSocket?.emit("messageRecieved", chatId, message.messageId);
   });
 
-  ChatSocket.on("messageRead", () => {
+  ChatSocket.on("messageRead", (senderId: string) => {
     console.log("📖 Message Read");
-    onMessageRead();
+    onMessageRead(senderId);
   });
   ChatSocket.on("messageTyping", (userId: string) => {
     console.log("📖 Other User is typing :", userId);
@@ -47,13 +47,13 @@ export const sendMessage = (
   if (!ChatSocket) return;
   ChatSocket.emit("sendMessage", { ...message, chatId }, callback);
 };
-export const typing = (chatId: string, user: string) => {
+export const typing = (chatId: string) => {
   if (!ChatSocket) return;
-  ChatSocket.emit("messageTyping", chatId, user);
+  ChatSocket.emit("messageTyping", chatId);
 };
-export const stopTyping = (chatId: string, user: string) => {
+export const stopTyping = (chatId: string) => {
   if (!ChatSocket) return;
-  ChatSocket.emit("stopTyping", chatId, user);
+  ChatSocket.emit("stopTyping", chatId);
 };
 export const unsubscribeFromMessages = (chatId: string) => {
   if (!ChatSocket) return;
@@ -71,11 +71,11 @@ export const subscribeToChats = (
   onChatUpdate: (chatCard: ChatCardInterface) => void,
   onNewChat: (chatCard: ChatCardInterface) => void,
 ) => {
-  ChatSocket?.on("cardUpdate", (chatCard: ChatCardInterface) => {
+  ChatSocket!.on("cardUpdate", (chatCard: ChatCardInterface) => {
     console.log("📩 Received modified chatCard:", chatCard);
     onChatUpdate(chatCard);
   });
-  ChatSocket?.on("newChat", (chatCard: ChatCardInterface) => {
+  ChatSocket!.on("newChat", (chatCard: ChatCardInterface) => {
     console.log("📩 Received new chatCard:", chatCard);
     onNewChat(chatCard);
   });

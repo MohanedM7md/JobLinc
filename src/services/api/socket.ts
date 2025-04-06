@@ -1,12 +1,14 @@
 import SERVER_URL from "./config";
-
+import io from "socket.io-client";
+import store from "@store/store";
 export const connectSocket = (namespace: string) => {
+  const token = store.getState().user.accessToken;
   const socket = io(`${SERVER_URL}/${namespace}`, {
     reconnection: true,
     reconnectionAttempts: 5,
     reconnectionDelay: 2000,
     auth: {
-      token: localStorage.getItem("accessToken"),
+      authorization: token,
     },
   });
 

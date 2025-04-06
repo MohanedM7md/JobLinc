@@ -3,11 +3,9 @@ import { RootState, AppDispatch } from "../store/store";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getUserDetails } from "../store/userSlice";
-import { sendConfirmationEmail } from "../store/userSlice";
-import { ReceiptRussianRuble } from "lucide-react";
+import { getUserDetails } from "../store/user/userThunks";
+import { sendConfirmationEmail } from "../store/user/userThunks";
 import { useAppSelector } from "@store/hooks";
-// import api from "../services/api/api";
 
 function Home() {
   const user1 = useAppSelector((state) => state.user);

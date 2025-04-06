@@ -3,10 +3,10 @@
 exports[`ChatContent > matches snapshot 1`] = `
 <div>
   <div
-    class="undefined flex flex-col flex-1 overflow-y-hidden "
+    class="undefined flex flex-col flex-1 overflow-y-hidden"
   >
     <div
-      class="flex-1 max-h-[50vh] overflow-y-auto"
+      class="h-8/12 overflow-y-auto"
     >
       <div
         class="flex-1 space-y-2 bg-gray-100 flex flex-col pt-2 h-auto"
@@ -19,7 +19,7 @@ exports[`ChatContent > matches snapshot 1`] = `
       </div>
     </div>
     <div
-      class="flex flex-col items-center p-3
+      class="flex flex-col items-center p-3 
      bg-charcoalWhite dark:bg-warmBlack border-t border-gray-200 relative"
     >
       <textarea

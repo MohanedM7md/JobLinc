@@ -13,21 +13,21 @@ import {
   MessageStatus,
 } from "./interfaces/Message.interfaces";
 import { User } from "./interfaces/User.interfaces";
-import { useUser } from "./mockUse";
+
 import { fetchChatData, createChat } from "@services/api/chatServices";
 import useChatid from "@context/ChatIdProvider";
 import useNetworkUserId from "@context/NetworkUserIdProvider";
 import UserTypingIndicator from "./UserTyping";
+import store from "@store/store";
 
 function ChatContent({ className }: { className?: string }) {
   const [users, setUsers] = useState<User[]>([]);
   const [messages, setMessages] = useState<RecievedMessage[]>([]);
   const { chatId, setChatId } = useChatid();
   const { usersId } = useNetworkUserId();
-  const { user } = useUser();
+
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const [typingUsers, setTypingUsers] = useState<string[]>([]);
-  console.log("typing triggers update");
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -35,30 +35,28 @@ function ChatContent({ className }: { className?: string }) {
     const fetchData = async () => {
       if (usersId.length && !chatId) {
         const data = await createChat(usersId);
-        setUsers(data.users);
+        setUsers(data.participants);
         setMessages(data.messages);
         setChatId(data.chatId);
       } else {
         const data = await fetchChatData(chatId);
-        setUsers(data.users);
+        setUsers(data.participants);
         setMessages(data.messages);
       }
     };
 
     fetchData();
+
     subscribeToMessages(
       chatId,
-      user,
       (message) => setMessages((prev) => [...prev, message]),
-      () =>
+      (userId) =>
         setMessages((prev) =>
-          prev.map((msg) => ({ ...msg, status: MessageStatus.Read })),
+          prev.map((msg) => ({ ...msg, seenBy: [...msg.seenBy, userId] })),
         ),
       (userId) =>
         setTypingUsers((prevTypingUsers) => {
-          console.log("Before update:", prevTypingUsers);
           if (!prevTypingUsers.includes(userId)) {
-            console.log("Adding user:", userId);
             return [...prevTypingUsers, userId];
           }
           return prevTypingUsers;
@@ -72,12 +70,12 @@ function ChatContent({ className }: { className?: string }) {
     };
   }, [chatId]);
 
-  const handleSendMessage = (message: string) => {
+  const handleSendMessage = (message: string | File, type: string) => {
     const newMessage: any = {
-      messageId: `${user}-${new Date().getTime()}`,
-      senderId: user,
+      senderId: store.getState().user.userId,
       time: new Date(),
       status: MessageStatus.Sent,
+      seenBy: [store.getState().user.userId],
       content: { text: message },
     };
 
@@ -86,22 +84,17 @@ function ChatContent({ className }: { className?: string }) {
     if (chatId) {
       sendMessage(chatId, newMessage, () => {
         console.log("✅ Message delivered");
-        setMessages((prevMsgs) => {
-          prevMsgs.pop();
-          newMessage.status = MessageStatus.Delivered;
-          return [...prevMsgs, newMessage];
-        });
       });
     }
   };
   const handleTypingMessage = (isTyping: boolean) => {
-    if (!chatId || !user) return;
+    if (!chatId) return;
     switch (isTyping) {
       case true:
-        typing(chatId, user);
+        typing(chatId);
         break;
       case false:
-        stopTyping(chatId, user);
+        stopTyping(chatId);
         break;
     }
   };
