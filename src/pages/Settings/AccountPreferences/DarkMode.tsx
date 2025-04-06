@@ -1,11 +1,14 @@
 import { ChevronLeftIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect, ChangeEvent } from "react";
-
+import { useContext } from "react";
+import { ThemeContext } from "@context/ThemeProvider";
 function DarkMode()
 {
     const navigate = useNavigate();
     const [selectedChoice, setSelectedChoice] = useState('');
+    const { darkMode, setDarkMode } = useContext(ThemeContext);
+
 
     useEffect(() => {
         const storedChoice = localStorage.getItem('theme');
@@ -17,7 +20,7 @@ function DarkMode()
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         const choice = event.target.value;
         setSelectedChoice(choice);
-        localStorage.setItem('theme', choice); // Store the choice in localStorage
+        setDarkMode(!darkMode);
     };
 
     return (
@@ -33,18 +36,6 @@ function DarkMode()
             </div>
 
             <div className="flex flex-col gap-5">
-                <div className="flex items-center gap-3">
-                    <input 
-                        type="radio" 
-                        id="device-settings" 
-                        name="ThemeChoice" 
-                        value="Device Settings" 
-                        className="w-6 h-6" 
-                        checked={selectedChoice === "Device Settings"} 
-                        onChange={handleChange} 
-                    />
-                    <label htmlFor="device-settings" className="text-xl font-medium">Device Settings</label>
-                </div>
                 <div className="flex items-center gap-3">
                     <input 
                         type="radio" 
