@@ -25,6 +25,13 @@ import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AuthRoute from "./components/AuthRoute";
 import Settings from "@pages/Settings/Settings";
+import AccountPreferences from "@pages/Settings/AccountPreferences";
+import Notifications from "@pages/Settings/Notifications";
+import SignInAndSecurity from "@pages/Settings/SignInAndSecurity";
+import Visibility from "@pages/Settings/Visibility";
+import DataAndPrivacy from "@pages/Settings/DataAndPrivacy";
+import AdvertisingData from "@pages/Settings/AdvertisingData";
+import DarkMode from "@pages/Settings/AccountPreferences/DarkMode";
 function App() {
   return (
     <>
@@ -56,7 +63,23 @@ function App() {
               path="/confirm-email"
               element={<ConfirmEmail />}
             />
-            <Route path="/settings" element={<Settings />}></Route>
+            
+            
+            <Route path="/settings" element={<Settings />}>
+              <Route index element={<AccountPreferences />}></Route>
+              
+              {/* Account Preferences Pages */}
+              <Route path="account-preferences" element={<AccountPreferences />} />
+              <Route path="account-preferences/display/dark-mode" element={<DarkMode />}></Route>
+
+              <Route path="sign-in-security" element={<SignInAndSecurity />}></Route>
+              <Route path="visibility" element={<Visibility />}></Route>
+              <Route path="data-privacy" element={<DataAndPrivacy />}></Route>
+              <Route path="advertising-data" element={<AdvertisingData />}></Route>
+              <Route path="notifications" element={<Notifications />}></Route>
+            </Route>
+
+
             <Route path="/update-email" element={<UpdateEmail />} />
             <Route path="/update-username" element={<UpdateUsername />} />
             <Route path="/in" element={<UserProfile />}></Route>

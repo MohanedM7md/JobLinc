@@ -3,28 +3,63 @@ import SettingsSection from "./SettingsSection";
 function AdvertisingData ()
 {
     return (
-        <div data-testid="advertising-data">
-            <SettingsSection title="Profile data" items={[
-                "Connections: On",
-                "Education you follow: On",
-                "Groups: On",
-                "Companies and Skills: Schools & 4 more",
-                "Job Information: Current job & 1 more",
-                "Employer: Current company & 1 more",
-                "Customized display format: On",
-                "Profile Location: On"
-            ]} />
-            <SettingsSection title="Activity and inferred data" items={[
-                "Inferred city location: On",
-                "Interests and traits: On",
-                "Age range: On",
-                "Gender: On"
-            ]} />
-            <SettingsSection title="Third-party data" items={[
-                "Ads beyond LinkedIn: On",
-                "Interactions with businesses: On",
-                "Ad-related actions: On"
-            ]} />
+        <div data-testid="advertising-data" className="flex flex-col gap-6">
+            <SettingsSection 
+                title="Profile data" 
+                items={[
+                    "Connections",
+                    "Education you follow",
+                    "Groups",
+                    "Companies and Skills",
+                    "Job Information",
+                    "Employer",
+                    "Customized display format",
+                    "Profile Location"
+                ]}
+                basePath="advertising-data/profile-data"
+                itemPaths={[
+                    "connections",
+                    "education-you-follow",
+                    "groups",
+                    "companies-and-skills",
+                    "job-information",
+                    "employer",
+                    "customized-display-format",
+                    "profile-location"
+                ]}
+            />
+
+            <SettingsSection 
+                title="Activity and inferred data" 
+                items={[
+                    "Inferred city location",
+                    "Interests and traits",
+                    "Age range",
+                    "Gender"
+                ]}
+                basePath="advertising-data/activity-and-data"
+                itemPaths={[
+                    "inferred-city-location",
+                    "interests-and-traits",
+                    "age-range",
+                    "gender"
+                ]}
+            />
+
+            <SettingsSection 
+                title="Third-party data" 
+                items={[
+                    "Ads beyond JobLinc",
+                    "Interactions with businesses",
+                    "Ad-related actions"
+                ]}
+                basePath="advertising-data/third-party-data"
+                itemPaths={[
+                    "ads-beyond-joblinc",
+                    "interactions-with-businesses",
+                    "ad-related-actions"
+                ]}
+            />
         </div>
     );
 }

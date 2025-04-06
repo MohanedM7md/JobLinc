@@ -3,8 +3,10 @@ import SettingsSection from "./SettingsSection";
 function Notifications ()
 {
     return (
-        <div data-testid="notifications">
-            <SettingsSection title="Notifications you receive" items={[
+        <div data-testid="notifications" className="flex flex-col gap-6">
+            <SettingsSection 
+            title="Notifications you receive" 
+            items={[
                 "Searching for a job",
                 "Hiring someone",
                 "Connecting with others",
@@ -18,7 +20,24 @@ function Notifications ()
                 "Updating your profile",
                 "Verifications",
                 "Games"
-            ]} />
+            ]} 
+            basePath="notifications/received"
+            itemPaths={[
+                "searching-for-a-job",
+                "hiring-someone",
+                "connecting-with-others",
+                "network-catch-up-updates",
+                "posting-and-commenting",
+                "messaging",
+                "groups",
+                "pages",
+                "attending-events",
+                "news-and-reports",
+                "updating-your-profile",
+                "verifications",
+                "games"
+            ]}
+            />
 
             
         </div>
