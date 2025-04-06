@@ -3,7 +3,7 @@ import SettingsSection from "./SettingsSection";
 function DataAndPrivacy ()
 {
     return (
-        <>
+        <div data-testid="data-privacy">
             <SettingsSection title="How LinkedIn uses your data" items={[
                 "Manage your data and activity",
                 "Get a copy of your data",
@@ -39,7 +39,7 @@ function DataAndPrivacy ()
             ]} />
 
                 
-        </>
+        </div>
     );
 }
 

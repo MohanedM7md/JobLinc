@@ -3,7 +3,7 @@ import SettingsSection from "./SettingsSection";
 function Notifications ()
 {
     return (
-        <>
+        <div data-testid="notifications">
             <SettingsSection title="Notifications you receive" items={[
                 "Searching for a job",
                 "Hiring someone",
@@ -21,7 +21,7 @@ function Notifications ()
             ]} />
 
             
-        </>
+        </div>
     );
 }
 

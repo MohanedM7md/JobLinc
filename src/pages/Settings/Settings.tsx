@@ -24,6 +24,7 @@ interface SettingsPage {
 function Settings() {
     const [selected, setSelected] = useState<string>("Account Preferences");
 
+
     const settingsComponents: { [key: string]: JSX.Element } = {
         "Account Preferences": <AccountPreferences />,
         "Sign in & Security": <SignInAndSecurity />,

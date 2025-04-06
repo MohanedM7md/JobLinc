@@ -3,7 +3,7 @@ import SettingsSection from "./SettingsSection";
 function Visibility()
 {
     return (
-        <>
+        <div data-testid="visibility">
             <SettingsSection title="Visibility of your profile & network" items={[
                 "Profile viewing options",
                 "Page visit visibility",
@@ -27,7 +27,7 @@ function Visibility()
                 "Mentioned by others (On)",
                 "Followers"
             ]} />
-        </>
+        </div>
     );
 }
 

@@ -3,7 +3,7 @@ import SettingsSection from "./SettingsSection";
 function AdvertisingData ()
 {
     return (
-        <>
+        <div data-testid="advertising-data">
             <SettingsSection title="Profile data" items={[
                 "Connections: On",
                 "Education you follow: On",
@@ -25,7 +25,7 @@ function AdvertisingData ()
                 "Interactions with businesses: On",
                 "Ad-related actions: On"
             ]} />
-        </>
+        </div>
     );
 }
 

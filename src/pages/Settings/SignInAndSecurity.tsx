@@ -3,7 +3,7 @@ import SettingsSection from "./SettingsSection";
 function SignInAndSecurity ()
 {
     return (
-        <>
+        <div data-testid="sign-in-security">
             <SettingsSection title="Account access" items={[
                 "Email addresses",
                 "Phone numbers",
@@ -15,7 +15,7 @@ function SignInAndSecurity ()
             ]} />
 
                 
-        </>
+        </div>
     );
 }
 
