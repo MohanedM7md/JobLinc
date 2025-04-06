@@ -37,20 +37,26 @@ export default function FullExperiences() {
           add
         </button>
       </div>
-      {experiences.map((exp, index) => (
-        <div key={exp._id} className="relative">
-          <UserExperience experience={exp} />
-          <button
-            className="material-icons absolute top-0 right-0 text-xl p-1 rounded-full hover:bg-gray-600 mr-1"
-            onClick={() => setEditExperienceData(exp)}
-          >
-            edit
-          </button>
-          {index < experiences.length - 1 && (
-            <div className="border-b border-gray-500 w-11/12 mx-auto mt-2 mb-3"></div>
-          )}
+      {experiences.length > 0 ? (
+        experiences.map((exp, index) => (
+          <div key={exp._id} className="relative">
+            <UserExperience experience={exp} />
+            <button
+              className="material-icons absolute top-0 right-0 text-xl p-1 rounded-full hover:bg-gray-600 mr-1"
+              onClick={() => setEditExperienceData(exp)}
+            >
+              edit
+            </button>
+            {index < experiences.length - 1 && (
+              <div className="border-b border-gray-500 w-11/12 mx-auto mt-2 mb-3"></div>
+            )}
+          </div>
+        ))
+      ) : (
+        <div className="text-mutedSilver font-medium flex justify-center">
+          No experiences are registered for this user
         </div>
-      ))}
+      )}
       <Modal
         isOpen={!!editExperienceData}
         onClose={() => setEditExperienceData(null)}

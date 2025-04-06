@@ -3,7 +3,9 @@ import {
   ExperienceInterface,
   NewCertificate,
   NewExperience,
+  NewSkill,
   ProfileUpdateInterface,
+  SkillInterface,
 } from "interfaces/userInterfaces";
 import { api } from "./api";
 
@@ -90,3 +92,38 @@ export async function deleteCertificate(certificateId: string) {
     console.error("Error deleting certificate:", error);
   }
 }
+
+export async function getSkills() {
+  try {
+    const response = await api.get("user/skills");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching skills data:", error);
+  }
+}
+
+export async function addSkill(skill: NewSkill) {
+  try {
+    await api.post("user/skills/add",  skill );
+  } catch (error) {
+    console.error("Error adding new skill:", error);
+  }
+}
+
+export async function editSkill(skill: SkillInterface) {
+  try {
+    await api.put(`user/skills/${skill.id}`,  skill );
+  } catch (error) {
+    console.error("Error editing skill:", error);
+  }
+}
+
+export async function deleteSkill(skillId: string) {
+  try {
+    await api.delete(`user/skills/${skillId}`);
+  } catch (error) {
+    console.error("Error deleting skill:", error);
+  }
+}
+
+

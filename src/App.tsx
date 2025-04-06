@@ -27,6 +27,7 @@ import AuthRoute from "./components/AuthRoute";
 import ProfileContainer from "./components/User Profile/ProfileContainer";
 import FullExperiences from "./components/User Profile/Experiences/FullExperiences";
 import FullCertificates from "./components/User Profile/Certificates/FullCertificates";
+import FullSkills from "./components/User Profile/Skills/FullSkills";
 function App() {
   return (
     <>
@@ -70,6 +71,7 @@ function App() {
                 path=":userId/details/certificates"
                 element={<FullCertificates />}
               />
+              <Route path=":userId/details/skills" element={<FullSkills />} />
             </Route>
             <Route path="/post">
               <Route index element={<PostContainer />} />

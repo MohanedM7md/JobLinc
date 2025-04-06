@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import "material-icons";
 
-interface EditProfilePictureProps {
-  profilePicture: string;
+interface EditCoverPictureProps {
+  coverPicture: string;
 }
 
-export default function EditProfilePicture(props: EditProfilePictureProps) {
+export default function EditCoverPicture(props: EditCoverPictureProps) {
   const [file, setFile] = useState<File | null>(null);
-  const [preview, setPreview] = useState(props.profilePicture); 
+  const [preview, setPreview] = useState(props.coverPicture); 
 
    function fileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const selectedFile = event.target.files?.[0] || null;

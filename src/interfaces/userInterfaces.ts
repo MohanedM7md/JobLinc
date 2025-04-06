@@ -18,7 +18,7 @@ export interface ProfileInterface {
   numberofConnections: number;
   mutualConnections: number;
   recentPosts: PostInterface[];
-  skills: string[];
+  skills: SkillInterface[];
   education: EducationInterface[];
   experience: ExperienceInterface[];
   certifications: CertificateInterface[];
@@ -74,4 +74,15 @@ export interface NewCertificate {
   organization: string;
   issueDate: Date;
   expirationDate: Date;
+}
+
+export interface SkillInterface {
+  id: string;
+  name: string;
+  level: number;
+}
+
+export interface NewSkill {
+  name: string;
+  level: number;
 }

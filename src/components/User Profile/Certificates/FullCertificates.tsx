@@ -50,20 +50,26 @@ export default function FullCertificates() {
           add
         </button>
       </div>
-      {certificates.map((cert, index) => (
-        <div key={cert._id} className="relative">
-          <UserCertificate certificate={cert} />
-          <button
-            className="material-icons absolute top-0 right-0 text-xl p-1 rounded-full hover:bg-gray-600 mr-1"
-            onClick={() => setEditCertificateData(cert)}
-          >
-            edit
-          </button>
-          {index < certificates.length - 1 && (
-            <div className="border-b border-gray-500 w-11/12 mx-auto mt-2 mb-3"></div>
-          )}
+      {certificates.length > 0 ? (
+        certificates.map((cert, index) => (
+          <div key={cert._id} className="relative">
+            <UserCertificate certificate={cert} />
+            <button
+              className="material-icons absolute top-0 right-0 text-xl p-1 rounded-full hover:bg-gray-600 mr-1"
+              onClick={() => setEditCertificateData(cert)}
+            >
+              edit
+            </button>
+            {index < certificates.length - 1 && (
+              <div className="border-b border-gray-500 w-11/12 mx-auto mt-2 mb-3"></div>
+            )}
+          </div>
+        ))
+      ) : (
+        <div className="text-mutedSilver font-medium flex justify-center">
+          No certificates are registered for this user
         </div>
-      ))}
+      )}
       {confirmDeleteData !== null && (
         <ConfirmAction
           action={() => {

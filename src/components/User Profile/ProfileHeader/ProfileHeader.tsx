@@ -1,10 +1,11 @@
-import { Camera, PenIcon } from "lucide-react";
 import ProfileForm from "./ProfileForm ";
 import Modal from "../../Authentication/Modal";
 import { useState } from "react";
 import { ProfileUpdateInterface } from "interfaces/userInterfaces";
 import { updateMe } from "@services/api/userProfileServices";
 import EditProfilePicture from "./EditProfilePicture";
+import EditCoverPicture from "./EditCoverPicture";
+import "material-icons"
 
 interface ProfileProps {
   firstname: string;
@@ -20,7 +21,9 @@ interface ProfileProps {
 
 function ProfileHeader(props: ProfileProps) {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [isEditPictureModalOpen, setIsEditPictureModalOpen] =
+  const [isEditProfilePictureModalOpen, setIsEditProfilePictureModalOpen] =
+    useState<boolean>(false);
+  const [isEditCoverPictureModalOpen, setIsEditCoverPictureModalOpen] =
     useState<boolean>(false);
 
   async function handleSave(updatedUser: ProfileUpdateInterface) {
@@ -37,17 +40,15 @@ function ProfileHeader(props: ProfileProps) {
           alt="Cover"
           className="w-full h-52 object-cover rounded-lg"
         />
-        <div className="absolute top-2 right-2 bg-softRosewood text-warmWhite p-2 rounded-full">
-          <Camera />
-          <input
-            type="file"
-            accept="image/*"
-            className="absolute w-full h-full inset-0 opacity-0 cursor-pointer z-10"
-          />
-        </div>
+        <button
+          className="material-icons-outlined hover:material-icons-round cursor-pointer absolute top-2 right-2 bg-crimsonRed hover:bg-red-800 text-white p-1 rounded-full shadow-md"
+          onClick={() => setIsEditCoverPictureModalOpen(true)}
+        >
+          camera_alt
+        </button>
         <div
           className="absolute -bottom-16 left-4 w-32 h-32 cursor-pointer"
-          onClick={() => setIsEditPictureModalOpen(true)}
+          onClick={() => setIsEditProfilePictureModalOpen(true)}
         >
           <img
             src={
@@ -76,12 +77,12 @@ function ProfileHeader(props: ProfileProps) {
             </span>
           </div>
         </div>
-        <div
-          className="text-white w-8 h-8 flex items-center justify-center bg-crimsonRed rounded-full cursor-pointer"
+        <button
           onClick={() => setIsModalOpen(true)}
+          className="material-icons text-white w-10 h-10 flex items-center justify-center hover:bg-gray-600 rounded-full cursor-pointer"
         >
-          <PenIcon />
-        </div>
+          edit
+        </button>
       </div>
 
       <div className="flex mt-4 space-x-2">
@@ -114,10 +115,17 @@ function ProfileHeader(props: ProfileProps) {
       </Modal>
 
       <Modal
-        isOpen={isEditPictureModalOpen}
-        onClose={() => setIsEditPictureModalOpen(false)}
+        isOpen={isEditProfilePictureModalOpen}
+        onClose={() => setIsEditProfilePictureModalOpen(false)}
       >
         <EditProfilePicture profilePicture={props.profilePicture} />
+      </Modal>
+
+      <Modal
+        isOpen={isEditCoverPictureModalOpen}
+        onClose={() => setIsEditCoverPictureModalOpen(false)}
+      >
+        <EditCoverPicture coverPicture={props.profilePicture} />
       </Modal>
     </div>
   );
