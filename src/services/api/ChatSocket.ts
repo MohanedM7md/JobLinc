@@ -21,12 +21,12 @@ export const subscribeToMessages = (
   ChatSocket.emit("openChat", chatId);
   ChatSocket.on("receiveMessage", (message: RecievedMessage) => {
     console.log("📩 Received Message:", message);
+    ChatSocket!.emit("messageRecieved", chatId, message.messageId);
     onMessageReceived(message);
-    ChatSocket?.emit("messageRecieved", chatId, message.messageId);
   });
 
   ChatSocket.on("messageRead", (senderId: string) => {
-    console.log("📖 Message Read");
+    console.log("📖 Message Read by", senderId);
     onMessageRead(senderId);
   });
   ChatSocket.on("messageTyping", (userId: string) => {
