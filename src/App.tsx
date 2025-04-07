@@ -22,6 +22,7 @@ import UpdateUsername from "./pages/UpdateUsername";
 import ConfirmEmail from "./pages/ConfirmEmail";
 import Error404 from "@pages/Eror404";
 import Layout from "./components/Layout";
+import NotificationTestPage from "./pages/NotificationTestPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AuthRoute from "./components/AuthRoute";
 function App() {
@@ -29,6 +30,10 @@ function App() {
     <>
       <ThemeProvider>
         <Routes>
+          <Route
+            path="/test-notifications"
+            element={<NotificationTestPage />}
+          />
           <Route element={<AuthRoute />}>
             <Route path="/" element={<LandPage />} />
             <Route path="/signup" element={<SignUpPage />} />

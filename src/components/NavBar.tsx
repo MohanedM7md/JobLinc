@@ -2,10 +2,14 @@ import { useEffect, useState } from "react";
 import Searchbar from "../components/SearchBar";
 import NavIcon from "../components/NavIcon";
 import Logo from "../components/Logo";
+import NotificationBell from "../components/Notifications/NotificationBell"; // adjust path
+import NotificationPanel from "../Notifications/../components/Notifications/NotificationPanel";
+
 function NavBar() {
   const [isLargeScreen, setIsLargeScreen] = useState<boolean>(
     window.innerWidth > 1280,
   ); // Typed as boolean
+  const [showNotifications, setShowNotifications] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -47,11 +51,13 @@ function NavBar() {
             Name="Messaging"
             pagePath="/messaging"
           />
-          <NavIcon
+          {/* <NavIcon
             Icon="fa-solid fa-bell"
             Name="Notifications"
             pagePath="notifactions"
-          />
+          /> */}
+          <NotificationBell onClick={() => setShowNotifications(true)} />
+
           <NavIcon
             Icon="fa-solid fa-user"
             Name="Me"
@@ -67,6 +73,10 @@ function NavBar() {
           />
         </div>
       </nav>
+      <NotificationPanel
+        isOpen={showNotifications}
+        onClose={() => setShowNotifications(false)}
+      />
     </>
   );
 }
