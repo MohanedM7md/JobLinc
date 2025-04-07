@@ -9,6 +9,7 @@ import {
   getUserDetailsAPI,
   sendConfirmationEmailAPI,
   confirmEmailAPI,
+  updateEmailAPI,
 } from "@services/api/authService";
 
 export const loginUser = createAsyncThunk(
@@ -105,6 +106,25 @@ export const changePassword = createAsyncThunk(
     }
   },
 );
+
+export const updateEmail = createAsyncThunk(
+  "user/updateEmail",
+  async(
+    userData: {
+      userId: string;
+      email: string;
+    },
+    {rejectWithValue},
+  ) => {
+    try {
+      return await updateEmailAPI(userData);
+    }
+    catch(error: any)
+    {
+      return rejectWithValue(error.respnse?.data || "Update email failed");
+    }
+  }
+)
 
 export const getUserDetails = createAsyncThunk(
   "user/getUserDetails",

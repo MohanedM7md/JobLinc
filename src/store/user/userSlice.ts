@@ -9,6 +9,7 @@ import {
   getUserDetails,
   sendConfirmationEmail,
   confirmEmail,
+  updateEmail,
 } from "./userThunks";
 import { loadState, saveState } from "./userUtils";
 import { UserState } from "./user.interface";
@@ -150,6 +151,20 @@ const userSlice = createSlice({
       .addCase(changePassword.rejected, (state) => {
         state.status = "FAILED";
       })
+      // Update Email
+      .addCase(updateEmail.pending, (state) => {
+        state.status = "LOADING";
+      })
+      .addCase(updateEmail.fulfilled, (state, action: PayloadAction<any>) => {
+        const userData = action.payload;
+        if (userData)
+        {
+          state.status = "SUCCESS";
+        }
+      })
+      .addCase(updateEmail.rejected, (state) => {
+        state.status = "FAILED";
+      })
       // Get User Details
       .addCase(getUserDetails.pending, (state) => {
         state.status = "LOADING";
@@ -158,8 +173,10 @@ const userSlice = createSlice({
         getUserDetails.fulfilled,
         (state, action: PayloadAction<any>) => {
           const userData = action.payload;
-
+          
           if (userData) {
+            console.log("get user details Payload:", userData);
+
             state.userId = userData.userId || null;
             state.loggedIn = true;
             state.status = "SUCCESS";

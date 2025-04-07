@@ -24,6 +24,7 @@ function Home() {
     firstname: "",
     lastname: "",
     email: "",
+    username: "",
     confirmed: false,
   });
 
@@ -65,6 +66,7 @@ function Home() {
             lastname: data.lastname,
             email: data.email,
             confirmed: data.confirmed,
+            username: data.username,
           });
           setLoading(false);
         })
@@ -117,6 +119,9 @@ function Home() {
           </p>
           <p>
             <strong>Last name:</strong> {userDetails.lastname}
+          </p>
+          <p>
+            <strong>Username:</strong> {userDetails.username}
           </p>
           
           <Link
