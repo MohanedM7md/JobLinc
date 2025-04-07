@@ -13,6 +13,7 @@ export const connectSocket = (namespace: string) => {
   });
 
   socket.on("connect", () => {
+    
     console.log(`Connected to ${namespace}`);
   });
 
