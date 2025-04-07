@@ -13,7 +13,6 @@ interface SettingsPage {
 }
 
 function Settings() {
-    const [selected, setSelected] = useState<string>("account-preferences");
     
     const settingsPages: SettingsPage[] = [
         { id: "account-preferences", icon: <User size={32} />, label: "Account preferences" },
@@ -25,16 +24,24 @@ function Settings() {
     ];
     const navigate = useNavigate();
     const location = useLocation();
+    const initialSelected = location.pathname.split("/").pop() || "account-preferences";
+    const [selected, setSelected] = useState<string>(initialSelected);
 
     useEffect(() => {
         const path = location.pathname;
-        const match = path.match(/[^/]+$/);
-        console.log(path);
+        const match = path.split("/settings/")[1]; // gets text after /settings/
         
         if (match) {
-            setSelected(match[0]);
+            // If there's a specific sub-route (e.g., "notifications")
+            const subPath = match.split("/")[0]; // Handles deeper paths like "account-preferences/profile"
+            setSelected(subPath);
+        } else {
+            // If it's just "/settings", default to "account-preferences"
+            setSelected("account-preferences");
         }
     }, [location]);
+
+    
     return (
         
         
@@ -56,7 +63,7 @@ function Settings() {
                         key={item.id}
                         onClick={() => {navigate(item.id); setSelected(item.id)}}
                         className={`flex items-center p-5 gap-4 text-gray-700 w-full hover:cursor-pointer
-                            ${selected === item.id ? "border-l-4 border-softRosewood text-softRosewood font-semibold" : ""}
+                            ${selected === item.id && "border-l-4 border-softRosewood text-softRosewood font-semibold"}
                         `}
                     >
                         {selected === item.id 

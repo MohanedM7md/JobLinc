@@ -1,9 +1,15 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { vi } from "vitest";
 import {describe, it, expect} from "vitest";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter, Route, Routes } from "react-router-dom";
 import Settings from "@pages/Settings/Settings";
 import "@testing-library/jest-dom/vitest";
+import AccountPreferences from "@pages/Settings/AccountPreferences";
+import SignInAndSecurity from "@pages/Settings/SignInAndSecurity";
+import Visibility from "@pages/Settings/Visibility";
+import DataAndPrivacy from "@pages/Settings/DataAndPrivacy";
+import AdvertisingData from "@pages/Settings/AdvertisingData";
+import Notifications from "@pages/Settings/Notifications";
 
 
 vi.mock("../../components/Authentication/Headers/SignHeader", () => ({
@@ -41,8 +47,17 @@ vi.mock("./AdvertisingData", () => ({
 describe("Settings Component", () => {
   beforeEach(() => {
     render(
-      <MemoryRouter>
-        <Settings />
+      <MemoryRouter initialEntries={["/settings/account-preferences"]}>
+        <Routes>
+          <Route path="/settings" element={<Settings />}>
+            <Route path="account-preferences" element={<AccountPreferences />} />
+            <Route path="sign-in-security" element={<SignInAndSecurity />} />
+            <Route path="visibility" element={<Visibility />} />
+            <Route path="data-privacy" element={<DataAndPrivacy />} />
+            <Route path="advertising-data" element={<AdvertisingData />} />
+            <Route path="notifications" element={<Notifications />} />
+          </Route>
+        </Routes>
       </MemoryRouter>
     );
   });
