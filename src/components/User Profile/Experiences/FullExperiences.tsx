@@ -8,7 +8,7 @@ import AddExperience from "./AddExperience";
 import Modal from "./../../Authentication/Modal";
 import { getExperience } from "@services/api/userProfileServices";
 
-export default function FullExperiences() {
+export default function FullExperiences({ isUser }: { isUser: boolean }) {
   const { userId } = useParams();
   const [experiences, setExperiences] = useState<ExperienceInterface[]>([]);
   const [addExperienceModal, setAddExperienceModal] = useState<boolean>(false);
@@ -30,23 +30,27 @@ export default function FullExperiences() {
     <div className="bg-darkGray my-2 p-4 rounded-lg shadow-md relative text-white w-12/12 lg:w-6/12 m-auto">
       <div className="flex flex-row justify-between items-center">
         <h1 className="font-medium text-xl mb-4">Experience</h1>
-        <button
-          onClick={() => setAddExperienceModal(true)}
-          className="material-icons font-medium text-2xl p-2 rounded-full hover:bg-gray-600 -mt-5"
-        >
-          add
-        </button>
+        {isUser && (
+          <button
+            onClick={() => setAddExperienceModal(true)}
+            className="material-icons font-medium text-2xl p-2 rounded-full hover:bg-gray-600 -mt-5"
+          >
+            add
+          </button>
+        )}
       </div>
       {experiences.length > 0 ? (
         experiences.map((exp, index) => (
           <div key={exp._id} className="relative">
             <UserExperience experience={exp} />
-            <button
-              className="material-icons absolute top-0 right-0 text-xl p-1 rounded-full hover:bg-gray-600 mr-1"
-              onClick={() => setEditExperienceData(exp)}
-            >
-              edit
-            </button>
+            {isUser && (
+              <button
+                className="material-icons absolute top-0 right-0 text-xl p-1 rounded-full hover:bg-gray-600 mr-1"
+                onClick={() => setEditExperienceData(exp)}
+              >
+                edit
+              </button>
+            )}
             {index < experiences.length - 1 && (
               <div className="border-b border-gray-500 w-11/12 mx-auto mt-2 mb-3"></div>
             )}

@@ -12,7 +12,7 @@ import UserCertificate from "./UserCertificate";
 import AddCertificate from "./AddCertificate";
 import EditCertificate from "./EditCertificate";
 
-export default function FullCertificates() {
+export default function FullCertificates({ isUser }: { isUser: boolean }) {
   const { userId } = useParams();
   const [certificates, setCertificates] = useState<CertificateInterface[]>([]);
   const [addCertificateModal, setAddCertificateModal] =
@@ -43,23 +43,27 @@ export default function FullCertificates() {
     <div className="bg-darkGray my-2 p-4 rounded-lg shadow-md relative text-white w-12/12 lg:w-6/12 m-auto">
       <div className="flex flex-row justify-between items-center">
         <h1 className="font-medium text-xl mb-4">Certificates</h1>
-        <button
-          onClick={() => setAddCertificateModal(true)}
-          className="material-icons font-medium text-2xl p-2 rounded-full hover:bg-gray-600 -mt-5"
-        >
-          add
-        </button>
+        {isUser && (
+          <button
+            onClick={() => setAddCertificateModal(true)}
+            className="material-icons font-medium text-2xl p-2 rounded-full hover:bg-gray-600 -mt-5"
+          >
+            add
+          </button>
+        )}
       </div>
       {certificates.length > 0 ? (
         certificates.map((cert, index) => (
           <div key={cert._id} className="relative">
             <UserCertificate certificate={cert} />
-            <button
-              className="material-icons absolute top-0 right-0 text-xl p-1 rounded-full hover:bg-gray-600 mr-1"
-              onClick={() => setEditCertificateData(cert)}
-            >
-              edit
-            </button>
+            {isUser && (
+              <button
+                className="material-icons absolute top-0 right-0 text-xl p-1 rounded-full hover:bg-gray-600 mr-1"
+                onClick={() => setEditCertificateData(cert)}
+              >
+                edit
+              </button>
+            )}
             {index < certificates.length - 1 && (
               <div className="border-b border-gray-500 w-11/12 mx-auto mt-2 mb-3"></div>
             )}

@@ -7,7 +7,12 @@ import {
 import UserExperience from "./Experiences/UserExperience";
 import ProfileHeader from "./ProfileHeader/ProfileHeader";
 import { useEffect, useState } from "react";
-import { CertificateInterface, ExperienceInterface, ProfileInterface, SkillInterface } from "interfaces/userInterfaces";
+import {
+  CertificateInterface,
+  ExperienceInterface,
+  ProfileInterface,
+  SkillInterface,
+} from "interfaces/userInterfaces";
 import Modal from "./../Authentication/Modal";
 import AddExperience from "./Experiences/AddExperience";
 import AddCertificate from "./Certificates/AddCertificate";
@@ -20,13 +25,18 @@ import SERVER_URL from "@services/api/config";
 
 function ProfileContainer() {
   const [userData, setUserData] = useState<ProfileInterface>();
-  const [userExperience, setUserExperience] = useState<ExperienceInterface[]>([]);
-  const [userCertificates, setUserCertificates] = useState<CertificateInterface[]>([]);
+  const [userExperience, setUserExperience] = useState<ExperienceInterface[]>(
+    [],
+  );
+  const [userCertificates, setUserCertificates] = useState<
+    CertificateInterface[]
+  >([]);
   const [userSkills, setUserSkills] = useState<SkillInterface[]>([]);
   const [addExperienceModal, setAddExperienceModal] = useState<boolean>(false);
   const [addCertificateModal, setAddCertificateModal] =
     useState<boolean>(false);
   const [addSkillModal, setAddSkillModal] = useState<boolean>(false);
+  const [isUser, setIsUser] = useState<boolean>(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -69,6 +79,7 @@ function ProfileContainer() {
       {userData && (
         <ProfileHeader
           key={`Header of user ${userData.userId}`}
+          userId={userData.userId}
           firstname={userData.firstname}
           lastname={userData.lastname}
           headline={userData.headline}
@@ -90,28 +101,31 @@ function ProfileContainer() {
           }
           email={userData.email}
           updateUser={updateUser}
+          isUser={isUser}
         />
       )}
       {userData && (
         <div className="bg-darkGray my-2 p-4 rounded-lg shadow-md relative text-white">
           <div className="flex flex-row justify-between items-center">
             <h1 className="font-medium text-xl mb-4">Experience</h1>
-            <div className="flex flex-row gap-2">
-              <button
-                onClick={() => setAddExperienceModal(true)}
-                className="material-icons font-medium text-2xl p-2 rounded-full hover:bg-gray-600"
-              >
-                add
-              </button>
-              <button
-                onClick={() =>
-                  navigate(`/profile/${userData?.userId}/details/experiences`)
-                }
-                className="material-icons font-medium text-2xl p-2 rounded-full hover:bg-gray-600"
-              >
-                edit
-              </button>
-            </div>
+            {isUser && (
+              <div className="flex flex-row gap-2">
+                <button
+                  onClick={() => setAddExperienceModal(true)}
+                  className="material-icons font-medium text-2xl p-2 rounded-full hover:bg-gray-600"
+                >
+                  add
+                </button>
+                <button
+                  onClick={() =>
+                    navigate(`/profile/${userData?.userId}/details/experiences`)
+                  }
+                  className="material-icons font-medium text-2xl p-2 rounded-full hover:bg-gray-600"
+                >
+                  edit
+                </button>
+              </div>
+            )}
           </div>
           {userExperience.length > 0 ? (
             <>
@@ -139,14 +153,18 @@ function ProfileContainer() {
           ) : (
             <div>
               <h2 className="text-mutedSilver">
-                Add your experience to improve your profile views and Lincs
+                {isUser
+                  ? "Add your experience to improve your profile views and Lincs"
+                  : "User has no experience"}
               </h2>
-              <button
-                onClick={() => setAddExperienceModal(true)}
-                className="cursor-pointer mt-2 px-4 py-1.5 border-1 border-crimsonRed rounded-3xl hover:bg-softRosewood font-medium"
-              >
-                Add experience
-              </button>
+              {isUser && (
+                <button
+                  onClick={() => setAddExperienceModal(true)}
+                  className="cursor-pointer mt-2 px-4 py-1.5 border-1 border-crimsonRed rounded-3xl hover:bg-softRosewood font-medium"
+                >
+                  Add experience
+                </button>
+              )}
             </div>
           )}
         </div>
@@ -155,22 +173,26 @@ function ProfileContainer() {
         <div className="bg-darkGray my-2 p-4 rounded-lg shadow-md relative text-white">
           <div className="flex flex-row justify-between items-center">
             <h1 className="font-medium text-xl mb-4">Certificates</h1>
-            <div className="flex flex-row gap-2">
-              <button
-                onClick={() => setAddCertificateModal(true)}
-                className="material-icons font-medium text-2xl p-2 rounded-full hover:bg-gray-600"
-              >
-                add
-              </button>
-              <button
-                onClick={() =>
-                  navigate(`/profile/${userData?.userId}/details/certificates`)
-                }
-                className="material-icons font-medium text-2xl p-2 rounded-full hover:bg-gray-600"
-              >
-                edit
-              </button>
-            </div>
+            {isUser && (
+              <div className="flex flex-row gap-2">
+                <button
+                  onClick={() => setAddCertificateModal(true)}
+                  className="material-icons font-medium text-2xl p-2 rounded-full hover:bg-gray-600"
+                >
+                  add
+                </button>
+                <button
+                  onClick={() =>
+                    navigate(
+                      `/profile/${userData?.userId}/details/certificates`,
+                    )
+                  }
+                  className="material-icons font-medium text-2xl p-2 rounded-full hover:bg-gray-600"
+                >
+                  edit
+                </button>
+              </div>
+            )}
           </div>
           {userCertificates.length > 0 ? (
             <>
@@ -196,14 +218,18 @@ function ProfileContainer() {
           ) : (
             <div>
               <h2 className="text-mutedSilver">
-                Add your certificates to showcase your achievements
+                {isUser
+                  ? "Add your certificates to showcase your achievements"
+                  : "User has no certificates"}
               </h2>
-              <button
-                onClick={() => setAddCertificateModal(true)}
-                className="cursor-pointer mt-2 px-4 py-1.5 border-1 border-crimsonRed rounded-3xl hover:bg-softRosewood font-medium"
-              >
-                Add certificate
-              </button>
+              {isUser && (
+                <button
+                  onClick={() => setAddCertificateModal(true)}
+                  className="cursor-pointer mt-2 px-4 py-1.5 border-1 border-crimsonRed rounded-3xl hover:bg-softRosewood font-medium"
+                >
+                  Add certificate
+                </button>
+              )}
             </div>
           )}
         </div>
@@ -212,22 +238,24 @@ function ProfileContainer() {
         <div className="bg-darkGray my-2 p-4 rounded-lg shadow-md relative text-white">
           <div className="flex flex-row justify-between items-center">
             <h1 className="font-medium text-xl mb-4">Skills</h1>
-            <div className="flex flex-row gap-2">
-              <button
-                onClick={() => setAddSkillModal(true)}
-                className="material-icons font-medium text-2xl p-2 rounded-full hover:bg-gray-600"
-              >
-                add
-              </button>
-              <button
-                onClick={() =>
-                  navigate(`/profile/${userData?.userId}/details/skills`)
-                }
-                className="material-icons font-medium text-2xl p-2 rounded-full hover:bg-gray-600"
-              >
-                edit
-              </button>
-            </div>
+            {isUser && (
+              <div className="flex flex-row gap-2">
+                <button
+                  onClick={() => setAddSkillModal(true)}
+                  className="material-icons font-medium text-2xl p-2 rounded-full hover:bg-gray-600"
+                >
+                  add
+                </button>
+                <button
+                  onClick={() =>
+                    navigate(`/profile/${userData?.userId}/details/skills`)
+                  }
+                  className="material-icons font-medium text-2xl p-2 rounded-full hover:bg-gray-600"
+                >
+                  edit
+                </button>
+              </div>
+            )}
           </div>
           {userSkills.length > 0 ? (
             <>
@@ -253,14 +281,18 @@ function ProfileContainer() {
           ) : (
             <div>
               <h2 className="text-mutedSilver">
-                Add your skills to showcase your expertise
+                {isUser
+                  ? "Add your skills to showcase your expertise"
+                  : "User has no skills"}
               </h2>
-              <button
-                onClick={() => setAddSkillModal(true)}
-                className="cursor-pointer mt-2 px-4 py-1.5 border-1 border-crimsonRed rounded-3xl hover:bg-softRosewood font-medium"
-              >
-                Add skill
-              </button>
+              {isUser && (
+                <button
+                  onClick={() => setAddSkillModal(true)}
+                  className="cursor-pointer mt-2 px-4 py-1.5 border-1 border-crimsonRed rounded-3xl hover:bg-softRosewood font-medium"
+                >
+                  Add skill
+                </button>
+              )}
             </div>
           )}
         </div>

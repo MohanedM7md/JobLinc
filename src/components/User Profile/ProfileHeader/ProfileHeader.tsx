@@ -1,13 +1,18 @@
-import ProfileForm from "./ProfileForm ";
+import EditProfile from "./EditProfile";
 import Modal from "../../Authentication/Modal";
 import { useState } from "react";
 import { ProfileUpdateInterface } from "interfaces/userInterfaces";
-import { updateCoverPicture, updateMe, updateProfilePicture } from "@services/api/userProfileServices";
+import {
+  updateCoverPicture,
+  updateMe,
+  updateProfilePicture,
+} from "@services/api/userProfileServices";
 import EditProfilePicture from "./EditProfilePicture";
 import EditCoverPicture from "./EditCoverPicture";
 import "material-icons";
 
 interface ProfileProps {
+  userId: string;
   firstname: string;
   lastname: string;
   headline: string;
@@ -21,8 +26,9 @@ interface ProfileProps {
   updateUser: () => Promise<void>;
 }
 
-function ProfileHeader(props: ProfileProps) {
-  const [isEditUserModalOpen, setIsEditUserModalOpen] = useState<boolean>(false);
+function ProfileHeader(props: ProfileProps & { isUser: boolean }) {
+  const [isEditUserModalOpen, setIsEditUserModalOpen] =
+    useState<boolean>(false);
   const [isEditProfilePictureModalOpen, setIsEditProfilePictureModalOpen] =
     useState<boolean>(false);
   const [isEditCoverPictureModalOpen, setIsEditCoverPictureModalOpen] =
@@ -40,11 +46,11 @@ function ProfileHeader(props: ProfileProps) {
     setIsEditProfilePictureModalOpen(false);
   }
 
-   async function handleUpdateCoverPicture(updatedCoverPicture: File) {
-     await updateCoverPicture(updatedCoverPicture);
-     await props.updateUser();
-     setIsEditCoverPictureModalOpen(false);
-   }
+  async function handleUpdateCoverPicture(updatedCoverPicture: File) {
+    await updateCoverPicture(updatedCoverPicture);
+    await props.updateUser();
+    setIsEditCoverPictureModalOpen(false);
+  }
 
   return (
     <div className="profile-header bg-darkGray p-4 rounded-lg shadow-md relative">
@@ -54,15 +60,19 @@ function ProfileHeader(props: ProfileProps) {
           alt="Cover"
           className="w-full h-80 object-cover rounded-lg"
         />
-        <button
-          className="material-icons-outlined hover:material-icons-round cursor-pointer absolute top-2 right-2 bg-crimsonRed hover:bg-red-800 text-white p-1 rounded-full shadow-md"
-          onClick={() => setIsEditCoverPictureModalOpen(true)}
-        >
-          camera_alt
-        </button>
+        {props.isUser && (
+          <button
+            className="material-icons-outlined hover:material-icons-round cursor-pointer absolute top-2 right-2 bg-crimsonRed hover:bg-red-800 text-white p-1 rounded-full shadow-md"
+            onClick={() => setIsEditCoverPictureModalOpen(true)}
+          >
+            camera_alt
+          </button>
+        )}
         <div
-          className="absolute -bottom-16 left-4 w-32 h-32 cursor-pointer"
-          onClick={() => setIsEditProfilePictureModalOpen(true)}
+          className={`absolute -bottom-16 left-4 w-32 h-32 ${
+            props.isUser ? "cursor-pointer" : ""
+          }`}
+          onClick={() => props.isUser && setIsEditProfilePictureModalOpen(true)}
         >
           <img
             src={props.profilePicture}
@@ -86,14 +96,18 @@ function ProfileHeader(props: ProfileProps) {
               Contant Info
             </span>
           </div>
-          <p className="text-crimsonRed font-medium cursor-pointer hover:underline">Connections: {props.numberofConnections}</p>
+          <p className="text-crimsonRed font-medium cursor-pointer hover:underline">
+            Connections: {props.numberofConnections}
+          </p>
         </div>
-        <button
-          onClick={() => setIsEditUserModalOpen(true)}
-          className="material-icons text-white w-10 h-10 flex items-center justify-center hover:bg-gray-600 rounded-full cursor-pointer"
-        >
-          edit
-        </button>
+        {props.isUser && (
+          <button
+            onClick={() => setIsEditUserModalOpen(true)}
+            className="material-icons text-white w-10 h-10 flex items-center justify-center hover:bg-gray-600 rounded-full cursor-pointer"
+          >
+            edit
+          </button>
+        )}
       </div>
 
       <div className="flex mt-4 space-x-2">
@@ -115,7 +129,7 @@ function ProfileHeader(props: ProfileProps) {
         isOpen={isEditUserModalOpen}
         onClose={() => setIsEditUserModalOpen(false)}
       >
-        <ProfileForm
+        <EditProfile
           user={{
             firstname: props.firstname,
             lastname: props.lastname,

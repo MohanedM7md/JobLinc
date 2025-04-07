@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-interface ProfileFormProps {
+interface EditProfileProps {
   user: {
     firstname: string;
     lastname: string;
@@ -12,7 +12,7 @@ interface ProfileFormProps {
   onSave: (updatedUser: any) => void;
 }
 
-function ProfileForm({ user, onSave }: ProfileFormProps) {
+function EditProfile({ user, onSave }: EditProfileProps) {
   const [formData, setFormData] = useState({ ...user });
 
   const handleInputChange = (
@@ -135,4 +135,4 @@ function ProfileForm({ user, onSave }: ProfileFormProps) {
   );
 }
 
-export default ProfileForm;
+export default EditProfile;
