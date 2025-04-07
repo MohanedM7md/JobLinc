@@ -12,6 +12,7 @@ import { api } from "./api";
 export async function getMe() {
   try {
     const response = await api.get("user/me");
+    console.log("User data:", response.data);
     return response.data;
   } catch (error) {
     console.error("Error fetching user data:", error);
@@ -24,6 +25,35 @@ export async function updateMe(newProfile: ProfileUpdateInterface) {
   }
   catch (error) {
     console.error("Error updating user data:", error);
+  }
+}
+
+export async function updateProfilePicture(file: File) {
+  try {
+    const form = new FormData();
+    form.append("file", file);
+    await api.post("user/edit/profile-picture", form, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+  }
+  catch (error) {
+    console.error("Error updating profile picture:", error);
+  }
+}
+
+export async function updateCoverPicture(file: File) {
+  try {
+    const form = new FormData();
+    form.append("file", file);
+    await api.post("user/edit/cover-picture", form, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+  } catch (error) {
+    console.error("Error updating cover picture:", error);
   }
 }
 

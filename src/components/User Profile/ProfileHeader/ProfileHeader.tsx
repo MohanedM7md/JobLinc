@@ -2,10 +2,10 @@ import ProfileForm from "./ProfileForm ";
 import Modal from "../../Authentication/Modal";
 import { useState } from "react";
 import { ProfileUpdateInterface } from "interfaces/userInterfaces";
-import { updateMe } from "@services/api/userProfileServices";
+import { updateCoverPicture, updateMe, updateProfilePicture } from "@services/api/userProfileServices";
 import EditProfilePicture from "./EditProfilePicture";
 import EditCoverPicture from "./EditCoverPicture";
-import "material-icons"
+import "material-icons";
 
 interface ProfileProps {
   firstname: string;
@@ -14,31 +14,45 @@ interface ProfileProps {
   country: string;
   city: string;
   profilePicture: string;
+  coverPicture: string;
   phoneNumber: string;
   email: string;
+  numberofConnections: number;
   updateUser: () => Promise<void>;
 }
 
 function ProfileHeader(props: ProfileProps) {
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isEditUserModalOpen, setIsEditUserModalOpen] = useState<boolean>(false);
   const [isEditProfilePictureModalOpen, setIsEditProfilePictureModalOpen] =
     useState<boolean>(false);
   const [isEditCoverPictureModalOpen, setIsEditCoverPictureModalOpen] =
     useState<boolean>(false);
 
-  async function handleSave(updatedUser: ProfileUpdateInterface) {
+  async function handleUpdateUser(updatedUser: ProfileUpdateInterface) {
     await updateMe(updatedUser);
     await props.updateUser();
-    setIsModalOpen(false);
+    setIsEditUserModalOpen(false);
   }
+
+  async function handleUpdateProfilePicture(updatedProfilePicture: File) {
+    await updateProfilePicture(updatedProfilePicture);
+    await props.updateUser();
+    setIsEditProfilePictureModalOpen(false);
+  }
+
+   async function handleUpdateCoverPicture(updatedCoverPicture: File) {
+     await updateCoverPicture(updatedCoverPicture);
+     await props.updateUser();
+     setIsEditCoverPictureModalOpen(false);
+   }
 
   return (
     <div className="profile-header bg-darkGray p-4 rounded-lg shadow-md relative">
       <div className="relative mb-16">
         <img
-          src="https://fastly.picsum.photos/id/6/500/150.jpg?hmac=DNsBPoYhZrvLVc__YwZt4A-PY7MIPBseudP2AQzu4Is"
+          src={props.coverPicture}
           alt="Cover"
-          className="w-full h-52 object-cover rounded-lg"
+          className="w-full h-80 object-cover rounded-lg"
         />
         <button
           className="material-icons-outlined hover:material-icons-round cursor-pointer absolute top-2 right-2 bg-crimsonRed hover:bg-red-800 text-white p-1 rounded-full shadow-md"
@@ -51,11 +65,7 @@ function ProfileHeader(props: ProfileProps) {
           onClick={() => setIsEditProfilePictureModalOpen(true)}
         >
           <img
-            src={
-              props.profilePicture === ""
-                ? "https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg"
-                : props.profilePicture
-            }
+            src={props.profilePicture}
             alt="Profile"
             className="w-32 h-32 object-cover rounded-full border-4 border-warmWhite shadow-lg"
           />
@@ -72,13 +82,14 @@ function ProfileHeader(props: ProfileProps) {
             <p className="text-mutedSilver">
               {props.city}, {props.country}
             </p>
-            <span className="text-crimsonRed font-medium cursor-pointer ml-2">
+            <span className="text-crimsonRed font-medium cursor-pointer ml-2 hover:underline">
               Contant Info
             </span>
           </div>
+          <p className="text-crimsonRed font-medium cursor-pointer hover:underline">Connections: {props.numberofConnections}</p>
         </div>
         <button
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => setIsEditUserModalOpen(true)}
           className="material-icons text-white w-10 h-10 flex items-center justify-center hover:bg-gray-600 rounded-full cursor-pointer"
         >
           edit
@@ -100,7 +111,10 @@ function ProfileHeader(props: ProfileProps) {
         </button>
       </div>
 
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+      <Modal
+        isOpen={isEditUserModalOpen}
+        onClose={() => setIsEditUserModalOpen(false)}
+      >
         <ProfileForm
           user={{
             firstname: props.firstname,
@@ -110,7 +124,7 @@ function ProfileHeader(props: ProfileProps) {
             city: props.city,
             phoneNumber: props.phoneNumber,
           }}
-          onSave={handleSave}
+          onSave={handleUpdateUser}
         />
       </Modal>
 
@@ -118,14 +132,20 @@ function ProfileHeader(props: ProfileProps) {
         isOpen={isEditProfilePictureModalOpen}
         onClose={() => setIsEditProfilePictureModalOpen(false)}
       >
-        <EditProfilePicture profilePicture={props.profilePicture} />
+        <EditProfilePicture
+          profilePicture={props.profilePicture}
+          onSave={handleUpdateProfilePicture}
+        />
       </Modal>
 
       <Modal
         isOpen={isEditCoverPictureModalOpen}
         onClose={() => setIsEditCoverPictureModalOpen(false)}
       >
-        <EditCoverPicture coverPicture={props.profilePicture} />
+        <EditCoverPicture
+          coverPicture={props.coverPicture}
+          onSave={handleUpdateCoverPicture}
+        />
       </Modal>
     </div>
   );

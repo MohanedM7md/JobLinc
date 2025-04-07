@@ -1,27 +1,19 @@
-import { PostInterface } from "./postInterfaces";
-
 export interface ProfileInterface {
   userId: string;
   firstname: string;
   lastname: string;
   headline: string;
-  profilePicture: string;
-  phoneNumber: string;
-  biography: string;
-  //coverPicture: string,
-  role: number;
+  username: string;
   email: string;
+  confirmed: string;
   country: string;
   city: string;
-  confirmed: string;
-  connectionStatus: string;
+  phoneNumber: string;
+  role: number;
   numberofConnections: number;
   mutualConnections: number;
-  recentPosts: PostInterface[];
-  skills: SkillInterface[];
-  education: EducationInterface[];
-  experience: ExperienceInterface[];
-  certifications: CertificateInterface[];
+  profilePicture?: string;
+  coverPicture?: string,
 }
 
 export interface ProfileUpdateInterface {

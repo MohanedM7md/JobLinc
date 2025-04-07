@@ -40,7 +40,7 @@ export default function FullCertificates() {
   }
 
   return (
-    <div className="bg-darkGray my-2 p-4 rounded-lg shadow-md relative text-white">
+    <div className="bg-darkGray my-2 p-4 rounded-lg shadow-md relative text-white w-12/12 lg:w-6/12 m-auto">
       <div className="flex flex-row justify-between items-center">
         <h1 className="font-medium text-xl mb-4">Certificates</h1>
         <button

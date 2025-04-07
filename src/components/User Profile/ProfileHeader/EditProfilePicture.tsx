@@ -3,6 +3,7 @@ import "material-icons";
 
 interface EditProfilePictureProps {
   profilePicture: string;
+  onSave: (updatedProfilePicture: File) => void;
 }
 
 export default function EditProfilePicture(props: EditProfilePictureProps) {
@@ -29,8 +30,10 @@ export default function EditProfilePicture(props: EditProfilePictureProps) {
     }
   },[file])
 
-  function confirmPicture() {
-  
+  async function confirmPicture() {
+    if (file) {
+      props.onSave(file);
+    }
   }
 
   function removePicture() {
