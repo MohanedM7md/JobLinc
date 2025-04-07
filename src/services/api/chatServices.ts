@@ -35,3 +35,8 @@ export const createChat = async (recievers: string[]) => {
   const response = await api.post(`/chat/openChat`, { recievers });
   return response.data;
 };
+
+export const ReadToggler = async (chatId: string) => {
+  const response = await api.put(`/chat/openChat`, { chatId });
+  return response.data;
+};
