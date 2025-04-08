@@ -12,8 +12,9 @@ import UserCertificate from "./UserCertificate";
 import AddCertificate from "./AddCertificate";
 import EditCertificate from "./EditCertificate";
 
-export default function FullCertificates({ isUser }: { isUser: boolean }) {
+export default function FullCertificates() {
   const { userId } = useParams();
+  const [isUser, setIsUser] = useState<boolean>(true);
   const [certificates, setCertificates] = useState<CertificateInterface[]>([]);
   const [addCertificateModal, setAddCertificateModal] =
     useState<boolean>(false);

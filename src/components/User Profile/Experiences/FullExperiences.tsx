@@ -8,8 +8,9 @@ import AddExperience from "./AddExperience";
 import Modal from "./../../Authentication/Modal";
 import { getExperience } from "@services/api/userProfileServices";
 
-export default function FullExperiences({ isUser }: { isUser: boolean }) {
+export default function FullExperiences() {
   const { userId } = useParams();
+  const [isUser, setIsUser] = useState<boolean>(true);
   const [experiences, setExperiences] = useState<ExperienceInterface[]>([]);
   const [addExperienceModal, setAddExperienceModal] = useState<boolean>(false);
   const [editExperienceData, setEditExperienceData] =

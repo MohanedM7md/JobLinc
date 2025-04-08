@@ -7,8 +7,9 @@ import EditSkill from "./EditSkill";
 import UserSkill from "./UserSkill";
 import { useParams } from "react-router-dom";
 
-export default function FullSkills({ isUser }: { isUser: boolean }) {
+export default function FullSkills() {
   const { userId } = useParams();
+  const [isUser, setIsUser] = useState<boolean>(true);
   const [skills, setSkills] = useState<SkillInterface[]>([]);
   const [addSkillModal, setAddSkillModal] = useState<boolean>(false);
   const [editSkillData, setEditSkillData] = useState<SkillInterface | null>(
