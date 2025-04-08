@@ -1,4 +1,4 @@
-import SignHeader from "../components/Authentication/SignHeader";
+import SignHeader from "../components/Authentication/Headers/SignHeader";
 import { AuthenticationSignInButton } from "../components/Authentication/AuthenticationButtons";
 import { useState, useEffect } from "react";
 import store from "../store/store";
