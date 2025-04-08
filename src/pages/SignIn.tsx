@@ -1,6 +1,6 @@
 import SignInInformation from "../components/Authentication/SignInInformation";
 import { AuthenticationGoogleButton, AuthenticationAppleButton } from "../components/Authentication/AuthenticationButtons";
-import SignHeader from "../components/Authentication/SignHeader";
+import SignHeader from "../components/Authentication/Headers/SignHeader";
 import { Outlet, Link } from "react-router-dom";
 
 function SignInPage()
