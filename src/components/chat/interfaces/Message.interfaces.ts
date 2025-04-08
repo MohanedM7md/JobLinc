@@ -15,10 +15,10 @@ export interface MessageBase {
     video?: string;
     document?: string;
   };
+  seenBy: string[];
 }
 export interface RecievedMessage extends MessageBase {
   senderId: string;
-  seenBy: string[];
 }
 
 export interface MessageBubbleInterface extends MessageBase {

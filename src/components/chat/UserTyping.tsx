@@ -6,7 +6,7 @@ export default function UserTypingIndicator({
   userImage: string | undefined;
 }) {
   return (
-    <div className="relative bg-lightGray">
+    <div className="relative bg-gray-100 ml-1">
       <div className=" absolute left-2">
         <div className="flex items-center space-x-2">
           <img
