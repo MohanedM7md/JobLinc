@@ -17,7 +17,14 @@ export default function FullSkills() {
   );
 
   useEffect(() => {
-    updateSkills();
+    if (userId === JSON.parse(localStorage.getItem("userState") || "").userId) {
+      setIsUser(true);
+      updateSkills();
+    }
+    else {
+      setIsUser(false);
+
+    }
   }, [userId]);
 
   async function updateSkills() {

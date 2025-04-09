@@ -88,17 +88,17 @@ function App() {
             <Route path="/update-email" element={<UpdateEmail />} />
             <Route path="/update-username" element={<UpdateUsername />} />
             <Route path="/in" element={<UserProfile />}></Route>
-            <Route path="/profile">
+            <Route path="/profile/:userId">
               <Route index element={<ProfileContainer />} />
               <Route
-                path=":userId/details/experiences"
+                path="details/experiences"
                 element={<FullExperiences />}
               />
               <Route
-                path=":userId/details/certificates"
+                path="details/certificates"
                 element={<FullCertificates />}
               />
-              <Route path=":userId/details/skills" element={<FullSkills />} />
+              <Route path="details/skills" element={<FullSkills />} />
             </Route>
             <Route path="/post">
               <Route index element={<PostContainer />} />

@@ -17,7 +17,14 @@ export default function FullExperiences() {
     useState<ExperienceInterface | null>(null);
 
   useEffect(() => {
-    updateExperiences();
+    if (userId === JSON.parse(localStorage.getItem("userState") || "").userId) {
+      setIsUser(true);
+      updateExperiences();
+    }
+    else {
+      setIsUser(false);
+
+    }
   }, [userId]);
 
   async function updateExperiences() {
