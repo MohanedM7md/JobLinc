@@ -156,4 +156,13 @@ export async function deleteSkill(skillId: string) {
   }
 }
 
+export async function getUserById(userId: string) {
+  try {
+    const response = await api.get(`user/u/${userId}/public`);
+    return response.data;
+  } catch (error) {
+    console.error("Error retrieving user:", error);
+  }
+}
+
 
