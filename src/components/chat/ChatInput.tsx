@@ -76,11 +76,13 @@ function ChatInput({
             ref={fileInputRef}
             onChange={handleFileChange}
             className="hidden"
+            data-testid="file-input"
           />
           <button
             onClick={handleFileButtonClick}
             className="text-mutedSilver dark:text-charcoalWhite hover:text-charcoalBlack
             dark:hover:text-warmWhite p-2"
+            data-testid="attach-button"
           >
             <Paperclip size={20} />
           </button>

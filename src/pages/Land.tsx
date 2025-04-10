@@ -20,7 +20,7 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
 } from "lucide-react";
-import Logo from "../components/Logo";
+import Logo from "../components/utils/Logo";
 
 function LandPage() {
   const navigate = useNavigate();
