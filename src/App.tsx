@@ -23,7 +23,7 @@ import ConfirmEmail from "./pages/ConfirmEmail";
 import Error404 from "@pages/Eror404";
 import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
-import Jobs_And_Hiring from "components/Jobs&hiring/Jobs_And_Hiring";
+import Jobs_And_Hiring from "./components/Jobs&hiring/Jobs_And_Hiring";
 
 import AuthRoute from "./components/AuthRoute";
 function App() {
@@ -49,7 +49,7 @@ function App() {
               element={<ConfirmEmail /* email="" token="" */ />}
             />
           </Route>
-          <Route path="/Jobs_And_Hiring" element={<Jobs_And_Hiring />} />
+          
 
           {/*   <Route element={<ProtectedRoute />}> */}
           <Route element={<Layout />}>
@@ -65,6 +65,7 @@ function App() {
               <Route path="create" element={<PostCreate />} />
               <Route path=":postId/edit" element={<PostEdit />} />
             </Route>
+            <Route path="/jobs-and-hiring" element={<Jobs_And_Hiring />} />
           </Route>
 
           <Route path="/playground" element={<PlayGround />} />
