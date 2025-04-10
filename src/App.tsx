@@ -35,7 +35,8 @@ import SignInAndSecurity from "@pages/Settings/SignInAndSecurity";
 import Visibility from "@pages/Settings/Visibility";
 import DataAndPrivacy from "@pages/Settings/DataAndPrivacy";
 import AdvertisingData from "@pages/Settings/AdvertisingData";
-import DarkMode from "@pages/Settings/AccountPreferences/DarkMode";
+import DarkMode from "@pages/Settings/AccountPreferences/Display/DarkMode";
+import DemographicInfo from "@pages/Settings/AccountPreferences/ProfileInformation/DemographicInfo";
 
 function App() {
   return (
@@ -76,6 +77,7 @@ function App() {
               {/* Account Preferences Pages */}
               <Route path="account-preferences" element={<AccountPreferences />} />
               <Route path="account-preferences/display/dark-mode" element={<DarkMode />}></Route>
+              <Route path="account-preferences/profile-information/demographic-info" element={<DemographicInfo />}></Route>
 
               <Route path="sign-in-security" element={<SignInAndSecurity />}></Route>
               <Route path="visibility" element={<Visibility />}></Route>

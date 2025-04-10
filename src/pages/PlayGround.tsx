@@ -6,6 +6,7 @@ import ChatProvider from "../context/ChatsIdProvider";
 import { useState } from "react";
 import FloatingChatSystem from "../components/chat/FloatingChat/FloatingChatSystem";
 import { UserProvider } from "../components/chat/mockUse";
+import DemographicInfo from "./Settings/AccountPreferences/ProfileInformation/DemographicInfo";
 
 function PlayGround() {
   /*   const dispatch = useAppDispatch();
@@ -39,7 +40,7 @@ function PlayGround() {
         </ChatProvider>
       </UserProvider> */}
 
-      
+      <DemographicInfo />
     </div>
   );
 }
