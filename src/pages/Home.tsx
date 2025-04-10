@@ -6,6 +6,9 @@ import { Link } from "react-router-dom";
 import { getUserDetails } from "../store/user/userThunks";
 import { sendConfirmationEmail } from "../store/user/userThunks";
 import { useAppSelector } from "@store/hooks";
+import { logOut } from "@store/user/userSlice";
+import store from "../store/store";
+
 
 function Home() {
   const user1 = useAppSelector((state) => state.user);
@@ -21,6 +24,7 @@ function Home() {
     firstname: "",
     lastname: "",
     email: "",
+    username: "",
     confirmed: false,
   });
 
@@ -51,7 +55,7 @@ function Home() {
 
   useEffect(() => {
     if (!localStorage.getItem("refreshToken")) {
-      navigate("/Signin");
+      navigate("/");
       return;
     } else {
       dispatch(getUserDetails())
@@ -62,13 +66,15 @@ function Home() {
             lastname: data.lastname,
             email: data.email,
             confirmed: data.confirmed,
+            username: data.username,
           });
           setLoading(false);
         })
         .catch((error) => {
           console.error("Error fetching user data: ", error);
           localStorage.removeItem("refreshToken");
-          navigate("/Signin");
+          localStorage.removeItem("userState");
+          navigate("/");
         });
     }
   }, [navigate, dispatch]);
@@ -87,6 +93,16 @@ function Home() {
         });
       });
   }
+
+  function handleSignOut()
+  {
+    dispatch(logOut());
+    navigate("/");
+  }
+
+
+
+
   if (loading) {
     return <p>Loading...</p>;
   }
@@ -104,7 +120,10 @@ function Home() {
           <p>
             <strong>Last name:</strong> {userDetails.lastname}
           </p>
-
+          <p>
+            <strong>Username:</strong> {userDetails.username}
+          </p>
+          
           <Link
             className="text-[16px] text-warmBlack font-semibold hover:underline"
             to="/change-password"
@@ -123,6 +142,12 @@ function Home() {
           >
             Update username
           </Link>
+
+          <span className="hover:underline hover:cursor-pointer" onClick={handleSignOut}>
+            Sign out
+          </span>
+
+
           {userDetails.confirmed ? (
             <p className="text-green-600">Email confirmed</p>
           ) : (

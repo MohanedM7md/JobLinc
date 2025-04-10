@@ -1,4 +1,4 @@
-import SignHeader from "../components/Authentication/SignHeader";
+import SignHeader from "../components/Authentication/Headers/SignHeader";
 import NameFieldNormal from "../components/Authentication/Utilities/NameFieldNormal";
 import { useState } from "react";
 import { AuthenticationSignInButton } from "../components/Authentication/AuthenticationButtons";

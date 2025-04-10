@@ -74,7 +74,6 @@ function ChatContent({ className }: { className?: string }) {
     const newMessage: any = {
       senderId: store.getState().user.userId,
       time: new Date(),
-      status: MessageStatus.Sent,
       seenBy: [store.getState().user.userId],
       content: { text: message },
     };
@@ -100,7 +99,7 @@ function ChatContent({ className }: { className?: string }) {
   };
   return (
     <div className={`${className} flex flex-col flex-1 overflow-y-hidden`}>
-      <div className="h-8/12 overflow-y-auto">
+      <div className="h-8/12 overflow-y-auto bg-gray-100">
         <ChatMessages users={users} messages={messages} />
         {typingUsers.map((typingUserId) => (
           <UserTypingIndicator

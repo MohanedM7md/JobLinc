@@ -1,21 +1,43 @@
-import SignHeader from "../components/Authentication/SignHeader";
+import SignHeader from "../components/Authentication/Headers/SignHeader";
 import EmailFieldNormal from "../components/Authentication/Utilities/EmailFieldNormal";
 import { useState } from "react";
 import { AuthenticationSignInButton } from "../components/Authentication/AuthenticationButtons";
+import { updateEmail } from "@store/user/userThunks";
+import { useAppDispatch } from "@store/hooks";
+
 function UpdateEmail()
 {
     const [emailText, setEmailText] = useState("");
     const [showErrorEmailEmpty, setshowErrorEmailEmpty] = useState(false);
     const [showErrorEmailInvalid, setshowErrorEmailInvalid] = useState(false);
-
-    function isValidSubmit(event: React.FormEvent<HTMLFormElement>) {
+    const dispatch = useAppDispatch();
+    async function isValidSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
         if (!showErrorEmailEmpty && !showErrorEmailInvalid) {
-            console.log("Email Updated");
-
-            // Add logic here to update email
-            // Most likely will need to dispatch an action to get the access token from the store and then send a request to the server to update the email
+            const storedUser = localStorage.getItem("userState");
+            const user = JSON.parse(storedUser || "{}");
+        
+            const userId = user.userId;
+            const userData = {
+                userId: userId,
+                email: emailText,
+            };
+        
+            dispatch(updateEmail(userData))
+            .then(() => {
+                console.log("Email updated successfully");
+        
+                const updatedUser = {
+                    ...user,
+                    email: emailText
+                };
+                localStorage.setItem("userState", JSON.stringify(updatedUser));
+            })
+            .catch((err) => {
+                console.error(err);
+            });
         }
+        
     }
     {
 
