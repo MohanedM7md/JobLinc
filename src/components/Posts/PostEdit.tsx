@@ -9,7 +9,7 @@ export default function PostEdit() {
 
   function submitEdit() {
     editPost(location.state.postID, newText).then(() => {
-      navigate("/post");
+      navigate("/home");
     });
   }
 

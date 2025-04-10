@@ -22,7 +22,7 @@ import AddSkill from "./Skills/AddSkill";
 import UserSkill from "./Skills/UserSkill";
 import "material-icons";
 import { useNavigate, useParams } from "react-router-dom";
-import SERVER_URL from "@services/api/config";
+import { CLOUDINARY_BASE_URL } from "@services/api/config";
 
 function ProfileContainer() {
   const { userId } = useParams();
@@ -98,12 +98,12 @@ function ProfileContainer() {
           city={userData.city}
           profilePicture={
             userData.profilePicture
-              ? `${SERVER_URL}${userData.profilePicture}`
+              ? `${CLOUDINARY_BASE_URL}${userData.profilePicture}`
               : "https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg"
           }
           coverPicture={
             userData.coverPicture
-              ? `${SERVER_URL}${userData.coverPicture}`
+              ? `${CLOUDINARY_BASE_URL}${userData.coverPicture}`
               : "https://fastly.picsum.photos/id/6/500/150.jpg?hmac=DNsBPoYhZrvLVc__YwZt4A-PY7MIPBseudP2AQzu4Is"
           }
           phoneNumber={userData.phoneNumber}

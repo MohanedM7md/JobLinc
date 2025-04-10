@@ -43,7 +43,7 @@ export default function CommentCard(props: CommentCardProps) {
       <div className="flex flex-row w-1/1 px-2">
         <CommenterDetails
           key={`Details of Commenter ${props.comment.userId}`}
-          userID={props.comment.userId}
+          userId={props.comment.userId}
           name={props.comment.firstname + " " + props.comment.lastname}
           headline={props.comment.headline}
           profilePicture={props.comment.profilePicture}

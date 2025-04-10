@@ -56,9 +56,9 @@ export const createPost = async (text: string) => {
 };
 
 // Create a comment (NOT in documentation)
-export const createComment = async (postId: string, commentText: string) => {
+export const createComment = async (postId: string, text: string) => {
   try {
-    await api.post(`post/${postId}/comment`, { commentText });
+    await api.post(`post/${postId}/comment`,  {text} );
   } catch (error) {
     console.error("Error creating comment:", error);
   }

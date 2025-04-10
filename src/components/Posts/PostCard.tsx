@@ -14,6 +14,7 @@ import {
   getComments,
 } from "../../services/api/postServices";
 import { useNavigate } from "react-router-dom";
+import { CLOUDINARY_BASE_URL } from "@services/api/config";
 
 interface PostProps {
   post: PostInterface;
@@ -51,14 +52,14 @@ export default function Post(props: PostProps) {
   }
 
   return !hide ? (
-    <div className="flex flex-wrap w-1/1 bg-lightGray rounded-xl relative">
+    <div className="flex flex-wrap w-1/1 relative">
       <div className="flex flex-row w-1/1">
         <ProfileDetails
           key={`Details of poster ${posterId}`}
           id={posterId}
           name={name}
           headline={props.post.headline}
-          profilePicture={posterPic}
+          profilePicture={`${CLOUDINARY_BASE_URL}${posterPic}`}
           isFollowing={false}
         />
         <div className="">
@@ -87,7 +88,7 @@ export default function Post(props: PostProps) {
       <PostDetails
         key={`Details of post ${props.post.postId}`}
         text={props.post.text}
-        media={props.post.media}
+        mediaURL={props.post.mediaURL}
       />
       <div className="flex flex-row m-auto py-2 w-11/12 border-b-1 border-gray-300">
         <span className="text-blue-500 material-icons">thumb_up</span>
