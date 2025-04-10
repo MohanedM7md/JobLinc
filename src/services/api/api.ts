@@ -3,7 +3,6 @@ import store from "@store/store";
 import { API_URL } from "./config";
 import { logOut, updateAccessToken } from "@store/user/userSlice";
 
-axios.defaults.baseURL;
 export const api = axios.create({
   baseURL: API_URL,
   headers: {
@@ -39,6 +38,8 @@ api.interceptors.response.use(
         const userId = store.getState().user.userId;
         if (!refreshToken) {
           console.log("No refresh token found, logging out...");
+          localStorage.removeItem("refreshToken");
+          localStorage.removeItem("userState");
           dispatch(logOut());
 
           window.location.href = "/";

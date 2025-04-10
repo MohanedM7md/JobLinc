@@ -1,0 +1,43 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`UserTypingIndicator Component > matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="relative bg-gray-100 ml-1"
+    data-testid="typing-indicator-container"
+  >
+    <div
+      class="absolute left-2"
+    >
+      <div
+        class="flex items-center space-x-2"
+      >
+        <img
+          alt="User typing indicator"
+          class="w-4 h-4 rounded-full border border-gray-300"
+          src="test.jpg"
+        />
+        <div
+          class="flex space-x-1"
+        >
+          <span
+            class="w-2 h-2 bg-gray-500 rounded-full animate-bounce"
+            data-testid="typing-dot"
+            style="animation-delay: 0s;"
+          />
+          <span
+            class="w-2 h-2 bg-gray-500 rounded-full animate-bounce"
+            data-testid="typing-dot"
+            style="animation-delay: 0.1s;"
+          />
+          <span
+            class="w-2 h-2 bg-gray-500 rounded-full animate-bounce"
+            data-testid="typing-dot"
+            style="animation-delay: 0.2s;"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
