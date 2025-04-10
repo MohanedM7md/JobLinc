@@ -10,8 +10,9 @@ import ForgotPassword from "./pages/ForgotPassword";
 import UserDetails from "./components/Authentication/UserDetails";
 const Messaging = lazy(() => import("./pages/Messaging"));
 const UserProfile = lazy(() => import("./pages/UserProfile"));
+//const MyNetwork = lazy(() => import("./pages/MyNetwork"));
 import Home from "./pages/Home";
-import MyNetwork from "./pages/MyNetworkPage";
+import MyNetwork from "./pages/MyNetwork";
 import PostContainer from "./components/Posts/PostContainer";
 import PostCreate from "./components/Posts/PostCreate";
 import PostEdit from "./components/Posts/PostEdit";
@@ -24,6 +25,7 @@ import Error404 from "@pages/Eror404";
 import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AuthRoute from "./components/AuthRoute";
+import Connections from "./pages/Connections";
 function App() {
   return (
     <>
@@ -52,6 +54,7 @@ function App() {
           <Route element={<Layout />}>
             <Route path="/home" element={<Home />} />
             <Route path="/my-network" element={<MyNetwork />} />
+            <Route path="/connections" element={<Connections />} />
             <Route path="/messaging" element={<Messaging />} />
             <Route path="/change-password" element={<ChangePassword />} />
             <Route path="/update-email" element={<UpdateEmail />} />

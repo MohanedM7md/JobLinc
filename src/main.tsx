@@ -16,7 +16,7 @@ async function enableMocking() {
 
   return worker.start();
 }
-/* enableMocking().then(() => { */
+enableMocking().then(() => {
 createRoot(document.getElementById("root")!).render(
   <BrowserRouter>
     <Provider store={store}>
@@ -24,4 +24,4 @@ createRoot(document.getElementById("root")!).render(
     </Provider>
   </BrowserRouter>,
 );
-/* }); */
+});
