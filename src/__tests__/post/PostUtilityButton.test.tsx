@@ -19,11 +19,16 @@ describe("PostUtilityButton", () => {
       lastname: "Doe",
       headline: "Software Engineer",
       profilePicture: "https://example.com/profile.jpg",
+      companyId: null,
+      companyName: null,
+      companyLogo: null,
       text: "This is a post",
-      pics: [],
+      time: new Date(),
+      mediaURL: [],
       likes: 10,
       comments: 5,
       reposts: 2,
+      repost: null,
     };
     render(
       <BrowserRouter>

@@ -171,6 +171,7 @@ const userSlice = createSlice({
         getUserDetails.fulfilled,
         (state, action: PayloadAction<any>) => {
           const userData = action.payload;
+          console.log("set in storage");
 
           if (userData) {
             console.log("get user details Payload:", userData);

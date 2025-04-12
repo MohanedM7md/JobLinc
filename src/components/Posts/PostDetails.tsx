@@ -3,7 +3,7 @@ import PostMedia from "./PostMedia";
 
 interface PostDetailsProps {
   text: string;
-  media: string[];
+  mediaURL: string[];
 }
 
 export default function PostDetails(props: PostDetailsProps) {
@@ -23,10 +23,10 @@ export default function PostDetails(props: PostDetailsProps) {
           {show}
         </button>
       </div>
-      {props.media.length > 0 ? (
+      {props.mediaURL?.length > 0 ? (
         <PostMedia
           key="mediaRendering"
-          pics={props.media}
+          pics={props.mediaURL}
         />
       ) : null}
     </div>

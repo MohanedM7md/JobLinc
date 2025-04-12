@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "material-icons/iconfont/material-icons.css";
+import { useNavigate } from "react-router-dom";
 
 interface ProfileDetailsProps {
   id: string;
@@ -10,6 +11,7 @@ interface ProfileDetailsProps {
 }
 
 export default function ProfileDetails(props: ProfileDetailsProps) {
+  const navigate = useNavigate();
   const [isFollowing, setIsFollowing] = useState<boolean>(props.isFollowing);
   const Followed = !isFollowing ? "Follow" : "Followed";
  
@@ -23,7 +25,7 @@ export default function ProfileDetails(props: ProfileDetailsProps) {
       <div className="mt-5 w-1/1 min-w-0">
         <div className="flex flex-row justify-between w-1/1">
           <div className="flex flex-row">
-            <p className="mr-2 font-bold">{props.name}</p>
+            <p onClick={() => {navigate(`/profile/${props.id}`)}} className="mr-2 font-bold cursor-pointer">{props.name}</p>
             <p
               className={
                 isFollowing

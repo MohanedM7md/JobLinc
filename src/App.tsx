@@ -106,7 +106,6 @@ function App() {
               <Route path="details/skills" element={<FullSkills />} />
             </Route>
             <Route path="/post">
-              <Route index element={<PostContainer />} />
               <Route path="create" element={<PostCreate />} />
               <Route path=":postId/edit" element={<PostEdit />} />
             </Route>

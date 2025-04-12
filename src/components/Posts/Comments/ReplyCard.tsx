@@ -16,7 +16,7 @@ export default function ReplyCard(props: ReplyCardProps) {
       <div className="flex flex-row w-1/1 pr-2">
         <CommenterDetails
           key={`Details of Commenter ${props.reply.userId}`}
-          userID={props.reply.userId}
+          userId={props.reply.userId}
           name={props.reply.firstname + " " + props.reply.lastname}
           headline={props.reply.headline}
           profilePicture={props.reply.profilePicture}
