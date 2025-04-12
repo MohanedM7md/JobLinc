@@ -7,7 +7,7 @@ import { AppDispatch } from "@store/store";
 export default function Home() {
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
-    //dispatch(getUserDetails());
+    dispatch(getUserDetails());
   }, []);
   return (
     <div className="bg-lightGray">
