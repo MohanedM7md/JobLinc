@@ -13,52 +13,51 @@ function ConnectionsListCard() {
       firstName: "Ahmed",
       lastName: "Hassan",
       userBio: "Plumber",
-      connectedDate: "Connected today",
+      connectedDate: new Date("2025-04-10"),
     },
     {
       profileImage: "src/assets/Tyrone.jpg",
       firstName: "Sarah",
       lastName: "Smith",
       userBio: "Graphic Designer",
-      connectedDate: "Connected 2 days ago",
+      connectedDate: new Date("2025-04-08"),
     },
     {
       profileImage: "src/assets/Tyrone.jpg",
       firstName: "John",
       lastName: "Doe",
       userBio: "Software Engineer",
-      connectedDate: "Connected last week",
+      connectedDate: new Date("2025-04-03"),
+    },
+    {
+      profileImage: "src/assets/Tyrone.jpg",
+      firstName: "Sarah",
+      lastName: "Zmith", 
+      userBio: "Graphic Designer",
+      connectedDate: new Date("2025-04-08"),
+    },
+    {
+      profileImage: "src/assets/Tyrone.jpg",
+      firstName: "John",
+      lastName: "Doe",
+      userBio: "Software Engineer",
+      connectedDate: new Date("2025-04-03"),
     },
     {
       profileImage: "src/assets/Tyrone.jpg",
       firstName: "Sarah",
       lastName: "Smith",
       userBio: "Graphic Designer",
-      connectedDate: "Connected 2 days ago",
+      connectedDate: new Date("2022-04-08"),
     },
     {
       profileImage: "src/assets/Tyrone.jpg",
-      firstName: "John",
-      lastName: "Doe",
+      firstName: "Ben",
+      lastName: "Dover",
       userBio: "Software Engineer",
-      connectedDate: "Connected last week",
-    },
-    {
-      profileImage: "src/assets/Tyrone.jpg",
-      firstName: "Sarah",
-      lastName: "Smith",
-      userBio: "Graphic Designer",
-      connectedDate: "Connected 2 days ago",
-    },
-    {
-      profileImage: "src/assets/Tyrone.jpg",
-      firstName: "John",
-      lastName: "Doe",
-      userBio: "Software Engineer",
-      connectedDate: "Connected last week",
+      connectedDate: new Date("2025-01-03"), 
     },
   ];
-
   
   const filteredConnections = connections.filter((connection) =>
     `${connection.firstName.toLowerCase()} ${connection.lastName.toLowerCase()}`.includes(searchTerm.toLowerCase())
@@ -69,6 +68,9 @@ function ConnectionsListCard() {
       return a.firstName.localeCompare(b.firstName);
     } else if (sortBy === "lastname") {
       return a.lastName.localeCompare(b.lastName);
+    }
+    else if(sortBy === "recentlyadded") {
+      return b.connectedDate.getTime() - a.connectedDate.getTime();
     }
     return 0;
   });

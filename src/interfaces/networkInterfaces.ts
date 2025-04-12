@@ -6,7 +6,7 @@ export interface connectsInterface {
     mutuals: string,
   }
 export interface invitationInterface {
-    profilePicture: string;
+    profilePicture: string; 
     userName: string;
     userBio: string;
     Mutuals: string;
@@ -19,14 +19,14 @@ export interface invitationInterface {
     firstName: string;
     lastName: string;
     userBio: string;
-    connectedDate: string;
+    connectedDate: Date;
   }
 
   export interface SearchProps {
     searchTerm: string;
     setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
   }
-  
+
   export interface SortProps {
     setSortBy: React.Dispatch<React.SetStateAction<string>>;
   }
