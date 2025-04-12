@@ -1,7 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import "./context/ThemeProvider";
 import { lazy } from "react";
-import PlayGround from "./pages/PlayGround";
 import { ThemeProvider } from "./context/ThemeProvider";
 import LandPage from "./pages/Land";
 import SignUpPage from "./pages/SignUp";
@@ -56,7 +55,6 @@ function App() {
               element={<ForgotPassword />}
             />
             <Route path="/reset-password" element={<ResetPassword />} />
-            
           </Route>
 
           {/*   <Route element={<ProtectedRoute />}> */}
@@ -65,44 +63,47 @@ function App() {
             <Route path="/my-network" element={<MyNetwork />} />
             <Route path="/messaging" element={<Messaging />} />
             <Route path="/change-password" element={<ChangePassword />} />
-            <Route
-              path="/confirm-email"
-              element={<ConfirmEmail />}
-            />
-            
-            
+            <Route path="/confirm-email" element={<ConfirmEmail />} />
+
             <Route path="/settings" element={<Settings />}>
               <Route index element={<AccountPreferences />}></Route>
-              
-              {/* Account Preferences Pages */}
-              <Route path="account-preferences" element={<AccountPreferences />} />
-              <Route path="account-preferences/display/dark-mode" element={<DarkMode />} />
-              <Route path="account-preferences/profile-information/demographic-info" element={<DemographicInfo />} />
 
-              <Route path="sign-in-security" element={<SignInAndSecurity />} />
+              {/* Account Preferences Pages */}
+              <Route
+                path="account-preferences"
+                element={<AccountPreferences />}
+              />
+              <Route
+                path="account-preferences/display/dark-mode"
+                element={<DarkMode />}
+              ></Route>
+
+              <Route
+                path="sign-in-security"
+                element={<SignInAndSecurity />}
+              ></Route>
               <Route path="sign-in-security/account-access/change-password" element={<ChangePassword />} />
-              
+
               <Route path="visibility" element={<Visibility />}></Route>
               <Route path="data-privacy" element={<DataAndPrivacy />}></Route>
-              <Route path="advertising-data" element={<AdvertisingData />}></Route>
+              <Route
+                path="advertising-data"
+                element={<AdvertisingData />}
+              ></Route>
               <Route path="notifications" element={<Notifications />}></Route>
             </Route>
-
 
             <Route path="/update-email" element={<UpdateEmail />} />
             <Route path="/update-username" element={<UpdateUsername />} />
             <Route path="/in" element={<UserProfile />}></Route>
-            <Route path="/profile">
+            <Route path="/profile/:userId">
               <Route index element={<ProfileContainer />} />
+              <Route path="details/experiences" element={<FullExperiences />} />
               <Route
-                path=":userId/details/experiences"
-                element={<FullExperiences />}
-              />
-              <Route
-                path=":userId/details/certificates"
+                path="details/certificates"
                 element={<FullCertificates />}
               />
-              <Route path=":userId/details/skills" element={<FullSkills />} />
+              <Route path="details/skills" element={<FullSkills />} />
             </Route>
             <Route path="/post">
               <Route index element={<PostContainer />} />
@@ -111,7 +112,6 @@ function App() {
             </Route>
           </Route>
 
-          <Route path="/playground" element={<PlayGround />} />
           {/* </Route> */}
 
           <Route path="*" element={<Error404 />} />

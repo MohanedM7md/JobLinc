@@ -1,13 +1,17 @@
 import { useEffect, useState } from "react";
 import Searchbar from "../components/SearchBar";
 import NavIcon from "../components/NavIcon";
-import Logo from "../components/Logo";
+import Logo from "./utils/Logo";
 function NavBar() {
   const [isLargeScreen, setIsLargeScreen] = useState<boolean>(
     window.innerWidth > 1280,
   ); // Typed as boolean
+  const [loggedInUserId, setLoggedInUserId] = useState<string | null>("");
 
   useEffect(() => {
+    setLoggedInUserId(
+      JSON.parse(localStorage.getItem("userState") || "").userId,
+    );
     const handleResize = () => {
       setIsLargeScreen(window.innerWidth > 1000); // Update state based on screen width
     };
@@ -57,7 +61,7 @@ function NavBar() {
             Name="Me"
             Dropdown="fa-solid fa-caret-down"
             rightBorder="border-r border-gray-200"
-            pagePath="profile"
+            pagePath={`profile/${loggedInUserId}`}
           />
           <NavIcon
             Icon="fa-solid fa-building"

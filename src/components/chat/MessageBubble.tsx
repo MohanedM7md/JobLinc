@@ -1,13 +1,17 @@
 import React, { useState } from "react";
 import { Img } from "react-image";
-import UserProfile from "../UserProfile";
 import { isRTL } from "../../utils/IsArabic";
 import { MessageBubbleInterface } from "./interfaces/Message.interfaces";
 import { User } from "./interfaces/User.interfaces";
 import { motion, AnimatePresence } from "framer-motion";
+import store from "@store/store";
 
 function SeenByList({ seenBy, users }: { seenBy: string[]; users: User[] }) {
-  const seenUsers = users.filter((user) => seenBy.includes(user.userId));
+  const seenUsers = users.filter(
+    (user) =>
+      seenBy.includes(user.userId) &&
+      user.userId != store.getState().user.userId,
+  );
 
   return (
     <motion.div
@@ -16,7 +20,7 @@ function SeenByList({ seenBy, users }: { seenBy: string[]; users: User[] }) {
       exit={{ opacity: 0 }}
       className="p-2 bg-gray-100 rounded-md text-sm  space-x-2 flex text-gray-700"
     >
-      <p className="font-semibold">Seen by:</p>
+      {seenUsers.length > 0 && <p className="font-semibold">Seen by:</p>}
 
       {seenUsers.map((user) => (
         <div
@@ -61,10 +65,9 @@ function MessageBubble({
         />
 
         <div className="w-full">
-          <UserProfile.Name
-            name={message.sender.firstName}
-            className="text-lg font-semibold text-gray-800"
-          />
+          <div className="text-lg font-semibold text-gray-800">
+            {message.sender.firstName}
+          </div>
 
           <div
             className={`hover:bg-gray-200 rounded-md bg-gray-100 p-2 w-full 

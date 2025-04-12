@@ -25,7 +25,13 @@ export default function FullCertificates() {
   );
 
   useEffect(() => {
-    updateCertificates();
+    if (userId === JSON.parse(localStorage.getItem("userState") || "").userId) {
+      setIsUser(true);
+      updateCertificates();
+    }
+    else {
+      setIsUser(false);
+    }
   }, [userId]);
 
   async function updateCertificates() {

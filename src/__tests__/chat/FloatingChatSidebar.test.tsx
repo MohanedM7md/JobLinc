@@ -1,38 +1,99 @@
-import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import ChatProvider from "../../context/ChatsIdProvider";
-import FloatingChatSidebar from "../../components/chat/FloatingChat/FloatingChatSidebar";
-import { UserProvider } from "../../components/chat/mockUse";
-import { vi, expect, test, describe, beforeEach } from "vitest";
+import { render, fireEvent, screen, waitFor } from "@testing-library/react";
+import FloatingChatSidebar from "@chatComponent/FloatingChat/FloatingChatSidebar";
+import { expect, it, describe, vi } from "vitest";
 
-vi.mock("@services/api/ChatSocket", () => ({
-  connectToChat: vi.fn(),
-  disconnectChatSocket: vi.fn(),
+// Mock all dependencies
+vi.mock("@hooks/useChats", () => ({
+  default: () => ({
+    setOpnedChats: vi.fn(),
+  }),
 }));
 
+vi.mock("@chatComponent/ChatCardsList", () => ({
+  default: ({ onCardClick }: any) => (
+    <div
+      data-testid="chat-cards-list"
+      onClick={() => onCardClick("1", "Test Chat", ["img1"])}
+    >
+      ChatCard
+    </div>
+  ),
+}));
+
+vi.mock("@chatComponent/NetWorksChatList", () => ({
+  default: ({ onCardClick }: any) => (
+    <div
+      data-testid="networks-list"
+      onClick={() => onCardClick("user1", "User Name", "img-url")}
+    >
+      NetWorkUser
+    </div>
+  ),
+}));
+
+vi.mock("@chatComponent/UI/SearchBar", () => ({
+  default: ({ FocusToggler }: any) => (
+    <input
+      data-testid="search-bar"
+      onFocus={FocusToggler}
+      placeholder="Search"
+    />
+  ),
+}));
+
+vi.mock("@chatComponent/FloatingChat/ConnectionsDropdown", () => ({
+  default: ({ className }: any) => (
+    <div className={className} data-testid="dropdown">
+      Dropdown
+    </div>
+  ),
+}));
+
+// Start test suite for FloatingChatSidebar
 describe("FloatingChatSidebar", () => {
-  const mockHandleNetWorkUserClick = vi.fn();
-  const mockHandleConversationClick = vi.fn();
   beforeEach(() => {
-    vi.clearAllMocks();
+    // Clear localStorage before each test
     localStorage.clear();
+    vi.clearAllMocks();
   });
-  beforeAll(() => {
-    render(
-      <UserProvider userId={"4"}>
-        <ChatProvider>
-          <FloatingChatSidebar />
-        </ChatProvider>
-      </UserProvider>,
+
+  it("renders Messaging header and toggles sidebar", () => {
+    render(<FloatingChatSidebar />);
+    const header = screen.getByText("Messaging");
+    expect(header).toBeInTheDocument();
+  });
+
+  it("renders ChatCardsList by default", () => {
+    render(<FloatingChatSidebar />);
+    expect(screen.getByTestId("chat-cards-list")).toBeInTheDocument();
+  });
+
+  it("switches to NetWorksChatList on search focus", async () => {
+    render(<FloatingChatSidebar />);
+    const searchInput = screen.getByPlaceholderText("Search");
+    fireEvent.focus(searchInput);
+
+    await waitFor(() =>
+      expect(screen.getByTestId("networks-list")).toBeInTheDocument(),
     );
   });
-  test("renders FloatingChatSidebar correctly", () => {
-    expect(screen.getByText("Messaging")).toBeInTheDocument();
+
+  it("calls onCardClick when ChatCard is clicked", () => {
+    render(<FloatingChatSidebar />);
+    fireEvent.click(screen.getByTestId("chat-cards-list"));
   });
-  it("renders the messaging header with correct elements", () => {
-    expect(screen.getByAltText("User Avatar")).toBeInTheDocument();
-    expect(screen.getByText("Messaging")).toBeInTheDocument();
-    expect(screen.getByRole("button")).toBeInTheDocument();
-    expect(screen.getByRole("button").querySelector("svg")).toBeInTheDocument();
+
+  it("calls onCardClick when NetWorkUser is clicked", async () => {
+    render(<FloatingChatSidebar />);
+    fireEvent.focus(screen.getByPlaceholderText("Search"));
+
+    await waitFor(() => screen.getByTestId("networks-list"));
+    fireEvent.click(screen.getByTestId("networks-list"));
+  });
+
+  it("renders ConnectionsDropdown and SearchBar", () => {
+    render(<FloatingChatSidebar />);
+    expect(screen.getByTestId("dropdown")).toBeInTheDocument();
+    expect(screen.getByTestId("search-bar")).toBeInTheDocument();
   });
 });

@@ -3,6 +3,7 @@ import {
   getExperience,
   getCertificate,
   getSkills,
+  getUserById,
 } from "@services/api/userProfileServices";
 import UserExperience from "./Experiences/UserExperience";
 import ProfileHeader from "./ProfileHeader/ProfileHeader";
@@ -20,10 +21,11 @@ import UserCertificate from "./Certificates/UserCertificate";
 import AddSkill from "./Skills/AddSkill";
 import UserSkill from "./Skills/UserSkill";
 import "material-icons";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import SERVER_URL from "@services/api/config";
 
 function ProfileContainer() {
+  const { userId } = useParams();
   const [userData, setUserData] = useState<ProfileInterface>();
   const [userExperience, setUserExperience] = useState<ExperienceInterface[]>(
     [],
@@ -40,18 +42,27 @@ function ProfileContainer() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    getMe().then((data) => {
-      setUserData(data);
-    });
-    getExperience().then((data) => {
-      setUserExperience(data);
-    });
-    getCertificate().then((data) => {
-      setUserCertificates(data);
-    });
-    getSkills().then((data) => {
-      setUserSkills(data);
-    });
+    if (userId === JSON.parse(localStorage.getItem("userState") || "").userId) {
+      setIsUser(true);
+      getMe().then((data) => {
+        setUserData(data);
+      });
+      getExperience().then((data) => {
+        setUserExperience(data);
+      });
+      getCertificate().then((data) => {
+        setUserCertificates(data);
+      });
+      getSkills().then((data) => {
+        setUserSkills(data);
+      });
+    }
+    else {
+      setIsUser(false);
+      if (userId) {
+        getUserById(userId);
+      }
+    }
   }, []);
 
   async function updateUser() {
