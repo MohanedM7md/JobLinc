@@ -4,6 +4,7 @@ import { http, HttpResponse } from "msw";
 import { connectsResponse } from "./connectsDB";
 import { invitationsResponse } from "./invitationsDB";
 import { ConnectionInterface } from "interfaces/networkInterfaces";
+import { connectionresponse } from "./connectionsDB";
 import { API_URL } from "@services/api/config";
 
 export const connectsHandler = [
