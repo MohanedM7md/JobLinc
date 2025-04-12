@@ -2,8 +2,8 @@ import PostContainer from "../components/Posts/PostContainer";
 
 export default function Home() {
   return (
-    <div className="">
-      <div className="flex flex-wrap lg:w-5/12 md:w-8/12 sm:1/1 m-auto bg-lightGray">
+    <div className="bg-lightGray">
+      <div className="flex flex-wrap lg:w-5/12 md:w-8/12 sm:1/1 m-auto bg-white">
         <PostContainer />
       </div>
     </div>
