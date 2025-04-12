@@ -98,12 +98,12 @@ function ProfileContainer() {
           city={userData.city}
           profilePicture={
             userData.profilePicture
-              ? `${SERVER_URL}${userData.profilePicture}`
+              ? `${userData.profilePicture}`
               : "https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg"
           }
           coverPicture={
             userData.coverPicture
-              ? `${SERVER_URL}${userData.coverPicture}`
+              ? `${userData.coverPicture}`
               : "https://fastly.picsum.photos/id/6/500/150.jpg?hmac=DNsBPoYhZrvLVc__YwZt4A-PY7MIPBseudP2AQzu4Is"
           }
           phoneNumber={userData.phoneNumber}
