@@ -3,6 +3,8 @@ import { AuthenticationSignInButton } from "../components/Authentication/Authent
 import { useState, useEffect } from "react";
 import store from "../store/store";
 import { changePassword } from "../store/user/userThunks";
+import { ChevronLeftIcon } from "lucide-react";
+
 
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store/store";
@@ -33,7 +35,7 @@ function ChangePassword() {
   const [showError, setShowError] = useState(false);
 
   const dispatch = useDispatch<AppDispatch>();
-
+  const navigate = useNavigate();
 
   async function isValidSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -68,8 +70,16 @@ function ChangePassword() {
   }
 
   return (
-    <div className="flex h-screen w-full bg-charcoalWhite items-center justify-center">
-      <SignHeader />
+    <div className="bg-white rounded-xl flex flex-col gap-4 p-6 w-[1000px] shadow-md border border-gray-200">
+      <div
+        className="flex items-center w-[60px] hover:underline hover:cursor-pointer"
+        onClick={() => {
+        navigate("/settings/sign-in-security");
+        }}>
+        <ChevronLeftIcon />
+        <span>Back</span>
+      </div>
+
       {isModalSuccessOpen ? (
         <UpdatedSuccessfully WhatIsUpdated="Password" goTo="/home" />
       ) : isModalErrorOpen ? (
@@ -82,10 +92,8 @@ function ChangePassword() {
         />
       ) : (
         <form onSubmit={isValidSubmit}>
-          <div className="flex flex-col w-80 gap-4 bg-lightGray p-5 rounded-xl">
-            <h1 className="text-warmBlack text-[20px] font-bold">
-              Change Password
-            </h1>
+          <div className="flex flex-col gap-6 w-full max-w-md mx-auto bg-gray-50 p-6 rounded-2xl border border-gray-200 shadow-sm">
+            <h1 className="text-xl font-bold text-neutral-800">Change Password</h1>
 
             <PasswordFieldNormal
               labelText="Old password *"
@@ -108,20 +116,19 @@ function ChangePassword() {
             />
 
             {showError && (
-              <p
-                data-testid="errorLogical"
-                className="text-red-800 text-[10px]"
-              >
-                New password can't be as old password.
+              <p data-testid="errorLogical" className="text-sm text-red-700 mt-[-10px]">
+                New password can't be the same as old password.
               </p>
             )}
 
-            <AuthenticationSignInButton id="done-btn" text="Done" />
+            <div className="pt-2">
+              <AuthenticationSignInButton id="done-btn" text="Done" />
+            </div>
           </div>
         </form>
       )}
+</div>
 
-    </div>
   );
 }
 

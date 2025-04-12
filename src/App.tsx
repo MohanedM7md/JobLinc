@@ -76,10 +76,12 @@ function App() {
               
               {/* Account Preferences Pages */}
               <Route path="account-preferences" element={<AccountPreferences />} />
-              <Route path="account-preferences/display/dark-mode" element={<DarkMode />}></Route>
-              <Route path="account-preferences/profile-information/demographic-info" element={<DemographicInfo />}></Route>
+              <Route path="account-preferences/display/dark-mode" element={<DarkMode />} />
+              <Route path="account-preferences/profile-information/demographic-info" element={<DemographicInfo />} />
 
-              <Route path="sign-in-security" element={<SignInAndSecurity />}></Route>
+              <Route path="sign-in-security" element={<SignInAndSecurity />} />
+              <Route path="sign-in-security/account-access/change-password" element={<ChangePassword />} />
+              
               <Route path="visibility" element={<Visibility />}></Route>
               <Route path="data-privacy" element={<DataAndPrivacy />}></Route>
               <Route path="advertising-data" element={<AdvertisingData />}></Route>

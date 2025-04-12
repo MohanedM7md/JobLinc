@@ -179,6 +179,9 @@ const userSlice = createSlice({
 
             state.userId = userData.userId || null;
             state.loggedIn = true;
+            localStorage.setItem("profilePicture", userData.profilePicture);
+            localStorage.setItem("coverPicture", userData.coverPicture);
+
             state.status = "SUCCESS";
           } else {
             console.error("User data missing in API response:", action.payload);

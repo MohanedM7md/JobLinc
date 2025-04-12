@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { JSX } from "react";
-import SignHeader from "../../components/Authentication/Headers/SignHeader";
+import SettingsHeader from "../../components/Authentication/Headers/SettingsHeader";
 import { User, Lock, Eye, Shield, Receipt, Bell } from "lucide-react";
 import { Link, Outlet } from "react-router-dom";
 import Logo from "../../components/Logo";
@@ -46,14 +46,14 @@ function Settings() {
         
         
         <div className="w-full min-h-screen flex flex-col justify-between items-center gap-10 bg-warmWhite">
-            <SignHeader />
+            <SettingsHeader />
 
             <div className="fixed left-0 bottom-0 top-[90px] w-[350px] flex flex-col bg-white gap-2">
                 <div className="flex items-center justify-start p-5 w-full">
                     <img 
                         className="w-[40px] h-[40px] object-cover rounded-full mr-4" 
                         alt="user profile picture" 
-                        src="/src/assets/Tyrone.jpg"
+                        src={localStorage.getItem("profilePicture")!}
                     />
                     <h2 className="text-[32px] text-charcoalBlack font-bold">Settings</h2>
                 </div>
