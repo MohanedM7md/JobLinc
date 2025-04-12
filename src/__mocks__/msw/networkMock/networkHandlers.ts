@@ -12,7 +12,7 @@ export const connectsHandler = [
         statusText: "OK",
       });
     }),
-   http.get(`${API_URL}pendinginvitations`, async ({ params }) => {
+    http.get(`${API_URL}pendinginvitations`, async ({ params }) => {
     return HttpResponse.json<invitationInterface[]>(invitationsResponse, {
       status: 200,
       statusText: 'OK',
