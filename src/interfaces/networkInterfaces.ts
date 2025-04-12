@@ -14,7 +14,7 @@ export interface invitationInterface {
     acceptButtonid: string;
     acknowledged?: boolean;
   }
-  export interface ConnectionCardProps {
+  export interface ConnectionInterface {
     profileImage: string;
     firstName: string;
     lastName: string;

@@ -1,6 +1,6 @@
-import { ConnectionCardProps } from "../../interfaces/networkInterfaces";
+import { ConnectionInterface } from "../../interfaces/networkInterfaces";
 
-function ConnectionCard(props: ConnectionCardProps) {
+function ConnectionCard(props: ConnectionInterface) {
   function getRelativeTime(connectedDate: Date): string {
     const now = new Date();
     const diffInMs = now.getTime() - connectedDate.getTime();

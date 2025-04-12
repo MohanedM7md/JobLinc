@@ -3,6 +3,7 @@ import { invitationInterface } from "interfaces/networkInterfaces";
 import { http, HttpResponse } from "msw";
 import { connectsResponse } from "./connectsDB";
 import { invitationsResponse } from "./invitationsDB";
+import { ConnectionInterface } from "interfaces/networkInterfaces";
 import { API_URL } from "@services/api/config";
 
 export const connectsHandler = [
@@ -15,6 +16,13 @@ export const connectsHandler = [
 
   http.get(`${API_URL}pendinginvitations`, async ({ params }) => {
     return HttpResponse.json<invitationInterface[]>(invitationsResponse, {
+      status: 200,
+      statusText: 'OK',
+    });
+  }),
+  
+  http.get(`${API_URL}connections`, async ({ params }) => {
+    return HttpResponse.json<connectsInterface[]>(connectionresponse, {
       status: 200,
       statusText: 'OK',
     });

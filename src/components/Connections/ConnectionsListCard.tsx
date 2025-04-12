@@ -1,13 +1,13 @@
 import { useState } from "react";
 import ConnectionsHeader from "./ConnectionsHeader";
 import ConnectionCard from "./ConnectionCard";
-import { ConnectionCardProps } from "../../interfaces/networkInterfaces";
+import { ConnectionInterface } from "../../interfaces/networkInterfaces";
 
 function ConnectionsListCard() {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("recentlyadded");
 
-  const connections: ConnectionCardProps[] = [
+  const connections: ConnectionInterface[] = [
     {
       profileImage: "src/assets/Tyrone.jpg",
       firstName: "Ahmed",
