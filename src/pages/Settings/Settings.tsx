@@ -13,7 +13,7 @@ interface SettingsPage {
 }
 
 function Settings() {
-  const settingsPages: SettingsPage[] = [
+    const settingsPages: SettingsPage[] = [
     {
       id: "account-preferences",
       icon: <User size={32} />,
@@ -42,11 +42,13 @@ function Settings() {
   useEffect(() => {
     const path = location.pathname;
     const match = path.split("/settings/")[1]; // gets text after /settings/
-    }, [])
+    if (match)
+        setSelected(match);
+    else    
+        setSelected("account-preferences")
+    }, []);
     
     return (
-        
-        
         <div className="w-full min-h-screen flex flex-col justify-between items-center gap-10 bg-warmWhite">
             <SettingsHeader />
 
@@ -59,38 +61,28 @@ function Settings() {
                     />
                     <h2 className="text-[32px] text-charcoalBlack font-bold">Settings</h2>
                 </div>
-
-                <div className="fixed left-0 bottom-0 top-[90px] w-[350px] flex flex-col bg-white gap-2">
-                    <div className="flex items-center justify-start p-5 w-full">
-                        <img
-                            className="w-[40px] h-[40px] object-cover rounded-full mr-4"
-                                alt="user profile picture"
-                                src="/src/assets/Tyrone.jpg"
-                        />
-                        <h2 className="text-[32px] text-charcoalBlack font-bold">Settings</h2>
+                {settingsPages.map((item: SettingsPage) => (
+                    <div
+                        key={item.id}
+                        onClick={() => {
+                        navigate(item.id);
+                        setSelected(item.id);
+                        }}
+                        className={`flex items-center p-5 gap-4 text-gray-700 w-full hover:cursor-pointer
+                                        ${selected === item.id && "border-l-4 border-softRosewood text-softRosewood font-semibold"}
+                                    `}
+                    >
+                        {selected === item.id ? (
+                        <item.icon.type size={32} className="text-softRosewood" />
+                        ) : (
+                        <item.icon.type size={32} className="text-gray-700" />
+                        )}
+                        <p className="text-[22px]">{item.label}</p>
                     </div>
-                </div>
+                    ))}
             </div>
 
-        {settingsPages.map((item: SettingsPage) => (
-          <div
-            key={item.id}
-            onClick={() => {
-              navigate(item.id);
-              setSelected(item.id);
-            }}
-            className={`flex items-center p-5 gap-4 text-gray-700 w-full hover:cursor-pointer
-                            ${selected === item.id && "border-l-4 border-softRosewood text-softRosewood font-semibold"}
-                        `}
-          >
-            {selected === item.id ? (
-              <item.icon.type size={32} className="text-softRosewood" />
-            ) : (
-              <item.icon.type size={32} className="text-gray-700" />
-            )}
-            <p className="text-[22px]">{item.label}</p>
-          </div>
-        ))}
+        
       <div className="ml-[380px] mt-[70px] flex flex-col w-[1000px]">
         <Outlet />
       </div>
