@@ -51,7 +51,6 @@ const userSlice = createSlice({
           state.status = "SUCCESS";
           state.loggedIn = true;
           localStorage.setItem("refreshToken", userData.refreshToken);
-          console.log(state);
           saveState(userData);
         } else {
           console.error("User data missing in API response:", action.payload);
@@ -157,8 +156,7 @@ const userSlice = createSlice({
       })
       .addCase(updateEmail.fulfilled, (state, action: PayloadAction<any>) => {
         const userData = action.payload;
-        if (userData)
-        {
+        if (userData) {
           state.status = "SUCCESS";
         }
       })
@@ -173,7 +171,7 @@ const userSlice = createSlice({
         getUserDetails.fulfilled,
         (state, action: PayloadAction<any>) => {
           const userData = action.payload;
-          
+
           if (userData) {
             console.log("get user details Payload:", userData);
 

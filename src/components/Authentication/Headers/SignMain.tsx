@@ -1,5 +1,5 @@
 import NavIcon from "../../NavIcon";
-import Logo from "../../Logo";
+import Logo from "../../utils/Logo";
 
 function SignMain() {
   return (

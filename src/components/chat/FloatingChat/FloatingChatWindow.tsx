@@ -5,7 +5,7 @@ import useChats from "@hooks/useChats";
 import useChatid from "@context/ChatIdProvider";
 import useNetworkUserId from "@context/NetworkUserIdProvider";
 import { FloatingChatWindowProps } from "@chatComponent/interfaces/Chat.interfaces";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 function FloatingChatWindow({
   className,
   chatName,
@@ -22,7 +22,6 @@ function FloatingChatWindow({
   );
 
   useEffect(() => {
-    // Update window width on resize
     const handleResize = () => setWindowWidth(window.innerWidth);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
@@ -65,7 +64,7 @@ function FloatingChatWindow({
         chatPicture={chatPicture}
         onClose={() => CloseChat(chatId, usersId)}
       />
-      <ChatContent className="max-h-[60vh]" />
+      <ChatContent className="h-[60vh]" />
     </motion.div>
   );
 }
