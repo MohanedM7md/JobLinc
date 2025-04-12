@@ -17,9 +17,7 @@ export default function PostContainerHeader(props: HeaderProps) {
       <div className="flex flex-row w-1/1 py-3 border-b-1 border-gray-300">
         <img
           className="rounded-full h-10 w-10 mx-2"
-          src={
-            "https://i.pinimg.com/550x/04/bb/21/04bb2164bbfa3684118a442c17d086bf.jpg"
-          }
+          src={localStorage.getItem("profilePicture")!}
           alt={"User"}
         />
         <input
