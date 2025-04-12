@@ -1,26 +1,44 @@
-import React from 'react';
+import React from "react";
 
-interface NetworkModalProps {
+interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
-  children?: React.ReactNode;
+  children: React.ReactNode;
 }
 
-const NetworkModal: React.FC<NetworkModalProps> = ({ isOpen, onClose }) => {
+const NetworkModal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="modal-overlay" data-testid="modal-overlay">
-      <div className="modal-content">
+    <div className="fixed inset-0 flex items-center justify-center z-50">
+      <div
+        data-testid="modal-overlay"
+        className="absolute inset-0 bg-black opacity-50"
+        onClick={(event) => {
+          if (event.target === event.currentTarget) {
+            onClose();
+          }
+        }}
+      />
+
+      <div
+        className="relative bg-white p-4 rounded-lg shadow-lg z-50"
+        style={{
+          maxWidth: "500px",
+          maxHeight: "400px",
+          overflowY: "auto",
+          width: "100%",
+        }}
+      >
         <button
-          data-testid="close-modal-button"
+          data-testid="close-button"
+          aria-label="Close modal"
           onClick={onClose}
-          className="close-button"
+          className="absolute top-2 right-2 text-gray-600 hover:cursor-pointer hover:bg-gray-200 px-1 rounded text-lg"
         >
-          Close
+          &times;
         </button>
-        <h2 data-testid="modal-title">All Invitations</h2>
-        {/* Other modal content */}
+        {children}
       </div>
     </div>
   );
