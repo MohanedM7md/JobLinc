@@ -30,7 +30,11 @@ export default function PostContainer() {
             return (
               <div
                 key={`post ${i}`}
-                className={i < posts.length - 1 ? "pb-10" : ""}
+                className={
+                  i < posts.length - 1
+                    ? " border-t-1 border-gray-300"
+                    : "border-t-1 border-gray-300"
+                }
               >
                 <PostCard post={post} />
               </div>

@@ -43,7 +43,7 @@ export default function Post(props: PostProps) {
   function addComment() {
     createComment(props.post.postId, newComment).then(() =>
       getComments(props.post.postId).then((data) => setComments(data)),
-    );
+    ).then(() => props.post.comments+=1);
   }
 
   function postDelete() {

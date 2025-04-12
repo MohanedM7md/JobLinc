@@ -37,7 +37,9 @@ function ProfileContainer() {
     } else {
       setIsUser(false);
       if (userId) {
-        getUserById(userId);
+        getUserById(userId).then((data) => {
+          setUserData(data);
+        })
       }
     }
   }, []);
