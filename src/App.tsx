@@ -36,6 +36,7 @@ import DataAndPrivacy from "@pages/Settings/DataAndPrivacy";
 import AdvertisingData from "@pages/Settings/AdvertisingData";
 import DarkMode from "@pages/Settings/AccountPreferences/Display/DarkMode";
 import DemographicInfo from "@pages/Settings/AccountPreferences/ProfileInformation/DemographicInfo";
+import CloseAccount from "@pages/Settings/AccountPreferences/AccountManagement/CloseAccount";
 
 function App() {
   return (
@@ -77,6 +78,7 @@ function App() {
                 path="account-preferences/display/dark-mode"
                 element={<DarkMode />}
               ></Route>
+              <Route path="account-preferences/account-management/close-account" element={<CloseAccount />} />
 
               <Route
                 path="sign-in-security"
