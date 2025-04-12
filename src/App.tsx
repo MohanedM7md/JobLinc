@@ -25,55 +25,90 @@ import Layout from "./components/Layout";
 import NotificationTestPage from "./pages/NotificationTestPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AuthRoute from "./components/AuthRoute";
+import PaymentPage from "./pages/PaymentPage";
+import ThankYouPage from "./pages/ThankYouPage";
+import SubscriptionMockPage from "./pages/SubscriptionMockPage";
+import SubscriptionLandingPage from "./pages/SubscriptionLandingPage";
+import SubscriptionManagePage from "./pages/SubscriptionManagePage";
+import RecurringPaymentPage from "./pages/RecurringPaymentPage";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import { Toaster } from "react-hot-toast";
+import SubscriptionManager from "./pages/SubscriptionManager";
+
+const stripePromise = loadStripe("pk_test_...");
+
 function App() {
   return (
     <>
       <ThemeProvider>
-        <Routes>
-          <Route
-            path="/test-notifications"
-            element={<NotificationTestPage />}
-          />
-          <Route element={<AuthRoute />}>
-            <Route path="/" element={<LandPage />} />
-            <Route path="/signup" element={<SignUpPage />} />
-            <Route path="/signin" element={<SignInPage />} />
+        <Elements stripe={stripePromise}>
+          <Routes>
             <Route
-              path="/user-details"
-              element={<UserDetails /* email="" password="" */ />}
+              path="/test-notifications"
+              element={<NotificationTestPage />}
             />
             <Route
-              path="/signin/forgot-password"
-              element={<ForgotPassword />}
+              path="/mock-subscription"
+              element={<SubscriptionMockPage />}
             />
-            <Route path="/reset-password" element={<ResetPassword />} />
-            <Route
-              path="/confirm-email"
-              element={<ConfirmEmail /* email="" token="" */ />}
-            />
-          </Route>
+            <Route path="/premium" element={<SubscriptionLandingPage />} />
 
-          {/*   <Route element={<ProtectedRoute />}> */}
-          <Route element={<Layout />}>
-            <Route path="/home" element={<Home />} />
-            <Route path="/my-network" element={<MyNetwork />} />
-            <Route path="/messaging" element={<Messaging />} />
-            <Route path="/change-password" element={<ChangePassword />} />
-            <Route path="/update-email" element={<UpdateEmail />} />
-            <Route path="/update-username" element={<UpdateUsername />} />
-            <Route path="/in" element={<UserProfile />}></Route>
-            <Route path="/post">
-              <Route index element={<PostContainer />} />
-              <Route path="create" element={<PostCreate />} />
-              <Route path=":postId/edit" element={<PostEdit />} />
+            <Route element={<AuthRoute />}>
+              <Route path="/" element={<LandPage />} />
+              <Route path="/signup" element={<SignUpPage />} />
+              <Route path="/signin" element={<SignInPage />} />
+              <Route
+                path="/user-details"
+                element={<UserDetails /* email="" password="" */ />}
+              />
+              <Route
+                path="/signin/forgot-password"
+                element={<ForgotPassword />}
+              />
+              <Route path="/reset-password" element={<ResetPassword />} />
+              <Route
+                path="/confirm-email"
+                element={<ConfirmEmail /* email="" token="" */ />}
+              />
             </Route>
-          </Route>
 
-          <Route path="/playground" element={<PlayGround />} />
-          {/* </Route> */}
+            <Route element={<Layout />}>
+              <Route path="/home" element={<Home />} />
+              <Route path="/my-network" element={<MyNetwork />} />
+              <Route path="/messaging" element={<Messaging />} />
+              <Route path="/change-password" element={<ChangePassword />} />
+              <Route path="/update-email" element={<UpdateEmail />} />
+              <Route path="/update-username" element={<UpdateUsername />} />
+              <Route path="/in" element={<UserProfile />}></Route>
+              <Route path="/thank-you" element={<ThankYouPage />} />
+              <Route
+                path="/manage-subscription"
+                element={<SubscriptionManager />}
+              />
 
-          <Route path="*" element={<Error404 />} />
-        </Routes>
+              <Route
+                path="/subscription-manage"
+                element={<SubscriptionManagePage />}
+              />
+              <Route
+                path="/recurring-payment"
+                element={<RecurringPaymentPage />}
+              />
+              <Route path="/post">
+                <Route index element={<PostContainer />} />
+                <Route path="create" element={<PostCreate />} />
+                <Route path=":postId/edit" element={<PostEdit />} />
+              </Route>
+              <Route path="/payment" element={<PaymentPage />} />
+            </Route>
+
+            <Route path="/playground" element={<PlayGround />} />
+            <Route path="*" element={<Error404 />} />
+          </Routes>
+        </Elements>
+        <Toaster position="top-right" reverseOrder={false} />{" "}
+        {/* ✅ Toast mount point */}
       </ThemeProvider>
     </>
   );
