@@ -55,6 +55,15 @@ export const createPost = async (text: string) => {
   }
 };
 
+// React to post
+export async function reactPost(postId: string, type: string) {
+  try {
+    await api.post(`post/${postId}/react`, {type});
+  } catch (error) {
+    console.error("Error reacting to post:", error);
+  }
+}
+
 // Create a comment (NOT in documentation)
 export const createComment = async (postId: string, text: string) => {
   try {

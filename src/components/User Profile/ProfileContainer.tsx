@@ -8,12 +8,7 @@ import {
 import UserExperience from "./Experiences/UserExperience";
 import ProfileHeader from "./ProfileHeader/ProfileHeader";
 import { useEffect, useState } from "react";
-import {
-  CertificateInterface,
-  ExperienceInterface,
-  ProfileInterface,
-  SkillInterface,
-} from "interfaces/userInterfaces";
+import { ProfileInterface } from "interfaces/userInterfaces";
 import Modal from "./../Authentication/Modal";
 import AddExperience from "./Experiences/AddExperience";
 import AddCertificate from "./Certificates/AddCertificate";
@@ -22,18 +17,10 @@ import AddSkill from "./Skills/AddSkill";
 import UserSkill from "./Skills/UserSkill";
 import "material-icons";
 import { useNavigate, useParams } from "react-router-dom";
-import { CLOUDINARY_BASE_URL } from "@services/api/config";
 
 function ProfileContainer() {
   const { userId } = useParams();
   const [userData, setUserData] = useState<ProfileInterface>();
-  const [userExperience, setUserExperience] = useState<ExperienceInterface[]>(
-    [],
-  );
-  const [userCertificates, setUserCertificates] = useState<
-    CertificateInterface[]
-  >([]);
-  const [userSkills, setUserSkills] = useState<SkillInterface[]>([]);
   const [addExperienceModal, setAddExperienceModal] = useState<boolean>(false);
   const [addCertificateModal, setAddCertificateModal] =
     useState<boolean>(false);
@@ -47,17 +34,7 @@ function ProfileContainer() {
       getMe().then((data) => {
         setUserData(data);
       });
-      getExperience().then((data) => {
-        setUserExperience(data);
-      });
-      getCertificate().then((data) => {
-        setUserCertificates(data);
-      });
-      getSkills().then((data) => {
-        setUserSkills(data);
-      });
-    }
-    else {
+    } else {
       setIsUser(false);
       if (userId) {
         getUserById(userId);
@@ -72,17 +49,21 @@ function ProfileContainer() {
 
   async function updateExperiences() {
     const updatedExperiences = await getExperience();
-    setUserExperience(updatedExperiences);
+    setUserData((prev) =>
+      prev ? { ...prev, experiences: updatedExperiences } : prev,
+    );
   }
 
   async function updateCertificates() {
     const updatedCertificates = await getCertificate();
-    setUserCertificates(updatedCertificates);
+    setUserData((prev) =>
+      prev ? { ...prev, certificates: updatedCertificates } : prev,
+    );
   }
 
   async function updateSkills() {
     const updatedSkills = await getSkills();
-    setUserSkills(updatedSkills);
+    setUserData((prev) => (prev ? { ...prev, skills: updatedSkills } : prev));
   }
 
   return (
@@ -98,12 +79,12 @@ function ProfileContainer() {
           city={userData.city}
           profilePicture={
             userData.profilePicture
-              ? `${CLOUDINARY_BASE_URL}${userData.profilePicture}`
+              ? `${userData.profilePicture}`
               : "https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg"
           }
           coverPicture={
             userData.coverPicture
-              ? `${CLOUDINARY_BASE_URL}${userData.coverPicture}`
+              ? `${userData.coverPicture}`
               : "https://fastly.picsum.photos/id/6/500/150.jpg?hmac=DNsBPoYhZrvLVc__YwZt4A-PY7MIPBseudP2AQzu4Is"
           }
           phoneNumber={userData.phoneNumber}
@@ -138,9 +119,9 @@ function ProfileContainer() {
               </div>
             )}
           </div>
-          {userExperience.length > 0 ? (
+          {userData.experiences.length > 0 ? (
             <>
-              {userExperience.slice(0, 2).map((experience, i) => {
+              {userData.experiences.slice(0, 2).map((experience, i) => {
                 return (
                   <div className="flex flex-row justify-between items-center">
                     <UserExperience
@@ -150,14 +131,14 @@ function ProfileContainer() {
                   </div>
                 );
               })}
-              {userExperience.length > 2 && (
+              {userData.experiences.length > 2 && (
                 <button
                   onClick={() =>
                     navigate(`/profile/${userData.userId}/details/experiences`)
                   }
                   className="mt-2 px-4 py-1.5 border-1 border-crimsonRed rounded-3xl hover:bg-softRosewood font-medium"
                 >
-                  Show all {userExperience.length} experiences
+                  Show all {userData.experiences.length} experiences
                 </button>
               )}
             </>
@@ -205,9 +186,9 @@ function ProfileContainer() {
               </div>
             )}
           </div>
-          {userCertificates.length > 0 ? (
+          {userData.certificates.length > 0 ? (
             <>
-              {userCertificates.slice(0, 2).map((certificate, i) => (
+              {userData.certificates.slice(0, 2).map((certificate, i) => (
                 <div className="flex flex-row justify-between items-center">
                   <UserCertificate
                     key={`Certificate ${i} of user ${userData.userId}`}
@@ -215,14 +196,14 @@ function ProfileContainer() {
                   />
                 </div>
               ))}
-              {userCertificates.length > 2 && (
+              {userData.certificates.length > 2 && (
                 <button
                   onClick={() =>
                     navigate(`/profile/${userData.userId}/details/certificates`)
                   }
                   className="mt-2 px-4 py-1.5 border-1 border-crimsonRed rounded-3xl hover:bg-softRosewood font-medium"
                 >
-                  Show all {userCertificates.length} certificates
+                  Show all {userData.certificates.length} certificates
                 </button>
               )}
             </>
@@ -268,9 +249,9 @@ function ProfileContainer() {
               </div>
             )}
           </div>
-          {userSkills.length > 0 ? (
+          {userData.skills.length > 0 ? (
             <>
-              {userSkills.slice(0, 2).map((skill, i) => (
+              {userData.skills.slice(0, 2).map((skill, i) => (
                 <div className="flex flex-row justify-between items-center">
                   <UserSkill
                     key={`Skill ${i} of user ${userData.userId}`}
@@ -278,14 +259,14 @@ function ProfileContainer() {
                   />
                 </div>
               ))}
-              {userSkills.length > 2 && (
+              {userData.skills.length > 2 && (
                 <button
                   onClick={() =>
                     navigate(`/profile/${userData.userId}/details/skills`)
                   }
                   className="mt-2 px-4 py-1.5 border-1 border-crimsonRed rounded-3xl hover:bg-softRosewood font-medium"
                 >
-                  Show all {userSkills.length} skills
+                  Show all {userData.skills.length} skills
                 </button>
               )}
             </>

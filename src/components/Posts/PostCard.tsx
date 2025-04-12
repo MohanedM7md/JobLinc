@@ -14,7 +14,6 @@ import {
   getComments,
 } from "../../services/api/postServices";
 import { useNavigate } from "react-router-dom";
-import { CLOUDINARY_BASE_URL } from "@services/api/config";
 
 interface PostProps {
   post: PostInterface;
@@ -59,7 +58,7 @@ export default function Post(props: PostProps) {
           id={posterId}
           name={name}
           headline={props.post.headline}
-          profilePicture={`${CLOUDINARY_BASE_URL}${posterPic}`}
+          profilePicture={`${posterPic}`}
           isFollowing={false}
         />
         <div className="">
