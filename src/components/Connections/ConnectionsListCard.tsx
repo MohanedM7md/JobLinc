@@ -1,11 +1,30 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ConnectionsHeader from "./ConnectionsHeader";
 import ConnectionCard from "./ConnectionCard";
 import { ConnectionInterface } from "../../interfaces/networkInterfaces";
+import { getUserConnections } from "@services/api/networkServices";
 
 function ConnectionsListCard() {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("recentlyadded");
+  const [userConnections, setUserConnections] = useState<ConnectionInterface[]>([]);
+    useEffect(() => {
+      const controller = new AbortController();
+      const fetchData = async () => {
+        try {
+          const response = await getUserConnections(5, controller.signal);
+          console.log(response);
+          setUserConnections(Array.isArray(response) ? response : []);
+        } catch (error) {
+          console.error("Error fetching network feed:", error);
+        }
+      };
+      fetchData();
+  
+      return () => {
+        controller.abort();
+      };
+    }, []);
 
   const connections: ConnectionInterface[] = [
     {

@@ -28,3 +28,19 @@ export const getPendingInvitations = async (
     return [];
   }
 };
+
+export const getUserConnections = async (
+  count: number,
+  signal: AbortSignal
+) => {
+  try {
+    const response = await api.get('userconnections', {
+      params: { count },
+      signal,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching pending connections:', error);
+    return [];
+  }
+};
