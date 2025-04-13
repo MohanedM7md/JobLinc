@@ -5,11 +5,10 @@ import Logo from "./Logo";
 function NavBar() {
   const [isLargeScreen, setIsLargeScreen] = useState<boolean>(
     window.innerWidth > 1280,
-  ); // Typed as boolean
-
+  );
   useEffect(() => {
     const handleResize = () => {
-      setIsLargeScreen(window.innerWidth > 1000); // Update state based on screen width
+      setIsLargeScreen(window.innerWidth > 1000);
     };
     window.addEventListener("resize", handleResize);
     handleResize();
@@ -57,7 +56,7 @@ function NavBar() {
             Name="Me"
             Dropdown="fa-solid fa-caret-down"
             rightBorder="border-r border-gray-200"
-            pagePath="userProfile"
+            pagePath="/my-network"
           />
           <NavIcon
             Icon="fa-solid fa-building"

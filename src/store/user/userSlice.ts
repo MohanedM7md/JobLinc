@@ -52,6 +52,7 @@ const userSlice = createSlice({
           state.loggedIn = true;
           localStorage.setItem("refreshToken", userData.refreshToken);
           saveState(userData);
+          console.log(userData);
         } else {
           console.error("User data missing in API response:", action.payload);
         }
