@@ -109,22 +109,20 @@ export const changePassword = createAsyncThunk(
 
 export const updateEmail = createAsyncThunk(
   "user/updateEmail",
-  async(
+  async (
     userData: {
       userId: string;
       email: string;
     },
-    {rejectWithValue},
+    { rejectWithValue },
   ) => {
     try {
       return await updateEmailAPI(userData);
-    }
-    catch(error: any)
-    {
+    } catch (error: any) {
       return rejectWithValue(error.respnse?.data || "Update email failed");
     }
-  }
-)
+  },
+);
 
 export const getUserDetails = createAsyncThunk(
   "user/getUserDetails",

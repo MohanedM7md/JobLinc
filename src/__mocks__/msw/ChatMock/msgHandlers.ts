@@ -1,29 +1,22 @@
 import { http, HttpResponse } from "msw";
-import db from "./db"; // Import the mock database
-import { API_URL } from "@services/api/config";
+import { setupServer } from "msw/node";
 
+import db from "./db";
+
+const API_URL = "http://localhost:4000";
+
+// HTTP handlers
 export const msghandlers = [
-  http.get(`${API_URL}/socket.io/`, () => {
-    return new HttpResponse(JSON.stringify({ sid: "mock-socket-id" }), {
-      status: 200,
-    });
-  }),
-  http.post(`${API_URL}/socket.io/`, () => {
-    return new HttpResponse(JSON.stringify({ sid: "mock-socket-id" }), {
-      status: 200,
-    });
-  }),
-  // Fetch user's network (friends list)
-  http.get(`${API_URL}/api/Networks/:userId`, async ({ params }) => {
+  // Get user's network (friends list)
+  http.get(`${API_URL}/api/Networks/:userId`, ({ params }) => {
     const { userId } = params;
     const user = db.participants.find(
       (participant) => participant.userId === userId,
     );
     if (!user) {
-      return new HttpResponse(JSON.stringify({ error: "User not found" }), {
-        status: 404,
-      });
+      return HttpResponse.json({ error: "User not found" }, { status: 404 });
     }
+
     const networkIds = user.network;
     const chatCards = db.participants
       .filter((participant) => networkIds.includes(participant.userId))
@@ -31,18 +24,21 @@ export const msghandlers = [
         userId: participant.userId,
         firstname: participant.firstname,
         lastname: participant.lastname,
-        profilePicture: [participant.profilePicture],
+        profilePicture: participant.profilePicture,
       }));
-    return new HttpResponse(JSON.stringify(chatCards), { status: 200 });
+
+    return HttpResponse.json(chatCards);
   }),
 
-  // Fetch user chats
-  http.get(`${API_URL}/api/all`, async ({ params }) => {
-    console.log("Mock: Fetching chats for user:", "1");
+  // Get all chats for user
+  http.get(`${API_URL}/api/chat/all`, ({ request }) => {
+    const url = new URL(request.url);
+    const userId = url.searchParams.get("userId");
+
     const chats = db.conversations
-      .filter((chat) => chat.participants.includes("1"))
+      .filter((chat) => chat.participants.includes(userId))
       .map((chat) => {
-        const otherUserId = chat.participants.find((id) => id !== "1");
+        const otherUserId = chat.participants.find((id) => id !== userId);
         const otherUser = db.participants.find(
           (user) => user.userId === otherUserId,
         );
@@ -56,30 +52,31 @@ export const msghandlers = [
         };
       })
       .sort((a, b) => (a.lastMessage > b.lastMessage ? -1 : 1));
-    return new HttpResponse(JSON.stringify(chats), { status: 200 });
+
+    return HttpResponse.json(chats);
   }),
 
-  // Fetch messages of a chat
-  http.get(`${API_URL}/api/c/chat/:chatId`, async ({ params }) => {
+  // Get chat messages
+  http.get(`${API_URL}/api/chat/c/:chatId`, ({ params }) => {
     const { chatId } = params;
-    console.log("Mock: Fetching messages for chat:", chatId);
     const chat = db.conversations.find((chat) => chat.chatId === chatId);
+
     if (!chat) {
-      return new HttpResponse(JSON.stringify({ message: "Chat not found" }), {
-        status: 404,
-      });
+      return HttpResponse.json({ message: "Chat not found" }, { status: 404 });
     }
-    const users = chat.participants
+
+    const participants = chat.participants
       .map((userId) =>
         db.participants.find((participant) => participant.userId === userId),
       )
       .filter(Boolean)
       .map((user) => ({
-        userId: user!.userId,
-        firstName: user!.firstname,
-        lastName: user!.lastname || "",
-        profilePicture: user!.profilePicture,
+        userId: user.userId,
+        firstName: user.firstname,
+        lastName: user.lastname || "",
+        profilePicture: user.profilePicture,
       }));
+
     const messages = db.messages
       .filter((msg) => msg.chatId === chatId)
       .map((msg) => ({
@@ -87,48 +84,50 @@ export const msghandlers = [
         senderId: msg.senderId,
         sentDate: msg.sentDate,
         content: msg.content,
-        status: msg.status,
+        seenBy: msg.seeenBy,
       }))
       .sort(
         (a, b) =>
           new Date(a.sentDate).getTime() - new Date(b.sentDate).getTime(),
       );
-    return new HttpResponse(JSON.stringify({ messages, users }), {
-      status: 200,
-    });
+
+    return HttpResponse.json({ messages, participants });
   }),
 
-  // Create or fetch chat messages
+  // Create or get chat
   http.post(`${API_URL}/api/messages`, async ({ request }) => {
-    const { usersId, myId } = await request.json();
-    console.log(`Mock: Chat created for users: ${usersId} and ${myId}`);
+    const { userId, myId } = await request.json();
+
     let chat = db.conversations.find(
       (chat) =>
         chat.participants.length === 2 &&
-        chat.participants.includes(usersId) &&
+        chat.participants.includes(userId) &&
         chat.participants.includes(myId),
     );
+
     if (!chat) {
       chat = {
         chatId: `chat_${Date.now()}`,
-        participants: [...usersId, myId],
-        lastMessage: "",
+        participants: [userId, myId],
+        lastMessage: null,
       };
       db.conversations.push(chat);
     }
-    const users = chat!.participants
+
+    const users = chat.participants
       .map((userId) =>
         db.participants.find((participant) => participant.userId === userId),
       )
       .filter(Boolean)
       .map((user) => ({
-        userId: user!.userId,
-        firstName: user!.firstname,
-        lastName: user!.lastname || "",
-        profilePicture: user!.profilePicture,
+        userId: user.userId,
+        firstName: user.firstname,
+        lastName: user.lastname || "",
+        profilePicture: user.profilePicture,
       }));
+
     const messages = db.messages
-      .filter((msg) => msg.chatId === chat!.chatId)
+      .filter((msg) => msg.chatId === chat.chatId)
       .map((msg) => ({
         messageId: msg.messageId,
         senderId: msg.senderId,
@@ -136,13 +135,8 @@ export const msghandlers = [
         content: msg.content,
         status: msg.status,
       }))
-      .sort(
-        (a, b) =>
-          new Date(a.sentDate).getTime() - new Date(b.sentDate).getTime(),
-      );
-    return new HttpResponse(
-      JSON.stringify({ chatId: chat!.chatId, users, messages }),
-      { status: 200 },
-    );
+      .sort((a, b) => new Date(a.sentDate) - new Date(b.sentDate));
+
+    return HttpResponse.json({ chatId: chat.chatId, users, messages });
   }),
 ];

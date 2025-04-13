@@ -4,6 +4,7 @@ import PostCard from "../../components/Posts/PostCard";
 import { BrowserRouter } from "react-router-dom";
 import "@testing-library/jest-dom/vitest";
 import userEvent from "@testing-library/user-event";
+import { PostInterface } from "interfaces/postInterfaces";
 
 const mockNavigate = vi.fn();
 vi.mock("react-router-dom", () => ({
@@ -14,18 +15,23 @@ vi.mock("react-router-dom", () => ({
   ),
 }));
 
-const mockPost = {
+const mockPost: PostInterface = {
   postId: "1",
   userId: "1",
   firstname: "John",
   lastname: "Doe",
   headline: "Software Engineer",
   profilePicture: "https://example.com/profile.jpg",
+  companyId: null,
+  companyName: null,
+  companyLogo: null,
   text: "This is a post",
-  pics: [],
+  time: new Date(),
+  mediaURL: [],
   likes: 10,
   comments: 5,
   reposts: 2,
+  repost: null
 };
 
 describe("PostCard", () => {

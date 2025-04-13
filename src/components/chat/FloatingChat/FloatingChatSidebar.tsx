@@ -56,14 +56,9 @@ function FloatingChatSidebar() {
     });
   };
 
-  useEffect(() => {
-    connectToChat();
-    return () => disconnectChatSocket();
-  }, []);
-
   return (
     <div
-      className={`w-72 shadow-lg rounded-t-lg md:block hidden mr-8 transition-transform duration-300
+      className={`w-72 shadow-lg rounded-t-lg md:block hidden mr-8 transition-transform duration-300 relative 
           dark:bg-darkGray bg-white cursor-pointer ${isActive ? "translate-y-0" : "translate-y-[calc(100%-56px)]"}`}
     >
       <header
@@ -71,7 +66,7 @@ function FloatingChatSidebar() {
         onClick={activeToggler}
       >
         <img
-          src="https://randomuser.me/api/portraits/men/2.jpg"
+          src=""
           alt="User Avatar"
           className="rounded-full w-10 h-10 border border-gray-300"
         />

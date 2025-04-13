@@ -14,6 +14,7 @@ import {
   getComments,
 } from "../../services/api/postServices";
 import { useNavigate } from "react-router-dom";
+import PostReact from "./PostReact";
 
 interface PostProps {
   post: PostInterface;
@@ -28,10 +29,15 @@ export default function Post(props: PostProps) {
   const like = !isLike ? "Like" : "Liked";
   const [newComment, setNewComment] = useState<string>("");
   const navigate = useNavigate();
+  const [showReact, setShowReact] = useState<boolean>(false);
 
   const posterId: string = props.post.userId ?? props.post.companyId ?? "0";
-  const name: string = props.post.firstname !== "" ?  props.post.firstname + " " + props.post.lastname : props.post.companyName ?? "Company Name";
-  const posterPic: string = props.post.profilePicture ?? props.post.companyLogo ?? "NotFound"
+  const name: string =
+    props.post.firstname !== ""
+      ? props.post.firstname + " " + props.post.lastname
+      : (props.post.companyName ?? "Company Name");
+  const posterPic: string =
+    props.post.profilePicture ?? props.post.companyLogo ?? "NotFound";
 
   useEffect(() => {
     if (showComment) {
@@ -41,9 +47,11 @@ export default function Post(props: PostProps) {
   }, [showComment]);
 
   function addComment() {
-    createComment(props.post.postId, newComment).then(() =>
-      getComments(props.post.postId).then((data) => setComments(data)),
-    );
+    createComment(props.post.postId, newComment)
+      .then(() =>
+        getComments(props.post.postId).then((data) => setComments(data)),
+      )
+      .then(() => (props.post.comments += 1));
   }
 
   function postDelete() {
@@ -51,7 +59,7 @@ export default function Post(props: PostProps) {
   }
 
   return !hide ? (
-    <div className="flex flex-wrap w-1/1 bg-lightGray rounded-xl relative">
+    <div className="flex flex-wrap w-1/1 relative">
       <div className="flex flex-row w-1/1">
         <ProfileDetails
           key={`Details of poster ${posterId}`}
@@ -87,7 +95,7 @@ export default function Post(props: PostProps) {
       <PostDetails
         key={`Details of post ${props.post.postId}`}
         text={props.post.text}
-        media={props.post.media}
+        mediaURL={props.post.mediaURL}
       />
       <div className="flex flex-row m-auto py-2 w-11/12 border-b-1 border-gray-300">
         <span className="text-blue-500 material-icons">thumb_up</span>
@@ -100,17 +108,27 @@ export default function Post(props: PostProps) {
           <span className="text-mutedSilver ml-2">Reposts</span>
         </div>
       </div>
-      <button
-        className={
-          isLike
-            ? "transition w-3/12 h-10 cursor-pointer font-medium text-blue-500 hover:bg-blue-100"
-            : "transition w-3/12 h-10 cursor-pointer font-medium text-gray-500 hover:bg-gray-200"
-        }
-        onClick={() => setIsLike(!isLike)}
-      >
-        <p className="material-icons mr-3 md:align-text-bottom">thumb_up</p>
-        <span className="hidden md:inline-block">{like}</span>
-      </button>
+      <div className="relative">
+        {showReact && (
+          <div className="absolute bottom-12 left-0">
+            <PostReact />
+          </div>
+        )}
+        <button
+          className={
+            isLike
+              ? "transition w-3/12 h-10 cursor-pointer font-medium text-blue-500 hover:bg-blue-100"
+              : "transition w-3/12 h-10 cursor-pointer font-medium text-gray-500 hover:bg-gray-200"
+          }
+          onClick={() => {
+            setIsLike(!isLike);
+            setShowReact(!showReact);
+          }}
+        >
+          <p className="material-icons mr-3 md:align-text-bottom">thumb_up</p>
+          <span className="hidden md:inline-block">{like}</span>
+        </button>
+      </div>
 
       <button
         onClick={() => {
@@ -138,9 +156,7 @@ export default function Post(props: PostProps) {
           <div className="flex flex-row w-1/1 py-3">
             <img
               className="rounded-full h-10 w-10 mx-2"
-              src={
-                "https://i.pinimg.com/550x/04/bb/21/04bb2164bbfa3684118a442c17d086bf.jpg"
-              }
+              src={localStorage.getItem("profilePicture")!}
               alt={"User"}
             />
             <input
