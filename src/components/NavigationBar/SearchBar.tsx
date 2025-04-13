@@ -32,8 +32,7 @@ function Searchbar(_props: SearchbarProps) {
         fa-solid
         fa-magnifying-glass
         text-black
-        text-md
-        "
+        text-md"
       ></i>
       <input
         type="text"

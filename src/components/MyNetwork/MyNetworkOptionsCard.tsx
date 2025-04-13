@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function MyNetworkOptionsCard() {
     const [activeOption, setActiveOption] = useState<"grow" | "catchup" | null>(null);
@@ -10,7 +10,9 @@ function MyNetworkOptionsCard() {
     function handleCatchUpClick() {
         setActiveOption("catchup");
     }
-
+    useEffect(() => {
+        setActiveOption("grow");
+    }, []);
     return (
         <div className="flex flex-row items-center font-semibold justify-center md:justify-start bg-white rounded-md border-2 border-gray-200 mt-5">
             <div

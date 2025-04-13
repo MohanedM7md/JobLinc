@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import Navbar from "./NavBar";
+import Navbar from "./NavigationBar/NavBar";
 import FloatingChatSystem from "@chatComponent/FloatingChat/FloatingChatSystem";
 import ChatProvider from "@context/ChatsIdProvider";
 
