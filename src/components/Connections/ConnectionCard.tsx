@@ -54,7 +54,7 @@ function ConnectionCard(props: ConnectionInterface) {
         >
           Message
         </button>
-        <i className="fa-solid fa-ellipsis mx-3 rounded-full hover:bg-gray-200 p-2 cursor-pointer"></i>
+        <i data-testid="ellipsisbuttonid" className="fa-solid fa-ellipsis mx-3 rounded-full hover:bg-gray-200 p-2 cursor-pointer"></i>
       </div>
     </div>
   );

@@ -36,7 +36,6 @@ function ConnectCard(props: ProfilePictureProps) {
 
   return (
     <div className="border-2 border-gray-200 rounded-xl flex-col w-57 h-80 justify-center items-center cursor-pointer">
-      {/* Profile Picture and Cover Section */}
       <div className="relative flex flex-col w-full h-7/20 justify-center items-center">
         <img
           src={props.profilePicture}
