@@ -108,10 +108,10 @@ export default function Post(props: PostProps) {
           <span className="text-mutedSilver ml-2">Reposts</span>
         </div>
       </div>
-      <div className="relative">
+      <div className="flex flex-grow relative m-auto justify-between">
         {showReact && (
           <div className="absolute bottom-12 left-0">
-            <PostReact />
+            <PostReact postId={props.post.postId} closeComponent={() => setShowReact(false)} />
           </div>
         )}
         <button
@@ -128,29 +128,29 @@ export default function Post(props: PostProps) {
           <p className="material-icons mr-3 md:align-text-bottom">thumb_up</p>
           <span className="hidden md:inline-block">{like}</span>
         </button>
+
+        <button
+          onClick={() => {
+            setShowComment(!showComment);
+          }}
+          className="w-3/12 h-10 cursor-pointer font-medium text-gray-500 hover:bg-gray-200"
+        >
+          <p className="material-icons mr-2 md:align-text-top lg:mr-3">
+            insert_comment
+          </p>
+          <span className="hidden md:inline-block">Comment</span>
+        </button>
+
+        <button className="w-3/12 h-10 cursor-pointer font-medium text-gray-500 hover:bg-gray-200">
+          <p className="material-icons mr-3 md:align-text-top">repeat</p>
+          <span className="hidden md:inline-block">Repost</span>
+        </button>
+
+        <button className="w-3/12 h-10 cursor-pointer font-medium text-gray-500 hover:bg-gray-200">
+          <p className="material-icons mr-3 md:align-text-top">send</p>
+          <span className="hidden md:inline-block">Send</span>
+        </button>
       </div>
-
-      <button
-        onClick={() => {
-          setShowComment(!showComment);
-        }}
-        className="w-3/12 h-10 cursor-pointer font-medium text-gray-500 hover:bg-gray-200"
-      >
-        <p className="material-icons mr-2 md:align-text-top lg:mr-3">
-          insert_comment
-        </p>
-        <span className="hidden md:inline-block">Comment</span>
-      </button>
-
-      <button className="w-3/12 h-10 cursor-pointer font-medium text-gray-500 hover:bg-gray-200">
-        <p className="material-icons mr-3 md:align-text-top">repeat</p>
-        <span className="hidden md:inline-block">Repost</span>
-      </button>
-
-      <button className="w-3/12 h-10 cursor-pointer font-medium text-gray-500 hover:bg-gray-200">
-        <p className="material-icons mr-3 md:align-text-top">send</p>
-        <span className="hidden md:inline-block">Send</span>
-      </button>
       {showComment ? (
         <>
           <div className="flex flex-row w-1/1 py-3">
