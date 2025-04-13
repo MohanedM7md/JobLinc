@@ -8,7 +8,7 @@ export default function PostCreate() {
   const navigate = useNavigate();
 
   const submitNewPost = () => {
-    createPost(newText).then(() => navigate("/post"));
+    createPost(newText).then(() => navigate("/home"));
   };
 
   return (

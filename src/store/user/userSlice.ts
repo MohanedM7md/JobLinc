@@ -171,12 +171,16 @@ const userSlice = createSlice({
         getUserDetails.fulfilled,
         (state, action: PayloadAction<any>) => {
           const userData = action.payload;
+          console.log("set in storage");
 
           if (userData) {
             console.log("get user details Payload:", userData);
 
             state.userId = userData.userId || null;
             state.loggedIn = true;
+            localStorage.setItem("profilePicture", userData.profilePicture);
+            localStorage.setItem("coverPicture", userData.coverPicture);
+
             state.status = "SUCCESS";
           } else {
             console.error("User data missing in API response:", action.payload);

@@ -34,7 +34,9 @@ import SignInAndSecurity from "@pages/Settings/SignInAndSecurity";
 import Visibility from "@pages/Settings/Visibility";
 import DataAndPrivacy from "@pages/Settings/DataAndPrivacy";
 import AdvertisingData from "@pages/Settings/AdvertisingData";
-import DarkMode from "@pages/Settings/AccountPreferences/DarkMode";
+import DarkMode from "@pages/Settings/AccountPreferences/Display/DarkMode";
+import DemographicInfo from "@pages/Settings/AccountPreferences/ProfileInformation/DemographicInfo";
+import CloseAccount from "@pages/Settings/AccountPreferences/AccountManagement/CloseAccount";
 
 function App() {
   return (
@@ -76,11 +78,14 @@ function App() {
                 path="account-preferences/display/dark-mode"
                 element={<DarkMode />}
               ></Route>
+              <Route path="account-preferences/account-management/close-account" element={<CloseAccount />} />
 
               <Route
                 path="sign-in-security"
                 element={<SignInAndSecurity />}
               ></Route>
+              <Route path="sign-in-security/account-access/change-password" element={<ChangePassword />} />
+
               <Route path="visibility" element={<Visibility />}></Route>
               <Route path="data-privacy" element={<DataAndPrivacy />}></Route>
               <Route
@@ -103,7 +108,6 @@ function App() {
               <Route path="details/skills" element={<FullSkills />} />
             </Route>
             <Route path="/post">
-              <Route index element={<PostContainer />} />
               <Route path="create" element={<PostCreate />} />
               <Route path=":postId/edit" element={<PostEdit />} />
             </Route>
