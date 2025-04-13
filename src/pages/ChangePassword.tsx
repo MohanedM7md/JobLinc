@@ -3,6 +3,8 @@ import { AuthenticationSignInButton } from "../components/Authentication/Authent
 import { useState, useEffect } from "react";
 import store from "../store/store";
 import { changePassword } from "../store/user/userThunks";
+import { ChevronLeftIcon } from "lucide-react";
+
 
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store/store";
@@ -14,6 +16,9 @@ import { Link } from "react-router-dom";
 
 import PasswordFieldNormal from "../components/Authentication/Utilities/PasswordFieldNormal";
 import { isValidPassword } from "../components/Authentication/Utilities/Validations";
+
+import UpdatedSuccessfully from "../components/Authentication/Utilities/UpdatedSuccessfully";
+import UpdateFailed from "../components/Authentication/Utilities/UpdateFailed";
 function ChangePassword() {
   const [oldPassText, setOldPassText] = useState("");
   const [newPassText, setNewPassText] = useState("");
@@ -29,17 +34,8 @@ function ChangePassword() {
 
   const [showError, setShowError] = useState(false);
 
-  const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-
-  useEffect(() => {
-    if (isModalSuccessOpen) {
-      setTimeout(() => {
-        setIsModalSuccessOpen(false);
-        navigate("/home");
-      }, 2000);
-    }
-  }, [isModalSuccessOpen]);
+  const navigate = useNavigate();
 
   async function isValidSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -74,76 +70,65 @@ function ChangePassword() {
   }
 
   return (
-    <div className="flex h-screen w-full bg-charcoalWhite items-center justify-center">
-      <SignHeader />
-      <form onSubmit={isValidSubmit}>
-        <div className="flex flex-col w-80 gap-4 bg-lightGray p-5 rounded-xl">
-          <h1 className="text-warmBlack text-[20px] font-bold">
-            Change Password
-          </h1>
-          <PasswordFieldNormal
-            labelText="Old password *"
-            passwordText={oldPassText}
-            setPasswordText={setOldPassText}
-            showErrorPassEmpty={showErrorOldPassEmpty}
-            setshowErrorPassEmpty={setShowErrorOldPassEmpty}
-            showErrorPassInvalid={showErrorOldPassInvalid}
-            setshowErrorPassInvalid={setShowErrorOldPassInvalid}
-          />
-          <PasswordFieldNormal
-            labelText="New password *"
-            passwordText={newPassText}
-            setPasswordText={setNewPassText}
-            showErrorPassEmpty={showErrorNewPassEmpty}
-            setshowErrorPassEmpty={setShowErrorNewPassEmpty}
-            showErrorPassInvalid={showErrorNewPassInvalid}
-            setshowErrorPassInvalid={setShowErrorNewPassInvalid}
-          />
-          {showError && (
-            <p data-testid="errorLogical" className="text-red-800 text-[10px]">
-              New password can't be as old password.
-            </p>
-          )}
-          <AuthenticationSignInButton id="done-btn" text="Done" />
-        </div>
-      </form>
+    <div className="bg-white rounded-xl flex flex-col gap-4 p-6 w-[1000px] shadow-md border border-gray-200">
+      <div
+        className="flex items-center w-[60px] hover:underline hover:cursor-pointer"
+        onClick={() => {
+        navigate("/settings/sign-in-security");
+        }}>
+        <ChevronLeftIcon />
+        <span>Back</span>
+      </div>
 
-      <Modal
-        isOpen={isModalSuccessOpen}
-        onClose={() => {
-          setIsModalSuccessOpen(false);
-        }}
-      >
-        <div className="flex flex-col items-center">
-          <h1 className="text-warmBlack text-[20px] font-bold">
-            Password Changed Successfully
-          </h1>
-          <p>Redirecting you to Main page..</p>
-        </div>
-      </Modal>
+      {isModalSuccessOpen ? (
+        <UpdatedSuccessfully WhatIsUpdated="Password" goTo="/home" />
+      ) : isModalErrorOpen ? (
+        <UpdateFailed
+          WhatFailed="Password"
+          errorText="Old password is incorrect. Did you forget your password?"
+          setVisible={setIsModalErrorOpen}
+          helperText="Forgot Password"
+          goTo="/signin/forgot-password"
+        />
+      ) : (
+        <form onSubmit={isValidSubmit}>
+          <div className="flex flex-col gap-6 w-full max-w-md mx-auto bg-gray-50 p-6 rounded-2xl border border-gray-200 shadow-sm">
+            <h1 className="text-xl font-bold text-neutral-800">Change Password</h1>
 
-      <Modal
-        isOpen={isModalErrorOpen}
-        onClose={() => {
-          setIsModalErrorOpen(false);
-        }}
-      >
-        <div className="flex flex-col items-center">
-          <h1 className="text-warmBlack text-[20px] font-bold">
-            Old password is incorrect
-          </h1>
-          <strong>
-            Did you forget your password?{" "}
-            <Link
-              to="/Signin/forgot-password"
-              className="text-[16px] text-warmBlack hover:underline"
-            >
-              Forgot password
-            </Link>
-          </strong>
-        </div>
-      </Modal>
-    </div>
+            <PasswordFieldNormal
+              labelText="Old password *"
+              passwordText={oldPassText}
+              setPasswordText={setOldPassText}
+              showErrorPassEmpty={showErrorOldPassEmpty}
+              setshowErrorPassEmpty={setShowErrorOldPassEmpty}
+              showErrorPassInvalid={showErrorOldPassInvalid}
+              setshowErrorPassInvalid={setShowErrorOldPassInvalid}
+            />
+
+            <PasswordFieldNormal
+              labelText="New password *"
+              passwordText={newPassText}
+              setPasswordText={setNewPassText}
+              showErrorPassEmpty={showErrorNewPassEmpty}
+              setshowErrorPassEmpty={setShowErrorNewPassEmpty}
+              showErrorPassInvalid={showErrorNewPassInvalid}
+              setshowErrorPassInvalid={setShowErrorNewPassInvalid}
+            />
+
+            {showError && (
+              <p data-testid="errorLogical" className="text-sm text-red-700 mt-[-10px]">
+                New password can't be the same as old password.
+              </p>
+            )}
+
+            <div className="pt-2">
+              <AuthenticationSignInButton id="done-btn" text="Done" />
+            </div>
+          </div>
+        </form>
+      )}
+</div>
+
   );
 }
 

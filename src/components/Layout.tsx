@@ -8,9 +8,9 @@ function Layout() {
     <>
       <Navbar />
       <main className="">
-        {/* <ChatProvider>
+        <ChatProvider>
           <FloatingChatSystem />
-        </ChatProvider> */}
+        </ChatProvider>
         <Outlet />
       </main>
     </>

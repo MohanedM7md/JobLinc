@@ -43,7 +43,7 @@ export default function CommentCard(props: CommentCardProps) {
       <div className="flex flex-row w-1/1 px-2">
         <CommenterDetails
           key={`Details of Commenter ${props.comment.userId}`}
-          userID={props.comment.userId}
+          userId={props.comment.userId}
           name={props.comment.firstname + " " + props.comment.lastname}
           headline={props.comment.headline}
           profilePicture={props.comment.profilePicture}
@@ -60,7 +60,7 @@ export default function CommentCard(props: CommentCardProps) {
       />
       <div className="ml-14.5">
         <button
-          onClick={()=> setIsLike(!isLike)}
+          onClick={() => setIsLike(!isLike)}
           className={
             isLike
               ? "transition cursor-pointer text-sm font-medium px-2 text-blue-500 hover:bg-blue-100 rounded-lg"
@@ -83,9 +83,7 @@ export default function CommentCard(props: CommentCardProps) {
             <div className="flex flex-row w-11/12 py-3">
               <img
                 className="rounded-full h-10 w-10 mx-2"
-                src={
-                  "https://i.pinimg.com/550x/04/bb/21/04bb2164bbfa3684118a442c17d086bf.jpg"
-                }
+                src={localStorage.getItem("profilePicture")!}
                 alt={"User"}
               />
               <input
@@ -107,9 +105,11 @@ export default function CommentCard(props: CommentCardProps) {
                 send
               </button>
             </div>
-            {replies ? replies.map((reply) => (
-              <ReplyCard key={reply.replyId} reply={reply} />
-            )) : null}
+            {replies
+              ? replies.map((reply) => (
+                  <ReplyCard key={reply.replyId} reply={reply} />
+                ))
+              : null}
           </>
         ) : null}
       </div>

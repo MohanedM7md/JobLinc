@@ -110,7 +110,7 @@ function ProfileHeader(props: ProfileProps & { isUser: boolean }) {
         )}
       </div>
 
-      <div className="flex mt-4 space-x-2">
+      {props.isUser && <div className="flex mt-4 space-x-2">
         <button className="bg-crimsonRed text-warmWhite px-4 py-1.5 rounded-3xl">
           Open to Work
         </button>
@@ -123,7 +123,7 @@ function ProfileHeader(props: ProfileProps & { isUser: boolean }) {
         <button className="bg-darkBurgundy text-warmWhite px-4 py-1.5 rounded-3xl">
           Resources
         </button>
-      </div>
+      </div> }
 
       <Modal
         isOpen={isEditUserModalOpen}

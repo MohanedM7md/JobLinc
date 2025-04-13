@@ -13,7 +13,10 @@ export interface ProfileInterface {
   numberofConnections: number;
   mutualConnections: number;
   profilePicture?: string;
-  coverPicture?: string,
+  coverPicture?: string;
+  skills: SkillInterface[];
+  experiences: ExperienceInterface[];
+  certificates: CertificateInterface[];
 }
 
 export interface ProfileUpdateInterface {
