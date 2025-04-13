@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { sendConnectionRequest } from "@services/api/networkServices"; // Import the service
+import { sendConnectionRequest } from "@services/api/networkServices";
+import NetworkModal from "./NetworkModal";
 
 interface ProfilePictureProps {
   lincbuttonid: string; 
@@ -13,8 +14,9 @@ function ConnectCard(props: ProfilePictureProps) {
   const [isClicked, setIsClicked] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [ modalOpen, setModalOpen] = useState(false);
 
-  const handleClick = async () => {
+  const handlelincClick = async () => {
     if (!isClicked) {
       setLoading(true);
       setError(null);
@@ -31,8 +33,15 @@ function ConnectCard(props: ProfilePictureProps) {
       }
     } else {
       setIsClicked(false);
+      handleassuringmodal();
     }
   };
+  const handleassuringmodal = () => {
+    setModalOpen(true);
+  }
+  const handleCloseModal = () => { 
+    setModalOpen(false);
+  }
 
   return (
     <div className="border-2 border-gray-200 rounded-xl flex-col w-57 h-80 justify-center items-center cursor-pointer">
@@ -49,7 +58,7 @@ function ConnectCard(props: ProfilePictureProps) {
         />
       </div>
       <div className="relative flex flex-col w-full h-13/20 justify-around items-center">
-        {/* User Info Section */}
+        
         <div className="flex flex-col w-full justify-center items-center mt-12">
           <p className="font-semibold text-md text-center">{props.userName}</p>
           <p className="line clamp-2 text-gray-500 text-md text-center">{props.userBio}</p>
@@ -65,17 +74,16 @@ function ConnectCard(props: ProfilePictureProps) {
           </p>
         </div>
         <div className="flex flex-col w-full justify-center items-center">
-          {/* Linc Button with Loading and Error States */}
           <button
             id={props.lincbuttonid}
-            onClick={handleClick}
-            disabled={loading} // Disable button while loading
+            onClick={handlelincClick}
+            disabled={loading}
             className={`border-2 px-15 py-0.5 ${
               isClicked ? "text-darkGray border-darkGray" : "text-crimsonRed border-crimsonRed"
             } rounded-full font-semibold hover:bg-lightGray hover:outline-1`}
           >
             {loading ? (
-              <span>Loading...</span> // Display loading state
+              <span>Loading...</span>
             ) : (
               <i
                 className={`${
@@ -85,7 +93,25 @@ function ConnectCard(props: ProfilePictureProps) {
             )}
             {isClicked ? "Pending" : "Linc"}
           </button>
-          {error && <p className="text-red-500 text-sm mt-2">{error}</p>} {/* Display error if exists */}
+          <NetworkModal isOpen={modalOpen} onClose={handleCloseModal}>
+            <div className="flex flex-col">
+              <div className="border-b border-gray-300 py-2">
+                <h1 className="font-bold">Withdraw Invitation.</h1>
+              </div>
+              <div className="border-b border-gray-300 flex items-center justify-center py-3">
+                <p className="font-semibold">Are you sure you want to withdraw your invitation?</p>
+              </div>
+              <div className="flex items-center justify-end space-x-4 pt-3">
+                <button className="cursor-pointer border-2 px-5 py-0.5 rounded-full font-semibold hover:bg-lightGray hover:outline-1 text-crimsonRed border-crimsonRed" onClick={handleCloseModal}>
+                  withdraw
+                </button>
+                <button className="cursor-pointer border-2 px-5 py-0.5 rounded-full font-semibold hover:bg-lightGray hover:outline-1 text-darkGray border-darkGray" onClick={handleCloseModal}>
+                  cancel
+                </button>
+              </div>
+            </div>
+          </NetworkModal>
+          {error && <p className="text-red-500 text-sm mt-2">{error}</p>} 
         </div>
       </div>
     </div>

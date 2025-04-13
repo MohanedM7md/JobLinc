@@ -15,6 +15,7 @@ export interface invitationInterface {
     acknowledged?: boolean;
   }
   export interface ConnectionInterface {
+    id: string;
     profileImage: string;
     firstName: string;
     lastName: string;
