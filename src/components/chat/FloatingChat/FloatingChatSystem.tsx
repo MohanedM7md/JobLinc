@@ -21,7 +21,7 @@ function FloatingChatSystem() {
     };
   }, []);
   return (
-    <div className="flex flex-row-reverse fixed bottom-0 right-0">
+    <div className="flex flex-row-reverse fixed bottom-0 right-0 z-10">
       {isConnected && (
         <div
           className={`  ${opnedChats.length > 0 ? " relative -bottom-45" : ""}`}

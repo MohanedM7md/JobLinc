@@ -6,7 +6,11 @@ function NavBar() {
   const [isLargeScreen, setIsLargeScreen] = useState<boolean>(
     window.innerWidth > 1280,
   );
+  const [loggedInUserId, setLoggedInUserId] = useState<string | null>("");
   useEffect(() => {
+    setLoggedInUserId(
+      JSON.parse(localStorage.getItem("userState") || "").userId,
+    );
     const handleResize = () => {
       setIsLargeScreen(window.innerWidth > 1000);
     };
@@ -21,7 +25,7 @@ function NavBar() {
     <>
       <nav className="flex flex-row border border-gray-100 shadow-lg rounded overflow-hidden w-full">
         <div className="flex flex-row items-center lg:w-7/20 sm:w-auto overflow-hidden flex-shrink-0 sm:ml-0 md:ml-[5%] mr-3">
-          <Logo id="lincbuttonid"/>
+          <Logo id="lincbuttonid" />
           <div className="hidden md:flex flex-grow">
             <Searchbar />
           </div>
@@ -56,7 +60,7 @@ function NavBar() {
             Name="Me"
             Dropdown="fa-solid fa-caret-down"
             rightBorder="border-r border-gray-200"
-            pagePath="/my-network"
+            pagePath="userProfile"
           />
           <NavIcon
             Icon="fa-solid fa-building"
