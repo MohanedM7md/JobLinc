@@ -8,6 +8,7 @@ export const getFeed = async (count: number, signal: AbortSignal) => {
         count: count,
       },
     });
+    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error("Error fetching feed:", error);
@@ -58,8 +59,7 @@ export const createPost = async (text: string) => {
 // React to post
 export async function reactPost(postId: string, type: string) {
   try {
-    const response = await api.post(`post/${postId}/react`, {type});
-    console.log(response.data)
+    await api.post(`post/${postId}/react`, {type});
   } catch (error) {
     console.error("Error reacting to post:", error);
   }

@@ -1,4 +1,3 @@
-import { reactPost } from "@services/api/postServices";
 import {
   HandHelping,
   Heart,
@@ -8,67 +7,54 @@ import {
   ThumbsUp,
 } from "lucide-react";
 
-interface ReactInterface {
-  postId: string;
-  closeComponent: () => void;
+interface PostReactProps {
+  postReaction: (reaction: string) => void;
 }
 
-export default function PostReact(props: ReactInterface) {
+export default function PostReact({ postReaction }: PostReactProps) {
   return (
-    <div className="bg-white shadow-md rounded-md flex flex-grow m-auto justify-between">
+    <div className="bg-white shadow-md rounded-md p-2 flex flex-grow m-auto justify-between">
       <button
-        onClick={() => {
-          reactPost(props.postId, "Like");
-          props.closeComponent();
-        }}
-        className="text-blue-500 cursor-pointer hover:bg-blue-200 px-5 py-1.5"
+        className="text-blue-500 cursor-pointer hover:bg-blue-200 font-medium flex flex-row px-2 py-1"
+        onClick={() => postReaction("Like")}
       >
         <ThumbsUp />
+        <span className="hidden md:inline-block mx-2">Like</span>
       </button>
       <button
-        onClick={() => {
-          reactPost(props.postId, "Celebrate");
-          props.closeComponent();
-        }}
-        className="text-pink-500 cursor-pointer hover:bg-pink-200 px-5 py-1.5"
+        className="text-pink-500 cursor-pointer hover:bg-pink-200 font-medium flex flex-row px-2 py-1"
+        onClick={() => postReaction("Celebrate")}
       >
         <PartyPopper />
+        <span className="hidden md:inline-block mx-2">Celebrate</span>
       </button>
       <button
-        onClick={() => {
-          reactPost(props.postId, "Support");
-          props.closeComponent();
-        }}
-        className="text-green-600 cursor-pointer hover:bg-green-200 px-5 py-1.5"
+        className="text-green-600 cursor-pointer hover:bg-green-200 font-medium flex flex-row px-2 py-1"
+        onClick={() => postReaction("Support")}
       >
         <HandHelping />
+        <span className="hidden md:inline-block mx-2">Support</span>
       </button>
       <button
-        onClick={() => {
-          reactPost(props.postId, "Funny");
-          props.closeComponent();
-        }}
-        className="text-violet-600 cursor-pointer hover:bg-violet-200 px-5 py-1.5"
+        className="text-violet-600 cursor-pointer hover:bg-violet-200 font-medium flex flex-row px-2 py-1"
+        onClick={() => postReaction("Funny")}
       >
         <Laugh />
+        <span className="hidden md:inline-block mx-2">Funny</span>
       </button>
       <button
-        onClick={() => {
-          reactPost(props.postId, "Love");
-          props.closeComponent();
-        }}
-        className="text-red-600 cursor-pointer hover:bg-red-200 px-5 py-1.5"
+        className="text-red-600 cursor-pointer hover:bg-red-200 font-medium flex flex-row px-2 py-1"
+        onClick={() => postReaction("Love")}
       >
         <Heart />
+        <span className="hidden md:inline-block mx-2">Love</span>
       </button>
       <button
-        onClick={() => {
-          reactPost(props.postId, "Insightful");
-          props.closeComponent;
-        }}
-        className="text-yellow-600 cursor-pointer hover:bg-yellow-200 px-5 py-1.5"
+        className="text-yellow-600 cursor-pointer hover:bg-yellow-200 font-medium flex flex-row px-2 py-1"
+        onClick={() => postReaction("Insightful")}
       >
         <Lightbulb />
+        <span className="hidden md:inline-block mx-2">Insightful</span>
       </button>
     </div>
   );
