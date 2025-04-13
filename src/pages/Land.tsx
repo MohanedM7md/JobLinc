@@ -19,13 +19,8 @@ import {
   ChevronUpIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
-<<<<<<< HEAD
-} from "lucide-react"; // Import Heroicons
-import Logo from "../components/NavigationBar/Logo"; // Update the path to the correct location
-=======
 } from "lucide-react";
 import Logo from "../components/utils/Logo";
->>>>>>> e758714ce1fbce6afadd25890fb9ac661b6854ea
 
 function LandPage() {
   const navigate = useNavigate();
