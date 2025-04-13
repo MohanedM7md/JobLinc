@@ -1,10 +1,12 @@
 import { TheNothingButton } from "../components/TheNothingButton";
 import useTheme from "../hooks/useTheme";
 
+
 import ChatProvider from "../context/ChatsIdProvider";
 import { useState } from "react";
 import FloatingChatSystem from "../components/chat/FloatingChat/FloatingChatSystem";
 import { UserProvider } from "../components/chat/mockUse";
+import DemographicInfo from "./Settings/AccountPreferences/ProfileInformation/DemographicInfo";
 
 function PlayGround() {
   /*   const dispatch = useAppDispatch();
@@ -14,7 +16,7 @@ function PlayGround() {
   }, [dispatch]); */
 
   const { darkMode, setDarkMode } = useTheme();
-  const [userId, _] = useState(window.prompt("Enter Chat ID:") || "1");
+  //const [userId, _] = useState(window.prompt("Enter Chat ID:") || "1");
   return (
     <div className="h-full dark:bg-charcoalBlack">
       <h1>Welcome Home</h1>
@@ -32,11 +34,13 @@ function PlayGround() {
           {/* wlecome <div className=" text-3xl inline">{user.name}</div>{" "} */}
         </h1>
       </div>
-      <UserProvider userId={userId}>
+      {/* <UserProvider userId={userId}>
         <ChatProvider>
           <FloatingChatSystem />
         </ChatProvider>
-      </UserProvider>
+      </UserProvider> */}
+
+      <DemographicInfo />
     </div>
   );
 }

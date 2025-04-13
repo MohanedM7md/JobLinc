@@ -2,12 +2,14 @@ import PostCard from "./PostCard";
 import { useEffect, useState } from "react";
 import { getFeed } from "../../services/api/postServices";
 import { PostInterface } from "interfaces/postInterfaces";
+import PostContainerHeader from "./PostContainerHeader";
 
 export default function PostContainer() {
   const [posts, setPosts] = useState<PostInterface[]>([]);
-  useEffect(() => {
+
+  function getPosts() {
     const controller = new AbortController();
-    const response = getFeed(10, controller.signal);
+    const response = getFeed(20, controller.signal);
     response.then((data) => {
       setPosts(data);
     });
@@ -15,14 +17,30 @@ export default function PostContainer() {
     return () => {
       controller.abort();
     };
+  }
+
+  useEffect(() => {
+    getPosts();
   }, []);
   return (
-    <div className="flex flex-wrap lg:w-5/12 md:w-8/12 sm:1/1 m-auto">
+    <>
+      <PostContainerHeader refreshPosts={getPosts} />
       {posts
         ? posts.map((post, i) => {
-            return <PostCard key={`post ${i}`} post={post} />;
+            return (
+              <div
+                key={`post ${i}`}
+                className={
+                  i < posts.length - 1
+                    ? " border-t-1 border-gray-300"
+                    : "border-t-1 border-gray-300"
+                }
+              >
+                <PostCard post={post} />
+              </div>
+            );
           })
         : null}
-    </div>
+    </>
   );
 }

@@ -39,7 +39,7 @@ const PasswordFieldNormal: React.FC<PasswordFieldNormalProps> = ({ labelText, pa
     return (
         <div className="flex flex-col relative w-full">
             <label htmlFor="password" className="text-[14px] text-charcoalBlack font-bold">{labelText}</label>
-            <input value={passwordText} name="password" type={isHidden ? "password" : "text"} onBlur={handleFocusOut} onChange={handleChange} required id="password" 
+            <input value={passwordText} name="password" type={isHidden ? "password" : "text"} onBlur={handleFocusOut} onChange={handleChange} required id={labelText} 
             className={`outline-[0.7px] text-[14px] text-charcoalBlack h-8 pl-2 pr-10 rounded-sm hover:cursor-text hover:outline-[1px] hover:bg-gray-100 focus:outline-black focus:outline-[1.5px] ${(showErrorPassEmpty || showErrorPassInvalid) && "outline-red-700 hover:outline-red-900"}`}  ></input>
             {showErrorPassEmpty && <p className="text-red-800 text-[10px]">Please enter your password.</p>}
             {showErrorPassInvalid && <p data-testid="errorPass" className="text-red-800 text-[10px]">Password must be 6 characters or more.</p>}

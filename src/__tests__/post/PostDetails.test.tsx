@@ -10,7 +10,7 @@ describe("PostDetails", () => {
   const media = ["image1.jpg", "image2.jpg"];
 
   beforeEach(() => {
-    render(<PostDetails text={text} media={media} />);
+    render(<PostDetails text={text} mediaURL={media} />);
   });
 
   afterEach(() => {
@@ -37,7 +37,7 @@ describe("PostDetails", () => {
 
   it("does not render PostMedia component when no media is provided", () => {
     cleanup();
-    render(<PostDetails text={text} media={[]} />);
+    render(<PostDetails text={text} mediaURL={[]} />);
     expect(screen.queryByTestId("media-rendering")).toBeNull();
   });
 });

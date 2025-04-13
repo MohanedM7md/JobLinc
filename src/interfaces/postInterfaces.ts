@@ -26,15 +26,16 @@ export interface PostInterface {
   userId: string | null;
   firstname: string;
   lastname: string;
-  profilePicture: string | null;
   companyId: string | null;
   companyName: string | null;
   companyLogo: string | null;
+  profilePicture: string | null;
   headline: string;
   text: string;
+  mediaURL: string[];
   time: Date;
   likes: number;
   comments: number;
   reposts: number;
-  media: string[];
+  repost: string | null;
 }

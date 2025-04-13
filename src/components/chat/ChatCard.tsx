@@ -3,6 +3,7 @@ import { EllipsisVertical } from "lucide-react";
 import Checkbox from "./UI/CheckBox";
 import { ChatCardProps } from "./interfaces/Chat.interfaces";
 import ChatAvatarGrid from "./ChatAvatarGrid";
+import { ReadToggler } from "@services/api/chatServices";
 export default function ChatCard({
   chatId,
   chatPicture,
@@ -26,14 +27,22 @@ export default function ChatCard({
     setIsMenuOpen(false);
   };
 
-  const handleMarkReadUnread = () => {
-    setMarkAsRead((prev) => !prev);
+  const handleMarkReadUnread = async () => {
+    const response = await ReadToggler(chatId);
+    if (response) setMarkAsRead((prev) => !prev);
     setIsMenuOpen(false);
   };
 
+  const handleClick = async (e: React.MouseEvent) => {
+    setMarkAsRead(true);
+
+    if (onClick) {
+      onClick();
+    }
+  };
   return (
     <div
-      onClick={onClick}
+      onClick={handleClick}
       data-testid={chatId}
       className={`${className} flex items-center p-3 cursor-pointer
                   relative rounded-lg shadow-sm group
