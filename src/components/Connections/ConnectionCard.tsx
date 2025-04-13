@@ -46,7 +46,7 @@ function ConnectionCard(props: ConnectionInterface) {
         <p className="text-gray-500 cursor-pointer">{userBio}</p>
         <p className="text-xs text-gray-500">{getRelativeTime(connectedDate)}</p>
       </div>
-      <div>
+      <div className=" w-1/3 flex justify-end items-center">
         <button
           id="msgbuttonid"
           className={`border-2 px-5 py-0.5 text-crimsonRed border-crimsonRed 

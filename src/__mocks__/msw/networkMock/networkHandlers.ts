@@ -6,6 +6,22 @@ import { invitationsResponse } from "./invitationsDB";
 import { ConnectionInterface } from "interfaces/networkInterfaces";
 import { connectionresponse } from "./connectionsDB";
 import { API_URL } from "@services/api/config";
+interface ConnectionRequestParams {}
+
+interface ConnectionRequestResponse {
+  requestId: string;
+  targetId: string;
+  userId: string;
+  requestedAt: Date;
+  status: "pending" | "accepted" | "rejected";
+}
+interface ConnectionRequestBody {
+  targetId: string; 
+  userId: string;   
+  requestedAt: string; 
+  status: "pending" | "accepted" | "rejected"; 
+}
+const connectionRequests: ConnectionRequestResponse[] = [];
 
 export const connectsHandler = [
     http.get(`${API_URL}MyNetwork`, async ({ params }) => {
@@ -28,6 +44,41 @@ export const connectsHandler = [
       statusText: 'OK',
     });
   }),
+  
+  
+  http.post<{}, ConnectionRequestBody>(
+    `${API_URL}connections/add`,
+    async ({ request }) => {
+      try {
+        const { targetId, userId, requestedAt, status } = await request.json();
+  
+        const connectionRequest: ConnectionRequestResponse = {
+          requestId: connectionRequests.length.toString(),
+          targetId,
+          userId,
+          requestedAt: new Date(requestedAt),
+          status,
+        };
+  
+        console.log("Received Connection Request:", connectionRequest);
+  
+        connectionRequests.push(connectionRequest);
+  
+        return HttpResponse.json({
+          status: 200,
+          statusText: "Connection request successfully added.",
+          data: connectionRequest,
+        });
+      } catch (error) {
+        console.error("Error handling connection request:", error);
+  
+        return HttpResponse.json({
+          status: 500,
+          statusText: "Internal server error while processing the request.",
+        });
+      }
+    }
+  ),
 ];
 // export const invitationsHandler = [
 //   http.get(`${baseURL}MyNetwork`, async ({ params, signal }) => {

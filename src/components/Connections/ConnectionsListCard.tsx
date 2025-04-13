@@ -14,7 +14,13 @@ function ConnectionsListCard() {
         try {
           const response = await getUserConnections(5, controller.signal);
           console.log(response);
-          setUserConnections(Array.isArray(response) ? response : []);
+          const parsedConnections = Array.isArray(response)
+          ? response.map((connection) => ({
+              ...connection,
+              connectedDate: new Date(connection.connectedDate),
+            }))
+          : [];
+        setUserConnections(parsedConnections);
         } catch (error) {
           console.error("Error fetching network feed:", error);
         }
@@ -25,60 +31,8 @@ function ConnectionsListCard() {
         controller.abort();
       };
     }, []);
-
-  const connections: ConnectionInterface[] = [
-    {
-      profileImage: "src/assets/Tyrone.jpg",
-      firstName: "Ahmed",
-      lastName: "Hassan",
-      userBio: "Plumber",
-      connectedDate: new Date("2025-04-10"),
-    },
-    {
-      profileImage: "src/assets/Tyrone.jpg",
-      firstName: "Sarah",
-      lastName: "Smith",
-      userBio: "Graphic Designer",
-      connectedDate: new Date("2025-04-08"),
-    },
-    {
-      profileImage: "src/assets/Tyrone.jpg",
-      firstName: "John",
-      lastName: "Doe",
-      userBio: "Software Engineer",
-      connectedDate: new Date("2025-04-03"),
-    },
-    {
-      profileImage: "src/assets/Tyrone.jpg",
-      firstName: "Sarah",
-      lastName: "Zmith", 
-      userBio: "Graphic Designer",
-      connectedDate: new Date("2025-04-08"),
-    },
-    {
-      profileImage: "src/assets/Tyrone.jpg",
-      firstName: "John",
-      lastName: "Doe",
-      userBio: "Software Engineer",
-      connectedDate: new Date("2025-04-03"),
-    },
-    {
-      profileImage: "src/assets/Tyrone.jpg",
-      firstName: "Sarah",
-      lastName: "Smith",
-      userBio: "Graphic Designer",
-      connectedDate: new Date("2022-04-08"),
-    },
-    {
-      profileImage: "src/assets/Tyrone.jpg",
-      firstName: "Ben",
-      lastName: "Dover",
-      userBio: "Software Engineer",
-      connectedDate: new Date("2025-01-03"), 
-    },
-  ];
   
-  const filteredConnections = connections.filter((connection) =>
+  const filteredConnections = userConnections.filter((connection) =>
     `${connection.firstName.toLowerCase()} ${connection.lastName.toLowerCase()}`.includes(searchTerm.toLowerCase())
   );
   
@@ -96,7 +50,7 @@ function ConnectionsListCard() {
 
   return (
     <div className="w-1/2 border border-gray-200 rounded-md m-10">
-      <div className="grid grid-rows-auto">
+      <div className="grid grid-rows-auto w-full">
         
         <ConnectionsHeader
           searchTerm={searchTerm}

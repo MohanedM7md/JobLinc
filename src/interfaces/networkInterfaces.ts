@@ -21,6 +21,13 @@ export interface invitationInterface {
     userBio: string;
     connectedDate: Date;
   }
+  export interface ConnectionRequestInterface {
+    requestId: string;
+    targetId: string;
+    userId: string;
+    requestedAt: Date;
+    status: "pending" | "accepted" | "rejected";
+  }
 
   export interface SearchProps {
     searchTerm: string;

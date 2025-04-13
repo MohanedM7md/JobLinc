@@ -44,3 +44,18 @@ export const getUserConnections = async (
     return [];
   }
 };
+
+export const sendConnectionRequest = async (targetId: string, userId: string) => {
+  try {
+    const payload = {
+      targetId,
+      userId,
+      requestedAt: new Date().toISOString(),
+      status: "pending",
+    };
+    const response = await api.post(`connections/add`, payload);
+    return response;
+  } catch (error) {
+    console.error("Error sending connection request:", error);
+  }
+};
