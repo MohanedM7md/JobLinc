@@ -36,7 +36,7 @@ export default function PostEdit() {
             Submit
           </button>
           <div className="flex flex-row w-1/1 justify-end">
-            <Link to="/post">
+            <Link to="/home">
               <button className="cursor-pointer hover:bg-gray-200 rounded-xl h-fit">
                 Cancel
               </button>

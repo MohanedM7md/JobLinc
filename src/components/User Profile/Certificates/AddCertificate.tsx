@@ -16,6 +16,7 @@ export default function AddCertificate(props: AddCertificateProps) {
   const [expirationMonth, setExpirationMonth] = useState<number>(0);
   const [expirationYear, setExpirationYear] = useState<number>(0);
   const [dateValidation, setDateValidation] = useState<boolean>(false);
+  const [validationMessage, setValidationMessage] = useState<string>("");
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -40,16 +41,23 @@ export default function AddCertificate(props: AddCertificateProps) {
       expirationMonth !== 0 &&
       expirationYear !== 0
     ) {
-      if (
-        issueYear > expirationYear ||
-        (issueYear === expirationYear && issueMonth > expirationMonth)
-      ) {
+      if (issueYear > expirationYear) {
         setDateValidation(false);
+        setValidationMessage(
+          "The expiration date must be after the issue date.",
+        );
+      } else if (issueYear === expirationYear && issueMonth > expirationMonth) {
+        setDateValidation(false);
+        setValidationMessage(
+          "The expiration date must be after the issue date.",
+        );
       } else {
         setDateValidation(true);
+        setValidationMessage("");
       }
     } else {
       setDateValidation(false);
+      setValidationMessage("The expiration date must be after the issue date.");
     }
   }, [issueMonth, issueYear, expirationMonth, expirationYear]);
 
@@ -89,6 +97,7 @@ export default function AddCertificate(props: AddCertificateProps) {
             value={issueMonth}
             onChange={(e) => setIssueMonth(Number(e.target.value))}
             className="w-1/2 px-2 py-1 border rounded-lg"
+            required
           >
             <option value={0}>Month</option>
             {months.map((month, index) => (
@@ -101,6 +110,7 @@ export default function AddCertificate(props: AddCertificateProps) {
             value={issueYear}
             onChange={(e) => setIssueYear(Number(e.target.value))}
             className="w-1/2 px-2 py-1 border rounded-lg"
+            required
           >
             <option value={0}>Year</option>
             {Array.from(
@@ -149,6 +159,11 @@ export default function AddCertificate(props: AddCertificateProps) {
             ))}
           </select>
         </div>
+        {!dateValidation && validationMessage && (
+          <p className="text-sm font-medium text-red-600 mt-1">
+            {validationMessage}
+          </p>
+        )}
       </div>
       <div className="flex space-x-2">
         <button

@@ -28,6 +28,7 @@ import {
   SendHorizontal,
   SmilePlus,
 } from "lucide-react";
+import { AnimatePresence } from "framer-motion"; // Import AnimatePresence
 
 interface PostProps {
   post: PostInterface;
@@ -59,11 +60,10 @@ export default function Post(props: PostProps) {
   }, [showComment]);
 
   function addComment() {
-    createComment(props.post.postId, newComment)
-      .then(() =>
-        getComments(props.post.postId).then((data) => setComments(data)),
-      )
-      .then(() => (props.post.comments += 1));
+    createComment(props.post.postId, newComment).then(() => {
+      props.post.comments += 1;
+      getComments(props.post.postId).then((data) => setComments(data));
+    });
   }
 
   function postDelete() {
@@ -73,7 +73,7 @@ export default function Post(props: PostProps) {
   function postReaction(reaction: string) {
     reactPost(props.post.postId, reaction).then(() => {
       setReaction(reaction);
-      props.post.likes+=1;
+      props.post.likes += 1;
     });
   }
 
@@ -120,7 +120,7 @@ export default function Post(props: PostProps) {
   }
 
   return !hide ? (
-    <div className="flex flex-wrap w-1/1 relative">
+    <div className="flex flex-wrap relative">
       <div className="flex flex-row w-1/1">
         <ProfileDetails
           key={`Details of poster ${posterId}`}
@@ -130,13 +130,15 @@ export default function Post(props: PostProps) {
           profilePicture={posterPic}
           isFollowing={false}
         />
-        <div className="">
+        <div className="relative">
           {showUtility ? (
-            <PostUtilityButton
-              postId={props.post.postId}
-              postText={props.post.text}
-              delete={() => postDelete()}
-            />
+            <div className="absolute top-5 -left-9">
+              <PostUtilityButton
+                postId={props.post.postId}
+                postText={props.post.text}
+                delete={() => postDelete()}
+              />
+            </div>
           ) : null}
         </div>
         <button
@@ -148,7 +150,7 @@ export default function Post(props: PostProps) {
         </button>
         <button
           onClick={() => setHide(true)}
-          className="material-icons-round cursor-pointer mr-1 text-mutedSilver hover:bg-gray-200 h-fit"
+          className="material-icons-round cursor-pointer ml-1 text-mutedSilver hover:bg-gray-200 h-fit"
         >
           clear
         </button>
@@ -170,11 +172,13 @@ export default function Post(props: PostProps) {
         </div>
       </div>
       <div className="flex flex-grow relative m-auto justify-between">
-        {showReact && (
-          <div className="absolute bottom-12 left-0">
-            <PostReact postReaction={postReaction} />
-          </div>
-        )}
+        <AnimatePresence>
+          {showReact && (
+            <div className="absolute bottom-12 left-0">
+              <PostReact postReaction={postReaction} />
+            </div>
+          )}
+        </AnimatePresence>
         <button
           className={`transition w-3/12 h-10 cursor-pointer font-medium flex items-center justify-center ${getReactionStyles(reaction)}`}
           onClick={() => {
@@ -232,15 +236,40 @@ export default function Post(props: PostProps) {
               send
             </button>
           </div>
-          {comments
-            ? comments.map((comment) => (
+          {comments ? (
+            comments.length > 0 ? (
+              comments.map((comment) => (
                 <CommentCard key={comment.commentId} comment={comment} />
               ))
-            : null}
+            ) : (
+              <div className="m-auto p-2">
+                <span className="text-mutedSilver font-medium">
+                  No Comments Yet
+                </span>
+              </div>
+            )
+          ) : (
+            <div className="m-auto p-2">
+              <span className="text-mutedSilver font-medium">
+                Can't fetch Comments, Please try again later
+              </span>
+            </div>
+          )}
         </>
       ) : null}
     </div>
   ) : (
-    <button onClick={() => setHide(false)}>undo</button>
+    <div className="flex flex-col flex-wrap items-center">
+      <h1 className="font-medium text-2xl m-2">Post Hidden</h1>
+      <h2 className="font-medium text-mutedSilver">
+        We'll try to show you less like this
+      </h2>
+      <button
+        className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-red-700 transition m-2"
+        onClick={() => setHide(false)}
+      >
+        Undo
+      </button>
+    </div>
   );
 }

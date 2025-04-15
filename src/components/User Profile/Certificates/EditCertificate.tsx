@@ -29,6 +29,7 @@ export default function EditCertificate(props: EditCertificateProps) {
   );
   const [dateValidation, setDateValidation] = useState<boolean>(true);
   const [showConfirm, setShowConfirm] = useState<boolean>(false);
+  const [validationMessage, setValidationMessage] = useState<string>("");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -61,13 +62,21 @@ export default function EditCertificate(props: EditCertificateProps) {
     ) {
       if (issueYear > expirationYear) {
         setDateValidation(false);
+        setValidationMessage(
+          "The expiration date must be after the issue date.",
+        );
       } else if (issueYear === expirationYear && issueMonth > expirationMonth) {
         setDateValidation(false);
+        setValidationMessage(
+          "The expiration date must be after the issue date.",
+        );
       } else {
         setDateValidation(true);
+        setValidationMessage("");
       }
     } else {
       setDateValidation(false);
+      setValidationMessage("The expiration date must be after the issue date.");
     }
   }, [issueMonth, issueYear, expirationMonth, expirationYear]);
 
@@ -114,6 +123,7 @@ export default function EditCertificate(props: EditCertificateProps) {
               value={issueMonth}
               onChange={(e) => setIssueMonth(Number(e.target.value))}
               className="w-1/2 px-2 py-1 border rounded-lg"
+              required
             >
               <option value={0}>Month</option>
               {months.map((month, index) => (
@@ -126,6 +136,7 @@ export default function EditCertificate(props: EditCertificateProps) {
               value={issueYear}
               onChange={(e) => setIssueYear(Number(e.target.value))}
               className="w-1/2 px-2 py-1 border rounded-lg"
+              required
             >
               <option value={0}>Year</option>
               {Array.from(
@@ -174,6 +185,11 @@ export default function EditCertificate(props: EditCertificateProps) {
               ))}
             </select>
           </div>
+          {!dateValidation && validationMessage && (
+            <p className="text-sm font-medium text-red-600 mt-1">
+              {validationMessage}
+            </p>
+          )}
         </div>
         <div className="flex space-x-2">
           <button

@@ -17,6 +17,7 @@ export default function AddExperience(props: AddExperienceProps) {
   const [endMonth, setEndMonth] = useState<number>(0);
   const [endYear, setendYear] = useState<number>(0);
   const [dateValidation, setDateValidation] = useState<boolean>(false);
+  const [validationMessage, setValidationMessage] = useState<string>("");
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -44,13 +45,17 @@ export default function AddExperience(props: AddExperienceProps) {
     ) {
       if (startYear > endYear) {
         setDateValidation(false);
-      } else if (startYear === endYear && startMonth > startYear) {
+        setValidationMessage("The end date must be after the start date.");
+      } else if (startYear === endYear && startMonth > endMonth) {
         setDateValidation(false);
+        setValidationMessage("The end date must be after the start date.");
       } else {
         setDateValidation(true);
+        setValidationMessage("");
       }
     } else {
       setDateValidation(false);
+      setValidationMessage("The end date must be after the start date.");
     }
   }, [startMonth, startYear, endMonth, endYear]);
 
@@ -92,6 +97,7 @@ export default function AddExperience(props: AddExperienceProps) {
             value={startMonth}
             onChange={(e) => setStartMonth(Number(e.target.value))}
             className="w-1/2 px-2 py-1 border rounded-lg"
+            required
           >
             <option value={0}>Month</option>
             {months.map((month, index) => (
@@ -104,6 +110,7 @@ export default function AddExperience(props: AddExperienceProps) {
             value={startYear}
             onChange={(e) => setStartYear(Number(e.target.value))}
             className="w-1/2 px-2 py-1 border rounded-lg"
+            required
           >
             <option value={0}>Year</option>
             {Array.from(
@@ -126,6 +133,7 @@ export default function AddExperience(props: AddExperienceProps) {
             value={endMonth}
             onChange={(e) => setEndMonth(Number(e.target.value))}
             className="w-1/2 px-2 py-1 border rounded-lg"
+            required
           >
             <option value={0}>Month</option>
             {months.map((month, index) => (
@@ -138,6 +146,7 @@ export default function AddExperience(props: AddExperienceProps) {
             value={endYear}
             onChange={(e) => setendYear(Number(e.target.value))}
             className="w-1/2 px-2 py-1 border rounded-lg"
+            required
           >
             <option value={0}>Year</option>
             {Array.from(
@@ -150,6 +159,11 @@ export default function AddExperience(props: AddExperienceProps) {
             ))}
           </select>
         </div>
+        {!dateValidation && validationMessage && (
+          <p className="text-sm font-medium text-red-600 mt-1">
+            {validationMessage}
+          </p>
+        )}
       </div>
       <div className="mb-4">
         <label className="text-sm font-medium text-charcoalBlack">
@@ -161,6 +175,7 @@ export default function AddExperience(props: AddExperienceProps) {
           onChange={(e) => setDescription(e.target.value)}
           className="w-full px-2 py-1 border rounded-lg"
           rows={4}
+          required
         />
       </div>
       <div className="flex space-x-2">

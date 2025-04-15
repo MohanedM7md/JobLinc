@@ -30,7 +30,7 @@ export default function PostCreate() {
         <div className="flex flex-row w-11/12 m-auto pt-2">
           <button onClick={() => submitNewPost()}>Submit</button>
           <div className="flex flex-row w-1/1 justify-end">
-            <Link to="/">
+            <Link to="/home">
               <button>Cancel</button>
             </Link>
           </div>

@@ -23,7 +23,7 @@ export default function PostContainer() {
     getPosts();
   }, []);
   return (
-    <>
+    <div className="bg-lightGray">
       <PostContainerHeader refreshPosts={getPosts} />
       {posts
         ? posts.map((post, i) => {
@@ -31,9 +31,9 @@ export default function PostContainer() {
               <div
                 key={`post ${i}`}
                 className={
-                  i < posts.length - 1
-                    ? " border-t-1 border-gray-300"
-                    : "border-t-1 border-gray-300"
+                  i >= 1
+                    ? "bg-white w-1/1 mt-2"
+                    : "bg-white w-1/1"
                 }
               >
                 <PostCard post={post} />
@@ -41,6 +41,6 @@ export default function PostContainer() {
             );
           })
         : null}
-    </>
+    </div>
   );
 }

@@ -81,13 +81,19 @@ function App() {
                 path="account-preferences/display/dark-mode"
                 element={<DarkMode />}
               ></Route>
-              <Route path="account-preferences/account-management/close-account" element={<CloseAccount />} />
+              <Route
+                path="account-preferences/account-management/close-account"
+                element={<CloseAccount />}
+              />
 
               <Route
                 path="sign-in-security"
                 element={<SignInAndSecurity />}
               ></Route>
-              <Route path="sign-in-security/account-access/change-password" element={<ChangePassword />} />
+              <Route
+                path="sign-in-security/account-access/change-password"
+                element={<ChangePassword />}
+              />
 
               <Route path="visibility" element={<Visibility />}></Route>
               <Route path="data-privacy" element={<DataAndPrivacy />}></Route>

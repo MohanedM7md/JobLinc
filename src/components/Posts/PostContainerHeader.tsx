@@ -14,7 +14,7 @@ export default function PostContainerHeader(props: HeaderProps) {
     }
 
     return (
-      <div className="flex flex-row w-1/1 py-3 border-b-1 border-gray-300">
+      <div className="bg-white flex flex-row w-1/1 py-3 border-b-1 border-gray-300">
         <img
           className="rounded-full h-10 w-10 mx-2"
           src={localStorage.getItem("profilePicture")!}

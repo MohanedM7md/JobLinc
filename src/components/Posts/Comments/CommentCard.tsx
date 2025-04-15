@@ -105,11 +105,25 @@ export default function CommentCard(props: CommentCardProps) {
                 send
               </button>
             </div>
-            {replies
-              ? replies.map((reply) => (
+            {replies ? (
+              replies.length > 0 ? (
+                replies.map((reply) => (
                   <ReplyCard key={reply.replyId} reply={reply} />
                 ))
-              : null}
+              ) : (
+                <div className="m-auto p-2">
+                  <span className="text-mutedSilver font-medium">
+                    No Replies Yet
+                  </span>
+                </div>
+              )
+            ) : (
+              <div className="m-auto p-2">
+                <span className="text-mutedSilver font-medium">
+                  Can't fetch Replies, Please try again later
+                </span>
+              </div>
+            )}
           </>
         ) : null}
       </div>
