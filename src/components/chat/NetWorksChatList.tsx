@@ -1,8 +1,8 @@
-import { useEffect, useState, memo } from "react";
+import { useEffect, useState, memo, useRef } from "react";
 import NetworkCard from "./NetworkCard";
 import { fetchNetWorks } from "@services/api/chatServices";
-import { useUser } from "./mockUse";
 import { NetWorkCard } from "./interfaces/Chat.interfaces";
+import { useAppSelector } from "@store/hooks";
 
 const NetWorksChatList = ({
   onCardClick,
@@ -12,7 +12,7 @@ const NetWorksChatList = ({
   className?: string;
 }) => {
   const [users, setUsers] = useState<NetWorkCard[]>([]);
-  const { user } = useUser();
+  const user = useAppSelector((state) => state.user.userId);
   const [isLoading, setIsLoading] = useState(true);
 
   console.log(
