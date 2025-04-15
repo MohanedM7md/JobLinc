@@ -97,7 +97,7 @@ export const editPost = async (postId: string, text: string) => {
 
 export const deletePost = async (postId: string) => {
   try {
-    await api.delete(`post/${postId}/delete`);
+    await api.post(`post/${postId}/delete`);
   } catch (error) {
     console.error("Error deleting post:", error);
   }

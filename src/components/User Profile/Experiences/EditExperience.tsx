@@ -30,7 +30,9 @@ export default function EditExperience(props: EditExperienceProps) {
   );
   const [dateValidation, setDateValidation] = useState<boolean>(true);
   const [showConfirmDelete, setShowConfirmDelete] = useState<boolean>(false);
-  const [validationMessage, setValidationMessage] = useState<string>("");
+  const validationMessage = dateValidation
+    ? ""
+    : "The end date must be after the start date.";
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -63,19 +65,16 @@ export default function EditExperience(props: EditExperienceProps) {
       endMonth !== 0 &&
       endYear !== 0
     ) {
-      if (startYear > endYear) {
+      if (
+        startYear > endYear ||
+        (startYear === endYear && startMonth > endMonth)
+      ) {
         setDateValidation(false);
-        setValidationMessage("The end date must be after the start date.");
-      } else if (startYear === endYear && startMonth > endMonth) {
-        setDateValidation(false);
-        setValidationMessage("The end date must be after the start date.");
       } else {
         setDateValidation(true);
-        setValidationMessage("");
       }
     } else {
       setDateValidation(false);
-      setValidationMessage("The end date must be after the start date.");
     }
   }, [startMonth, startYear, endMonth, endYear]);
 

@@ -29,7 +29,9 @@ export default function EditCertificate(props: EditCertificateProps) {
   );
   const [dateValidation, setDateValidation] = useState<boolean>(true);
   const [showConfirm, setShowConfirm] = useState<boolean>(false);
-  const [validationMessage, setValidationMessage] = useState<string>("");
+  const validationMessage = dateValidation
+    ? ""
+    : "The expiration date must be after the issue date.";
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -60,23 +62,16 @@ export default function EditCertificate(props: EditCertificateProps) {
       expirationMonth !== 0 &&
       expirationYear !== 0
     ) {
-      if (issueYear > expirationYear) {
+      if (
+        issueYear > expirationYear ||
+        (issueYear === expirationYear && issueMonth > expirationMonth)
+      ) {
         setDateValidation(false);
-        setValidationMessage(
-          "The expiration date must be after the issue date.",
-        );
-      } else if (issueYear === expirationYear && issueMonth > expirationMonth) {
-        setDateValidation(false);
-        setValidationMessage(
-          "The expiration date must be after the issue date.",
-        );
       } else {
         setDateValidation(true);
-        setValidationMessage("");
       }
     } else {
       setDateValidation(false);
-      setValidationMessage("The expiration date must be after the issue date.");
     }
   }, [issueMonth, issueYear, expirationMonth, expirationYear]);
 
