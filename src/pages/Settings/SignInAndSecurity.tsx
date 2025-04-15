@@ -17,7 +17,7 @@ function SignInAndSecurity ()
             ]} 
             basePath="sign-in-security/account-access"
             itemPaths={[
-                "email-addresses",
+                "email-address",
                 "phone-numbers",
                 "change-password",
                 "passkeys",

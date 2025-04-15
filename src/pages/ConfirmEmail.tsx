@@ -6,7 +6,7 @@ import { AppDispatch } from "@store/store";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Modal from "../components/Authentication/Modal";
-
+import store from "@store/store";
 interface ConfirmEmailProps {
   email: string;
   token: string;
@@ -16,7 +16,7 @@ function ConfirmEmail() {
   const location = useLocation();
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const { email, token } = location.state as ConfirmEmailProps;
+  // const { email, token } = location.state as ConfirmEmailProps;
 
   const [redirecting, setRedirecting] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -27,6 +27,9 @@ function ConfirmEmail() {
     // Send OTP to server for verification
     // If OTP is correct, then set email as confirmed
     // Else, show an error message
+    const userData = JSON.parse(localStorage.getItem("userState") || "" );
+    const email = userData.email;
+    const token = localStorage.getItem("tokenForOTP") || "";
     setClearOTP(false);
     const response = await dispatch(
       confirmEmail({ email: email, token: resendToken || token, otp: otp }),
@@ -45,6 +48,8 @@ function ConfirmEmail() {
   async function handleResend() {
     setIsModalOpen(false);
     setClearOTP(true);
+    const userData = JSON.parse(localStorage.getItem("userState") || "" );
+    const email = userData.email;
     const response = await dispatch(sendConfirmationEmail({ email: email }));
     // const response = dispatch(sendConfirmationEmail ({ email: "" })).unwrap()
     if (sendConfirmationEmail.fulfilled.match(response)) {

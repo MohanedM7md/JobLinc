@@ -158,6 +158,17 @@ const userSlice = createSlice({
         const userData = action.payload;
         if (userData) {
           state.status = "SUCCESS";
+
+          const userNewData = JSON.stringify({
+            accessToken: userData.accessToken,
+            confirmed: userData.confirmed,
+            email: userData.email,
+            refreshToken: userData.refreshToken,
+            role: userData.role,
+            userId: userData.userId
+
+          });
+          localStorage.setItem("userState", userNewData);
         }
       })
       .addCase(updateEmail.rejected, (state) => {
@@ -201,6 +212,7 @@ const userSlice = createSlice({
 
           if (userData) {
             state.status = "SUCCESS";
+            localStorage.setItem("tokenForOTP", userData.token);
           } else {
             console.error("User data missing in API response:", action.payload);
           }

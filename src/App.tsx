@@ -39,6 +39,7 @@ import AdvertisingData from "@pages/Settings/AdvertisingData";
 import DarkMode from "@pages/Settings/AccountPreferences/Display/DarkMode";
 import DemographicInfo from "@pages/Settings/AccountPreferences/ProfileInformation/DemographicInfo";
 import CloseAccount from "@pages/Settings/AccountPreferences/AccountManagement/CloseAccount";
+import EmailAddress from "@pages/Settings/SignInAndSecurity/AccountAccess/EmailAddress";
 
 function App() {
   return (
@@ -66,29 +67,20 @@ function App() {
             <Route path="/my-network" element={<MyNetwork />} />
             <Route path="/connections" element={<Connections />} />
             <Route path="/messaging" element={<Messaging />} />
-            <Route path="/change-password" element={<ChangePassword />} />
+            {/* <Route path="/change-password" element={<ChangePassword />} /> */}
             <Route path="/confirm-email" element={<ConfirmEmail />} />
 
             <Route path="/settings" element={<Settings />}>
               <Route index element={<AccountPreferences />}></Route>
 
               {/* Account Preferences Pages */}
-              <Route
-                path="account-preferences"
-                element={<AccountPreferences />}
-              />
-              <Route
-                path="account-preferences/display/dark-mode"
-                element={<DarkMode />}
-              ></Route>
+              <Route path="account-preferences" element={<AccountPreferences />} />
+              <Route path="account-preferences/display/dark-mode" element={<DarkMode />} />
               <Route path="account-preferences/account-management/close-account" element={<CloseAccount />} />
 
-              <Route
-                path="sign-in-security"
-                element={<SignInAndSecurity />}
-              ></Route>
+              <Route path="sign-in-security" element={<SignInAndSecurity />}></Route>
               <Route path="sign-in-security/account-access/change-password" element={<ChangePassword />} />
-
+              <Route path="sign-in-security/account-access/email-address" element={<EmailAddress />} />
               <Route path="visibility" element={<Visibility />}></Route>
               <Route path="data-privacy" element={<DataAndPrivacy />}></Route>
               <Route

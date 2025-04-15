@@ -42,7 +42,6 @@ api.interceptors.response.use(
           localStorage.removeItem("userState");
           dispatch(logOut());
 
-          window.location.href = "/";
           return Promise.reject(error);
         }
         const { data } = await api.post("auth/refresh-token", {
