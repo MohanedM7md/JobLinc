@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import axios from 'axios'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSortDown } from '@fortawesome/free-solid-svg-icons';
+import { useEffect, useState } from 'react'
+import { Link, Navigate, useNavigate } from 'react-router-dom'
+import { useDispatch, UseDispatch } from 'react-redux';
+import { LogOut } from 'lucide-react';
+import { logOut } from '@store/user/userSlice';
 
 interface User {
     id: number;
@@ -15,6 +15,8 @@ function MeCard(){
     const [handleBtn, setHandleBtn] = useState<boolean>(false)
     const [user, setUser] = useState<User | null>(null)
     const [userId, setUserId]=useState();
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
   // const handleUserButton = async (id?: number): Promise<void> => {
   //   try {
@@ -32,10 +34,14 @@ function MeCard(){
   const handleBtnClick = (): void => {
     setHandleBtn(!handleBtn)
   }
+  const handleSignOut = async () => {
+    await dispatch(logOut());
+    navigate("/");
+  };
 
   useEffect(() => {
-    // const userData = JSON.parse(localStorage.getItem("userState") || "");
-    // setUserId(userData.userId)
+    const userData = JSON.parse(localStorage.getItem("userState") || "");
+    setUserId(userData.userId)
     // const userId = localStorage.getItem('user')
     // if (!userId) {
     //   handleUserButton()
@@ -50,7 +56,7 @@ function MeCard(){
 
             <ul className='space-y-2 text-gray-600'>
               <li>
-                <Link className="cursor-pointer flex justify-center" to="">
+                <Link className="cursor-pointer flex justify-center" to={`/profile/${userId}`}>
                   <button className='cursor-pointer border-2 px-15 py-0.5 rounded-full font-semibold hover:bg-lightGray hover:outline-1 text-crimsonRed border-crimsonRed'>View Profile</button>
                 </Link>
               </li>
@@ -80,7 +86,7 @@ function MeCard(){
             </ul>
           </div>
           <div className="final py-2 text-gray-600">
-            <Link className='hover:underline' to="#">Sign Out</Link>
+            <Link className='hover:underline' to="#" onClick={handleSignOut}>Sign Out</Link>
           </div>
         </div>
     );

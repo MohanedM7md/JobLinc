@@ -60,7 +60,7 @@ function NavBar() {
             Name="Me"
             Dropdown="fa-solid fa-caret-down"
             rightBorder="border-r border-gray-200"
-            pagePath="userProfile"
+            
           />
           <NavIcon
             Icon="fa-solid fa-building"

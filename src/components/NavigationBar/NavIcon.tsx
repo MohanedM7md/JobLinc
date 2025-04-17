@@ -7,7 +7,7 @@ interface NavIconProps {
   Icon: string;
   Name: string;
   Dropdown?: string;
-  pagePath: string;
+  pagePath?: string;
 }
 // const navigate = useNavigate();
 
