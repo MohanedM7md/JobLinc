@@ -3,13 +3,14 @@ import Searchbar from "./SearchBar";
 import NavIcon from "./NavIcon";
 import Logo from "./Logo";
 import store from "@store/store";
-import NotificationBell from "../components/Notifications/NotificationBell"; // adjust path
-import NotificationPanel from "../Notifications/../components/Notifications/NotificationPanel";
+import NotificationBell from "../Notifications/NotificationBell";
+import NotificationPanel from "../Notifications/NotificationPanel";
 
 function NavBar() {
   const [isLargeScreen, setIsLargeScreen] = useState<boolean>(
     window.innerWidth > 1280,
   );
+  const [showNotifications, setShowNotifications] = useState(false);
   const [loggedInUserId, setLoggedInUserId] = useState<string | null>("");
   useEffect(() => {
     setLoggedInUserId(store.getState().user.userId);

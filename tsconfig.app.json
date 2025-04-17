@@ -4,6 +4,7 @@
       "paths": {
         "@chatComponent/*": ["components/chat/*"] ,
         "@context/*": ["context/*"] ,
+        "@component": ["components/*"],
         "@hooks/*": ["hooks/*"] ,
         "@pages/*": ["pages/*"] ,
         "@services/*": ["services/*"] ,
