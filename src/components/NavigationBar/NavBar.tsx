@@ -3,8 +3,8 @@ import Searchbar from "./SearchBar";
 import NavIcon from "./NavIcon";
 import Logo from "./Logo";
 import store from "@store/store";
-import NotificationBell from "../components/Notifications/NotificationBell"; // adjust path
-import NotificationPanel from "../Notifications/../components/Notifications/NotificationPanel";
+import NotificationBell from "../Notifications/NotificationBell"; // corrected path
+import NotificationPanel from "../Notifications/NotificationPanel";
 
 function NavBar() {
   const [isLargeScreen, setIsLargeScreen] = useState<boolean>(
