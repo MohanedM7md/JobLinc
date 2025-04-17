@@ -1,37 +1,81 @@
 import React from "react";
+import { motion } from "framer-motion";
+import store from "@store/store";
 import { User } from "./interfaces/User.interfaces";
-import { RecievedMessage } from "./interfaces/Message.interfaces";
 
-interface MessageSeenByProps {
-  message: RecievedMessage;
+interface SeenByProps {
+  seenBy: string[];
   users: User[];
-  currentUserId: string;
+  messageStatus: "sent" | "delivered" | "seen" | "failed";
+  senderId: string;
 }
 
-function SeenBy({ message, users, currentUserId }: MessageSeenByProps) {
-  // Determine users who have seen this message
-  const seenByUsers = React.useMemo(() => {
-    return users.filter((user) => {
-      // Exclude current user and message sender
-      if (user.userId === currentUserId || user.userId === message.senderId) {
-        return false;
-      }
+const SeenBy = React.memo(
+  ({ seenBy, users, messageStatus, senderId }: SeenByProps) => {
+    const currentUserId = store.getState().user.userId;
 
-      // Check if user has seen this specific message
-      return message.seenBy.includes(user.userId);
-    });
-  }, [message, users, currentUserId]);
+    if (senderId !== currentUserId) {
+      return null;
+    }
 
-  // If no users have seen the message, return null
-  if (seenByUsers.length === 0) {
-    return null;
-  }
+    console.log("seenBy", seenBy);
+    const seenUsers = users.filter((user) => seenBy.includes(user.userId));
+    console.log("seenUser", seenUsers);
+    console.log("Message status", messageStatus == undefined);
+    if (messageStatus != undefined && messageStatus !== "delivered") {
+      return (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="p-2 bg-gray-100 rounded-md text-sm text-gray-700"
+        >
+          Status:{" "}
+          <span
+            className={
+              messageStatus === "failed"
+                ? "text-red-500"
+                : messageStatus === "sent"
+                  ? "text-yellow-600"
+                  : "text-green-600"
+            }
+          >
+            {messageStatus}
+          </span>
+        </motion.div>
+      );
+    }
 
-  return (
-    <div className="text-xs text-blue-500 mt-1">
-      👀 Seen by: {seenByUsers.map((user) => user.firstName).join(", ")}
-    </div>
-  );
-}
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="p-2 bg-gray-100 rounded-md text-sm space-x-2 flex flex-wrap items-center gap-2 text-gray-700"
+      >
+        <div className="font-semibold">Seen by:</div>
+        {seenUsers.length > 0 ? (
+          seenUsers.map((user) => (
+            <div
+              key={user.userId}
+              className="flex items-center gap-2 rounded-md shadow-sm"
+            >
+              <img
+                src={user.profilePicture}
+                alt={user.firstName}
+                className="w-6 h-6 rounded-full"
+              />
+              <span>
+                {user.firstName} {user.lastName}
+              </span>
+            </div>
+          ))
+        ) : (
+          <span className="text-gray-500 italic">No views yet</span>
+        )}
+      </motion.div>
+    );
+  },
+);
 
-export default React.memo(SeenBy);
+export default SeenBy;

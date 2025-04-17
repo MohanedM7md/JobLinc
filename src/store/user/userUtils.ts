@@ -7,8 +7,12 @@ export const loadState = (): UserState => {
       ? JSON.parse(serializedState)
       : {
           userId: null,
-          role: null,
+          firstname: null,
+          lastname: null,
+          email: null,
+          profilePicture: null,
           confirmed: null,
+          role: null,
           accessToken: null,
           status: "IDLE",
           loggedIn: false,
@@ -17,8 +21,12 @@ export const loadState = (): UserState => {
     console.error("Failed to load state:", err);
     return {
       userId: null,
-      role: null,
+      firstname: null,
+      lastname: null,
+      email: null,
+      profilePicture: null,
       confirmed: null,
+      role: null,
       accessToken: null,
       status: "IDLE",
       loggedIn: false,
@@ -26,9 +34,9 @@ export const loadState = (): UserState => {
   }
 };
 
-export const saveState = (state: UserState) => {
+export const saveState = (authData) => {
   try {
-    localStorage.setItem("userState", JSON.stringify(state));
+    localStorage.setItem("userData", JSON.stringify(authData));
   } catch (err) {
     console.error("Failed to save state:", err);
   }

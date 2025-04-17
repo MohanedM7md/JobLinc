@@ -12,7 +12,7 @@ export const fetchChats = async () => {
 };
 
 export const fetchNetWorks = async (Id: string) => {
-  const response = await api.get(`/Networks/${Id}`);
+  const response = await api.get(`/connection/${Id}/mutual`);
   const users = response.data.map(
     ({
       userId,
@@ -32,11 +32,11 @@ export const fetchChatData = async (chatId: string) => {
 };
 
 export const createChat = async (recievers: string[]) => {
-  const response = await api.post(`/chat/openChat`, { recievers });
+  const response = await api.post(`/chat/create`, { receiverIDs: recievers });
   return response.data;
 };
 
 export const ReadToggler = async (chatId: string) => {
-  const response = await api.put(`/chat/openChat`, { chatId });
+  const response = await api.put(`/chat/readOrUnread`, { chatId });
   return response.data;
 };
