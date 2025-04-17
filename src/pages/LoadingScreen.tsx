@@ -18,16 +18,8 @@ function LoadingScreen() {
         transition={{ duration: 0.4 }}
         className="flex items-center gap-1 text-4xl font-extrabold"
       >
-        <span style={{ color: "var(--color-crimsonRed)" }}>Job</span>
-        <span
-          style={{
-            color: isDark
-              ? "var(--color-charcoalWhite)"
-              : "var(--color-charcoalBlack)",
-          }}
-        >
-          Linc
-        </span>
+        <span className="text-crimsonRed">Job</span>
+        <span className="text-charcoalBlack">Linc</span>
       </motion.div>
 
       {/* Spinner */}
