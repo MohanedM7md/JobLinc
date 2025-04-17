@@ -33,12 +33,16 @@ export const loadState = (): UserState => {
     }
     const dispatch = useAppDispatch();
     let serializedState: UserState = initialState;
-    dispatch(getUserDetails())
+    const res = dispatch(getUserDetails())
     .then((action) => {
-      if (!serializedState){
+      if (getUserDetails.fulfilled.match(res)){
         console.log("User Details fetched successfully", action.payload);
         serializedState = action.payload;
+        return serializedState;
       }
+    })
+    .catch(err => {
+      console.error("Failed to get user details (loadState fn. userUtils.ts)", err);
     });
 
   } catch (err) {
