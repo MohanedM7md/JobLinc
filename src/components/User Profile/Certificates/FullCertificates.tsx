@@ -3,14 +3,13 @@ import { useState, useEffect } from "react";
 import "material-icons";
 import { useParams } from "react-router-dom";
 import Modal from "./../../Authentication/Modal";
-import {
-  getCertificate,
-  deleteCertificate,
-} from "@services/api/userProfileServices";
-import ConfirmAction from "../../utils/ConfirmAction";
+import { getCertificate } from "@services/api/userProfileServices";
 import UserCertificate from "./UserCertificate";
 import AddCertificate from "./AddCertificate";
 import EditCertificate from "./EditCertificate";
+import { useQuery } from "@tanstack/react-query";
+import SuccessMessage from "../../utils/SuccessMessage";
+import { AnimatePresence } from "framer-motion";
 
 export default function FullCertificates() {
   const { userId } = useParams();
@@ -20,30 +19,47 @@ export default function FullCertificates() {
     useState<boolean>(false);
   const [editCertificateData, setEditCertificateData] =
     useState<CertificateInterface | null>(null);
-  const [confirmDeleteData, setConfirmDeleteData] = useState<string | null>(
-    null,
-  );
+  const [showSuccessMessage, setShowSuccessMessage] = useState<boolean>(false);
+  const [successMessage, setSuccessMessage] = useState<string>("");
+
+  const {
+    isFetching: isCertificatesFetching,
+    isError: isCertificatesError,
+    refetch: refetchCertificates,
+  } = useQuery({
+    queryKey: ["getCertificates"],
+    queryFn: getCertificate,
+    enabled: false,
+  });
 
   useEffect(() => {
     if (userId === JSON.parse(localStorage.getItem("userState") || "").userId) {
       setIsUser(true);
       updateCertificates();
-    }
-    else {
+    } else {
       setIsUser(false);
     }
   }, [userId]);
 
   async function updateCertificates() {
     if (userId) {
-      const updatedCertificates = await getCertificate();
-      setCertificates(updatedCertificates);
+      const { data } = await refetchCertificates();
+      setCertificates(data);
     }
   }
 
-  async function handleDeleteCertificate(certificateId: string) {
-    await deleteCertificate(certificateId);
-    updateCertificates();
+  function handleCertificateSuccess(message: string) {
+    setShowSuccessMessage(true);
+    setSuccessMessage(message);
+    setTimeout(() => setShowSuccessMessage(false), 3000);
+  }
+
+  if (isCertificatesFetching) {
+    return <div>Loading...</div>;
+  }
+
+  if (isCertificatesError) {
+    return <div>Error loading certificates</div>;
   }
 
   return (
@@ -81,15 +97,6 @@ export default function FullCertificates() {
           No certificates are registered for this user
         </div>
       )}
-      {confirmDeleteData !== null && (
-        <ConfirmAction
-          action={() => {
-            handleDeleteCertificate(confirmDeleteData);
-            setConfirmDeleteData(null);
-          }}
-          onClose={() => setConfirmDeleteData(null)}
-        />
-      )}
       <Modal
         isOpen={!!editCertificateData}
         onClose={() => setEditCertificateData(null)}
@@ -99,6 +106,12 @@ export default function FullCertificates() {
             {...editCertificateData}
             onClose={() => setEditCertificateData(null)}
             onUpdate={updateCertificates}
+            onEditSuccess={() =>
+              handleCertificateSuccess("Certificate updated successfully")
+            }
+            onDeleteSuccess={() =>
+              handleCertificateSuccess("Certificate deleted successfully")
+            }
           />
         )}
       </Modal>
@@ -109,8 +122,18 @@ export default function FullCertificates() {
         <AddCertificate
           onUpdate={updateCertificates}
           onClose={() => setAddCertificateModal(false)}
+          onSuccess={() =>
+            handleCertificateSuccess("Certificate added successfully")
+          }
         />
       </Modal>
+      <AnimatePresence>
+        {showSuccessMessage && (
+          <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2">
+            <SuccessMessage message={successMessage} />
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

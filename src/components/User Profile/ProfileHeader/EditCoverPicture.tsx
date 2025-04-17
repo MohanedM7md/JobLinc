@@ -9,18 +9,30 @@ interface EditCoverPictureProps {
 export default function EditCoverPicture(props: EditCoverPictureProps) {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState(props.coverPicture);
+  const [isImage, setIsImage] = useState<boolean>(true);
+  const imageValidation = isImage
+    ? ""
+    : "Invalid image format. Please upload a JPG, JPEG, or PNG file.";
 
   function fileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const selectedFile = event.target.files?.[0] || null;
     if (selectedFile) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        if (reader.result) {
-          setPreview(reader.result as string);
-          setFile(selectedFile);
-        }
-      };
-      reader.readAsDataURL(selectedFile);
+      if (
+        selectedFile.type !== "image/jpeg" &&
+        selectedFile.type !== "image/png" &&
+        selectedFile.type !== "image/jpg"
+      ) {
+        setIsImage(false);
+      } else {
+        const reader = new FileReader();
+        reader.onload = () => {
+          if (reader.result) {
+            setPreview(reader.result as string);
+            setFile(selectedFile);
+          }
+        };
+        reader.readAsDataURL(selectedFile);
+      }
     }
   }
 
@@ -105,6 +117,9 @@ export default function EditCoverPicture(props: EditCoverPictureProps) {
       </div>
       <span className="text-mutedSilver text-sm mt-2">
         Maximum Size: 5MB, Format: JPG, JPEG, PNG
+      </span>
+      <span className="text-red-500 font-medium text-sm mt-2">
+        {imageValidation}
       </span>
       <div className="flex justify-between mt-4 space-x-2">
         <button

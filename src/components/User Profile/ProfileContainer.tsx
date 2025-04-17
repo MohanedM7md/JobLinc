@@ -17,6 +17,9 @@ import AddSkill from "./Skills/AddSkill";
 import UserSkill from "./Skills/UserSkill";
 import "material-icons";
 import { useNavigate, useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import SuccessMessage from "../utils/SuccessMessage";
+import { AnimatePresence } from "framer-motion";
 
 function ProfileContainer() {
   const { userId } = useParams();
@@ -26,46 +29,117 @@ function ProfileContainer() {
     useState<boolean>(false);
   const [addSkillModal, setAddSkillModal] = useState<boolean>(false);
   const [isUser, setIsUser] = useState<boolean>(true);
+  const [showSuccessMessage, setShowSuccessMessage] = useState<boolean>(false);
+  const [successMessage, setSuccessMessage] = useState<string>("");
   const navigate = useNavigate();
 
+  const {
+    isFetching: isMeFetching,
+    isError: isMeError,
+    refetch: refetchMe,
+  } = useQuery({ queryKey: ["getMe"], queryFn: getMe, enabled: false });
+
+  const {
+    isFetching: isUserFetching,
+    isError: isUserError,
+    refetch: refetchUser,
+  } = useQuery({
+    queryKey: ["getUserById", userId],
+    queryFn: () => getUserById(userId!),
+    enabled: false,
+  });
+
+  const {
+    isFetching: isExperiencesFetching,
+    isError: isExperiencesError,
+    refetch: refetchExperiences,
+  } = useQuery({
+    queryKey: ["getExperiences"],
+    queryFn: getExperience,
+    enabled: false,
+  });
+
+  const {
+    isFetching: isCertificatesFetching,
+    isError: isCertificatesError,
+    refetch: refetchCertificates,
+  } = useQuery({
+    queryKey: ["getCertificates"],
+    queryFn: getCertificate,
+    enabled: false,
+  });
+
+  const {
+    isFetching: isSkillsFetching,
+    isError: isSkillsError,
+    refetch: refetchSkills,
+  } = useQuery({
+    queryKey: ["getSkills"],
+    queryFn: getSkills,
+    enabled: false,
+  });
+
   useEffect(() => {
-    if (userId === JSON.parse(localStorage.getItem("userState") || "").userId) {
+    const loggedInUserId = JSON.parse(
+      localStorage.getItem("userState") || "",
+    ).userId;
+    if (userId === loggedInUserId) {
       setIsUser(true);
-      getMe().then((data) => {
+      refetchMe().then(({ data }) => {
         setUserData(data);
       });
     } else {
       setIsUser(false);
-      if (userId) {
-        getUserById(userId).then((data) => {
-          setUserData(data);
-        })
-      }
+      refetchUser().then(({ data }) => {
+        setUserData(data);
+      });
     }
-  }, []);
+  }, [userId, refetchMe, refetchUser]);
 
   async function updateUser() {
-    const updatedUser = await getMe();
-    setUserData(updatedUser);
+    const { data } = await refetchMe();
+    setUserData(data);
   }
 
   async function updateExperiences() {
-    const updatedExperiences = await getExperience();
-    setUserData((prev) =>
-      prev ? { ...prev, experiences: updatedExperiences } : prev,
-    );
+    const { data } = await refetchExperiences();
+    setUserData((prev) => (prev ? { ...prev, experiences: data } : prev));
   }
 
   async function updateCertificates() {
-    const updatedCertificates = await getCertificate();
-    setUserData((prev) =>
-      prev ? { ...prev, certificates: updatedCertificates } : prev,
-    );
+    const { data } = await refetchCertificates();
+    setUserData((prev) => (prev ? { ...prev, certificates: data } : prev));
   }
 
   async function updateSkills() {
-    const updatedSkills = await getSkills();
-    setUserData((prev) => (prev ? { ...prev, skills: updatedSkills } : prev));
+    const { data } = await refetchSkills();
+    setUserData((prev) => (prev ? { ...prev, skills: data } : prev));
+  }
+
+  function handleAddSuccess(message: string) {
+    setShowSuccessMessage(true);
+    setSuccessMessage(message);
+    setTimeout(() => setShowSuccessMessage(false), 3000);
+  }
+
+  if (
+    isMeFetching ||
+    isCertificatesFetching ||
+    isExperiencesFetching ||
+    isSkillsFetching ||
+    isUserFetching
+  ) {
+    return <div>Loading...</div>;
+  }
+
+  if (
+    isMeError ||
+    isCertificatesError ||
+    isExperiencesError ||
+    isSkillsError ||
+    isUserError
+  ) {
+    return <div>Error loading user data.</div>;
   }
 
   return (
@@ -306,6 +380,7 @@ function ProfileContainer() {
             key={`Adding Experience to ${userData?.firstname} ${userData?.lastname}`}
             onUpdate={updateExperiences}
             onClose={() => setAddExperienceModal(false)}
+            onSuccess={() => handleAddSuccess("Experience added successfully")}
           />
         </Modal>
         <Modal
@@ -315,15 +390,24 @@ function ProfileContainer() {
           <AddCertificate
             onUpdate={updateCertificates}
             onClose={() => setAddCertificateModal(false)}
+            onSuccess={() => handleAddSuccess("Certificate added successfully")}
           />
         </Modal>
         <Modal isOpen={addSkillModal} onClose={() => setAddSkillModal(false)}>
           <AddSkill
             onUpdate={updateSkills}
             onClose={() => setAddSkillModal(false)}
+            onSuccess={() => handleAddSuccess("Skill added successfully")}
           />
         </Modal>
       </div>
+      <AnimatePresence>
+        {showSuccessMessage && (
+          <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2">
+            <SuccessMessage message={successMessage} />
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

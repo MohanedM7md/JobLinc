@@ -6,10 +6,15 @@ import {
   editExperience,
 } from "@services/api/userProfileServices";
 import ConfirmAction from "../../utils/ConfirmAction";
+import { useMutation } from "@tanstack/react-query";
+import ErrorMessage from "../../../components/utils/ErrorMessage";
+import { AnimatePresence } from "framer-motion";
 
 interface EditExperienceProps extends ExperienceInterface {
   onClose: () => void;
   onUpdate: () => void;
+  onEditSuccess: () => void;
+  onDeleteSuccess: () => void;
 }
 
 export default function EditExperience(props: EditExperienceProps) {
@@ -30,11 +35,45 @@ export default function EditExperience(props: EditExperienceProps) {
   );
   const [dateValidation, setDateValidation] = useState<boolean>(true);
   const [showConfirmDelete, setShowConfirmDelete] = useState<boolean>(false);
+  const [showErrorMessage, setShowErrorMessage] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
   const validationMessage = dateValidation
     ? ""
     : "The end date must be after the start date.";
 
-  async function handleSubmit(e: React.FormEvent) {
+  const editExperienceMutation = useMutation({
+    mutationFn: editExperience,
+    onError: async (error) => {
+      setShowErrorMessage(true);
+      setErrorMessage(error.message);
+      setTimeout(() => setShowErrorMessage(false), 3000);
+    },
+    onSuccess: () => {
+      props.onEditSuccess();
+      props.onUpdate();
+      props.onClose();
+    },
+  });
+
+  const deleteExperienceMutation = useMutation({
+    mutationFn: deleteExperience,
+    onError: async (error) => {
+      setShowErrorMessage(true);
+      setErrorMessage(error.message);
+      setTimeout(() => setShowErrorMessage(false), 3000);
+    },
+    onSuccess: () => {
+      props.onDeleteSuccess();
+      props.onUpdate();
+      props.onClose();
+    },
+  });
+
+  const isProcessing =
+    editExperienceMutation.status === "pending" ||
+    deleteExperienceMutation.status === "pending";
+
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (dateValidation) {
       const editedExperience: ExperienceInterface = {
@@ -45,17 +84,12 @@ export default function EditExperience(props: EditExperienceProps) {
         startDate: new Date(startYear, startMonth - 1, 1),
         endDate: new Date(endYear, endMonth - 1, 1),
       };
-      console.log(props);
-      await editExperience(editedExperience);
-      props.onUpdate();
-      props.onClose();
+      editExperienceMutation.mutate(editedExperience);
     }
   }
 
-  async function handleDelete() {
-    await deleteExperience(props._id);
-    props.onUpdate();
-    props.onClose();
+  function handleDelete() {
+    deleteExperienceMutation.mutate(props._id);
   }
 
   useEffect(() => {
@@ -95,6 +129,7 @@ export default function EditExperience(props: EditExperienceProps) {
             onChange={(e) => setPosition(e.target.value)}
             className="w-full px-2 py-1 border rounded-lg"
             required
+            disabled={isProcessing}
           />
         </div>
         <div className="mb-4">
@@ -108,6 +143,7 @@ export default function EditExperience(props: EditExperienceProps) {
             onChange={(e) => setCompany(e.target.value)}
             className="w-full px-2 py-1 border rounded-lg"
             required
+            disabled={isProcessing}
           />
         </div>
         <div className="mb-4">
@@ -120,6 +156,7 @@ export default function EditExperience(props: EditExperienceProps) {
               onChange={(e) => setStartMonth(Number(e.target.value))}
               className="w-1/2 px-2 py-1 border rounded-lg"
               required
+              disabled={isProcessing}
             >
               <option value={0}>Month</option>
               {months.map((month, index) => (
@@ -133,6 +170,7 @@ export default function EditExperience(props: EditExperienceProps) {
               onChange={(e) => setStartYear(Number(e.target.value))}
               className="w-1/2 px-2 py-1 border rounded-lg"
               required
+              disabled={isProcessing}
             >
               <option value={0}>Year</option>
               {Array.from(
@@ -156,6 +194,7 @@ export default function EditExperience(props: EditExperienceProps) {
               onChange={(e) => setEndMonth(Number(e.target.value))}
               className="w-1/2 px-2 py-1 border rounded-lg"
               required
+              disabled={isProcessing}
             >
               <option value={0}>Month</option>
               {months.map((month, index) => (
@@ -169,6 +208,7 @@ export default function EditExperience(props: EditExperienceProps) {
               onChange={(e) => setendYear(Number(e.target.value))}
               className="w-1/2 px-2 py-1 border rounded-lg"
               required
+              disabled={isProcessing}
             >
               <option value={0}>Year</option>
               {Array.from(
@@ -198,21 +238,26 @@ export default function EditExperience(props: EditExperienceProps) {
             className="w-full px-2 py-1 border rounded-lg"
             rows={4}
             required
+            disabled={isProcessing}
           />
         </div>
         <div className="flex space-x-2">
           <button
             type="submit"
             className="bg-crimsonRed text-warmWhite px-4 py-1.5 rounded-3xl cursor-pointer hover:bg-red-700"
+            disabled={isProcessing}
           >
-            Save
+            {editExperienceMutation.status === "pending" ? "Saving..." : "Save"}
           </button>
           <button
             type="button"
             className="bg-gray-500 text-warmWhite px-4 py-1.5 rounded-3xl cursor-pointer hover:bg-gray-700"
             onClick={() => setShowConfirmDelete(true)}
+            disabled={isProcessing}
           >
-            Delete
+            {deleteExperienceMutation.status === "pending"
+              ? "Deleting..."
+              : "Delete"}
           </button>
         </div>
       </form>
@@ -222,6 +267,13 @@ export default function EditExperience(props: EditExperienceProps) {
           onClose={() => setShowConfirmDelete(false)}
         />
       )}
+      <AnimatePresence>
+        {showErrorMessage && (
+          <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2">
+            <ErrorMessage message={errorMessage} />
+          </div>
+        )}
+      </AnimatePresence>
     </>
   );
 }

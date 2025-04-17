@@ -10,6 +10,7 @@ import {
 import EditProfilePicture from "./EditProfilePicture";
 import EditCoverPicture from "./EditCoverPicture";
 import "material-icons";
+import { useQuery } from "@tanstack/react-query";
 
 interface ProfileProps {
   userId: string;

@@ -6,10 +6,15 @@ import {
 } from "@services/api/userProfileServices";
 import { months } from "@utils/months";
 import ConfirmAction from "../../utils/ConfirmAction";
+import { useMutation } from "@tanstack/react-query";
+import ErrorMessage from "../../../components/utils/ErrorMessage";
+import { AnimatePresence } from "framer-motion";
 
 interface EditCertificateProps extends CertificateInterface {
   onClose: () => void;
   onUpdate: () => void;
+  onEditSuccess: () => void;
+  onDeleteSuccess: () => void;
 }
 
 export default function EditCertificate(props: EditCertificateProps) {
@@ -28,10 +33,44 @@ export default function EditCertificate(props: EditCertificateProps) {
     new Date(props.expirationDate).getFullYear(),
   );
   const [dateValidation, setDateValidation] = useState<boolean>(true);
-  const [showConfirm, setShowConfirm] = useState<boolean>(false);
+  const [showErrorMessage, setShowErrorMessage] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [showConfirmDelete, setShowConfirmDelete] = useState<boolean>(false);
   const validationMessage = dateValidation
     ? ""
     : "The expiration date must be after the issue date.";
+
+  const editCertificateMutation = useMutation({
+    mutationFn: editCertificate,
+    onError: async (error) => {
+      setShowErrorMessage(true);
+      setErrorMessage(error.message);
+      setTimeout(() => setShowErrorMessage(false), 3000);
+    },
+    onSuccess: () => {
+      props.onEditSuccess();
+      props.onUpdate();
+      props.onClose();
+    },
+  });
+
+  const deleteCertificateMutation = useMutation({
+    mutationFn: deleteCertificate,
+    onError: async (error) => {
+      setShowErrorMessage(true);
+      setErrorMessage(error.message);
+      setTimeout(() => setShowErrorMessage(false), 3000);
+    },
+    onSuccess: () => {
+      props.onDeleteSuccess();
+      props.onUpdate();
+      props.onClose();
+    },
+  });
+
+  const isProcessing =
+    editCertificateMutation.status === "pending" ||
+    deleteCertificateMutation.status === "pending";
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -43,16 +82,12 @@ export default function EditCertificate(props: EditCertificateProps) {
         issueDate: new Date(issueYear, issueMonth - 1, 1),
         expirationDate: new Date(expirationYear, expirationMonth - 1, 1),
       };
-      await editCertificate(editedCertificate);
-      props.onUpdate();
-      props.onClose();
+      editCertificateMutation.mutate(editedCertificate);
     }
   }
 
   async function handleDelete() {
-    await deleteCertificate(props._id);
-    props.onUpdate();
-    props.onClose();
+    deleteCertificateMutation.mutate(props._id);
   }
 
   useEffect(() => {
@@ -77,10 +112,10 @@ export default function EditCertificate(props: EditCertificateProps) {
 
   return (
     <>
-      {showConfirm && (
+      {showConfirmDelete && (
         <ConfirmAction
           action={handleDelete}
-          onClose={() => setShowConfirm(false)}
+          onClose={() => setShowConfirmDelete(false)}
         />
       )}
       <form
@@ -190,18 +225,31 @@ export default function EditCertificate(props: EditCertificateProps) {
           <button
             type="submit"
             className="bg-crimsonRed text-warmWhite px-4 py-1.5 rounded-3xl cursor-pointer hover:bg-red-700"
+            disabled={isProcessing}
           >
-            Save
+            {editCertificateMutation.status === "pending"
+              ? "Saving..."
+              : "Save"}
           </button>
           <button
             type="button"
-            onClick={() => setShowConfirm(true)}
+            onClick={() => setShowConfirmDelete(true)}
             className="bg-gray-500 text-warmWhite px-4 py-1.5 rounded-3xl cursor-pointer hover:bg-gray-700"
+            disabled={isProcessing}
           >
-            Delete
+            {deleteCertificateMutation.status === "pending"
+              ? "Deleting..."
+              : "Delete"}
           </button>
         </div>
       </form>
+      <AnimatePresence>
+        {showErrorMessage && (
+          <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2">
+            <ErrorMessage message={errorMessage} />
+          </div>
+        )}
+      </AnimatePresence>
     </>
   );
 }
