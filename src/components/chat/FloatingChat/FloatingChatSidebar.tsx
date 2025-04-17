@@ -66,7 +66,8 @@ function FloatingChatSidebar() {
         onClick={activeToggler}
       >
         <img
-          src=""
+          // src=""
+          src="/"
           alt="User Avatar"
           className="rounded-full w-10 h-10 border border-gray-300"
         />

@@ -28,19 +28,23 @@ api.interceptors.response.use(
     if (
       error.response &&
       error.response.status === 401 &&
+      error.response.data.errorCode === 401100 &&
       !originalRequest._retry
     ) {
       originalRequest._retry = true;
 
       const dispatch = store.dispatch;
       try {
+        console.log("refreshing refresh token");
         const refreshToken = localStorage.getItem("refreshToken");
-        const userId = store.getState().user.userId;
-        if (!refreshToken) {
+        // const userId = store.getState().user.userId;
+        const userId = localStorage.getItem("userId");
+        if (!refreshToken && !userId) {
           console.log("No refresh token found, logging out...");
           localStorage.removeItem("refreshToken");
-          localStorage.removeItem("userState");
+          localStorage.removeItem("userId");
           dispatch(logOut());
+
           return Promise.reject(error);
         }
         const { data } = await api.post("auth/refresh-token", {
