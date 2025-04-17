@@ -75,6 +75,7 @@ export const updateUsernameAPI = async (userData: {
 
 export const getUserDetailsAPI = async () => {
   const response = await api.get("user/me");
+  console.log("response of user Details yarb: ", response.data);
   return response.data;
 };
 
