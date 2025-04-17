@@ -41,8 +41,6 @@ api.interceptors.response.use(
           localStorage.removeItem("refreshToken");
           localStorage.removeItem("userState");
           dispatch(logOut());
-
-          window.location.href = "/";
           return Promise.reject(error);
         }
         const { data } = await api.post("auth/refresh-token", {
@@ -50,6 +48,7 @@ api.interceptors.response.use(
           refreshToken: refreshToken,
         });
         dispatch(updateAccessToken(data.accessToken));
+        localStorage.setItem("refreshToken", data.refreshToken);
         originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
         return api(originalRequest);
       } catch (refreshError) {
