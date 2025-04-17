@@ -5,10 +5,11 @@ import { expect, it, describe } from "vitest";
 import { Container } from "lucide-react";
 
 describe("MessageBubble ", () => {
-  it("it should Render message bubble the custom inputs", () => {
+  it("should Render message bubble the custom inputs", () => {
     const { container } = render(
       <UserProvider userId="2">
         <MessageBubble
+          users={[]}
           message={{
             sender: {
               userId: "user123",
@@ -18,6 +19,7 @@ describe("MessageBubble ", () => {
             },
             sentDate: new Date("2015"),
             messageId: "1-1633024800000",
+            seenBy: ["1", "2"],
             content: {
               text: "Hello! How are you?",
             },
@@ -27,7 +29,6 @@ describe("MessageBubble ", () => {
     );
     expect(screen.getByText("Hello! How are you?")).toBeInTheDocument();
     expect(screen.getByText("Ahmed")).toBeInTheDocument();
-    screen.debug();
     const image = screen.getByRole("img");
     expect(image).toHaveAttribute("src", "https://via.placeholder.com/150");
   });

@@ -57,6 +57,22 @@ export const changePasswordAPI = async (userData: {
   return response.data;
 };
 
+export const updateEmailAPI = async (userData: {
+  userId: string;
+  email: string;
+}) => {
+  const response = await api.put("user/edit/email", userData);
+  return response.data;
+};
+
+export const updateUsernameAPI = async (userData: {
+  userId: string;
+  username: string;
+}) => {
+  const response = await api.put("user/edit/username", userData);
+  return response.data;
+};
+
 export const getUserDetailsAPI = async () => {
   const response = await api.get("user/me");
   return response.data;

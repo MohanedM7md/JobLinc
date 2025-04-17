@@ -8,6 +8,7 @@ export const getFeed = async (count: number, signal: AbortSignal) => {
         count: count,
       },
     });
+    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error("Error fetching feed:", error);
@@ -55,10 +56,19 @@ export const createPost = async (text: string) => {
   }
 };
 
-// Create a comment (NOT in documentation)
-export const createComment = async (postId: string, commentText: string) => {
+// React to post
+export async function reactPost(postId: string, type: string) {
   try {
-    await api.post(`post/${postId}/comment`, { commentText });
+    await api.post(`post/${postId}/react`, {type});
+  } catch (error) {
+    console.error("Error reacting to post:", error);
+  }
+}
+
+// Create a comment 
+export const createComment = async (postId: string, text: string) => {
+  try {
+    await api.post(`post/${postId}/comment`,  {text} );
   } catch (error) {
     console.error("Error creating comment:", error);
   }

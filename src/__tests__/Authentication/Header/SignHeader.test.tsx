@@ -1,4 +1,4 @@
-import SignHeader from "../../../components/Authentication/SignHeader";
+import SignHeader from "../../../components/Authentication/Headers/SignHeader";
 import { render, screen } from "@testing-library/react";
 import {describe, it, expect} from "vitest";
 import "@testing-library/jest-dom/vitest";

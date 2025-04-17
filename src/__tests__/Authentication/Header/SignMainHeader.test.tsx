@@ -1,4 +1,4 @@
-import SignMain from "../../../components/Authentication/SignMain";
+import SignMain from "../../../components/Authentication/Headers/SignMain";
 import { MemoryRouter } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
 import { render, screen, cleanup, waitFor, act } from "@testing-library/react";

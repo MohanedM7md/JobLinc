@@ -2,15 +2,17 @@ import { useEffect, useState } from "react";
 import Searchbar from "./SearchBar";
 import NavIcon from "./NavIcon";
 import Logo from "./Logo";
-import NotificationBell from "../Notifications/NotificationBell"; // ✅ Import our custom bell
+import store from "@store/store";
+import NotificationBell from "../components/Notifications/NotificationBell"; // adjust path
+import NotificationPanel from "../Notifications/../components/Notifications/NotificationPanel";
 
-//import { Outlet, Link } from "react-router-dom";
 function NavBar() {
   const [isLargeScreen, setIsLargeScreen] = useState<boolean>(
     window.innerWidth > 1280,
-  ); // Typed as boolean
-
+  );
+  const [loggedInUserId, setLoggedInUserId] = useState<string | null>("");
   useEffect(() => {
+    setLoggedInUserId(store.getState().user.userId);
     const handleResize = () => {
       setIsLargeScreen(window.innerWidth > 1000); // Update state based on screen width
     };
@@ -22,61 +24,55 @@ function NavBar() {
   }, []);
 
   return (
-    <nav className="flex flex-row border border-gray-100 shadow-lg rounded overflow-hidden w-full">
-      <div className="flex flex-row items-center lg:w-7/20 sm:w-auto overflow-hidden flex-shrink-0 sm:ml-0 md:ml-[5%] mr-3">
-        <Logo id="LogoButton" />
-        <div className="hidden md:flex flex-grow">
-          <Searchbar id="SearchBar" />
+    <>
+      <nav className="flex flex-row border border-gray-100 shadow-lg rounded overflow-hidden w-full">
+        <div className="flex flex-row items-center lg:w-7/20 sm:w-auto overflow-hidden flex-shrink-0 sm:ml-0 md:ml-[5%] mr-3">
+          <Logo id="lincbuttonid" />
+          <div className="hidden md:flex flex-grow">
+            <Searchbar id="SearchBar" />
+          </div>
+          <div className="flex sm:block md:hidden items-center justify-center">
+            <NavIcon
+              Icon="fa-solid fa-magnifying-glass"
+              Name="Search"
+              pagePath="/"
+            />
+          </div>
         </div>
-        <div className="flex sm:block md:hidden items-center justify-center">
+        <div className="flex flex-row items-center justify-between w-full">
+          <NavIcon Icon="fa-solid fa-house" Name="Home" pagePath="/Home" />
           <NavIcon
-            id="SearchBarButton"
-            Icon="fa-solid fa-magnifying-glass"
-            Name="Search"
+            Icon="fa-solid fa-user-group"
+            Name={isLargeScreen ? "My Network" : "Network"}
+            pagePath="/my-network"
+          />
+          <NavIcon Icon="fa-solid fa-briefcase" Name="Jobs" pagePath="/" />
+          <NavIcon
+            Icon="fa-solid fa-message"
+            Name="Messaging"
+            pagePath="/messaging"
+          />
+          <NotificationBell onClick={() => setShowNotifications(true)} />
+          <NavIcon
+            Icon="fa-solid fa-user"
+            Name="Me"
+            Dropdown="fa-solid fa-caret-down"
+            rightBorder="border-r border-gray-200"
+            pagePath={`profile/${loggedInUserId}`}
+          />
+          <NavIcon
+            Icon="fa-solid fa-building"
+            Name="Businesses"
+            Dropdown="fa-solid fa-caret-down"
+            pagePath="/"
           />
         </div>
-      </div>
-      <div className="flex flex-row items-center justify-between w-full">
-        <NavIcon
-          id="HomeButton"
-          Icon="fa-solid fa-house"
-          Name="Home"
-          Link="/Home"
-        />
-        <NavIcon
-          id="NetworkButton"
-          Icon="fa-solid fa-user-group"
-          Name={isLargeScreen ? "My Network" : "Network"}
-          Link="/MyNetwork"
-        />
-        <NavIcon id="JobsButton" Icon="fa-solid fa-briefcase" Name="Jobs" />
-        <NavIcon
-          id="MessagingButton"
-          Icon="fa-solid fa-message"
-          Name="Messaging"
-        />
-        <NavIcon
-          id="NotificationsButton"
-          Icon="fa-solid fa-bell"
-          Name="Notifications"
-        />
-
-        {/* <div className="flex items-center justify-center px-2">
-          <NotificationBell />
-        </div> */}
-        <NavIcon
-          Icon="fa-solid fa-user"
-          Name="Me"
-          Dropdown="fa-solid fa-caret-down"
-          rightBorder="border-r border-gray-200"
-        />
-        <NavIcon
-          Icon="fa-solid fa-building"
-          Name="Businesses"
-          Dropdown="fa-solid fa-caret-down"
-        />
-      </div>
-    </nav>
+      </nav>
+      <NotificationPanel
+        isOpen={showNotifications}
+        onClose={() => setShowNotifications(false)}
+      />
+    </>
   );
 }
 export default NavBar;

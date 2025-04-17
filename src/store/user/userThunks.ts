@@ -9,6 +9,7 @@ import {
   getUserDetailsAPI,
   sendConfirmationEmailAPI,
   confirmEmailAPI,
+  updateEmailAPI,
 } from "@services/api/authService";
 
 export const loginUser = createAsyncThunk(
@@ -102,6 +103,23 @@ export const changePassword = createAsyncThunk(
       return await changePasswordAPI(userData);
     } catch (error: any) {
       return rejectWithValue(error.response?.data || "Change password failed");
+    }
+  },
+);
+
+export const updateEmail = createAsyncThunk(
+  "user/updateEmail",
+  async (
+    userData: {
+      userId: string;
+      email: string;
+    },
+    { rejectWithValue },
+  ) => {
+    try {
+      return await updateEmailAPI(userData);
+    } catch (error: any) {
+      return rejectWithValue(error.respnse?.data || "Update email failed");
     }
   },
 );

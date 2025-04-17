@@ -30,11 +30,11 @@ const ChatCardsList = ({
     fetchData();
     subscribeToChats(
       (UpdatedChatCard) =>
-        setChats((prev) =>
-          prev.map((chat) =>
-            chat.chatId == UpdatedChatCard.chatId ? UpdatedChatCard : chat,
-          ),
-        ),
+        setChats((prev) => {
+          prev = prev.filter((chat) => chat.chatId != UpdatedChatCard.chatId);
+          prev.unshift(UpdatedChatCard);
+          return prev;
+        }),
       (newChatCard) => setChats((prev) => [...prev, newChatCard]),
     );
   }, []);

@@ -12,8 +12,22 @@ import {
   createComment,
   deletePost,
   getComments,
+  reactPost,
 } from "../../services/api/postServices";
 import { useNavigate } from "react-router-dom";
+import PostReact from "./PostReact";
+import {
+  ThumbsUp,
+  PartyPopper,
+  HandHelping,
+  Laugh,
+  Heart,
+  Lightbulb,
+  MessageSquareText,
+  Repeat,
+  SendHorizontal,
+  SmilePlus,
+} from "lucide-react";
 
 interface PostProps {
   post: PostInterface;
@@ -24,14 +38,18 @@ export default function Post(props: PostProps) {
   const [showUtility, setShowUtility] = useState<boolean>(false);
   const [showComment, setShowComment] = useState<boolean>(false);
   const [comments, setComments] = useState<CommentInterface[]>([]);
-  const [isLike, setIsLike] = useState<boolean>(false);
-  const like = !isLike ? "Like" : "Liked";
+  const [reaction, setReaction] = useState<string>("React");
   const [newComment, setNewComment] = useState<string>("");
   const navigate = useNavigate();
+  const [showReact, setShowReact] = useState<boolean>(false);
 
   const posterId: string = props.post.userId ?? props.post.companyId ?? "0";
-  const name: string = props.post.firstname !== "" ?  props.post.firstname + " " + props.post.lastname : props.post.companyName ?? "Company Name";
-  const posterPic: string = props.post.profilePicture ?? props.post.companyLogo ?? "NotFound"
+  const name: string =
+    props.post.firstname !== ""
+      ? props.post.firstname + " " + props.post.lastname
+      : (props.post.companyName ?? "Company Name");
+  const posterPic: string =
+    props.post.profilePicture ?? props.post.companyLogo ?? "NotFound";
 
   useEffect(() => {
     if (showComment) {
@@ -41,17 +59,68 @@ export default function Post(props: PostProps) {
   }, [showComment]);
 
   function addComment() {
-    createComment(props.post.postId, newComment).then(() =>
-      getComments(props.post.postId).then((data) => setComments(data)),
-    );
+    createComment(props.post.postId, newComment)
+      .then(() =>
+        getComments(props.post.postId).then((data) => setComments(data)),
+      )
+      .then(() => (props.post.comments += 1));
   }
 
   function postDelete() {
-    deletePost(props.post.postId).then(() => navigate("/"));
+    deletePost(props.post.postId).then(() => navigate("/home"));
+  }
+
+  function postReaction(reaction: string) {
+    reactPost(props.post.postId, reaction).then(() => {
+      setReaction(reaction);
+      props.post.likes+=1;
+    });
+  }
+
+  function getReactionIcon(reaction: string) {
+    switch (reaction) {
+      case "React":
+        return <SmilePlus className="mr-2 md:align-text-bottom" />;
+      case "Like":
+        return <ThumbsUp className="mr-2 md:align-text-bottom" />;
+      case "Celebrate":
+        return <PartyPopper className="mr-2 md:align-text-bottom" />;
+      case "Support":
+        return <HandHelping className="mr-2 md:align-text-bottom" />;
+      case "Funny":
+        return <Laugh className="mr-2 md:align-text-bottom" />;
+      case "Love":
+        return <Heart className="mr-2 md:align-text-bottom" />;
+      case "Insightful":
+        return <Lightbulb className="mr-2 md:align-text-bottom" />;
+      default:
+        return <SmilePlus className="mr-2 md:align-text-bottom" />;
+    }
+  }
+
+  function getReactionStyles(reaction: string) {
+    switch (reaction) {
+      case "React":
+        return "text-gray-500 hover:bg-gray-200";
+      case "Like":
+        return "text-blue-500 hover:bg-blue-100";
+      case "Celebrate":
+        return "text-pink-500 hover:bg-pink-100";
+      case "Support":
+        return "text-green-600 hover:bg-green-100";
+      case "Funny":
+        return "text-violet-600 hover:bg-violet-100";
+      case "Love":
+        return "text-red-600 hover:bg-red-100";
+      case "Insightful":
+        return "text-yellow-600 hover:bg-yellow-100";
+      default:
+        return "text-gray-500 hover:bg-gray-200";
+    }
   }
 
   return !hide ? (
-    <div className="flex flex-wrap w-1/1 bg-lightGray rounded-xl relative">
+    <div className="flex flex-wrap w-1/1 relative">
       <div className="flex flex-row w-1/1">
         <ProfileDetails
           key={`Details of poster ${posterId}`}
@@ -87,10 +156,10 @@ export default function Post(props: PostProps) {
       <PostDetails
         key={`Details of post ${props.post.postId}`}
         text={props.post.text}
-        media={props.post.media}
+        mediaURL={props.post.mediaURL}
       />
       <div className="flex flex-row m-auto py-2 w-11/12 border-b-1 border-gray-300">
-        <span className="text-blue-500 material-icons">thumb_up</span>
+        <ThumbsUp className="text-blue-500" />
         <span className="text-mutedSilver ml-2">{props.post.likes}</span>
         <div className="flex flex-row justify-end w-1/1">
           <span className="text-mutedSilver ml-2">{props.post.comments}</span>
@@ -100,47 +169,48 @@ export default function Post(props: PostProps) {
           <span className="text-mutedSilver ml-2">Reposts</span>
         </div>
       </div>
-      <button
-        className={
-          isLike
-            ? "transition w-3/12 h-10 cursor-pointer font-medium text-blue-500 hover:bg-blue-100"
-            : "transition w-3/12 h-10 cursor-pointer font-medium text-gray-500 hover:bg-gray-200"
-        }
-        onClick={() => setIsLike(!isLike)}
-      >
-        <p className="material-icons mr-3 md:align-text-bottom">thumb_up</p>
-        <span className="hidden md:inline-block">{like}</span>
-      </button>
+      <div className="flex flex-grow relative m-auto justify-between">
+        {showReact && (
+          <div className="absolute bottom-12 left-0">
+            <PostReact postReaction={postReaction} />
+          </div>
+        )}
+        <button
+          className={`transition w-3/12 h-10 cursor-pointer font-medium flex items-center justify-center ${getReactionStyles(reaction)}`}
+          onClick={() => {
+            setShowReact(!showReact);
+          }}
+        >
+          {getReactionIcon(reaction)}
+          <span className="hidden md:inline-block">{reaction}</span>
+        </button>
 
-      <button
-        onClick={() => {
-          setShowComment(!showComment);
-        }}
-        className="w-3/12 h-10 cursor-pointer font-medium text-gray-500 hover:bg-gray-200"
-      >
-        <p className="material-icons mr-2 md:align-text-top lg:mr-3">
-          insert_comment
-        </p>
-        <span className="hidden md:inline-block">Comment</span>
-      </button>
+        <button
+          onClick={() => {
+            setShowComment(!showComment);
+          }}
+          className="w-3/12 h-10 cursor-pointer font-medium text-gray-500 hover:bg-gray-200 flex items-center justify-center"
+        >
+          <MessageSquareText className="mr-2" />
+          <span className="hidden md:inline-block">Comment</span>
+        </button>
 
-      <button className="w-3/12 h-10 cursor-pointer font-medium text-gray-500 hover:bg-gray-200">
-        <p className="material-icons mr-3 md:align-text-top">repeat</p>
-        <span className="hidden md:inline-block">Repost</span>
-      </button>
+        <button className="w-3/12 h-10 cursor-pointer font-medium text-gray-500 hover:bg-gray-200 flex items-center justify-center">
+          <Repeat className="mr-2" />
+          <span className="hidden md:inline-block">Repost</span>
+        </button>
 
-      <button className="w-3/12 h-10 cursor-pointer font-medium text-gray-500 hover:bg-gray-200">
-        <p className="material-icons mr-3 md:align-text-top">send</p>
-        <span className="hidden md:inline-block">Send</span>
-      </button>
+        <button className="w-3/12 h-10 cursor-pointer font-medium text-gray-500 hover:bg-gray-200 flex items-center justify-center">
+          <SendHorizontal className="mr-2" />
+          <span className="hidden md:inline-block">Send</span>
+        </button>
+      </div>
       {showComment ? (
         <>
           <div className="flex flex-row w-1/1 py-3">
             <img
               className="rounded-full h-10 w-10 mx-2"
-              src={
-                "https://i.pinimg.com/550x/04/bb/21/04bb2164bbfa3684118a442c17d086bf.jpg"
-              }
+              src={localStorage.getItem("profilePicture")!}
               alt={"User"}
             />
             <input
