@@ -3,7 +3,7 @@ interface Logoprops{
 }
 function Logo(props:Logoprops) {
   const handleRefresh = (): void => {
-    window.location.reload(); // Explicitly typed as void
+    window.location.reload(); 
   };
 
   return (
