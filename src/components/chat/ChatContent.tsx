@@ -72,6 +72,7 @@ function ChatContent({ className }: { className?: string }) {
   }, [chatId]);
 
   const handleSendMessage = (message: string | File, type: string) => {
+    console.log("message sending");
     const newMessage: any = {
       senderId: store.getState().user.userId,
       time: new Date(),
