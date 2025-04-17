@@ -24,6 +24,7 @@ import CommentsContainer from "./Comments/CommentsContainer";
 
 interface PostProps {
   post: PostInterface;
+  isRepost: boolean;
 }
 
 export default function Post(props: PostProps) {
@@ -48,7 +49,7 @@ export default function Post(props: PostProps) {
 
   function reactionSuccess(newReaction: string) {
     setReaction(newReaction);
-    props.post.likes +=1;
+    props.post.likes += 1;
     setShowReact(false);
   }
 
@@ -120,82 +121,93 @@ export default function Post(props: PostProps) {
             </div>
           ) : null}
         </div>
-        <button
-          data-testid={`Options ${props.post.postId}`}
-          onClick={() => setShowUtility(!showUtility)}
-          className="material-icons-round cursor-pointer mr-1 text-mutedSilver hover:bg-gray-200 h-fit"
-        >
-          more_horiz
-        </button>
-        <button
-          onClick={() => setHide(true)}
-          className="material-icons-round cursor-pointer ml-1 text-mutedSilver hover:bg-gray-200 h-fit"
-        >
-          clear
-        </button>
+        {!props.isRepost ? (
+          <>
+            <button
+              data-testid={`Options ${props.post.postId}`}
+              onClick={() => setShowUtility(!showUtility)}
+              className="material-icons-round cursor-pointer mr-1 text-mutedSilver hover:bg-gray-200 h-fit"
+            >
+              more_horiz
+            </button>
+            <button
+              onClick={() => setHide(true)}
+              className="material-icons-round cursor-pointer ml-1 text-mutedSilver hover:bg-gray-200 h-fit"
+            >
+              clear
+            </button>
+          </>
+        ) : null}
       </div>
       <PostDetails
         key={`Details of post ${props.post.postId}`}
         text={props.post.text}
         mediaURL={props.post.mediaURL}
       />
-      <div className="flex flex-row m-auto py-2 w-11/12 border-b-1 border-gray-300">
+      {props.post.repost ? (
+        <div className="w-12/12 m-auto my-2 border-1 rounded-lg border-mutedSilver transform scale-90">
+          <Post post={props.post.repost} isRepost={true} />
+        </div>
+      ) : null}
+      <div className="flex flex-row text-mutedSilver m-auto py-2 w-11/12 border-b-1 border-gray-300">
         <ThumbsUp className="text-blue-500" />
-        <span className="text-mutedSilver ml-2">{props.post.likes}</span>
+        <span className="ml-2">{props.post.likes}</span>
         <div className="flex flex-row justify-end w-1/1">
-          <span className="text-mutedSilver ml-2">{props.post.comments}</span>
-          <span className="text-mutedSilver ml-2">Comments</span>
-          <span className="text-mutedSilver ml-2">•</span>
-          <span className="text-mutedSilver ml-2">{props.post.reposts}</span>
-          <span className="text-mutedSilver ml-2">Reposts</span>
+          <span className="ml-2">{props.post.comments}</span>
+          <MessageSquareText className="ml-2" />
+          <span className="ml-2">•</span>
+          <span className="ml-2">{props.post.reposts}</span>
+          <Repeat className="ml-2" />
         </div>
       </div>
-      <div className="flex flex-grow relative m-auto justify-between">
-        <AnimatePresence>
-          {showReact && (
-            <div className="absolute bottom-12 left-0">
-              <PostReact
-                postId={props.post.postId}
-                userReaction={reaction}
-                successHandler={reactionSuccess}
-              />
-            </div>
-          )}
-        </AnimatePresence>
-        <button
-          className={`transition w-3/12 h-10 cursor-pointer font-medium flex items-center justify-center ${getReactionStyles(reaction)}`}
-          onClick={() => {
-            setShowReact(!showReact);
-          }}
-        >
-          {getReactionIcon(reaction)}
-          <span className="hidden md:inline-block">{reaction}</span>
-        </button>
+      {!props.isRepost ? (
+        <div className="flex flex-grow relative m-auto justify-between">
+          <AnimatePresence>
+            {showReact && (
+              <div className="absolute bottom-12 left-0">
+                <PostReact
+                  postId={props.post.postId}
+                  userReaction={reaction}
+                  successHandler={reactionSuccess}
+                />
+              </div>
+            )}
+          </AnimatePresence>
+          <button
+            className={`transition w-3/12 h-10 cursor-pointer font-medium flex items-center justify-center ${getReactionStyles(reaction)}`}
+            onClick={() => {
+              setShowReact(!showReact);
+            }}
+          >
+            {getReactionIcon(reaction)}
+            <span className="hidden md:inline-block">{reaction}</span>
+          </button>
 
-        <button
-          onClick={() => {
-            setShowComment(!showComment);
-          }}
-          className="w-3/12 h-10 cursor-pointer font-medium text-gray-500 hover:bg-gray-200 flex items-center justify-center"
-        >
-          <MessageSquareText className="mr-2" />
-          <span className="hidden md:inline-block">Comment</span>
-        </button>
+          <button
+            onClick={() => {
+              setShowComment(!showComment);
+            }}
+            className="w-3/12 h-10 cursor-pointer font-medium text-gray-500 hover:bg-gray-200 flex items-center justify-center"
+          >
+            <MessageSquareText className="mr-2" />
+            <span className="hidden md:inline-block">Comment</span>
+          </button>
 
-        <button className="w-3/12 h-10 cursor-pointer font-medium text-gray-500 hover:bg-gray-200 flex items-center justify-center">
-          <Repeat className="mr-2" />
-          <span className="hidden md:inline-block">Repost</span>
-        </button>
+          <button className="w-3/12 h-10 cursor-pointer font-medium text-gray-500 hover:bg-gray-200 flex items-center justify-center">
+            <Repeat className="mr-2" />
+            <span className="hidden md:inline-block">Repost</span>
+          </button>
 
-        <button className="w-3/12 h-10 cursor-pointer font-medium text-gray-500 hover:bg-gray-200 flex items-center justify-center">
-          <SendHorizontal className="mr-2" />
-          <span className="hidden md:inline-block">Send</span>
-        </button>
-      </div>
+          <button className="w-3/12 h-10 cursor-pointer font-medium text-gray-500 hover:bg-gray-200 flex items-center justify-center">
+            <SendHorizontal className="mr-2" />
+            <span className="hidden md:inline-block">Send</span>
+          </button>
+        </div>
+      ) : null}
       {showComment ? (
         <CommentsContainer
           postId={props.post.postId}
-          incrementCommentsCount={incrementCommentsCount} // Pass the function as a prop
+          incrementCommentsCount={incrementCommentsCount}
         />
       ) : null}
     </div>

@@ -63,7 +63,7 @@ export default function PostContainer() {
                 key={`post ${i}`}
                 className={i >= 1 ? "bg-white mt-2" : "bg-white"}
               >
-                <PostCard post={post} />
+                <PostCard post={post} isRepost={false} />
               </div>
             );
           })
