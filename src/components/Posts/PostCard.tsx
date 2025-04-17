@@ -1,19 +1,10 @@
 import PostDetails from "./PostDetails";
 import ProfileDetails from "./ProfileDetails";
 import PostUtilityButton from "./PostUtilityButton";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "material-icons/iconfont/material-icons.css";
-import CommentCard from "./Comments/CommentCard";
-import {
-  CommentInterface,
-  PostInterface,
-} from "../../interfaces/postInterfaces";
-import {
-  createComment,
-  deletePost,
-  getComments,
-  reactPost,
-} from "../../services/api/postServices";
+import { PostInterface } from "@interfaces/postInterfaces";
+import { deletePost } from "@services/api/postServices";
 import { useNavigate } from "react-router-dom";
 import PostReact from "./PostReact";
 import {
@@ -28,7 +19,8 @@ import {
   SendHorizontal,
   SmilePlus,
 } from "lucide-react";
-import { AnimatePresence } from "framer-motion"; // Import AnimatePresence
+import { AnimatePresence } from "framer-motion";
+import CommentsContainer from "./Comments/CommentsContainer";
 
 interface PostProps {
   post: PostInterface;
@@ -38,43 +30,30 @@ export default function Post(props: PostProps) {
   const [hide, setHide] = useState<boolean>(false);
   const [showUtility, setShowUtility] = useState<boolean>(false);
   const [showComment, setShowComment] = useState<boolean>(false);
-  const [comments, setComments] = useState<CommentInterface[]>([]);
   const [reaction, setReaction] = useState<string>("React");
-  const [newComment, setNewComment] = useState<string>("");
-  const navigate = useNavigate();
   const [showReact, setShowReact] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   const posterId: string = props.post.userId ?? props.post.companyId ?? "0";
   const name: string =
     props.post.firstname !== ""
       ? props.post.firstname + " " + props.post.lastname
-      : (props.post.companyName ?? "Company Name");
+      : (props.post.companyName ?? "Not Found");
   const posterPic: string =
     props.post.profilePicture ?? props.post.companyLogo ?? "NotFound";
-
-  useEffect(() => {
-    if (showComment) {
-      const response = getComments(props.post.postId);
-      response.then((data) => setComments(data));
-    }
-  }, [showComment]);
-
-  function addComment() {
-    createComment(props.post.postId, newComment).then(() => {
-      props.post.comments += 1;
-      getComments(props.post.postId).then((data) => setComments(data));
-    });
-  }
 
   function postDelete() {
     deletePost(props.post.postId).then(() => navigate("/home"));
   }
 
-  function postReaction(reaction: string) {
-    reactPost(props.post.postId, reaction).then(() => {
-      setReaction(reaction);
-      props.post.likes += 1;
-    });
+  function reactionSuccess(newReaction: string) {
+    setReaction(newReaction);
+    props.post.likes +=1;
+    setShowReact(false);
+  }
+
+  function incrementCommentsCount() {
+    props.post.comments += 1; //this counter isn't counting for some reason, look into it later
   }
 
   function getReactionIcon(reaction: string) {
@@ -175,7 +154,11 @@ export default function Post(props: PostProps) {
         <AnimatePresence>
           {showReact && (
             <div className="absolute bottom-12 left-0">
-              <PostReact postReaction={postReaction} />
+              <PostReact
+                postId={props.post.postId}
+                userReaction={reaction}
+                successHandler={reactionSuccess}
+              />
             </div>
           )}
         </AnimatePresence>
@@ -210,52 +193,10 @@ export default function Post(props: PostProps) {
         </button>
       </div>
       {showComment ? (
-        <>
-          <div className="flex flex-row w-1/1 py-3">
-            <img
-              className="rounded-full h-10 w-10 mx-2"
-              src={localStorage.getItem("profilePicture")!}
-              alt={"User"}
-            />
-            <input
-              type="text"
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
-              placeholder="Write a comment..."
-              className="outline-[0.7px] outline-gray-300 text-[14px] text-charcoalBlack h-8 w-12/12 px-2 mt-1 rounded-3xl hover:cursor-text hover:outline-[1px] hover:bg-gray-100 focus:outline-black focus:outline-[1.5px]"
-            ></input>
-            <button
-              onClick={() => {
-                if (newComment != "") {
-                  addComment();
-                  setNewComment("");
-                }
-              }}
-              className="material-icons-round cursor-pointer rounded-full p-1 mt-1 mx-2 text-gray-500 hover:bg-gray-200 h-fit"
-            >
-              send
-            </button>
-          </div>
-          {comments ? (
-            comments.length > 0 ? (
-              comments.map((comment) => (
-                <CommentCard key={comment.commentId} comment={comment} />
-              ))
-            ) : (
-              <div className="m-auto p-2">
-                <span className="text-mutedSilver font-medium">
-                  No Comments Yet
-                </span>
-              </div>
-            )
-          ) : (
-            <div className="m-auto p-2">
-              <span className="text-mutedSilver font-medium">
-                Can't fetch Comments, Please try again later
-              </span>
-            </div>
-          )}
-        </>
+        <CommentsContainer
+          postId={props.post.postId}
+          incrementCommentsCount={incrementCommentsCount} // Pass the function as a prop
+        />
       ) : null}
     </div>
   ) : (

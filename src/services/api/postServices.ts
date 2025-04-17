@@ -1,42 +1,44 @@
 import { api } from "./api";
 
 // Fetch a a number of posts to populate a user's feed
-export const getFeed = async (count: number, signal: AbortSignal) => {
+export async function getFeed(count: number, signal: AbortSignal) {
   try {
     const response = await api.get(`post/feed/`, {
-      params: {
-        count: count,
-      },
+      params: { count },
+      signal,
     });
     console.log(response.data);
     return response.data;
   } catch (error) {
     console.error("Error fetching feed:", error);
+    throw error;
   }
-};
+}
 
 // Fetch a post by ID
-export const getPost = async (postId: string) => {
+export async function getPost(postId: string) {
   try {
     const response = await api.get(`post/${postId}`);
     return response.data;
   } catch (error) {
     console.error("Error fetching post:", error);
+    throw error;
   }
-};
+}
 
 // Fetch comments for a post (NOT in documentation)
-export const getComments = async (postId: string) => {
+export async function getComments(postId: string) {
   try {
     const response = await api.get(`post/${postId}/comment`);
     return response.data;
   } catch (error) {
     console.error("Error fetching comments:", error);
+    throw error;
   }
-};
+}
 
 // Fetch replies for a comment (NOT in documentation)
-export const getReplies = async (postId: string, commentId: string) => {
+export async function getReplies(postId: string, commentId: string) {
   try {
     const response = await api.get(
       `post/${postId}/comment/${commentId}/replies`,
@@ -44,78 +46,108 @@ export const getReplies = async (postId: string, commentId: string) => {
     return response.data;
   } catch (error) {
     console.error("Error fetching replies:", error);
-  }
-};
-
-// Create a post
-export const createPost = async (text: string) => {
-  try {
-    await api.post(`post/add`, { text });
-  } catch (error) {
-    console.error("Error creating post:", error);
-  }
-};
-
-// React to post
-export async function reactPost(postId: string, type: string) {
-  try {
-    await api.post(`post/${postId}/react`, {type});
-  } catch (error) {
-    console.error("Error reacting to post:", error);
+    throw error;
   }
 }
 
-// Create a comment 
-export const createComment = async (postId: string, text: string) => {
+// Create a post
+export async function createPost(text: string) {
   try {
-    await api.post(`post/${postId}/comment`,  {text} );
+    const response = await api.post(`post/add`, { text });
+    return response.status;
+  } catch (error) {
+    console.error("Error creating post:", error);
+    throw error;
+  }
+}
+
+// React to post
+export async function reactPost({
+  postId,
+  type,
+}: {
+  postId: string;
+  type: string;
+}) {
+  try {
+    const response = await api.post(`post/${postId}/react`, { type });
+    return response.status;
+  } catch (error) {
+    console.error("Error reacting to post:", error);
+    throw error;
+  }
+}
+
+// Create a comment
+export async function createComment({
+  postId,
+  comment,
+}: {
+  postId: string;
+  comment: string;
+}) {
+  try {
+    const response = await api.post(`post/${postId}/comment`, {
+      text: comment,
+    });
+    return response.status;
   } catch (error) {
     console.error("Error creating comment:", error);
+    throw error;
   }
-};
+}
 
 // Create a reply (NOT in documentation)
-export const createReply = async (
+export async function createReply(
   postId: string,
   commentId: string,
   replyText: string,
-) => {
+) {
   try {
-    await api.post(`post/${postId}/comment/${commentId}/reply`, { replyText });
+    const response = await api.post(
+      `post/${postId}/comment/${commentId}/reply`,
+      { replyText },
+    );
+    return response.status;
   } catch (error) {
     console.error("Error creating reply:", error);
+    throw error;
   }
-};
+}
 
-export const editPost = async (postId: string, text: string) => {
+export async function editPost(postId: string, text: string) {
   try {
-    await api.post(`post/${postId}/edit`, { text });
+    const response = await api.post(`post/${postId}/edit`, { text });
+    return response.status;
   } catch (error) {
     console.error("Error editing post:", error);
+    throw error;
   }
-};
+}
 
-export const deletePost = async (postId: string) => {
+export async function deletePost(postId: string) {
   try {
-    await api.post(`post/${postId}/delete`);
+    const response = await api.post(`post/${postId}/delete`);
+    return response.status;
   } catch (error) {
     console.error("Error deleting post:", error);
+    throw error;
   }
-};
+}
 
 // Like a post (NOT in documentation)
-export const likePost = async (postId: string) => {
+export async function likePost(postId: string) {
   try {
-    await api.post(`post/${postId}/react`, {
-      body: JSON.stringify({ type: "like" }),
-    });
+    const response = await api.post(`post/${postId}/react`, { type: "like" });
+    return response.status;
   } catch (error) {
     console.error("Error liking post:", error);
+    throw error;
   }
-};
+}
 
 // Check if a post is liked (NOT in documentation)
-export const checkPostLike = async (postId: string, userId: string) => {
+export async function checkPostLike(postId: string, userId: string) {
   try {
     const response = await api.get(`post/${postId}/react`, {
       params: { userId },
@@ -123,52 +155,55 @@ export const checkPostLike = async (postId: string, userId: string) => {
     return response.data;
   } catch (error) {
     console.error("Error checking post like:", error);
+    throw error;
   }
-};
+}
 
 // Like a comment (NOT in documentation)
-export const likeComment = async (postId: string, commentId: string) => {
+export async function likeComment(postId: string, commentId: string) {
   try {
-    await api.post(`post/${postId}/comment/${commentId}/react`, {
-      body: JSON.stringify({ type: "like" }),
-    });
+    const response = await api.post(
+      `post/${postId}/comment/${commentId}/react`,
+      { type: "like" },
+    );
+    return response.status;
   } catch (error) {
     console.error("Error liking comment:", error);
+    throw error;
   }
-};
+}
 
 // Check if a comment is liked (NOT in documentation)
-export const checkCommentLike = async (
+export async function checkCommentLike(
   postId: string,
   commentId: string,
   userId: string,
-) => {
+) {
   try {
     const response = await api.get(
       `post/${postId}/comment/${commentId}/react`,
-      {
-        params: { userId },
-      },
+      { params: { userId } },
     );
     return response.data;
   } catch (error) {
     console.error("Error checking comment like:", error);
+    throw error;
   }
-};
+}
 
 // Like a reply (NOT in documentation)
-export const likeReply = async (replyId: string) => {
+export async function likeReply(replyId: string) {
   try {
-    await api.post(`reply/${replyId}/react`, {
-      body: JSON.stringify({ type: "like" }),
-    });
+    const response = await api.post(`reply/${replyId}/react`, { type: "like" });
+    return response.status;
   } catch (error) {
     console.error("Error liking reply:", error);
+    throw error;
   }
-};
+}
 
 // Check if a reply is liked (NOT in documentation)
-export const checkReplyLike = async (replyId: string, userId: string) => {
+export async function checkReplyLike(replyId: string, userId: string) {
   try {
     const response = await api.get(`reply/${replyId}/react`, {
       params: { userId },
@@ -176,11 +211,17 @@ export const checkReplyLike = async (replyId: string, userId: string) => {
     return response.data;
   } catch (error) {
     console.error("Error checking reply like:", error);
+    throw error;
   }
-};
+}
 
 // Testing Fetching user data after sign in
-export const retrieveUser = async (email: string, password: string) => {
-  const response = await api.post(`auth/login`, { email, password });
-  return response.data;
-};
+export async function retrieveUser(email: string, password: string) {
+  try {
+    const response = await api.post(`auth/login`, { email, password });
+    return response.data;
+  } catch (error) {
+    console.error("Error retrieving user:", error);
+    throw error;
+  }
+}
