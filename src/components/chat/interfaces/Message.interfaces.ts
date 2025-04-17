@@ -16,6 +16,7 @@ export interface MessageBase {
     document?: string;
   };
   seenBy: string[];
+  status: "sent" | "delivered" | "failed";
 }
 export interface RecievedMessage extends MessageBase {
   senderId: string;

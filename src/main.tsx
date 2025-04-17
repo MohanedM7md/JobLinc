@@ -6,7 +6,7 @@ export type AppStore = typeof store;
 import { Provider } from "react-redux";
 import App from "./App.tsx";
 
-async function enableMocking() {
+/* async function enableMocking() {
  if (process.env.NODE_ENV !== "development") {
    return;
  }
@@ -15,7 +15,7 @@ async function enableMocking() {
 
  return worker.start();
 }
-enableMocking().then(() => { 
+enableMocking().then(() => {  */
 createRoot(document.getElementById("root")!).render(
   <BrowserRouter>
     <Provider store={store}>
@@ -23,4 +23,4 @@ createRoot(document.getElementById("root")!).render(
     </Provider>
   </BrowserRouter>,
 );
-});
+/* }); */

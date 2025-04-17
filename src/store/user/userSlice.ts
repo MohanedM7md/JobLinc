@@ -30,7 +30,7 @@ const userSlice = createSlice({
       state.status = "IDLE";
       state.loggedIn = false;
       state.accessToken = null;
-      localStorage.removeItem("userState");
+      localStorage.removeItem("userId");
       localStorage.removeItem("refreshToken");
     },
   },
