@@ -12,7 +12,7 @@ export const fetchChats = async () => {
 };
 
 export const fetchNetWorks = async (Id: string) => {
-  const response = await api.get(`/Networks/${Id}`);
+  const response = await api.get(`/connection/${Id}/mutual`);
   const users = response.data.map(
     ({
       userId,

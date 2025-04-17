@@ -37,81 +37,124 @@ import Visibility from "@pages/Settings/Visibility";
 import DataAndPrivacy from "@pages/Settings/DataAndPrivacy";
 import AdvertisingData from "@pages/Settings/AdvertisingData";
 import DarkMode from "@pages/Settings/AccountPreferences/Display/DarkMode";
-import DemographicInfo from "@pages/Settings/AccountPreferences/ProfileInformation/DemographicInfo";
+
 import CloseAccount from "@pages/Settings/AccountPreferences/AccountManagement/CloseAccount";
-import EmailAddress from "@pages/Settings/SignInAndSecurity/AccountAccess/EmailAddress";
+
+import ThankYouPage from "./pages/ThankYouPage";
+
+import SubscriptionLandingPage from "./pages/SubscriptionLandingPage";
+import SubscriptionManagePage from "./pages/SubscriptionManagePage";
+import RecurringPaymentPage from "./pages/RecurringPaymentPage";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import { Toaster } from "react-hot-toast";
+import SubscriptionManager from "./pages/SubscriptionManager";
+
+const stripePromise = loadStripe("pk_test_...");
 
 function App() {
   return (
     <>
       <ThemeProvider>
-        <Routes>
-          <Route element={<AuthRoute />}>
-            <Route path="/" element={<LandPage />} />
-            <Route path="/signup" element={<SignUpPage />} />
-            <Route path="/signin" element={<SignInPage />} />
-            <Route
-              path="/user-details"
-              element={<UserDetails /* email="" password="" */ />}
-            />
-            <Route
-              path="/signin/forgot-password"
-              element={<ForgotPassword />}
-            />
-            <Route path="/reset-password" element={<ResetPassword />} />
-          </Route>
-
-          {/*   <Route element={<ProtectedRoute />}> */}
-          <Route element={<Layout />}>
-            <Route path="/home" element={<Home />} />
-            <Route path="/my-network" element={<MyNetwork />} />
-            <Route path="/connections" element={<Connections />} />
-            <Route path="/messaging" element={<Messaging />} />
-            {/* <Route path="/change-password" element={<ChangePassword />} /> */}
-            <Route path="/confirm-email" element={<ConfirmEmail />} />
-
-            <Route path="/settings" element={<Settings />}>
-              <Route index element={<AccountPreferences />}></Route>
-
-              {/* Account Preferences Pages */}
-              <Route path="account-preferences" element={<AccountPreferences />} />
-              <Route path="account-preferences/display/dark-mode" element={<DarkMode />} />
-              <Route path="account-preferences/account-management/close-account" element={<CloseAccount />} />
-
-              <Route path="sign-in-security" element={<SignInAndSecurity />}></Route>
-              <Route path="sign-in-security/account-access/change-password" element={<ChangePassword />} />
-              <Route path="sign-in-security/account-access/email-address" element={<EmailAddress />} />
-              <Route path="visibility" element={<Visibility />}></Route>
-              <Route path="data-privacy" element={<DataAndPrivacy />}></Route>
+        <Elements stripe={stripePromise}>
+          <Routes>
+            <Route element={<AuthRoute />}>
+              <Route path="/" element={<LandPage />} />
+              <Route path="/signup" element={<SignUpPage />} />
+              <Route path="/signin" element={<SignInPage />} />
               <Route
-                path="advertising-data"
-                element={<AdvertisingData />}
-              ></Route>
-              <Route path="notifications" element={<Notifications />}></Route>
-            </Route>
-
-            <Route path="/update-email" element={<UpdateEmail />} />
-            <Route path="/update-username" element={<UpdateUsername />} />
-            <Route path="/in" element={<UserProfile />}></Route>
-            <Route path="/profile/:userId">
-              <Route index element={<ProfileContainer />} />
-              <Route path="details/experiences" element={<FullExperiences />} />
-              <Route
-                path="details/certificates"
-                element={<FullCertificates />}
+                path="/user-details"
+                element={<UserDetails /* email="" password="" */ />}
               />
-              <Route path="details/skills" element={<FullSkills />} />
+              <Route
+                path="/signin/forgot-password"
+                element={<ForgotPassword />}
+              />
+              <Route path="/reset-password" element={<ResetPassword />} />
             </Route>
-            <Route path="/post">
-              <Route path="create" element={<PostCreate />} />
-              <Route path=":postId/edit" element={<PostEdit />} />
+
+            <Route element={<ProtectedRoute />}>
+              <Route element={<Layout />}>
+                <Route path="/home" element={<Home />} />
+                <Route path="/my-network" element={<MyNetwork />} />
+                <Route path="/connections" element={<Connections />} />
+                <Route path="/messaging" element={<Messaging />} />
+                <Route path="/change-password" element={<ChangePassword />} />
+                <Route path="/confirm-email" element={<ConfirmEmail />} />
+
+                <Route path="/settings" element={<Settings />}>
+                  <Route index element={<AccountPreferences />} />
+                  <Route
+                    path="account-preferences"
+                    element={<AccountPreferences />}
+                  />
+                  <Route
+                    path="account-preferences/display/dark-mode"
+                    element={<DarkMode />}
+                  />
+                  <Route
+                    path="account-preferences/account-management/close-account"
+                    element={<CloseAccount />}
+                  />
+
+                  <Route
+                    path="sign-in-security"
+                    element={<SignInAndSecurity />}
+                  />
+                  <Route
+                    path="sign-in-security/account-access/change-password"
+                    element={<ChangePassword />}
+                  />
+
+                  <Route path="visibility" element={<Visibility />} />
+                  <Route path="data-privacy" element={<DataAndPrivacy />} />
+                  <Route
+                    path="advertising-data"
+                    element={<AdvertisingData />}
+                  ></Route>
+                  <Route path="notifications" element={<Notifications />} />
+                </Route>
+
+                <Route path="/update-email" element={<UpdateEmail />} />
+                <Route path="/update-username" element={<UpdateUsername />} />
+                <Route path="/profile/:userId">
+                  <Route index element={<ProfileContainer />} />
+                  <Route
+                    path="details/experiences"
+                    element={<FullExperiences />}
+                  />
+                  <Route
+                    path="details/certificates"
+                    element={<FullCertificates />}
+                  />
+                  <Route path="details/skills" element={<FullSkills />} />
+                </Route>
+                <Route path="/thank-you" element={<ThankYouPage />} />
+                <Route path="/premium" element={<SubscriptionLandingPage />} />
+                <Route
+                  path="/manage-subscription"
+                  element={<SubscriptionManager />}
+                />
+
+                <Route
+                  path="/subscription-manage"
+                  element={<SubscriptionManagePage />}
+                />
+                <Route
+                  path="/recurring-payment"
+                  element={<RecurringPaymentPage />}
+                />
+                <Route path="/post">
+                  <Route path="create" element={<PostCreate />} />
+                  <Route path=":postId/edit" element={<PostEdit />} />
+                </Route>
+              </Route>
             </Route>
-          </Route>
 
-          {/* </Route> */}
-
-          <Route path="*" element={<Error404 />} />
-        </Routes>
+            <Route path="*" element={<Error404 />} />
+          </Routes>
+        </Elements>
+        <Toaster position="top-right" reverseOrder={false} />{" "}
       </ThemeProvider>
     </>
   );
