@@ -2,15 +2,17 @@ import { useEffect, useState } from "react";
 import Searchbar from "./SearchBar";
 import NavIcon from "./NavIcon";
 import Logo from "./Logo";
+import store from "@store/store";
+import NotificationBell from "../components/Notifications/NotificationBell"; // adjust path
+import NotificationPanel from "../Notifications/../components/Notifications/NotificationPanel";
+
 function NavBar() {
   const [isLargeScreen, setIsLargeScreen] = useState<boolean>(
     window.innerWidth > 1280,
   );
   const [loggedInUserId, setLoggedInUserId] = useState<string | null>("");
   useEffect(() => {
-    setLoggedInUserId(
-      JSON.parse(localStorage.getItem("userState") || "").userId,
-    );
+    setLoggedInUserId(store.getState().user.userId);
     const handleResize = () => {
       setIsLargeScreen(window.innerWidth > 1000);
     };
@@ -27,7 +29,7 @@ function NavBar() {
         <div className="flex flex-row items-center lg:w-7/20 sm:w-auto overflow-hidden flex-shrink-0 sm:ml-0 md:ml-[5%] mr-3">
           <Logo id="lincbuttonid" />
           <div className="hidden md:flex flex-grow">
-            <Searchbar />
+            <Searchbar id="SearchBar" />
           </div>
           <div className="flex sm:block md:hidden items-center justify-center">
             <NavIcon
@@ -50,11 +52,7 @@ function NavBar() {
             Name="Messaging"
             pagePath="/messaging"
           />
-          <NavIcon
-            Icon="fa-solid fa-bell"
-            Name="Notifications"
-            pagePath="notifactions"
-          />
+          <NotificationBell onClick={() => setShowNotifications(true)} />
           <NavIcon
             Icon="fa-solid fa-user"
             Name="Me"
@@ -70,6 +68,10 @@ function NavBar() {
           />
         </div>
       </nav>
+      <NotificationPanel
+        isOpen={showNotifications}
+        onClose={() => setShowNotifications(false)}
+      />
     </>
   );
 }
