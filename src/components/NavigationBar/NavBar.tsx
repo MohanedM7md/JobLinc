@@ -15,7 +15,7 @@ function NavBar() {
   useEffect(() => {
     setLoggedInUserId(store.getState().user.userId);
     const handleResize = () => {
-      setIsLargeScreen(window.innerWidth > 1000); // Update state based on screen width
+      setIsLargeScreen(window.innerWidth > 1000);
     };
     window.addEventListener("resize", handleResize);
     handleResize();
@@ -59,7 +59,7 @@ function NavBar() {
             Name="Me"
             Dropdown="fa-solid fa-caret-down"
             rightBorder="border-r border-gray-200"
-            pagePath={`profile/${loggedInUserId}`}
+            
           />
           <NavIcon
             Icon="fa-solid fa-building"
