@@ -3,13 +3,11 @@ import { months } from "../../../utils/months";
 import { NewExperience } from "interfaces/userInterfaces";
 import { addExperience } from "@services/api/userProfileServices";
 import { useMutation } from "@tanstack/react-query";
-import ErrorMessage from "../../../components/utils/ErrorMessage";
-import { AnimatePresence } from "framer-motion";
+import toast from "react-hot-toast";
 
 interface AddExperienceProps {
   onUpdate: () => void;
   onClose: () => void;
-  onSuccess: () => void;
 }
 
 export default function AddExperience(props: AddExperienceProps) {
@@ -21,21 +19,13 @@ export default function AddExperience(props: AddExperienceProps) {
   const [endMonth, setEndMonth] = useState<number>(0);
   const [endYear, setendYear] = useState<number>(0);
   const [dateValidation, setDateValidation] = useState<boolean>(false);
-  const [showErrorMessage, setShowErrorMessage] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string>("");
   const validationMessage = dateValidation
     ? ""
     : "The end date must be after the start date.";
 
   const addExperienceMutation = useMutation({
     mutationFn: addExperience,
-    onError: async (error) => {
-      setShowErrorMessage(true);
-      setErrorMessage(error.message);
-      setTimeout(() => setShowErrorMessage(false), 3000);
-    },
     onSuccess: () => {
-      props.onSuccess();
       props.onUpdate();
       props.onClose();
     },
@@ -51,7 +41,11 @@ export default function AddExperience(props: AddExperienceProps) {
         startDate: new Date(startYear, startMonth, 1),
         endDate: new Date(endYear, endMonth, 1),
       };
-      addExperienceMutation.mutate(newExperience);
+      toast.promise(addExperienceMutation.mutateAsync(newExperience), {
+        loading: "Adding experience...",
+        success: "Experience added successfully",
+        error: (error) => error.message,
+      })
     }
   }
 
@@ -204,13 +198,6 @@ export default function AddExperience(props: AddExperienceProps) {
           </button>
         </div>
       </form>
-      <AnimatePresence>
-        {showErrorMessage && (
-          <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2">
-            <ErrorMessage message={errorMessage} />
-          </div>
-        )}
-      </AnimatePresence>
     </>
   );
 }

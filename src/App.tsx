@@ -3,6 +3,7 @@ import "./context/ThemeProvider";
 import { lazy } from "react";
 import { ThemeProvider } from "./context/ThemeProvider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { Toaster } from "react-hot-toast";
 import LandPage from "./pages/Land";
 import SignUpPage from "./pages/SignUp";
 import SignInPage from "./pages/SignIn";
@@ -133,6 +134,11 @@ function App() {
 
             <Route path="*" element={<Error404 />} />
           </Routes>
+          <Toaster
+          position="bottom-center"
+          toastOptions={{
+            
+          }} />
         </QueryClientProvider>
       </ThemeProvider>
     </>

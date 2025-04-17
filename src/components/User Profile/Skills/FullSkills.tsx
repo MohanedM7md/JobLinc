@@ -7,8 +7,6 @@ import EditSkill from "./EditSkill";
 import UserSkill from "./UserSkill";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import SuccessMessage from "../../../components/utils/SuccessMessage";
-import { AnimatePresence } from "framer-motion";
 
 export default function FullSkills() {
   const { userId } = useParams();
@@ -18,8 +16,6 @@ export default function FullSkills() {
   const [editSkillData, setEditSkillData] = useState<SkillInterface | null>(
     null,
   );
-  const [showSuccessMessage, setShowSuccessMessage] = useState<boolean>(false);
-  const [successMessage, setSuccessMessage] = useState<string>("");
 
   const {
     isFetching: isSkillsFetching,
@@ -45,12 +41,6 @@ export default function FullSkills() {
       const { data } = await refetchSkills();
       setSkills(data);
     }
-  }
-
-  function handleSkillSuccess(message: string) {
-    setShowSuccessMessage(true);
-    setSuccessMessage(message);
-    setTimeout(() => setShowSuccessMessage(false), 3000);
   }
 
   if (isSkillsFetching) {
@@ -106,12 +96,6 @@ export default function FullSkills() {
             {...editSkillData}
             onClose={() => setEditSkillData(null)}
             onUpdate={updateSkills}
-            onEditSuccess={() =>
-              handleSkillSuccess("Skill updated successfully")
-            }
-            onDeleteSuccess={() =>
-              handleSkillSuccess("Skill deleted successfully")
-            }
           />
         )}
       </Modal>
@@ -119,16 +103,8 @@ export default function FullSkills() {
         <AddSkill
           onUpdate={updateSkills}
           onClose={() => setAddSkillModal(false)}
-          onSuccess={() => handleSkillSuccess("Skill added successfully")}
         />
       </Modal>
-      <AnimatePresence>
-        {showSuccessMessage && (
-          <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2">
-            <SuccessMessage message={successMessage} />
-          </div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }

@@ -3,30 +3,20 @@ import { NewSkill } from "interfaces/userInterfaces";
 import { addSkill } from "@services/api/userProfileServices";
 import skillLevels from "@utils/skillLevels";
 import { useMutation } from "@tanstack/react-query";
-import ErrorMessage from "../../utils/ErrorMessage";
-import { AnimatePresence } from "framer-motion";
+import toast from "react-hot-toast";
 
 interface AddSkillProps {
   onUpdate: () => void;
   onClose: () => void;
-  onSuccess: () => void;
 }
 
 export default function AddSkill(props: AddSkillProps) {
   const [name, setName] = useState<string>("");
   const [level, setLevel] = useState<number>(1);
-  const [showErrorMessage, setShowErrorMessage] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string>("");
 
   const addSkillMutation = useMutation({
     mutationFn: addSkill,
-    onError: async (error) => {
-      setShowErrorMessage(true);
-      setErrorMessage(error.message);
-      setTimeout(() => setShowErrorMessage(false), 3000);
-    },
     onSuccess: () => {
-      props.onSuccess();
       props.onUpdate();
       props.onClose();
     },
@@ -35,7 +25,11 @@ export default function AddSkill(props: AddSkillProps) {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const newSkill: NewSkill = { name, level };
-    addSkillMutation.mutate(newSkill);
+    toast.promise(addSkillMutation.mutateAsync(newSkill),{
+      loading: "Adding skill...",
+      success: "Skill added successfully!",
+      error: (error) => error.message,
+    })
   }
 
   return (
@@ -85,13 +79,6 @@ export default function AddSkill(props: AddSkillProps) {
           </button>
         </div>
       </form>
-      <AnimatePresence>
-        {showErrorMessage && (
-          <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2">
-            <ErrorMessage message={errorMessage} />
-          </div>
-        )}
-      </AnimatePresence>
     </>
   );
 }

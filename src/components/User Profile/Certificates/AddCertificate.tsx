@@ -3,13 +3,11 @@ import { NewCertificate } from "interfaces/userInterfaces";
 import { addCertificate } from "@services/api/userProfileServices";
 import { months } from "../../../utils/months";
 import { useMutation } from "@tanstack/react-query";
-import ErrorMessage from "../../../components/utils/ErrorMessage";
-import { AnimatePresence } from "framer-motion";
+import toast from "react-hot-toast";
 
 interface AddCertificateProps {
   onUpdate: () => void;
   onClose: () => void;
-  onSuccess: () => void; // Added onSuccess prop
 }
 
 export default function AddCertificate(props: AddCertificateProps) {
@@ -20,22 +18,13 @@ export default function AddCertificate(props: AddCertificateProps) {
   const [expirationMonth, setExpirationMonth] = useState<number>(0);
   const [expirationYear, setExpirationYear] = useState<number>(0);
   const [dateValidation, setDateValidation] = useState<boolean>(false);
-  const [showErrorMessage, setShowErrorMessage] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string>("");
-
   const validationMessage = dateValidation
     ? ""
     : "The expiration date must be after the issue date.";
 
   const addCertificateMutation = useMutation({
     mutationFn: addCertificate,
-    onError: async (error) => {
-      setShowErrorMessage(true);
-      setErrorMessage(error.message);
-      setTimeout(() => setShowErrorMessage(false), 3000);
-    },
     onSuccess: () => {
-      props.onSuccess(); // Call onSuccess handler
       props.onUpdate();
       props.onClose();
     },
@@ -52,7 +41,11 @@ export default function AddCertificate(props: AddCertificateProps) {
         issueDate: new Date(issueYear, issueMonth - 1, 1),
         expirationDate: new Date(expirationYear, expirationMonth - 1, 1),
       };
-      addCertificateMutation.mutate(newCertificate);
+      toast.promise(addCertificateMutation.mutateAsync(newCertificate), {
+        loading: "Adding certificate...",
+        success: "Certificate added successfully!",
+        error: (error) => error.message,
+      });
     }
   }
 
@@ -191,13 +184,6 @@ export default function AddCertificate(props: AddCertificateProps) {
           </button>
         </div>
       </form>
-      <AnimatePresence>
-        {showErrorMessage && (
-          <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2">
-            <ErrorMessage message={errorMessage} />
-          </div>
-        )}
-      </AnimatePresence>
     </>
   );
 }

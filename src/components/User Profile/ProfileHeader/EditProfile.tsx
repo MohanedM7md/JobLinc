@@ -1,4 +1,7 @@
+import { updateMe } from "@services/api/userProfileServices";
+import { useMutation } from "@tanstack/react-query";
 import React, { useState } from "react";
+import toast from "react-hot-toast";
 
 interface EditProfileProps {
   user: {
@@ -9,12 +12,21 @@ interface EditProfileProps {
     city: string;
     phoneNumber: string;
   };
-  onSave: (updatedUser: any) => void;
+  onSave: () => void;
 }
 
 function EditProfile({ user, onSave }: EditProfileProps) {
   const [formData, setFormData] = useState({ ...user });
-
+  
+  const editUserMutation = useMutation({
+    mutationFn: updateMe,
+    onSuccess: () => {
+      onSave();
+    },
+  });
+  
+  const isPending = editUserMutation.isPending;
+  
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
@@ -24,8 +36,13 @@ function EditProfile({ user, onSave }: EditProfileProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave(formData);
+    toast.promise(editUserMutation.mutateAsync(formData), {
+      loading: "Saving changes...",
+      success: "Saved changes!",
+      error: (error) => error.message,
+    });
   };
+
 
   return (
     <form
@@ -44,6 +61,7 @@ function EditProfile({ user, onSave }: EditProfileProps) {
             onChange={handleInputChange}
             className="w-full px-2 py-1 border rounded-lg"
             required
+            readOnly={isPending}
           />
         </div>
 
@@ -58,6 +76,7 @@ function EditProfile({ user, onSave }: EditProfileProps) {
             onChange={handleInputChange}
             className="w-full px-2 py-1 border rounded-lg"
             required
+            readOnly={isPending}
           />
         </div>
 
@@ -71,6 +90,7 @@ function EditProfile({ user, onSave }: EditProfileProps) {
             onChange={handleInputChange}
             className="w-full px-2 py-1 border rounded-lg"
             rows={4}
+            readOnly={isPending}
           />
         </div>
 
@@ -86,6 +106,7 @@ function EditProfile({ user, onSave }: EditProfileProps) {
             value={formData.country}
             onChange={handleInputChange}
             className="w-full px-2 py-1 border rounded-lg"
+            readOnly={isPending}
           />
           <label className="text-sm font-medium text-charcoalBlack">City</label>
           <input
@@ -94,6 +115,7 @@ function EditProfile({ user, onSave }: EditProfileProps) {
             value={formData.city}
             onChange={handleInputChange}
             className="w-full px-2 py-1 border rounded-lg"
+            readOnly={isPending}
           />
         </div>
 
@@ -107,6 +129,7 @@ function EditProfile({ user, onSave }: EditProfileProps) {
             value={formData.phoneNumber}
             onChange={handleInputChange}
             className="w-full px-2 py-1 border rounded-lg"
+            readOnly={isPending}
           />
         </div>
 
@@ -120,6 +143,7 @@ function EditProfile({ user, onSave }: EditProfileProps) {
             value="Not sent by backend as of now"
             onChange={handleInputChange}
             className="w-full px-2 py-1 border rounded-lg"
+            readOnly={isPending}
           />
         </div>
       </div>
@@ -127,8 +151,9 @@ function EditProfile({ user, onSave }: EditProfileProps) {
         <button
           type="submit"
           className="bg-crimsonRed text-warmWhite px-4 py-2 rounded-3xl hover:bg-red-700 cursor-pointer"
+          disabled={isPending}
         >
-          Save Changes
+          {isPending ? "Saving..." : "Save changes"}
         </button>
       </div>
     </form>

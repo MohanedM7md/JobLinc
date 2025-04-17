@@ -7,14 +7,11 @@ import {
 } from "@services/api/userProfileServices";
 import ConfirmAction from "../../utils/ConfirmAction";
 import { useMutation } from "@tanstack/react-query";
-import ErrorMessage from "../../../components/utils/ErrorMessage";
-import { AnimatePresence } from "framer-motion";
+import toast from "react-hot-toast";
 
 interface EditExperienceProps extends ExperienceInterface {
   onClose: () => void;
   onUpdate: () => void;
-  onEditSuccess: () => void;
-  onDeleteSuccess: () => void;
 }
 
 export default function EditExperience(props: EditExperienceProps) {
@@ -35,21 +32,13 @@ export default function EditExperience(props: EditExperienceProps) {
   );
   const [dateValidation, setDateValidation] = useState<boolean>(true);
   const [showConfirmDelete, setShowConfirmDelete] = useState<boolean>(false);
-  const [showErrorMessage, setShowErrorMessage] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string>("");
   const validationMessage = dateValidation
     ? ""
     : "The end date must be after the start date.";
 
   const editExperienceMutation = useMutation({
     mutationFn: editExperience,
-    onError: async (error) => {
-      setShowErrorMessage(true);
-      setErrorMessage(error.message);
-      setTimeout(() => setShowErrorMessage(false), 3000);
-    },
     onSuccess: () => {
-      props.onEditSuccess();
       props.onUpdate();
       props.onClose();
     },
@@ -57,13 +46,7 @@ export default function EditExperience(props: EditExperienceProps) {
 
   const deleteExperienceMutation = useMutation({
     mutationFn: deleteExperience,
-    onError: async (error) => {
-      setShowErrorMessage(true);
-      setErrorMessage(error.message);
-      setTimeout(() => setShowErrorMessage(false), 3000);
-    },
     onSuccess: () => {
-      props.onDeleteSuccess();
       props.onUpdate();
       props.onClose();
     },
@@ -84,7 +67,11 @@ export default function EditExperience(props: EditExperienceProps) {
         startDate: new Date(startYear, startMonth - 1, 1),
         endDate: new Date(endYear, endMonth - 1, 1),
       };
-      editExperienceMutation.mutate(editedExperience);
+      toast.promise(editExperienceMutation.mutateAsync(editedExperience), {
+        loading: "Saving experience...",
+        success: "Experience edited successfully",
+        error: (error) => error.message,
+      })
     }
   }
 
@@ -267,13 +254,6 @@ export default function EditExperience(props: EditExperienceProps) {
           onClose={() => setShowConfirmDelete(false)}
         />
       )}
-      <AnimatePresence>
-        {showErrorMessage && (
-          <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2">
-            <ErrorMessage message={errorMessage} />
-          </div>
-        )}
-      </AnimatePresence>
     </>
   );
 }

@@ -8,8 +8,6 @@ import AddExperience from "./AddExperience";
 import Modal from "./../../Authentication/Modal";
 import { getExperience } from "@services/api/userProfileServices";
 import { useQuery } from "@tanstack/react-query";
-import SuccessMessage from "../../utils/SuccessMessage";
-import { AnimatePresence } from "framer-motion";
 
 export default function FullExperiences() {
   const { userId } = useParams();
@@ -18,8 +16,6 @@ export default function FullExperiences() {
   const [addExperienceModal, setAddExperienceModal] = useState<boolean>(false);
   const [editExperienceData, setEditExperienceData] =
     useState<ExperienceInterface | null>(null);
-  const [showSuccessMessage, setShowSuccessMessage] = useState<boolean>(false);
-  const [successMessage, setSuccessMessage] = useState<string>("");
 
   const {
     isFetching: isExperiencesFetching,
@@ -45,12 +41,6 @@ export default function FullExperiences() {
       const { data } = await refetchExperiences();
       setExperiences(data);
     }
-  }
-
-  function handleExperienceSuccess(message: string) {
-    setShowSuccessMessage(true);
-    setSuccessMessage(message);
-    setTimeout(() => setShowSuccessMessage(false), 3000);
   }
 
   if (isExperiencesFetching) {
@@ -105,8 +95,6 @@ export default function FullExperiences() {
             {...editExperienceData}
             onClose={() => setEditExperienceData(null)}
             onUpdate={updateExperiences}
-            onEditSuccess={() => handleExperienceSuccess("Experience updated successfully")}
-            onDeleteSuccess={() => handleExperienceSuccess("Experience deleted successfully")}
           />
         )}
       </Modal>
@@ -117,16 +105,8 @@ export default function FullExperiences() {
         <AddExperience
           onUpdate={updateExperiences}
           onClose={() => setAddExperienceModal(false)}
-          onSuccess={() => handleExperienceSuccess("Experience added successfully")}
         />
       </Modal>
-      <AnimatePresence>
-        {showSuccessMessage && (
-          <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2">
-            <SuccessMessage message={successMessage} />
-          </div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }

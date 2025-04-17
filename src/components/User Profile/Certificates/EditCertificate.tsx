@@ -7,14 +7,11 @@ import {
 import { months } from "@utils/months";
 import ConfirmAction from "../../utils/ConfirmAction";
 import { useMutation } from "@tanstack/react-query";
-import ErrorMessage from "../../../components/utils/ErrorMessage";
-import { AnimatePresence } from "framer-motion";
+import toast from "react-hot-toast";
 
 interface EditCertificateProps extends CertificateInterface {
   onClose: () => void;
   onUpdate: () => void;
-  onEditSuccess: () => void;
-  onDeleteSuccess: () => void;
 }
 
 export default function EditCertificate(props: EditCertificateProps) {
@@ -33,8 +30,6 @@ export default function EditCertificate(props: EditCertificateProps) {
     new Date(props.expirationDate).getFullYear(),
   );
   const [dateValidation, setDateValidation] = useState<boolean>(true);
-  const [showErrorMessage, setShowErrorMessage] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string>("");
   const [showConfirmDelete, setShowConfirmDelete] = useState<boolean>(false);
   const validationMessage = dateValidation
     ? ""
@@ -42,13 +37,7 @@ export default function EditCertificate(props: EditCertificateProps) {
 
   const editCertificateMutation = useMutation({
     mutationFn: editCertificate,
-    onError: async (error) => {
-      setShowErrorMessage(true);
-      setErrorMessage(error.message);
-      setTimeout(() => setShowErrorMessage(false), 3000);
-    },
     onSuccess: () => {
-      props.onEditSuccess();
       props.onUpdate();
       props.onClose();
     },
@@ -56,13 +45,7 @@ export default function EditCertificate(props: EditCertificateProps) {
 
   const deleteCertificateMutation = useMutation({
     mutationFn: deleteCertificate,
-    onError: async (error) => {
-      setShowErrorMessage(true);
-      setErrorMessage(error.message);
-      setTimeout(() => setShowErrorMessage(false), 3000);
-    },
     onSuccess: () => {
-      props.onDeleteSuccess();
       props.onUpdate();
       props.onClose();
     },
@@ -82,12 +65,20 @@ export default function EditCertificate(props: EditCertificateProps) {
         issueDate: new Date(issueYear, issueMonth - 1, 1),
         expirationDate: new Date(expirationYear, expirationMonth - 1, 1),
       };
-      editCertificateMutation.mutate(editedCertificate);
+      toast.promise(editCertificateMutation.mutateAsync(editedCertificate), {
+        loading: "Saving certificate...",
+        success: "Certificate edited successfully!",
+        error: (error) => error.message,
+      })
     }
   }
 
   async function handleDelete() {
-    deleteCertificateMutation.mutate(props._id);
+    toast.promise(deleteCertificateMutation.mutateAsync(props._id), {
+      loading: "Deleting certificate...",
+      success: "Certificate deleted successfully!",
+      error: (error) => error.message,
+    })
   }
 
   useEffect(() => {
@@ -243,13 +234,6 @@ export default function EditCertificate(props: EditCertificateProps) {
           </button>
         </div>
       </form>
-      <AnimatePresence>
-        {showErrorMessage && (
-          <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2">
-            <ErrorMessage message={errorMessage} />
-          </div>
-        )}
-      </AnimatePresence>
     </>
   );
 }

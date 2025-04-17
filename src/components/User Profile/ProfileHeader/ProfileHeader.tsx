@@ -1,16 +1,9 @@
 import EditProfile from "./EditProfile";
 import Modal from "../../Authentication/Modal";
 import { useState } from "react";
-import { ProfileUpdateInterface } from "interfaces/userInterfaces";
-import {
-  updateCoverPicture,
-  updateMe,
-  updateProfilePicture,
-} from "@services/api/userProfileServices";
 import EditProfilePicture from "./EditProfilePicture";
 import EditCoverPicture from "./EditCoverPicture";
 import "material-icons";
-import { useQuery } from "@tanstack/react-query";
 
 interface ProfileProps {
   userId: string;
@@ -35,20 +28,17 @@ function ProfileHeader(props: ProfileProps & { isUser: boolean }) {
   const [isEditCoverPictureModalOpen, setIsEditCoverPictureModalOpen] =
     useState<boolean>(false);
 
-  async function handleUpdateUser(updatedUser: ProfileUpdateInterface) {
-    await updateMe(updatedUser);
+  async function handleUpdateUser() {
     await props.updateUser();
     setIsEditUserModalOpen(false);
   }
 
-  async function handleUpdateProfilePicture(updatedProfilePicture: File) {
-    await updateProfilePicture(updatedProfilePicture);
+  async function handleUpdateProfilePicture() {
     await props.updateUser();
     setIsEditProfilePictureModalOpen(false);
   }
 
-  async function handleUpdateCoverPicture(updatedCoverPicture: File) {
-    await updateCoverPicture(updatedCoverPicture);
+  async function handleUpdateCoverPicture() {
     await props.updateUser();
     setIsEditCoverPictureModalOpen(false);
   }

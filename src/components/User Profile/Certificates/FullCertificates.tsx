@@ -8,8 +8,6 @@ import UserCertificate from "./UserCertificate";
 import AddCertificate from "./AddCertificate";
 import EditCertificate from "./EditCertificate";
 import { useQuery } from "@tanstack/react-query";
-import SuccessMessage from "../../utils/SuccessMessage";
-import { AnimatePresence } from "framer-motion";
 
 export default function FullCertificates() {
   const { userId } = useParams();
@@ -19,8 +17,6 @@ export default function FullCertificates() {
     useState<boolean>(false);
   const [editCertificateData, setEditCertificateData] =
     useState<CertificateInterface | null>(null);
-  const [showSuccessMessage, setShowSuccessMessage] = useState<boolean>(false);
-  const [successMessage, setSuccessMessage] = useState<string>("");
 
   const {
     isFetching: isCertificatesFetching,
@@ -46,12 +42,6 @@ export default function FullCertificates() {
       const { data } = await refetchCertificates();
       setCertificates(data);
     }
-  }
-
-  function handleCertificateSuccess(message: string) {
-    setShowSuccessMessage(true);
-    setSuccessMessage(message);
-    setTimeout(() => setShowSuccessMessage(false), 3000);
   }
 
   if (isCertificatesFetching) {
@@ -106,12 +96,6 @@ export default function FullCertificates() {
             {...editCertificateData}
             onClose={() => setEditCertificateData(null)}
             onUpdate={updateCertificates}
-            onEditSuccess={() =>
-              handleCertificateSuccess("Certificate updated successfully")
-            }
-            onDeleteSuccess={() =>
-              handleCertificateSuccess("Certificate deleted successfully")
-            }
           />
         )}
       </Modal>
@@ -122,18 +106,8 @@ export default function FullCertificates() {
         <AddCertificate
           onUpdate={updateCertificates}
           onClose={() => setAddCertificateModal(false)}
-          onSuccess={() =>
-            handleCertificateSuccess("Certificate added successfully")
-          }
         />
       </Modal>
-      <AnimatePresence>
-        {showSuccessMessage && (
-          <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2">
-            <SuccessMessage message={successMessage} />
-          </div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }

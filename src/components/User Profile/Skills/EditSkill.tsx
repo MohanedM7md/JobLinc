@@ -4,32 +4,21 @@ import { editSkill, deleteSkill } from "@services/api/userProfileServices";
 import ConfirmAction from "../../utils/ConfirmAction";
 import skillLevels from "@utils/skillLevels";
 import { useMutation } from "@tanstack/react-query";
-import ErrorMessage from "../../utils/ErrorMessage";
-import { AnimatePresence } from "framer-motion";
+import toast from "react-hot-toast";
 
 interface EditSkillProps extends SkillInterface {
   onClose: () => void;
-  onUpdate: () => void;
-  onEditSuccess: () => void;
-  onDeleteSuccess: () => void; 
+  onUpdate: () => void; 
 }
 
 export default function EditSkill(props: EditSkillProps) {
   const [name, setName] = useState<string>(props.name);
   const [level, setLevel] = useState<number>(props.level);
   const [showConfirmDelete, setShowConfirmDelete] = useState<boolean>(false);
-  const [showErrorMessage, setShowErrorMessage] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string>("");
 
   const editSkillMutation = useMutation({
     mutationFn: editSkill,
-    onError: async (error) => {
-      setShowErrorMessage(true);
-      setErrorMessage(error.message);
-      setTimeout(() => setShowErrorMessage(false), 3000);
-    },
     onSuccess: () => {
-      props.onEditSuccess(); 
       props.onUpdate();
       props.onClose();
     },
@@ -37,13 +26,7 @@ export default function EditSkill(props: EditSkillProps) {
 
   const deleteSkillMutation = useMutation({
     mutationFn: deleteSkill,
-    onError: async (error) => {
-      setShowErrorMessage(true);
-      setErrorMessage(error.message);
-      setTimeout(() => setShowErrorMessage(false), 3000);
-    },
     onSuccess: () => {
-      props.onDeleteSuccess(); 
       props.onUpdate();
       props.onClose();
     },
@@ -56,11 +39,21 @@ export default function EditSkill(props: EditSkillProps) {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const updatedSkill: SkillInterface = { id: props.id, name, level };
-    editSkillMutation.mutate(updatedSkill);
+    toast.promise(
+      editSkillMutation.mutateAsync(updatedSkill),{
+        loading: "Saving skill...",
+        success: "Skill updated successfully!",
+        error: (error) => error.message,
+      }
+    )
   }
 
   function handleDelete() {
-    deleteSkillMutation.mutate(props.id);
+    toast.promise(deleteSkillMutation.mutateAsync(props.id),{
+      loading: "Deleting skill...",
+      success: "Skill deleted successfully!",
+      error: (error) => error.message,
+    })
   }
 
   return (
@@ -126,13 +119,6 @@ export default function EditSkill(props: EditSkillProps) {
           onClose={() => setShowConfirmDelete(false)}
         />
       )}
-      <AnimatePresence>
-        {showErrorMessage && (
-          <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2">
-            <ErrorMessage message={errorMessage} />
-          </div>
-        )}
-      </AnimatePresence>
     </>
   );
 }

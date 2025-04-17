@@ -18,8 +18,6 @@ import UserSkill from "./Skills/UserSkill";
 import "material-icons";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import SuccessMessage from "../utils/SuccessMessage";
-import { AnimatePresence } from "framer-motion";
 
 function ProfileContainer() {
   const { userId } = useParams();
@@ -29,8 +27,6 @@ function ProfileContainer() {
     useState<boolean>(false);
   const [addSkillModal, setAddSkillModal] = useState<boolean>(false);
   const [isUser, setIsUser] = useState<boolean>(true);
-  const [showSuccessMessage, setShowSuccessMessage] = useState<boolean>(false);
-  const [successMessage, setSuccessMessage] = useState<string>("");
   const navigate = useNavigate();
 
   const {
@@ -114,12 +110,6 @@ function ProfileContainer() {
   async function updateSkills() {
     const { data } = await refetchSkills();
     setUserData((prev) => (prev ? { ...prev, skills: data } : prev));
-  }
-
-  function handleAddSuccess(message: string) {
-    setShowSuccessMessage(true);
-    setSuccessMessage(message);
-    setTimeout(() => setShowSuccessMessage(false), 3000);
   }
 
   if (
@@ -380,7 +370,6 @@ function ProfileContainer() {
             key={`Adding Experience to ${userData?.firstname} ${userData?.lastname}`}
             onUpdate={updateExperiences}
             onClose={() => setAddExperienceModal(false)}
-            onSuccess={() => handleAddSuccess("Experience added successfully")}
           />
         </Modal>
         <Modal
@@ -390,24 +379,15 @@ function ProfileContainer() {
           <AddCertificate
             onUpdate={updateCertificates}
             onClose={() => setAddCertificateModal(false)}
-            onSuccess={() => handleAddSuccess("Certificate added successfully")}
           />
         </Modal>
         <Modal isOpen={addSkillModal} onClose={() => setAddSkillModal(false)}>
           <AddSkill
             onUpdate={updateSkills}
             onClose={() => setAddSkillModal(false)}
-            onSuccess={() => handleAddSuccess("Skill added successfully")}
           />
         </Modal>
       </div>
-      <AnimatePresence>
-        {showSuccessMessage && (
-          <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2">
-            <SuccessMessage message={successMessage} />
-          </div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }
