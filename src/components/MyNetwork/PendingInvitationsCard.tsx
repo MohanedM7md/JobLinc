@@ -3,11 +3,7 @@ import { invitationInterface } from "interfaces/networkInterfaces";
 import { getPendingInvitations } from "../../services/api/networkServices";
 import NetworkModal from "./NetworkModal";
 
-interface PendingInvitationsCardProps {
-  manageButtonid: string;
-}
-
-function PendingInvitationsCard({ manageButtonid }: PendingInvitationsCardProps) {
+function PendingInvitationsCard() {
   const [invitations, setInvitations] = useState<invitationInterface[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -67,7 +63,7 @@ function PendingInvitationsCard({ manageButtonid }: PendingInvitationsCardProps)
       <div className="flex justify-between items-center m-2">
         <h2>Invitations ({invitations.filter((inv) => !inv.acknowledged).length}) {invitations.length>0 ? "" : "(No pending invitations)"}</h2>
         <button
-          id={manageButtonid}
+          data-testid="manage-showall-button"
           className="font-semibold hover:bg-gray-100 hover:text-black text-darkGray p-1 rounded-md"
           onClick={handleShowAll}
         >
@@ -92,6 +88,7 @@ function PendingInvitationsCard({ manageButtonid }: PendingInvitationsCardProps)
                   </p>
                 </div>
                 <button
+                  data-testid="remove-acknowledgment-button"
                   className="text-red-600 hover:text-red-800 hover:cursor-pointer"
                   onClick={() => handleRemoveAcknowledgment(index)}
                 >
@@ -113,12 +110,14 @@ function PendingInvitationsCard({ manageButtonid }: PendingInvitationsCardProps)
                 </div>
                 <div>
                   <button
+                    data-testid="ignore-button"
                     className="text-darkGray font-semibold hover:bg-lightGray p-1 rounded-md m-1 mx-2"
                     onClick={() => handleReject(index)}
                   >
                     Ignore
                   </button>
                   <button
+                    data-testid="accept-inv-button"
                     className="text-crimsonRed border-crimsonRed border-2 hover:outline-1 hover:bg-lightGray font-semibold py-0.5 px-5 rounded-full m-1 mx-2"
                     onClick={() => handleAccept(index)}
                   >
@@ -151,6 +150,7 @@ function PendingInvitationsCard({ manageButtonid }: PendingInvitationsCardProps)
                   </p>
                 </div>
                 <button
+                  data-testid="remove-acknowledgment-modal-button"
                   className="text-red-600 hover:text-red-800 hover:cursor-pointer"
                   onClick={() => handleRemoveAcknowledgment(index)}
                 >
@@ -172,12 +172,14 @@ function PendingInvitationsCard({ manageButtonid }: PendingInvitationsCardProps)
                   </div>
                   <div>
                     <button
+                      data-testid="accept-modal-button"
                       className="text-crimsonRed border-crimsonRed border hover:outline hover:bg-lightGray font-semibold py-0.5 px-3 rounded-full m-1 text-sm"
                       onClick={() => handleAccept(index)}
                     >
                       Accept
                     </button>
                     <button
+                      data-testid="ignore-modal-button"
                       className="text-darkGray font-semibold hover:bg-lightGray p-1 rounded-md m-1 text-sm"
                       onClick={() => handleReject(index)}
                     >

@@ -18,9 +18,7 @@ function MyNetwork(){
                 <MyNetworkOptionsCard></MyNetworkOptionsCard>
                 </div>  
                 <div className="mt-5">
-                <PendingInvitationsCard
-                manageButtonid="manage-1"
-                />
+                <PendingInvitationsCard/>
                 </div>
                 <div className="mt-5">
                   <ConnectionsGrid></ConnectionsGrid>

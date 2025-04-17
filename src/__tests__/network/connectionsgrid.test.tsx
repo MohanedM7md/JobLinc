@@ -24,17 +24,16 @@ describe("ConnectionsGrid Component", () => {
     },
   ];
 
-  test("renders ConnectCard components for fetched data", async () => {
+  test("renders ConnectCard components with full data", async () => {
     (getNetworkFeed as Mock).mockResolvedValue(mockConnects);
-
+  
     render(<ConnectionsGrid />);
-
+  
     await waitFor(() => {
-      const user1Name = screen.getByText("User 1");
-      const user2Name = screen.getByText("User 2");
-      expect(user1Name).toBeInTheDocument();
-      expect(user2Name).toBeInTheDocument();
+      const connectCards = screen.getAllByTestId("connect-card");
+      expect(connectCards.length).toBe(mockConnects.length); 
     });
+
   });
 
   test("handles empty fetch response gracefully", async () => {

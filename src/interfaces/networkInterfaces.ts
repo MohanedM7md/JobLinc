@@ -10,8 +10,6 @@ export interface invitationInterface {
     userName: string;
     userBio: string;
     Mutuals: string;
-    ignoreButtonid: string;
-    acceptButtonid: string;
     acknowledged?: boolean;
   }
   export interface ConnectionInterface {

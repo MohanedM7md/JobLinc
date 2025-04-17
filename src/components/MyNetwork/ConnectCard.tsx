@@ -47,11 +47,11 @@ function ConnectCard(props: ProfilePictureProps) {
   }
 
   return (
-    <div className="border-2 border-gray-200 rounded-xl flex-col w-57 h-80 justify-center items-center cursor-pointer">
+    <div data-testid="connect-card" className="border-2 border-gray-200 rounded-xl flex-col w-57 h-80 justify-center items-center cursor-pointer">
       <div className="relative flex flex-col w-full h-7/20 justify-center items-center">
         <img
           src={props.profilePicture}
-          alt="User Profile Photo"
+          alt={`User Profile Photo`}
           className="absolute w-29 h-29 rounded-full top-7/20 object-cover shadow-sm"
         />
         <img
