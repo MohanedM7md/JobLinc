@@ -34,6 +34,7 @@ function ChatContent({ className }: { className?: string }) {
   useEffect(() => {
     const fetchData = async () => {
       if (usersId.length && !chatId) {
+        console.log("Create new chat with: ", usersId);
         const data = await createChat(usersId);
         setUsers(data.participants);
         setMessages(data.messages);

@@ -32,11 +32,11 @@ export const fetchChatData = async (chatId: string) => {
 };
 
 export const createChat = async (recievers: string[]) => {
-  const response = await api.post(`/chat/openChat`, { recievers });
+  const response = await api.post(`/chat/create`, { receiverIDs: recievers });
   return response.data;
 };
 
 export const ReadToggler = async (chatId: string) => {
-  const response = await api.put(`/chat/openChat`, { chatId });
+  const response = await api.put(`/chat/readOrUnread`, { chatId });
   return response.data;
 };
