@@ -21,11 +21,15 @@ const userSlice = createSlice({
   reducers: {
     updateAccessToken: (state, action: PayloadAction<string>) => {
       state.accessToken = action.payload;
+      const userOldData = JSON.parse(localStorage.getItem("userState") || "");
+      userOldData.accessToken = state.accessToken;
+      localStorage.setItem("userState", JSON.stringify(userOldData));
+      
     },
     logOut: (state) => {
       state.userId = null;
       state.role = null;
-      state.confirmed = null;
+      state.confirmed = false;
       state.status = "IDLE";
       state.loggedIn = false;
       state.accessToken = null;
@@ -158,6 +162,17 @@ const userSlice = createSlice({
         const userData = action.payload;
         if (userData) {
           state.status = "SUCCESS";
+
+          const userNewData = JSON.stringify({
+            accessToken: userData.accessToken,
+            confirmed: userData.confirmed,
+            email: userData.email,
+            refreshToken: userData.refreshToken,
+            role: userData.role,
+            userId: userData.userId
+
+          });
+          localStorage.setItem("userState", userNewData);
         }
       })
       .addCase(updateEmail.rejected, (state) => {
@@ -177,6 +192,23 @@ const userSlice = createSlice({
             console.log("get user details Payload:", userData);
 
             state.userId = userData.userId || null;
+            state.firstname = userData.firstname;
+            state.lastname = userData.lastname;
+            state.username = userData.username;
+            state.email = userData.email;
+            state.profilePicture = userData.profilePicture;
+            state.coverPicture = userData.coverPicture;
+            state.confirmed = userData.confirmed;
+            state.country = userData.country;
+            state.city = userData.city;
+            state.phoneNumber = userData.phoneNumber;
+            state.role = userData.role;
+            state.numberOfConnections = userData.numberOfConnections;
+            state.mutualConnections = userData.mutualConnections;
+            state.skills = userData.skills;
+            state.experiences = userData.experiences;
+            state.certificates = userData.certificates;
+            state.resumes = userData.resumes;
             state.loggedIn = true;
             localStorage.setItem("profilePicture", userData.profilePicture);
             localStorage.setItem("coverPicture", userData.coverPicture);
@@ -201,6 +233,7 @@ const userSlice = createSlice({
 
           if (userData) {
             state.status = "SUCCESS";
+            localStorage.setItem("tokenForOTP", userData.token);
           } else {
             console.error("User data missing in API response:", action.payload);
           }

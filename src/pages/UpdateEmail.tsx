@@ -29,11 +29,6 @@ function UpdateEmail()
             dispatch(updateEmail(userData))
             .then(() => {
                 setEmailUpdatedSuccessfully(true);
-                const updatedUser = {
-                    ...user,
-                    email: emailText
-                };
-                localStorage.setItem("userState", JSON.stringify(updatedUser));
             })
             .catch((err) => {
                 console.error(err);
@@ -56,7 +51,7 @@ function UpdateEmail()
         {emailUpdatedSuccessfully ? 
         (<UpdatedSuccessfully WhatIsUpdated="Email" goTo="/home" />) : emailUpdateFailed ? 
         (   <UpdateFailed
-            WhatFailed="Email"
+            WhatFailed="Email update failed"
             errorText="Please enter a valid email address. Click the button below to try again."
             setVisible={setEmailUpdateFailed}
             />

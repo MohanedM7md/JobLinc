@@ -50,13 +50,13 @@ import { loadStripe } from "@stripe/stripe-js";
 import { Toaster } from "react-hot-toast";
 import SubscriptionManager from "./pages/SubscriptionManager";
 
-const stripePromise = loadStripe("pk_test_...");
+// const stripePromise = loadStripe("pk_test_...");
 
 function App() {
   return (
     <>
       <ThemeProvider>
-        <Elements stripe={stripePromise}>
+        {/* <Elements stripe={stripePromise}> */}
           <Routes>
             <Route element={<AuthRoute />}>
               <Route path="/" element={<LandPage />} />
@@ -82,7 +82,7 @@ function App() {
                 <Route path="/change-password" element={<ChangePassword />} />
                 <Route path="/confirm-email" element={<ConfirmEmail />} />
 
-                <Route path="/settings" element={<Settings />}>
+              <Route path="/" element={<Settings />}>
                   <Route index element={<AccountPreferences />} />
                   <Route
                     path="account-preferences"
@@ -129,7 +129,7 @@ function App() {
                   />
                   <Route path="details/skills" element={<FullSkills />} />
                 </Route>
-                <Route path="/thank-you" element={<ThankYouPage />} />
+                {/* <Route path="/thank-you" element={<ThankYouPage />} />
                 <Route path="/premium" element={<SubscriptionLandingPage />} />
                 <Route
                   path="/manage-subscription"
@@ -143,7 +143,7 @@ function App() {
                 <Route
                   path="/recurring-payment"
                   element={<RecurringPaymentPage />}
-                />
+                /> */}
                 <Route path="/post">
                   <Route path="create" element={<PostCreate />} />
                   <Route path=":postId/edit" element={<PostEdit />} />
@@ -153,8 +153,8 @@ function App() {
 
             <Route path="*" element={<Error404 />} />
           </Routes>
-        </Elements>
-        <Toaster position="top-right" reverseOrder={false} />{" "}
+        {/* </Elements> */}
+        {/* <Toaster position="top-right" reverseOrder={false} />{" "} */}
       </ThemeProvider>
     </>
   );
