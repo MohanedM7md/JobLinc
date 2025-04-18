@@ -88,7 +88,7 @@ function EmailAddress() {
 
     return (
         <motion.div
-            className="bg-white rounded-xl flex flex-col gap-4 p-6 w-[1000px]"
+            className="bg-white rounded-xl flex flex-col gap-4 p-6"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
