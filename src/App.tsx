@@ -87,41 +87,7 @@ function App() {
                 <Route path="/messaging" element={<Messaging />} />
                 <Route path="/change-password" element={<ChangePassword />} />
 
-              <Route path="/settings" element={<Settings />}>
-                <Route index element={<AccountPreferences />} />
-                <Route
-                  path="account-preferences"
-                  element={<AccountPreferences />}
-                />
-                <Route
-                  path="account-preferences/display/dark-mode"
-                  element={<DarkMode />}
-                />
-                <Route
-                  path="account-preferences/account-management/close-account"
-                  element={<CloseAccount />}
-                />
-
-                <Route
-                  path="sign-in-security"
-                  element={<SignInAndSecurity />}
-                />
-                <Route
-                  path="sign-in-security/account-access/change-password"
-                  element={<ChangePassword />}
-                />
-                <Route
-                  path="sign-in-security/account-access/email-address" 
-                  element={<EmailAddress />} />
-
-                  <Route path="visibility" element={<Visibility />} />
-                  <Route path="data-privacy" element={<DataAndPrivacy />} />
-                  <Route
-                    path="advertising-data"
-                    element={<AdvertisingData />}
-                  ></Route>
-                  <Route path="notifications" element={<Notifications />} />
-                </Route>
+              
 
               {/* <Route path="/update-email" element={<UpdateEmail />} /> */}
               <Route path="/update-username" element={<UpdateUsername />} />
@@ -157,6 +123,41 @@ function App() {
                 <Route path=":postId/edit" element={<PostEdit />} />
               </Route>
             </Route>
+            <Route path="/settings" element={<Settings />}>
+                <Route index element={<AccountPreferences />} />
+                <Route
+                  path="account-preferences"
+                  element={<AccountPreferences />}
+                />
+                <Route
+                  path="account-preferences/display/dark-mode"
+                  element={<DarkMode />}
+                />
+                <Route
+                  path="account-preferences/account-management/close-account"
+                  element={<CloseAccount />}
+                />
+
+                <Route
+                  path="sign-in-security"
+                  element={<SignInAndSecurity />}
+                />
+                <Route
+                  path="sign-in-security/account-access/change-password"
+                  element={<ChangePassword />}
+                />
+                <Route
+                  path="sign-in-security/account-access/email-address" 
+                  element={<EmailAddress />} />
+
+                  <Route path="visibility" element={<Visibility />} />
+                  <Route path="data-privacy" element={<DataAndPrivacy />} />
+                  <Route
+                    path="advertising-data"
+                    element={<AdvertisingData />}
+                  ></Route>
+                  <Route path="notifications" element={<Notifications />} />
+                </Route>
           </Route>
 
             <Route path="*" element={<Error404 />} />
