@@ -178,6 +178,7 @@ const userSlice = createSlice({
 
           if (userData) {
             state.loggedIn = true;
+            state.userId = userData.userId || null;
             state.firstname = userData.firstname || null;
             state.lastname = userData.lastname || null;
             state.profilePicture = userData.profilePicture || null;

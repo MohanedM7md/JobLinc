@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { NewCertificate } from "interfaces/userInterfaces";
 import { addCertificate } from "@services/api/userProfileServices";
 import { months } from "../../../utils/months";
+import { useMutation } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 interface AddCertificateProps {
   onUpdate: () => void;
@@ -16,6 +18,19 @@ export default function AddCertificate(props: AddCertificateProps) {
   const [expirationMonth, setExpirationMonth] = useState<number>(0);
   const [expirationYear, setExpirationYear] = useState<number>(0);
   const [dateValidation, setDateValidation] = useState<boolean>(false);
+  const validationMessage = dateValidation
+    ? ""
+    : "The expiration date must be after the issue date.";
+
+  const addCertificateMutation = useMutation({
+    mutationFn: addCertificate,
+    onSuccess: () => {
+      props.onUpdate();
+      props.onClose();
+    },
+  });
+
+  const isProcessing = addCertificateMutation.status === "pending";
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -26,9 +41,10 @@ export default function AddCertificate(props: AddCertificateProps) {
         issueDate: new Date(issueYear, issueMonth - 1, 1),
         expirationDate: new Date(expirationYear, expirationMonth - 1, 1),
       };
-      addCertificate(newCertificate).then(() => {
-        props.onUpdate();
-        props.onClose();
+      toast.promise(addCertificateMutation.mutateAsync(newCertificate), {
+        loading: "Adding certificate...",
+        success: "Certificate added successfully!",
+        error: (error) => error.message,
       });
     }
   }
@@ -54,110 +70,120 @@ export default function AddCertificate(props: AddCertificateProps) {
   }, [issueMonth, issueYear, expirationMonth, expirationYear]);
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="p-4 bg-lightGray rounded-lg text-charcoalBlack"
-    >
-      <div className="mb-4">
-        <label className="text-sm font-medium text-charcoalBlack">Name</label>
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="w-full px-2 py-1 border rounded-lg"
-          required
-        />
-      </div>
-      <div className="mb-4">
-        <label className="text-sm font-medium text-charcoalBlack">
-          Organization
-        </label>
-        <input
-          type="text"
-          value={organization}
-          onChange={(e) => setOrganization(e.target.value)}
-          className="w-full px-2 py-1 border rounded-lg"
-          required
-        />
-      </div>
-      <div className="mb-4">
-        <label className="text-sm font-medium text-charcoalBlack">
-          Issue Date
-        </label>
-        <div className="flex gap-2">
-          <select
-            value={issueMonth}
-            onChange={(e) => setIssueMonth(Number(e.target.value))}
-            className="w-1/2 px-2 py-1 border rounded-lg"
-          >
-            <option value={0}>Month</option>
-            {months.map((month, index) => (
-              <option key={index + 1} value={index + 1}>
-                {month}
-              </option>
-            ))}
-          </select>
-          <select
-            value={issueYear}
-            onChange={(e) => setIssueYear(Number(e.target.value))}
-            className="w-1/2 px-2 py-1 border rounded-lg"
-          >
-            <option value={0}>Year</option>
-            {Array.from(
-              { length: 50 },
-              (_, i) => new Date().getFullYear() - i,
-            ).map((year) => (
-              <option key={year} value={year}>
-                {year}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
-      <div className="mb-4">
-        <label className="text-sm font-medium text-charcoalBlack">
-          Expiration Date
-        </label>
-        <div className="flex gap-2">
-          <select
-            value={expirationMonth}
-            onChange={(e) => setExpirationMonth(Number(e.target.value))}
-            className="w-1/2 px-2 py-1 border rounded-lg"
+    <>
+      <form
+        onSubmit={handleSubmit}
+        className="p-4 bg-lightGray rounded-lg text-charcoalBlack"
+      >
+        <div className="mb-4">
+          <label className="text-sm font-medium text-charcoalBlack">Name</label>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="w-full px-2 py-1 border rounded-lg"
             required
-          >
-            <option value={0}>Month</option>
-            {months.map((month, index) => (
-              <option key={index + 1} value={index + 1}>
-                {month}
-              </option>
-            ))}
-          </select>
-          <select
-            value={expirationYear}
-            onChange={(e) => setExpirationYear(Number(e.target.value))}
-            className="w-1/2 px-2 py-1 border rounded-lg"
-            required
-          >
-            <option value={0}>Year</option>
-            {Array.from(
-              { length: 50 },
-              (_, i) => new Date().getFullYear() - i,
-            ).map((year) => (
-              <option key={year} value={year}>
-                {year}
-              </option>
-            ))}
-          </select>
+          />
         </div>
-      </div>
-      <div className="flex space-x-2">
-        <button
-          type="submit"
-          className="bg-crimsonRed text-warmWhite px-4 py-1.5 rounded-3xl cursor-pointer hover:bg-red-700"
-        >
-          Add
-        </button>
-      </div>
-    </form>
+        <div className="mb-4">
+          <label className="text-sm font-medium text-charcoalBlack">
+            Organization
+          </label>
+          <input
+            type="text"
+            value={organization}
+            onChange={(e) => setOrganization(e.target.value)}
+            className="w-full px-2 py-1 border rounded-lg"
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label className="text-sm font-medium text-charcoalBlack">
+            Issue Date
+          </label>
+          <div className="flex gap-2">
+            <select
+              value={issueMonth}
+              onChange={(e) => setIssueMonth(Number(e.target.value))}
+              className="w-1/2 px-2 py-1 border rounded-lg"
+              required
+            >
+              <option value={0}>Month</option>
+              {months.map((month, index) => (
+                <option key={index + 1} value={index + 1}>
+                  {month}
+                </option>
+              ))}
+            </select>
+            <select
+              value={issueYear}
+              onChange={(e) => setIssueYear(Number(e.target.value))}
+              className="w-1/2 px-2 py-1 border rounded-lg"
+              required
+            >
+              <option value={0}>Year</option>
+              {Array.from(
+                { length: 50 },
+                (_, i) => new Date().getFullYear() - i,
+              ).map((year) => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+        <div className="mb-4">
+          <label className="text-sm font-medium text-charcoalBlack">
+            Expiration Date
+          </label>
+          <div className="flex gap-2">
+            <select
+              value={expirationMonth}
+              onChange={(e) => setExpirationMonth(Number(e.target.value))}
+              className="w-1/2 px-2 py-1 border rounded-lg"
+              required
+            >
+              <option value={0}>Month</option>
+              {months.map((month, index) => (
+                <option key={index + 1} value={index + 1}>
+                  {month}
+                </option>
+              ))}
+            </select>
+            <select
+              value={expirationYear}
+              onChange={(e) => setExpirationYear(Number(e.target.value))}
+              className="w-1/2 px-2 py-1 border rounded-lg"
+              required
+            >
+              <option value={0}>Year</option>
+              {Array.from(
+                { length: 50 },
+                (_, i) => new Date().getFullYear() - i,
+              ).map((year) => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              ))}
+            </select>
+          </div>
+          {!dateValidation && validationMessage && (
+            <p className="text-sm font-medium text-red-600 mt-1">
+              {validationMessage}
+            </p>
+          )}
+        </div>
+        <div className="flex space-x-2">
+          <button
+            type="submit"
+            className="bg-crimsonRed text-warmWhite px-4 py-1.5 rounded-3xl cursor-pointer hover:bg-red-700"
+            disabled={isProcessing}
+          >
+            {isProcessing ? "Adding..." : "Add"}
+          </button>
+        </div>
+      </form>
+    </>
   );
 }

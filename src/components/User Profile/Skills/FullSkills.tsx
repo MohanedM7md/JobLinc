@@ -6,6 +6,8 @@ import AddSkill from "./AddSkill";
 import EditSkill from "./EditSkill";
 import UserSkill from "./UserSkill";
 import { useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import store from "@store/store";
 
 export default function FullSkills() {
   const { userId } = useParams();
@@ -16,22 +18,42 @@ export default function FullSkills() {
     null,
   );
 
+  const {
+    isFetching: isSkillsFetching,
+    isError: isSkillsError,
+    refetch: refetchSkills,
+  } = useQuery({
+    queryKey: ["getSkills"],
+    queryFn: getSkills,
+    enabled: false,
+  });
+
   useEffect(() => {
-    if (userId === JSON.parse(localStorage.getItem("userState") || "").userId) {
+    if (userId === store.getState().user.userId) {
       setIsUser(true);
       updateSkills();
-    }
-    else {
+    } else {
       setIsUser(false);
-
     }
   }, [userId]);
 
   async function updateSkills() {
     if (userId) {
-      const updatedSkills = await getSkills();
-      setSkills(updatedSkills);
+      const { data } = await refetchSkills();
+      setSkills(data);
     }
+  }
+
+  if (isSkillsFetching) {
+    return (
+    <div>Loading...</div>
+    )
+  }
+
+  if (isSkillsError) {
+    return (
+    <div>Error loading skills</div>
+    )
   }
 
   return (

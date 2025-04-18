@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import "./context/ThemeProvider";
 import { lazy } from "react";
 import { ThemeProvider } from "./context/ThemeProvider";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import LandPage from "./pages/Land";
 import SignUpPage from "./pages/SignUp";
 import SignInPage from "./pages/SignIn";
@@ -12,7 +13,6 @@ const UserProfile = lazy(() => import("./pages/UserProfile"));
 //const MyNetwork = lazy(() => import("./pages/MyNetwork"));
 import Home from "./pages/Home";
 import MyNetwork from "./pages/MyNetwork";
-import PostContainer from "./components/Posts/PostContainer";
 import PostCreate from "./components/Posts/PostCreate";
 import PostEdit from "./components/Posts/PostEdit";
 import ChangePassword from "./pages/ChangePassword";
@@ -37,11 +37,8 @@ import Visibility from "@pages/Settings/Visibility";
 import DataAndPrivacy from "@pages/Settings/DataAndPrivacy";
 import AdvertisingData from "@pages/Settings/AdvertisingData";
 import DarkMode from "@pages/Settings/AccountPreferences/Display/DarkMode";
-
 import CloseAccount from "@pages/Settings/AccountPreferences/AccountManagement/CloseAccount";
-
 import ThankYouPage from "./pages/ThankYouPage";
-
 import SubscriptionLandingPage from "./pages/SubscriptionLandingPage";
 import SubscriptionManagePage from "./pages/SubscriptionManagePage";
 import RecurringPaymentPage from "./pages/RecurringPaymentPage";
@@ -50,37 +47,39 @@ import { loadStripe } from "@stripe/stripe-js";
 import { Toaster } from "react-hot-toast";
 import SubscriptionManager from "./pages/SubscriptionManager";
 
+const queryClient = new QueryClient()
 const stripePromise = loadStripe("pk_test_...");
 
 function App() {
   return (
     <>
-      {/* <ThemeProvider> */}
-      <Elements stripe={stripePromise}>
-        <Routes>
-          <Route element={<AuthRoute />}>
-            <Route path="/" element={<LandPage />} />
-            <Route path="/signup" element={<SignUpPage />} />
-            <Route path="/signin" element={<SignInPage />} />
-            <Route
-              path="/user-details"
-              element={<UserDetails /* email="" password="" */ />}
-            />
-            <Route
-              path="/signin/forgot-password"
-              element={<ForgotPassword />}
-            />
-            <Route path="/reset-password" element={<ResetPassword />} />
-          </Route>
+      {/*<ThemeProvider> */}
+        <QueryClientProvider client={queryClient}>
+          <Elements stripe={stripePromise}>
+            <Routes>
+            <Route element={<AuthRoute />}>
+              <Route path="/" element={<LandPage />} />
+              <Route path="/signup" element={<SignUpPage />} />
+              <Route path="/signin" element={<SignInPage />} />
+              <Route
+                path="/user-details"
+                element={<UserDetails /* email="" password="" */ />}
+              />
+              <Route
+                path="/signin/forgot-password"
+                element={<ForgotPassword />}
+              />
+              <Route path="/reset-password" element={<ResetPassword />} />
+            </Route>
 
-          <Route element={<ProtectedRoute />}>
-            <Route element={<Layout />}>
-              <Route path="/home" element={<Home />} />
-              <Route path="/my-network" element={<MyNetwork />} />
-              <Route path="/connections" element={<Connections />} />
-              <Route path="/messaging" element={<Messaging />} />
-              <Route path="/change-password" element={<ChangePassword />} />
-              <Route path="/confirm-email" element={<ConfirmEmail />} />
+            <Route element={<ProtectedRoute />}>
+              <Route element={<Layout />}>
+                <Route path="/home" element={<Home />} />
+                <Route path="/my-network" element={<MyNetwork />} />
+                <Route path="/connections" element={<Connections />} />
+                <Route path="/messaging" element={<Messaging />} />
+                <Route path="/change-password" element={<ChangePassword />} />
+                <Route path="/confirm-email" element={<ConfirmEmail />} />
 
               <Route path="/settings" element={<Settings />}>
                 <Route index element={<AccountPreferences />} />
@@ -106,14 +105,14 @@ function App() {
                   element={<ChangePassword />}
                 />
 
-                <Route path="visibility" element={<Visibility />} />
-                <Route path="data-privacy" element={<DataAndPrivacy />} />
-                <Route
-                  path="advertising-data"
-                  element={<AdvertisingData />}
-                ></Route>
-                <Route path="notifications" element={<Notifications />} />
-              </Route>
+                  <Route path="visibility" element={<Visibility />} />
+                  <Route path="data-privacy" element={<DataAndPrivacy />} />
+                  <Route
+                    path="advertising-data"
+                    element={<AdvertisingData />}
+                  ></Route>
+                  <Route path="notifications" element={<Notifications />} />
+                </Route>
 
               <Route path="/update-email" element={<UpdateEmail />} />
               <Route path="/update-username" element={<UpdateUsername />} />
@@ -151,11 +150,16 @@ function App() {
             </Route>
           </Route>
 
-          <Route path="*" element={<Error404 />} />
-        </Routes>
-      </Elements>
-      <Toaster position="top-right" reverseOrder={false} />{" "}
-      {/*</ThemeProvider> */}
+            <Route path="*" element={<Error404 />} />
+          </Routes>
+          <Toaster
+          position="bottom-center"
+          toastOptions={{
+            
+          }} />
+          </Elements>
+        </QueryClientProvider>
+      {/*</ThemeProvider>*/}
     </>
   );
 }

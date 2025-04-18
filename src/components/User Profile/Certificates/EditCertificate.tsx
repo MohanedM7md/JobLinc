@@ -6,6 +6,8 @@ import {
 } from "@services/api/userProfileServices";
 import { months } from "@utils/months";
 import ConfirmAction from "../../utils/ConfirmAction";
+import { useMutation } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 interface EditCertificateProps extends CertificateInterface {
   onClose: () => void;
@@ -28,7 +30,30 @@ export default function EditCertificate(props: EditCertificateProps) {
     new Date(props.expirationDate).getFullYear(),
   );
   const [dateValidation, setDateValidation] = useState<boolean>(true);
-  const [showConfirm, setShowConfirm] = useState<boolean>(false);
+  const [showConfirmDelete, setShowConfirmDelete] = useState<boolean>(false);
+  const validationMessage = dateValidation
+    ? ""
+    : "The expiration date must be after the issue date.";
+
+  const editCertificateMutation = useMutation({
+    mutationFn: editCertificate,
+    onSuccess: () => {
+      props.onUpdate();
+      props.onClose();
+    },
+  });
+
+  const deleteCertificateMutation = useMutation({
+    mutationFn: deleteCertificate,
+    onSuccess: () => {
+      props.onUpdate();
+      props.onClose();
+    },
+  });
+
+  const isProcessing =
+    editCertificateMutation.status === "pending" ||
+    deleteCertificateMutation.status === "pending";
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -40,16 +65,20 @@ export default function EditCertificate(props: EditCertificateProps) {
         issueDate: new Date(issueYear, issueMonth - 1, 1),
         expirationDate: new Date(expirationYear, expirationMonth - 1, 1),
       };
-      await editCertificate(editedCertificate);
-      props.onUpdate();
-      props.onClose();
+      toast.promise(editCertificateMutation.mutateAsync(editedCertificate), {
+        loading: "Saving certificate...",
+        success: "Certificate edited successfully!",
+        error: (error) => error.message,
+      })
     }
   }
 
   async function handleDelete() {
-    await deleteCertificate(props._id);
-    props.onUpdate();
-    props.onClose();
+    toast.promise(deleteCertificateMutation.mutateAsync(props._id), {
+      loading: "Deleting certificate...",
+      success: "Certificate deleted successfully!",
+      error: (error) => error.message,
+    })
   }
 
   useEffect(() => {
@@ -59,9 +88,10 @@ export default function EditCertificate(props: EditCertificateProps) {
       expirationMonth !== 0 &&
       expirationYear !== 0
     ) {
-      if (issueYear > expirationYear) {
-        setDateValidation(false);
-      } else if (issueYear === expirationYear && issueMonth > expirationMonth) {
+      if (
+        issueYear > expirationYear ||
+        (issueYear === expirationYear && issueMonth > expirationMonth)
+      ) {
         setDateValidation(false);
       } else {
         setDateValidation(true);
@@ -73,10 +103,10 @@ export default function EditCertificate(props: EditCertificateProps) {
 
   return (
     <>
-      {showConfirm && (
+      {showConfirmDelete && (
         <ConfirmAction
           action={handleDelete}
-          onClose={() => setShowConfirm(false)}
+          onClose={() => setShowConfirmDelete(false)}
         />
       )}
       <form
@@ -114,6 +144,7 @@ export default function EditCertificate(props: EditCertificateProps) {
               value={issueMonth}
               onChange={(e) => setIssueMonth(Number(e.target.value))}
               className="w-1/2 px-2 py-1 border rounded-lg"
+              required
             >
               <option value={0}>Month</option>
               {months.map((month, index) => (
@@ -126,6 +157,7 @@ export default function EditCertificate(props: EditCertificateProps) {
               value={issueYear}
               onChange={(e) => setIssueYear(Number(e.target.value))}
               className="w-1/2 px-2 py-1 border rounded-lg"
+              required
             >
               <option value={0}>Year</option>
               {Array.from(
@@ -174,20 +206,31 @@ export default function EditCertificate(props: EditCertificateProps) {
               ))}
             </select>
           </div>
+          {!dateValidation && validationMessage && (
+            <p className="text-sm font-medium text-red-600 mt-1">
+              {validationMessage}
+            </p>
+          )}
         </div>
         <div className="flex space-x-2">
           <button
             type="submit"
             className="bg-crimsonRed text-warmWhite px-4 py-1.5 rounded-3xl cursor-pointer hover:bg-red-700"
+            disabled={isProcessing}
           >
-            Save
+            {editCertificateMutation.status === "pending"
+              ? "Saving..."
+              : "Save"}
           </button>
           <button
             type="button"
-            onClick={() => setShowConfirm(true)}
+            onClick={() => setShowConfirmDelete(true)}
             className="bg-gray-500 text-warmWhite px-4 py-1.5 rounded-3xl cursor-pointer hover:bg-gray-700"
+            disabled={isProcessing}
           >
-            Delete
+            {deleteCertificateMutation.status === "pending"
+              ? "Deleting..."
+              : "Delete"}
           </button>
         </div>
       </form>
