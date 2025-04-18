@@ -39,10 +39,13 @@ import AdvertisingData from "@pages/Settings/AdvertisingData";
 import DarkMode from "@pages/Settings/AccountPreferences/Display/DarkMode";
 import DemographicInfo from "@pages/Settings/AccountPreferences/ProfileInformation/DemographicInfo";
 import CloseAccount from "@pages/Settings/AccountPreferences/AccountManagement/CloseAccount";
+import { Toaster } from './../node_modules/react-hot-toast/src/components/toaster';
+import Saved_Jobs from './components/Jobs&hiring/Saved_Jobs';
 
 function App() {
   return (
     <>
+      <Toaster position="bottom-left" />
       <ThemeProvider>
         <Routes>
           <Route element={<AuthRoute />}>
@@ -59,7 +62,7 @@ function App() {
             />
             <Route path="/reset-password" element={<ResetPassword />} />
           </Route>
-          
+
 
           {/*   <Route element={<ProtectedRoute />}> */}
           <Route element={<Layout />}>
@@ -115,6 +118,7 @@ function App() {
               <Route path=":postId/edit" element={<PostEdit />} />
             </Route>
             <Route path="/jobs-and-hiring" element={<Jobs_And_Hiring />} />
+            <Route path="/saved-jobs" element={<Saved_Jobs />} />
           </Route>
 
           {/* </Route> */}
