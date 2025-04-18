@@ -13,6 +13,7 @@ const UserProfile = lazy(() => import("./pages/UserProfile"));
 import Home from "./pages/Home";
 import MyNetwork from "./pages/MyNetwork";
 import PostContainer from "./components/Posts/PostContainer";
+import { CreateForm } from "@pages/Company/CreateForm";
 import PostCreate from "./components/Posts/PostCreate";
 import PostEdit from "./components/Posts/PostEdit";
 import ChangePassword from "./pages/ChangePassword";
@@ -73,83 +74,78 @@ function App() {
             <Route path="/reset-password" element={<ResetPassword />} />
           </Route>
 
-          <Route element={<ProtectedRoute />}>
-            <Route element={<Layout />}>
-              <Route path="/home" element={<Home />} />
-              <Route path="/my-network" element={<MyNetwork />} />
-              <Route path="/connections" element={<Connections />} />
-              <Route path="/messaging" element={<Messaging />} />
-              <Route path="/change-password" element={<ChangePassword />} />
-              <Route path="/confirm-email" element={<ConfirmEmail />} />
-
-              <Route path="/settings" element={<Settings />}>
-                <Route index element={<AccountPreferences />} />
-                <Route
-                  path="account-preferences"
-                  element={<AccountPreferences />}
-                />
-                <Route
-                  path="account-preferences/display/dark-mode"
-                  element={<DarkMode />}
-                />
-                <Route
-                  path="account-preferences/account-management/close-account"
-                  element={<CloseAccount />}
-                />
-
-                <Route
-                  path="sign-in-security"
-                  element={<SignInAndSecurity />}
-                />
-                <Route
-                  path="sign-in-security/account-access/change-password"
-                  element={<ChangePassword />}
-                />
-
-                <Route path="visibility" element={<Visibility />} />
-                <Route path="data-privacy" element={<DataAndPrivacy />} />
-                <Route
-                  path="advertising-data"
-                  element={<AdvertisingData />}
-                ></Route>
-                <Route path="notifications" element={<Notifications />} />
-              </Route>
-
-              <Route path="/update-email" element={<UpdateEmail />} />
-              <Route path="/update-username" element={<UpdateUsername />} />
-              <Route path="/profile/:userId">
-                <Route index element={<ProfileContainer />} />
-                <Route
-                  path="details/experiences"
-                  element={<FullExperiences />}
-                />
-                <Route
-                  path="details/certificates"
-                  element={<FullCertificates />}
-                />
-                <Route path="details/skills" element={<FullSkills />} />
-              </Route>
-              <Route path="/thank-you" element={<ThankYouPage />} />
-              <Route path="/premium" element={<SubscriptionLandingPage />} />
+          {/* <Route element={<ProtectedRoute />}> */}
+          <Route element={<Layout />}>
+            <Route path="/home" element={<Home />} />
+            <Route path="/my-network" element={<MyNetwork />} />
+            <Route path="/connections" element={<Connections />} />
+            <Route path="/messaging" element={<Messaging />} />
+            <Route path="/change-password" element={<ChangePassword />} />
+            <Route path="/confirm-email" element={<ConfirmEmail />} />
+            <Route path="/settings" element={<Settings />}>
+              <Route index element={<AccountPreferences />} />
               <Route
-                path="/manage-subscription"
-                element={<SubscriptionManager />}
-              />
-
-              <Route
-                path="/subscription-manage"
-                element={<SubscriptionManagePage />}
+                path="account-preferences"
+                element={<AccountPreferences />}
               />
               <Route
-                path="/recurring-payment"
-                element={<RecurringPaymentPage />}
+                path="account-preferences/display/dark-mode"
+                element={<DarkMode />}
               />
-              <Route path="/post">
-                <Route path="create" element={<PostCreate />} />
-                <Route path=":postId/edit" element={<PostEdit />} />
-              </Route>
+              <Route
+                path="account-preferences/account-management/close-account"
+                element={<CloseAccount />}
+              />
+
+              <Route path="sign-in-security" element={<SignInAndSecurity />} />
+              <Route
+                path="sign-in-security/account-access/change-password"
+                element={<ChangePassword />}
+              />
+              <Route path="visibility" element={<Visibility />} />
+              <Route path="data-privacy" element={<DataAndPrivacy />} />
+              <Route
+                path="advertising-data"
+                element={<AdvertisingData />}
+              ></Route>
+              <Route path="notifications" element={<Notifications />} />
+            </Route>
+            <Route path="/update-email" element={<UpdateEmail />} />
+            <Route path="/update-username" element={<UpdateUsername />} />
+
+            <Route path="/profile/:userId">
+              <Route index element={<ProfileContainer />} />
+              <Route path="details/experiences" element={<FullExperiences />} />
+              <Route
+                path="details/certificates"
+                element={<FullCertificates />}
+              />
+              <Route path="details/skills" element={<FullSkills />} />
+            </Route>
+
+            <Route path="/thank-you" element={<ThankYouPage />} />
+            <Route path="/premium" element={<SubscriptionLandingPage />} />
+            <Route
+              path="/manage-subscription"
+              element={<SubscriptionManager />}
+            />
+            <Route
+              path="/subscription-manage"
+              element={<SubscriptionManagePage />}
+            />
+            <Route
+              path="/recurring-payment"
+              element={<RecurringPaymentPage />}
+            />
+
+            <Route path="/post">
+              <Route path="create" element={<PostCreate />} />
+              <Route path=":postId/edit" element={<PostEdit />} />
             </Route>
           </Route>
+          {/* </Route> */}
+
+          <Route path="/company/setup/new" element={<CreateForm />} />
 
           <Route path="*" element={<Error404 />} />
         </Routes>
