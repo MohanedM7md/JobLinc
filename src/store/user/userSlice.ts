@@ -177,6 +177,8 @@ const userSlice = createSlice({
           console.log("set in storage");
 
           if (userData) {
+            state.userId = userData.userId;
+            state.email = userData.email;
             state.loggedIn = true;
             state.firstname = userData.firstname || null;
             state.lastname = userData.lastname || null;
