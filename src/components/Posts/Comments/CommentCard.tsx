@@ -7,6 +7,7 @@ import {
 import { useEffect, useState } from "react";
 import ReplyCard from "./ReplyCard";
 import { createReply, getReplies } from "../../../services/api/postServices";
+import store from "@store/store";
 
 interface CommentCardProps {
   comment: CommentInterface;
@@ -78,12 +79,13 @@ export default function CommentCard(props: CommentCardProps) {
         </button>
       </div>
       <div className="flex flex-wrap flex-row-reverse w-1/1 bg-lightGray rounded-xl relative pt-2">
+      {/* This code should be refactored, seperate responsibilities */}
         {showReplies ? (
           <>
             <div className="flex flex-row w-11/12 py-3">
               <img
                 className="rounded-full h-10 w-10 mx-2"
-                src={localStorage.getItem("profilePicture")!}
+                src={store.getState().user.profilePicture!}
                 alt={"User"}
               />
               <input
@@ -105,11 +107,25 @@ export default function CommentCard(props: CommentCardProps) {
                 send
               </button>
             </div>
-            {replies
-              ? replies.map((reply) => (
+            {replies ? (
+              replies.length > 0 ? (
+                replies.map((reply) => (
                   <ReplyCard key={reply.replyId} reply={reply} />
                 ))
-              : null}
+              ) : (
+                <div className="m-auto p-2">
+                  <span className="text-mutedSilver font-medium">
+                    No Replies Yet
+                  </span>
+                </div>
+              )
+            ) : (
+              <div className="m-auto p-2">
+                <span className="text-mutedSilver font-medium">
+                  Can't fetch Replies, Please try again later
+                </span>
+              </div>
+            )}
           </>
         ) : null}
       </div>

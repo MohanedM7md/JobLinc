@@ -6,6 +6,8 @@ import {
   editExperience,
 } from "@services/api/userProfileServices";
 import ConfirmAction from "../../utils/ConfirmAction";
+import { useMutation } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 interface EditExperienceProps extends ExperienceInterface {
   onClose: () => void;
@@ -30,8 +32,31 @@ export default function EditExperience(props: EditExperienceProps) {
   );
   const [dateValidation, setDateValidation] = useState<boolean>(true);
   const [showConfirmDelete, setShowConfirmDelete] = useState<boolean>(false);
+  const validationMessage = dateValidation
+    ? ""
+    : "The end date must be after the start date.";
 
-  async function handleSubmit(e: React.FormEvent) {
+  const editExperienceMutation = useMutation({
+    mutationFn: editExperience,
+    onSuccess: () => {
+      props.onUpdate();
+      props.onClose();
+    },
+  });
+
+  const deleteExperienceMutation = useMutation({
+    mutationFn: deleteExperience,
+    onSuccess: () => {
+      props.onUpdate();
+      props.onClose();
+    },
+  });
+
+  const isProcessing =
+    editExperienceMutation.status === "pending" ||
+    deleteExperienceMutation.status === "pending";
+
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (dateValidation) {
       const editedExperience: ExperienceInterface = {
@@ -42,17 +67,16 @@ export default function EditExperience(props: EditExperienceProps) {
         startDate: new Date(startYear, startMonth - 1, 1),
         endDate: new Date(endYear, endMonth - 1, 1),
       };
-      console.log(props);
-      await editExperience(editedExperience);
-      props.onUpdate();
-      props.onClose();
+      toast.promise(editExperienceMutation.mutateAsync(editedExperience), {
+        loading: "Saving experience...",
+        success: "Experience edited successfully",
+        error: (error) => error.message,
+      })
     }
   }
 
-  async function handleDelete() {
-    await deleteExperience(props._id);
-    props.onUpdate();
-    props.onClose();
+  function handleDelete() {
+    deleteExperienceMutation.mutate(props._id);
   }
 
   useEffect(() => {
@@ -62,9 +86,10 @@ export default function EditExperience(props: EditExperienceProps) {
       endMonth !== 0 &&
       endYear !== 0
     ) {
-      if (startYear > endYear) {
-        setDateValidation(false);
-      } else if (startYear === endYear && startMonth > startYear) {
+      if (
+        startYear > endYear ||
+        (startYear === endYear && startMonth > endMonth)
+      ) {
         setDateValidation(false);
       } else {
         setDateValidation(true);
@@ -91,6 +116,7 @@ export default function EditExperience(props: EditExperienceProps) {
             onChange={(e) => setPosition(e.target.value)}
             className="w-full px-2 py-1 border rounded-lg"
             required
+            disabled={isProcessing}
           />
         </div>
         <div className="mb-4">
@@ -104,6 +130,7 @@ export default function EditExperience(props: EditExperienceProps) {
             onChange={(e) => setCompany(e.target.value)}
             className="w-full px-2 py-1 border rounded-lg"
             required
+            disabled={isProcessing}
           />
         </div>
         <div className="mb-4">
@@ -115,6 +142,8 @@ export default function EditExperience(props: EditExperienceProps) {
               value={startMonth}
               onChange={(e) => setStartMonth(Number(e.target.value))}
               className="w-1/2 px-2 py-1 border rounded-lg"
+              required
+              disabled={isProcessing}
             >
               <option value={0}>Month</option>
               {months.map((month, index) => (
@@ -127,6 +156,8 @@ export default function EditExperience(props: EditExperienceProps) {
               value={startYear}
               onChange={(e) => setStartYear(Number(e.target.value))}
               className="w-1/2 px-2 py-1 border rounded-lg"
+              required
+              disabled={isProcessing}
             >
               <option value={0}>Year</option>
               {Array.from(
@@ -149,6 +180,8 @@ export default function EditExperience(props: EditExperienceProps) {
               value={endMonth}
               onChange={(e) => setEndMonth(Number(e.target.value))}
               className="w-1/2 px-2 py-1 border rounded-lg"
+              required
+              disabled={isProcessing}
             >
               <option value={0}>Month</option>
               {months.map((month, index) => (
@@ -161,6 +194,8 @@ export default function EditExperience(props: EditExperienceProps) {
               value={endYear}
               onChange={(e) => setendYear(Number(e.target.value))}
               className="w-1/2 px-2 py-1 border rounded-lg"
+              required
+              disabled={isProcessing}
             >
               <option value={0}>Year</option>
               {Array.from(
@@ -173,6 +208,11 @@ export default function EditExperience(props: EditExperienceProps) {
               ))}
             </select>
           </div>
+          {!dateValidation && validationMessage && (
+            <p className="text-sm font-medium text-red-600 mt-1">
+              {validationMessage}
+            </p>
+          )}
         </div>
         <div className="mb-4">
           <label className="text-sm font-medium text-charcoalBlack">
@@ -184,21 +224,27 @@ export default function EditExperience(props: EditExperienceProps) {
             onChange={(e) => setDescription(e.target.value)}
             className="w-full px-2 py-1 border rounded-lg"
             rows={4}
+            required
+            disabled={isProcessing}
           />
         </div>
         <div className="flex space-x-2">
           <button
             type="submit"
             className="bg-crimsonRed text-warmWhite px-4 py-1.5 rounded-3xl cursor-pointer hover:bg-red-700"
+            disabled={isProcessing}
           >
-            Save
+            {editExperienceMutation.status === "pending" ? "Saving..." : "Save"}
           </button>
           <button
             type="button"
             className="bg-gray-500 text-warmWhite px-4 py-1.5 rounded-3xl cursor-pointer hover:bg-gray-700"
             onClick={() => setShowConfirmDelete(true)}
+            disabled={isProcessing}
           >
-            Delete
+            {deleteExperienceMutation.status === "pending"
+              ? "Deleting..."
+              : "Delete"}
           </button>
         </div>
       </form>

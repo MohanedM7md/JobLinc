@@ -1,12 +1,6 @@
 import EditProfile from "./EditProfile";
 import Modal from "../../Authentication/Modal";
 import { useState } from "react";
-import { ProfileUpdateInterface } from "interfaces/userInterfaces";
-import {
-  updateCoverPicture,
-  updateMe,
-  updateProfilePicture,
-} from "@services/api/userProfileServices";
 import EditProfilePicture from "./EditProfilePicture";
 import EditCoverPicture from "./EditCoverPicture";
 import "material-icons";
@@ -34,26 +28,23 @@ function ProfileHeader(props: ProfileProps & { isUser: boolean }) {
   const [isEditCoverPictureModalOpen, setIsEditCoverPictureModalOpen] =
     useState<boolean>(false);
 
-  async function handleUpdateUser(updatedUser: ProfileUpdateInterface) {
-    await updateMe(updatedUser);
+  async function handleUpdateUser() {
     await props.updateUser();
     setIsEditUserModalOpen(false);
   }
 
-  async function handleUpdateProfilePicture(updatedProfilePicture: File) {
-    await updateProfilePicture(updatedProfilePicture);
+  async function handleUpdateProfilePicture() {
     await props.updateUser();
     setIsEditProfilePictureModalOpen(false);
   }
 
-  async function handleUpdateCoverPicture(updatedCoverPicture: File) {
-    await updateCoverPicture(updatedCoverPicture);
+  async function handleUpdateCoverPicture() {
     await props.updateUser();
     setIsEditCoverPictureModalOpen(false);
   }
 
   return (
-    <div className="profile-header bg-darkGray p-4 rounded-lg shadow-md relative">
+    <div className="profile-header p-4 rounded-lg shadow-md relative">
       <div className="relative mb-16">
         <img
           src={props.coverPicture}
@@ -84,10 +75,10 @@ function ProfileHeader(props: ProfileProps & { isUser: boolean }) {
 
       <div className="mb-4 flex justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-warmWhite">
+          <h1 className="text-2xl font-bold">
             {props.firstname + " " + props.lastname}
           </h1>
-          <p className="text-warmWhite">{props.headline}</p>
+          <p>{props.headline}</p>
           <div className="flex flex-row">
             <p className="text-mutedSilver">
               {props.city}, {props.country}
@@ -103,7 +94,7 @@ function ProfileHeader(props: ProfileProps & { isUser: boolean }) {
         {props.isUser && (
           <button
             onClick={() => setIsEditUserModalOpen(true)}
-            className="material-icons text-white w-10 h-10 flex items-center justify-center hover:bg-gray-600 rounded-full cursor-pointer"
+            className="material-icons w-10 h-10 flex items-center justify-center hover:bg-gray-200 rounded-full cursor-pointer"
           >
             edit
           </button>

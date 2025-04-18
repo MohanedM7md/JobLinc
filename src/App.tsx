@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import "./context/ThemeProvider";
 import { lazy } from "react";
 import { ThemeProvider } from "./context/ThemeProvider";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import LandPage from "./pages/Land";
 import SignUpPage from "./pages/SignUp";
 import SignInPage from "./pages/SignIn";
@@ -12,7 +13,6 @@ const UserProfile = lazy(() => import("./pages/UserProfile"));
 //const MyNetwork = lazy(() => import("./pages/MyNetwork"));
 import Home from "./pages/Home";
 import MyNetwork from "./pages/MyNetwork";
-import PostContainer from "./components/Posts/PostContainer";
 import PostCreate from "./components/Posts/PostCreate";
 import PostEdit from "./components/Posts/PostEdit";
 import ChangePassword from "./pages/ChangePassword";
@@ -37,11 +37,8 @@ import Visibility from "@pages/Settings/Visibility";
 import DataAndPrivacy from "@pages/Settings/DataAndPrivacy";
 import AdvertisingData from "@pages/Settings/AdvertisingData";
 import DarkMode from "@pages/Settings/AccountPreferences/Display/DarkMode";
-
 import CloseAccount from "@pages/Settings/AccountPreferences/AccountManagement/CloseAccount";
-
 import ThankYouPage from "./pages/ThankYouPage";
-
 import SubscriptionLandingPage from "./pages/SubscriptionLandingPage";
 import SubscriptionManagePage from "./pages/SubscriptionManagePage";
 import RecurringPaymentPage from "./pages/RecurringPaymentPage";
@@ -55,6 +52,7 @@ import EmailAddress from "@pages/Settings/SignInAndSecurity/AccountAccess/EmailA
 const queryClient = new QueryClient()
 
 
+const queryClient = new QueryClient()
 const stripePromise = loadStripe("pk_test_...");
 
 function App() {
