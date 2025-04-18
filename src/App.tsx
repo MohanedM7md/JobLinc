@@ -9,8 +9,9 @@ import ForgotPassword from "./pages/ForgotPassword";
 import UserDetails from "./components/Authentication/UserDetails";
 const Messaging = lazy(() => import("./pages/Messaging"));
 const UserProfile = lazy(() => import("./pages/UserProfile"));
+//const MyNetwork = lazy(() => import("./pages/MyNetwork"));
 import Home from "./pages/Home";
-import MyNetwork from "./pages/MyNetworkPage";
+import MyNetwork from "./pages/MyNetwork";
 import PostContainer from "./components/Posts/PostContainer";
 import PostCreate from "./components/Posts/PostCreate";
 import PostEdit from "./components/Posts/PostEdit";
@@ -25,6 +26,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Jobs_And_Hiring from "./components/Jobs&hiring/Jobs_And_Hiring";
 
 import AuthRoute from "./components/AuthRoute";
+import Connections from "./pages/Connections";
 import ProfileContainer from "./components/User Profile/ProfileContainer";
 import FullExperiences from "./components/User Profile/Experiences/FullExperiences";
 import FullCertificates from "./components/User Profile/Certificates/FullCertificates";
@@ -68,6 +70,7 @@ function App() {
           <Route element={<Layout />}>
             <Route path="/home" element={<Home />} />
             <Route path="/my-network" element={<MyNetwork />} />
+            <Route path="/connections" element={<Connections />} />
             <Route path="/messaging" element={<Messaging />} />
             <Route path="/change-password" element={<ChangePassword />} />
             <Route path="/confirm-email" element={<ConfirmEmail />} />

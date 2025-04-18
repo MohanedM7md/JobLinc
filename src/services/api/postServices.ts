@@ -8,6 +8,7 @@ export const getFeed = async (count: number, signal: AbortSignal) => {
         count: count,
       },
     });
+    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error("Error fetching feed:", error);
@@ -64,7 +65,7 @@ export async function reactPost(postId: string, type: string) {
   }
 }
 
-// Create a comment (NOT in documentation)
+// Create a comment 
 export const createComment = async (postId: string, text: string) => {
   try {
     await api.post(`post/${postId}/comment`,  {text} );
