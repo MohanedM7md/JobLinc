@@ -2,7 +2,6 @@ import { Route, Routes } from "react-router-dom";
 import "./context/ThemeProvider";
 import { lazy } from "react";
 import { ThemeProvider } from "./context/ThemeProvider";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import LandPage from "./pages/Land";
 import SignUpPage from "./pages/SignUp";
 import SignInPage from "./pages/SignIn";
@@ -52,7 +51,6 @@ import EmailAddress from "@pages/Settings/SignInAndSecurity/AccountAccess/EmailA
 const queryClient = new QueryClient()
 
 
-const queryClient = new QueryClient()
 const stripePromise = loadStripe("pk_test_...");
 
 function App() {
