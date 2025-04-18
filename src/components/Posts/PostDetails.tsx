@@ -24,7 +24,7 @@ export default function PostDetails(props: PostDetailsProps) {
       <div className="min-w-0 mr-3 ml-3">
         <p
           ref={textRef}
-          className={!showMore ? "truncate text-wrap line-clamp-3" : ""}
+          className={!showMore ? "truncate text-wrap line-clamp-3" : "text-wrap"}
         >
           {props.text}
         </p>

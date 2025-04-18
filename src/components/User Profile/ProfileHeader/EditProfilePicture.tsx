@@ -46,8 +46,18 @@ export default function EditProfilePicture(props: EditProfilePictureProps) {
               img.onload = () => {
                 const canvas = document.createElement("canvas");
                 const ctx = canvas.getContext("2d");
-                const targetWidth = 80;
-                const targetHeight = 80;
+                const maxDimension = 600;
+
+                let targetWidth = img.width;
+                let targetHeight = img.height;
+
+                if (img.width > img.height) {
+                  targetWidth = maxDimension;
+                  targetHeight = (img.height / img.width) * maxDimension;
+                } else {
+                  targetHeight = maxDimension;
+                  targetWidth = (img.width / img.height) * maxDimension;
+                }
 
                 canvas.width = targetWidth;
                 canvas.height = targetHeight;

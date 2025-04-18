@@ -8,6 +8,7 @@ import AddExperience from "./AddExperience";
 import Modal from "./../../Authentication/Modal";
 import { getExperience } from "@services/api/userProfileServices";
 import { useQuery } from "@tanstack/react-query";
+import store from "@store/store";
 
 export default function FullExperiences() {
   const { userId } = useParams();
@@ -28,7 +29,7 @@ export default function FullExperiences() {
   });
 
   useEffect(() => {
-    if (userId === JSON.parse(localStorage.getItem("userState") || "").userId) {
+    if (userId === store.getState().user.userId) {
       setIsUser(true);
       updateExperiences();
     } else {

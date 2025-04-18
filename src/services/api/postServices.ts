@@ -51,7 +51,7 @@ export async function getReplies(postId: string, commentId: string) {
 }
 
 // Create a post
-export async function createPost(text: string) {
+export async function createPost({text} : {text: string}) {
   try {
     const response = await api.post(`post/add`, { text });
     return response.status;
@@ -115,7 +115,13 @@ export async function createReply(
   }
 }
 
-export async function editPost(postId: string, text: string) {
+export async function editPost({
+  postId,
+  text,
+}: {
+  postId: string;
+  text: string;
+}) {
   try {
     const response = await api.post(`post/${postId}/edit`, { text });
     return response.status;

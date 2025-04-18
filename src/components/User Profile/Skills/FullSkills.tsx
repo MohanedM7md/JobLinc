@@ -7,6 +7,7 @@ import EditSkill from "./EditSkill";
 import UserSkill from "./UserSkill";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
+import store from "@store/store";
 
 export default function FullSkills() {
   const { userId } = useParams();
@@ -28,7 +29,7 @@ export default function FullSkills() {
   });
 
   useEffect(() => {
-    if (userId === JSON.parse(localStorage.getItem("userState") || "").userId) {
+    if (userId === store.getState().user.userId) {
       setIsUser(true);
       updateSkills();
     } else {

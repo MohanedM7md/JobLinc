@@ -2,6 +2,7 @@ import { useState } from "react";
 import { createComment } from "@services/api/postServices";
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
+import store from "@store/store";
 
 interface CommentsHeaderProps {
   postId: string;
@@ -39,7 +40,7 @@ export default function CommentsHeader({
     <div className="flex flex-row w-1/1 py-3">
       <img
         className="rounded-full h-10 w-10 mx-2"
-        src={localStorage.getItem("profilePicture")!}
+        src={store.getState().user.profilePicture!}
         alt={"User"}
       />
       <input

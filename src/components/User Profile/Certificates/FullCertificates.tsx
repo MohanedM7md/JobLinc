@@ -8,6 +8,7 @@ import UserCertificate from "./UserCertificate";
 import AddCertificate from "./AddCertificate";
 import EditCertificate from "./EditCertificate";
 import { useQuery } from "@tanstack/react-query";
+import store from "@store/store";
 
 export default function FullCertificates() {
   const { userId } = useParams();
@@ -29,7 +30,7 @@ export default function FullCertificates() {
   });
 
   useEffect(() => {
-    if (userId === JSON.parse(localStorage.getItem("userState") || "").userId) {
+    if (userId === store.getState().user.userId) {
       setIsUser(true);
       updateCertificates();
     } else {

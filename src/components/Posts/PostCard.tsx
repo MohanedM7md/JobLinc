@@ -4,20 +4,12 @@ import PostUtilityButton from "./PostUtilityButton";
 import { useState } from "react";
 import "material-icons/iconfont/material-icons.css";
 import { PostInterface } from "@interfaces/postInterfaces";
-import { deletePost } from "@services/api/postServices";
-import { useNavigate } from "react-router-dom";
 import PostReact from "./PostReact";
 import {
   ThumbsUp,
-  PartyPopper,
-  HandHelping,
-  Laugh,
-  Heart,
-  Lightbulb,
   MessageSquareText,
   Repeat,
   SendHorizontal,
-  SmilePlus,
 } from "lucide-react";
 import { AnimatePresence } from "framer-motion";
 import CommentsContainer from "./Comments/CommentsContainer";
@@ -29,11 +21,7 @@ interface PostProps {
 
 export default function Post(props: PostProps) {
   const [hide, setHide] = useState<boolean>(false);
-  const [showUtility, setShowUtility] = useState<boolean>(false);
   const [showComment, setShowComment] = useState<boolean>(false);
-  const [reaction, setReaction] = useState<string>("React");
-  const [showReact, setShowReact] = useState<boolean>(false);
-  const navigate = useNavigate();
 
   const posterId: string = props.post.userId ?? props.post.companyId ?? "0";
   const name: string =
@@ -43,60 +31,12 @@ export default function Post(props: PostProps) {
   const posterPic: string =
     props.post.profilePicture ?? props.post.companyLogo ?? "NotFound";
 
-  function postDelete() {
-    deletePost(props.post.postId).then(() => navigate("/home"));
-  }
-
-  function reactionSuccess(newReaction: string) {
-    setReaction(newReaction);
+  function reactionSuccess() {
     props.post.likes += 1;
-    setShowReact(false);
   }
 
   function incrementCommentsCount() {
     props.post.comments += 1; //this counter isn't counting for some reason, look into it later
-  }
-
-  function getReactionIcon(reaction: string) {
-    switch (reaction) {
-      case "React":
-        return <SmilePlus className="mr-2 md:align-text-bottom" />;
-      case "Like":
-        return <ThumbsUp className="mr-2 md:align-text-bottom" />;
-      case "Celebrate":
-        return <PartyPopper className="mr-2 md:align-text-bottom" />;
-      case "Support":
-        return <HandHelping className="mr-2 md:align-text-bottom" />;
-      case "Funny":
-        return <Laugh className="mr-2 md:align-text-bottom" />;
-      case "Love":
-        return <Heart className="mr-2 md:align-text-bottom" />;
-      case "Insightful":
-        return <Lightbulb className="mr-2 md:align-text-bottom" />;
-      default:
-        return <SmilePlus className="mr-2 md:align-text-bottom" />;
-    }
-  }
-
-  function getReactionStyles(reaction: string) {
-    switch (reaction) {
-      case "React":
-        return "text-gray-500 hover:bg-gray-200";
-      case "Like":
-        return "text-blue-500 hover:bg-blue-100";
-      case "Celebrate":
-        return "text-pink-500 hover:bg-pink-100";
-      case "Support":
-        return "text-green-600 hover:bg-green-100";
-      case "Funny":
-        return "text-violet-600 hover:bg-violet-100";
-      case "Love":
-        return "text-red-600 hover:bg-red-100";
-      case "Insightful":
-        return "text-yellow-600 hover:bg-yellow-100";
-      default:
-        return "text-gray-500 hover:bg-gray-200";
-    }
   }
 
   return !hide ? (
@@ -111,32 +51,21 @@ export default function Post(props: PostProps) {
           isFollowing={false}
         />
         <div className="relative">
-          {showUtility ? (
-            <div className="absolute top-5 -left-9">
-              <PostUtilityButton
-                postId={props.post.postId}
-                postText={props.post.text}
-                delete={() => postDelete()}
-              />
-            </div>
-          ) : null}
+          <AnimatePresence>
+            <PostUtilityButton
+              postId={props.post.postId}
+              posterId={posterId}
+              postText={props.post.text}
+            />
+          </AnimatePresence>
         </div>
         {!props.isRepost ? (
-          <>
-            <button
-              data-testid={`Options ${props.post.postId}`}
-              onClick={() => setShowUtility(!showUtility)}
-              className="material-icons-round cursor-pointer mr-1 text-mutedSilver hover:bg-gray-200 h-fit"
-            >
-              more_horiz
-            </button>
-            <button
-              onClick={() => setHide(true)}
-              className="material-icons-round cursor-pointer ml-1 text-mutedSilver hover:bg-gray-200 h-fit"
-            >
-              clear
-            </button>
-          </>
+          <button
+            onClick={() => setHide(true)}
+            className="material-icons-round cursor-pointer ml-1 text-mutedSilver hover:bg-gray-200 h-fit"
+          >
+            clear
+          </button>
         ) : null}
       </div>
       <PostDetails
@@ -162,27 +91,11 @@ export default function Post(props: PostProps) {
       </div>
       {!props.isRepost ? (
         <div className="flex flex-grow relative m-auto justify-between">
-          <AnimatePresence>
-            {showReact && (
-              <div className="absolute bottom-12 left-0">
-                <PostReact
-                  postId={props.post.postId}
-                  userReaction={reaction}
-                  successHandler={reactionSuccess}
-                />
-              </div>
-            )}
-          </AnimatePresence>
-          <button
-            className={`transition w-3/12 h-10 cursor-pointer font-medium flex items-center justify-center ${getReactionStyles(reaction)}`}
-            onClick={() => {
-              setShowReact(!showReact);
-            }}
-          >
-            {getReactionIcon(reaction)}
-            <span className="hidden md:inline-block">{reaction}</span>
-          </button>
-
+          <PostReact
+            postId={props.post.postId}
+            userReaction="React"
+            successHandler={reactionSuccess}
+          />
           <button
             onClick={() => {
               setShowComment(!showComment);
@@ -192,12 +105,10 @@ export default function Post(props: PostProps) {
             <MessageSquareText className="mr-2" />
             <span className="hidden md:inline-block">Comment</span>
           </button>
-
           <button className="w-3/12 h-10 cursor-pointer font-medium text-gray-500 hover:bg-gray-200 flex items-center justify-center">
             <Repeat className="mr-2" />
             <span className="hidden md:inline-block">Repost</span>
           </button>
-
           <button className="w-3/12 h-10 cursor-pointer font-medium text-gray-500 hover:bg-gray-200 flex items-center justify-center">
             <SendHorizontal className="mr-2" />
             <span className="hidden md:inline-block">Send</span>

@@ -18,6 +18,7 @@ import UserSkill from "./Skills/UserSkill";
 import "material-icons";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
+import store from "@store/store";
 
 function ProfileContainer() {
   const { userId } = useParams();
@@ -76,9 +77,7 @@ function ProfileContainer() {
   });
 
   useEffect(() => {
-    const loggedInUserId = JSON.parse(
-      localStorage.getItem("userState") || "",
-    ).userId;
+    const loggedInUserId = store.getState().user.userId 
     if (userId === loggedInUserId) {
       setIsUser(true);
       refetchMe().then(({ data }) => {
@@ -119,7 +118,7 @@ function ProfileContainer() {
     isSkillsFetching ||
     isUserFetching
   ) {
-    return <div>Loading...</div>;
+    return <div>Loading...</div>; 
   }
 
   if (
