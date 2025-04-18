@@ -36,3 +36,10 @@ export interface invitationInterface {
   export interface SortProps {
     setSortBy: React.Dispatch<React.SetStateAction<string>>;
   }
+
+  export interface testconnectsInterface {
+    userID: string;
+    firstName: string;
+    lastName: string;
+    mutualconnections:number;
+  }

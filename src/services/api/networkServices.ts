@@ -1,7 +1,7 @@
 import { api } from "./api";
 export const getNetworkFeed = async (count: number, signal: AbortSignal) => {
     try {
-      const response = await api.get(`MyNetwork`, {
+      const response = await api.get(`connection/connected`, {
         params: {
           count: count,
           signal,
@@ -13,6 +13,14 @@ export const getNetworkFeed = async (count: number, signal: AbortSignal) => {
     }
   };
 
+  export const getNetworkFeedTest = async () => {
+    try {
+      const response = await api.get(`connection/connected`);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching feed:", error);
+    }
+  };
 export const getPendingInvitations = async (
   count: number,
   signal: AbortSignal

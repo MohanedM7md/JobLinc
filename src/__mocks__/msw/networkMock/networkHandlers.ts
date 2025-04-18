@@ -24,7 +24,7 @@ interface ConnectionRequestBody {
 const connectionRequests: ConnectionRequestResponse[] = [];
 
 export const connectsHandler = [
-    http.get(`${API_URL}MyNetwork`, async ({ params }) => {
+    http.get(`${API_URL}connection/connected`, async ({ params }) => {
       return HttpResponse.json<connectsInterface[]>(connectsResponse, {
         status: 200,
         statusText: "OK",
