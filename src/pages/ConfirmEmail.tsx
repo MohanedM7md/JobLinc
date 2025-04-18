@@ -27,7 +27,7 @@ function ConfirmEmail() {
     // Send OTP to server for verification
     // If OTP is correct, then set email as confirmed
     // Else, show an error message
-    const userData = JSON.parse(localStorage.getItem("userState") || "" );
+    const userData = JSON.parse(localStorage.getItem("userState") || "");
     const email = userData.email;
     const token = localStorage.getItem("tokenForOTP") || "";
     setClearOTP(false);
@@ -48,7 +48,7 @@ function ConfirmEmail() {
   async function handleResend() {
     setIsModalOpen(false);
     setClearOTP(true);
-    const userData = JSON.parse(localStorage.getItem("userState") || "" );
+    const userData = JSON.parse(localStorage.getItem("userState") || "");
     const email = userData.email;
     const response = await dispatch(sendConfirmationEmail({ email: email }));
     // const response = dispatch(sendConfirmationEmail ({ email: "" })).unwrap()

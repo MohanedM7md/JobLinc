@@ -1,10 +1,7 @@
-import { memo } from "react";
 import MessageBubble from "./MessageBubble";
-
 import { ChatMessagesProbs } from "./interfaces/Message.interfaces";
-import { RecievedMessage } from "./interfaces/Message.interfaces";
 import { User } from "./interfaces/User.interfaces";
-import store from "@store/store";
+
 function ChatMessages({ users, messages, className }: ChatMessagesProbs) {
   return (
     <div className="flex-1 space-y-2 bg-gray-100 flex flex-col pt-2 h-auto">

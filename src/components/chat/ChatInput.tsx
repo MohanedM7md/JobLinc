@@ -24,6 +24,7 @@ function ChatInput({
   }, [message]);
 
   const handleSendMessage = () => {
+    console.log("input message sending", chatId);
     if ((!message.trim() && selectedFiles.length === 0) || !chatId) return;
     if (message.trim()) {
       onSendMessage(message, "text");

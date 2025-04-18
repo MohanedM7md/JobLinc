@@ -49,15 +49,20 @@ import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { Toaster } from "react-hot-toast";
 import SubscriptionManager from "./pages/SubscriptionManager";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 
-// const stripePromise = loadStripe("pk_test_...");
+const queryClient = new QueryClient()
+
+
+const stripePromise = loadStripe("pk_test_...");
 
 function App() {
   return (
     <>
-      <ThemeProvider>
-        {/* <Elements stripe={stripePromise}> */}
-          <Routes>
+      {/*<ThemeProvider> */}
+        <QueryClientProvider client={queryClient}>
+          <Elements stripe={stripePromise}>
+            <Routes>
             <Route element={<AuthRoute />}>
               <Route path="/" element={<LandPage />} />
               <Route path="/signup" element={<SignUpPage />} />
@@ -82,29 +87,29 @@ function App() {
                 <Route path="/change-password" element={<ChangePassword />} />
                 <Route path="/confirm-email" element={<ConfirmEmail />} />
 
-                <Route path="/settings" element={<Settings />}>
-                  <Route index element={<AccountPreferences />} />
-                  <Route
-                    path="account-preferences"
-                    element={<AccountPreferences />}
-                  />
-                  <Route
-                    path="account-preferences/display/dark-mode"
-                    element={<DarkMode />}
-                  />
-                  <Route
-                    path="account-preferences/account-management/close-account"
-                    element={<CloseAccount />}
-                  />
+              <Route path="/settings" element={<Settings />}>
+                <Route index element={<AccountPreferences />} />
+                <Route
+                  path="account-preferences"
+                  element={<AccountPreferences />}
+                />
+                <Route
+                  path="account-preferences/display/dark-mode"
+                  element={<DarkMode />}
+                />
+                <Route
+                  path="account-preferences/account-management/close-account"
+                  element={<CloseAccount />}
+                />
 
-                  <Route
-                    path="sign-in-security"
-                    element={<SignInAndSecurity />}
-                  />
-                  <Route
-                    path="sign-in-security/account-access/change-password"
-                    element={<ChangePassword />}
-                  />
+                <Route
+                  path="sign-in-security"
+                  element={<SignInAndSecurity />}
+                />
+                <Route
+                  path="sign-in-security/account-access/change-password"
+                  element={<ChangePassword />}
+                />
 
                   <Route path="visibility" element={<Visibility />} />
                   <Route path="data-privacy" element={<DataAndPrivacy />} />
@@ -115,47 +120,52 @@ function App() {
                   <Route path="notifications" element={<Notifications />} />
                 </Route>
 
-                <Route path="/update-email" element={<UpdateEmail />} />
-                <Route path="/update-username" element={<UpdateUsername />} />
-                <Route path="/profile/:userId">
-                  <Route index element={<ProfileContainer />} />
-                  <Route
-                    path="details/experiences"
-                    element={<FullExperiences />}
-                  />
-                  <Route
-                    path="details/certificates"
-                    element={<FullCertificates />}
-                  />
-                  <Route path="details/skills" element={<FullSkills />} />
-                </Route>
-                {/* <Route path="/thank-you" element={<ThankYouPage />} />
-                <Route path="/premium" element={<SubscriptionLandingPage />} />
+              <Route path="/update-email" element={<UpdateEmail />} />
+              <Route path="/update-username" element={<UpdateUsername />} />
+              <Route path="/profile/:userId">
+                <Route index element={<ProfileContainer />} />
                 <Route
-                  path="/manage-subscription"
-                  element={<SubscriptionManager />}
+                  path="details/experiences"
+                  element={<FullExperiences />}
                 />
+                <Route
+                  path="details/certificates"
+                  element={<FullCertificates />}
+                />
+                <Route path="details/skills" element={<FullSkills />} />
+              </Route>
+              <Route path="/thank-you" element={<ThankYouPage />} />
+              <Route path="/premium" element={<SubscriptionLandingPage />} />
+              <Route
+                path="/manage-subscription"
+                element={<SubscriptionManager />}
+              />
 
-                <Route
-                  path="/subscription-manage"
-                  element={<SubscriptionManagePage />}
-                />
-                <Route
-                  path="/recurring-payment"
-                  element={<RecurringPaymentPage />}
-                /> */}
-                <Route path="/post">
-                  <Route path="create" element={<PostCreate />} />
-                  <Route path=":postId/edit" element={<PostEdit />} />
-                </Route>
+              <Route
+                path="/subscription-manage"
+                element={<SubscriptionManagePage />}
+              />
+              <Route
+                path="/recurring-payment"
+                element={<RecurringPaymentPage />}
+              />
+              <Route path="/post">
+                <Route path="create" element={<PostCreate />} />
+                <Route path=":postId/edit" element={<PostEdit />} />
               </Route>
             </Route>
+          </Route>
 
             <Route path="*" element={<Error404 />} />
           </Routes>
-        {/* </Elements> */}
-        {/* <Toaster position="top-right" reverseOrder={false} />{" "} */}
-      </ThemeProvider>
+          <Toaster
+          position="bottom-center"
+          toastOptions={{
+            
+          }} />
+          </Elements>
+        </QueryClientProvider>
+      {/*</ThemeProvider>*/}
     </>
   );
 }
