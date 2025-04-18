@@ -25,6 +25,10 @@ const userSlice = createSlice({
     },
     logOut: (state) => {
       state.userId = null;
+      state.firstname = null;
+      state.lastname = null;
+      state.email = null;
+      state.profilePicture = null;
       state.role = null;
       state.confirmed = null;
       state.status = "IDLE";
@@ -178,6 +182,8 @@ const userSlice = createSlice({
 
           if (userData) {
             state.loggedIn = true;
+            state.userId = userData.userId;
+            state.email = userData.email;
             state.firstname = userData.firstname || null;
             state.lastname = userData.lastname || null;
             state.profilePicture = userData.profilePicture || null;
@@ -203,7 +209,7 @@ const userSlice = createSlice({
 
           if (userData) {
             state.status = "SUCCESS";
-            localStorage.setItem("tokenForOTP", userData.token);
+            // localStorage.setItem("tokenForOTP", userData.token);
           } else {
             console.error("User data missing in API response:", action.payload);
           }

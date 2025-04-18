@@ -81,10 +81,10 @@ function ChangePassword() {
       </div>
 
       {isModalSuccessOpen ? (
-        <UpdatedSuccessfully WhatIsUpdated="Password" goTo="/home" />
+        <UpdatedSuccessfully WhatIsUpdated="Password updated successfully!" goTo="/home" />
       ) : isModalErrorOpen ? (
         <UpdateFailed
-          WhatFailed="Password"
+          WhatFailed="Password update failed"
           errorText="Old password is incorrect. Did you forget your password?"
           setVisible={setIsModalErrorOpen}
           helperText="Forgot Password"

@@ -1,14 +1,14 @@
 import { ChevronLeftIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect, ChangeEvent } from "react";
+import { useState } from "react";
 import { useAppDispatch } from "@store/hooks";
 import { logOut } from "@store/user/userSlice";
+import store from "@store/store";
 import ConfirmationModal from "../../../../components/Authentication/Utilities/ConfirmationModal";
 
 function CloseAccount() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const [userDetails, setUserDetails] = useState({ firstname: "" });
   const [displayWarning, setDisplayWarning] = useState(false);
 
   function handleClick() {
@@ -19,16 +19,7 @@ function CloseAccount() {
     navigate("/home");
   }
 
-  /*   useEffect(() => {
-    dispatch(getUserDetails())
-      .unwrap()
-      .then((data) => {
-        setUserDetails({
-          firstname: data.firstname,
-        });
-      });
-  }, []);
- */
+  const user = store.getState().user;
   return (
     <div className="bg-white rounded-xl flex flex-col gap-4 p-6 w-[1000px]">
       {displayWarning ? (
@@ -51,9 +42,9 @@ function CloseAccount() {
             <p>Back</p>
           </div>
 
-          <div className="mb-5">
+          <div className="mb-5 flex flex-col gap-2">
             <h3 className="font-semibold text-[20px]">Close Account</h3>
-            <p>{userDetails.firstname}, we are sorry to see you go</p>
+            <p>{user.firstname}, we are sorry to see you go</p>
             <p>
               Just a quick reminder, closing your account means you will lose
               touch with your connections.
@@ -65,7 +56,7 @@ function CloseAccount() {
           </div>
 
           <div>
-            <button onClick={handleClick} className="bg-red p-4 rounded-md">
+            <button onClick={handleClick} className="w-[100px] bg-crimsonRed py-2 text-charcoalBlack font-semibold rounded-3xl hover:bg-softRosewood hover:cursor-pointer">
               Continue
             </button>
           </div>

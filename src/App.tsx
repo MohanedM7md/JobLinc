@@ -50,6 +50,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { Toaster } from "react-hot-toast";
 import SubscriptionManager from "./pages/SubscriptionManager";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import EmailAddress from "@pages/Settings/SignInAndSecurity/AccountAccess/EmailAddress";
 
 const queryClient = new QueryClient()
 
@@ -85,7 +86,6 @@ function App() {
                 <Route path="/connections" element={<Connections />} />
                 <Route path="/messaging" element={<Messaging />} />
                 <Route path="/change-password" element={<ChangePassword />} />
-                <Route path="/confirm-email" element={<ConfirmEmail />} />
 
               <Route path="/settings" element={<Settings />}>
                 <Route index element={<AccountPreferences />} />
@@ -110,6 +110,9 @@ function App() {
                   path="sign-in-security/account-access/change-password"
                   element={<ChangePassword />}
                 />
+                <Route
+                  path="sign-in-security/account-access/email-address" 
+                  element={<EmailAddress />} />
 
                   <Route path="visibility" element={<Visibility />} />
                   <Route path="data-privacy" element={<DataAndPrivacy />} />
@@ -120,7 +123,7 @@ function App() {
                   <Route path="notifications" element={<Notifications />} />
                 </Route>
 
-              <Route path="/update-email" element={<UpdateEmail />} />
+              {/* <Route path="/update-email" element={<UpdateEmail />} /> */}
               <Route path="/update-username" element={<UpdateUsername />} />
               <Route path="/profile/:userId">
                 <Route index element={<ProfileContainer />} />

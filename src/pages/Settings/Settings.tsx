@@ -5,6 +5,7 @@ import { User, Lock, Eye, Shield, Receipt, Bell } from "lucide-react";
 import { Link, Outlet } from "react-router-dom";
 import Logo from "../../components/utils/Logo";
 import { useNavigate, useLocation } from "react-router-dom";
+import store from "@store/store";
 
 interface SettingsPage {
   id: string;
@@ -38,6 +39,7 @@ function Settings() {
   const initialSelected =
     location.pathname.split("/").pop() || "account-preferences";
   const [selected, setSelected] = useState<string>(initialSelected);
+  const user = store.getState().user;
 
   useEffect(() => {
     const path = location.pathname;
@@ -57,7 +59,7 @@ function Settings() {
                     <img 
                         className="w-[40px] h-[40px] object-cover rounded-full mr-4" 
                         alt="user profile picture" 
-                        src={localStorage.getItem("profilePicture")!}
+                        src={user.profilePicture!}
                     />
                     <h2 className="text-[32px] text-charcoalBlack font-bold">Settings</h2>
                 </div>

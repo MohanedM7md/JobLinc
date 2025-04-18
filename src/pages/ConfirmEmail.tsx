@@ -7,12 +7,14 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Modal from "../components/Authentication/Modal";
 import store from "@store/store";
-interface ConfirmEmailProps {
-  email: string;
-  token: string;
+import { ChevronLeftIcon } from "lucide-react";
+import UpdatedSuccessfully from "../components/Authentication/Utilities/UpdatedSuccessfully";
+type ConfirmEmailProps = {
+  tokenForOTP: string;
+  setIsConfirmClicked: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function ConfirmEmail() {
+function ConfirmEmail(props: ConfirmEmailProps) {
   const location = useLocation();
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
@@ -22,24 +24,22 @@ function ConfirmEmail() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [clearOTP, setClearOTP] = useState(false);
   const [resendToken, setResendToken] = useState("");
+  const user = store.getState().user;
+
 
   async function handleSubmit(otp: string) {
     // Send OTP to server for verification
     // If OTP is correct, then set email as confirmed
     // Else, show an error message
-    const userData = JSON.parse(localStorage.getItem("userState") || "");
-    const email = userData.email;
-    const token = localStorage.getItem("tokenForOTP") || "";
+    const email = user.email;
+    const token = props.tokenForOTP;
     setClearOTP(false);
     const response = await dispatch(
-      confirmEmail({ email: email, token: resendToken || token, otp: otp }),
+      confirmEmail({ email: email || "", token: resendToken || token, otp: otp }),
     );
     // const response = dispatch(confirmEmail({ email: "", token: "", otp: otp}));
     if (confirmEmail.fulfilled.match(response)) {
       setRedirecting(true);
-      setTimeout(() => {
-        navigate("/home");
-      }, 2000);
     } else {
       setIsModalOpen(true);
     }
@@ -48,9 +48,8 @@ function ConfirmEmail() {
   async function handleResend() {
     setIsModalOpen(false);
     setClearOTP(true);
-    const userData = JSON.parse(localStorage.getItem("userState") || "");
-    const email = userData.email;
-    const response = await dispatch(sendConfirmationEmail({ email: email }));
+    const email = user.email;
+    const response = await dispatch(sendConfirmationEmail({ email: email || "" }));
     // const response = dispatch(sendConfirmationEmail ({ email: "" })).unwrap()
     if (sendConfirmationEmail.fulfilled.match(response)) {
       setResendToken(response.payload.token);
@@ -60,16 +59,22 @@ function ConfirmEmail() {
   }
 
   return (
-    <div className="flex w-full h-screen items-center justify-center">
+    <div className="flex w-full mt-10 items-center justify-center">
       {redirecting ? (
-        <p>Redirecting you back to main page...</p>
+        <UpdatedSuccessfully WhatIsUpdated="Email confirmed successfully!" goTo="/home"/>
       ) : (
-        <div className="flex flex-col p-4 bg-lightGray rounded-lg shadow-md">
-          <h1 className="text-2xl font-bold">Confirm Email</h1>
-          <p className="text-[16px]">
-            Please enter the OTP sent to your email.
-          </p>
-          <OTPInput clear={clearOTP} onComplete={handleSubmit} />
+        <div className="flex flex-col p-4 bg-white rounded-lg shadow-md">
+          <div className="flex items-center w-[60px] hover:underline hover:cursor-pointer" onClick={() => {props.setIsConfirmClicked(false)}}>
+              <ChevronLeftIcon/>
+              <p>Back</p>
+          </div>
+          <div className="flex flex-col">
+            <h1 className="text-2xl font-bold">Confirm Email</h1>
+            <p className="text-[16px]">
+              Please enter the OTP sent to your email.
+            </p>
+            <OTPInput clear={clearOTP} onComplete={handleSubmit} />
+          </div>  
         </div>
       )}
 

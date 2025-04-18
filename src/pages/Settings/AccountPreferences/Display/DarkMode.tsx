@@ -6,21 +6,23 @@ import { ThemeContext } from "@context/ThemeProvider";
 function DarkMode()
 {
     const navigate = useNavigate();
-    const [selectedChoice, setSelectedChoice] = useState('');
+    const [selectedChoice, setSelectedChoice] = useState(false);
     const { darkMode, setDarkMode } = useContext(ThemeContext);
 
 
     useEffect(() => {
-        const storedChoice = localStorage.getItem('theme');
-        if (storedChoice) {
-            setSelectedChoice(storedChoice);
-        }
-    }, []);
+        // const storedChoice = localStorage.getItem('theme');
+        // if (storedChoice) {
+        //     setSelectedChoice(storedChoice);
+        // }
+        setSelectedChoice(darkMode);
+    }, [darkMode]);
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-        const choice = event.target.value;
-        setSelectedChoice(choice);
-        setDarkMode(!darkMode);
+        const value = event.target.value;
+        const isDark = value === "dark";
+        setSelectedChoice(isDark);
+        setDarkMode(isDark);
     };
 
     return (
@@ -43,7 +45,7 @@ function DarkMode()
                         name="ThemeChoice" 
                         value="light" 
                         className="w-6 h-6" 
-                        checked={selectedChoice === "light"} 
+                        checked={selectedChoice === false} 
                         onChange={handleChange} 
                     />
                     <label htmlFor="always-off" className="text-xl font-medium">Always Off</label>
@@ -55,7 +57,7 @@ function DarkMode()
                         name="ThemeChoice" 
                         value="dark" 
                         className="w-6 h-6" 
-                        checked={selectedChoice === "dark"} 
+                        checked={selectedChoice === true} 
                         onChange={handleChange} 
                     />
                     <label htmlFor="always-on" className="text-xl font-medium">Always On</label>
