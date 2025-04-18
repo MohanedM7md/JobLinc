@@ -1,5 +1,4 @@
 import PostDetails from "./PostDetails";
-import ProfileDetails from "./ProfileDetails";
 import PostUtilityButton from "./PostUtilityButton";
 import { useState } from "react";
 import "material-icons/iconfont/material-icons.css";
@@ -13,6 +12,7 @@ import {
 } from "lucide-react";
 import { AnimatePresence } from "framer-motion";
 import CommentsContainer from "./Comments/CommentsContainer";
+import PostHeader from "./PostHeader";
 
 interface PostProps {
   post: PostInterface;
@@ -42,13 +42,14 @@ export default function Post(props: PostProps) {
   return !hide ? (
     <div className="flex flex-wrap relative">
       <div className="flex flex-row w-1/1">
-        <ProfileDetails
+        <PostHeader
           key={`Details of poster ${posterId}`}
           id={posterId}
           name={name}
           headline={props.post.headline}
           profilePicture={posterPic}
           isFollowing={false}
+          time={props.post.time}
         />
         <div className="relative">
           <AnimatePresence>
