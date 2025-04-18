@@ -38,7 +38,7 @@ export const connectsHandler = [
     });
   }),
   
-  http.get(`${API_URL}userconnections`, async ({ params }) => {
+  http.get(`${API_URL}connection/:userId/all`, async ({ params }) => {
     return HttpResponse.json<ConnectionInterface[]>(connectionresponse, {
       status: 200,
       statusText: 'OK',

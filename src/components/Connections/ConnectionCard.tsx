@@ -3,7 +3,7 @@ import { ConnectionInterface } from "../../interfaces/networkInterfaces";
 import { Link } from "react-router-dom";
 import NetworkModal from "../../components/MyNetwork/NetworkModal";
 
-function ConnectionCard(props: ConnectionInterface & { onRemove: (id: string) => void }) {
+function  ConnectionCard(props: ConnectionInterface & { onRemove: (id: string) => void }) {
   const [showPopup, setShowPopup] = useState(false);
   const popupRef = useRef<HTMLButtonElement>(null);
   const divRef = useRef<HTMLDivElement>(null);
@@ -72,23 +72,25 @@ function ConnectionCard(props: ConnectionInterface & { onRemove: (id: string) =>
   const { profileImage, firstName, lastName, userBio, connectedDate} = props;
 
   return (
-    <div className="flex items-center border-b border-gray-300 w-full p-3">
+    <div 
+    data-testid="connection-card"
+    className="flex items-center border-b border-gray-300 w-full p-3">
       <img
         src={profileImage}
         alt="Profile Picture"
         className="w-15 h-15 rounded-full object-cover cursor-pointer"
       />
       <div className="ml-4 flex-grow">
-        <h3 className="font-semibold cursor-pointer hover:underline">
+        <h3 role="heading" className="font-semibold cursor-pointer hover:underline">
           {firstName} {lastName}
         </h3>
         <p className="text-gray-500 cursor-pointer">{userBio}</p>
         <p className="text-xs text-gray-500">{getRelativeTime(connectedDate)}</p>
       </div>
       <div className="w-1/3 flex justify-end items-center">
-        <Link to="/messaging">
+        <Link data-testid="message-button-route" to="/messaging">
           <button
-            id="msgbuttonid"
+            data-testid="message-button"
             className="border-2 px-5 py-0.5 text-crimsonRed border-crimsonRed rounded-full font-semibold hover:bg-lightGray hover:outline-1 cursor-pointer"
           >
             Message
@@ -96,7 +98,7 @@ function ConnectionCard(props: ConnectionInterface & { onRemove: (id: string) =>
         </Link>
         <div>
           <i
-            data-testid="ellipsisbuttonid"
+            data-testid="ellipsis-button"
             className="fa-solid fa-ellipsis mx-3 rounded-full hover:bg-gray-200 p-2 cursor-pointer relative"
             onClick={handleellipsisClick}
           ></i>
@@ -106,6 +108,7 @@ function ConnectionCard(props: ConnectionInterface & { onRemove: (id: string) =>
               ref = {divRef}
             >
               <button
+                data-testid="remove-connection-button"
                 className="cursor-pointer flex items-center text-darkGray font-semibold hover:bg-lightGray p-1 rounded-md m-1 mx-2"
                 onClick={handleOpenModal} ref={popupRef}
               >
@@ -124,11 +127,15 @@ function ConnectionCard(props: ConnectionInterface & { onRemove: (id: string) =>
                 <p className="font-normal">Are you sure you want to remove your connection with <span className="font-bold">{firstName} {lastName}</span>?</p>
               </div>
               <div className="flex items-center justify-end space-x-4 pt-3">
-                <button className="cursor-pointer border-2 px-5 py-0.5 rounded-full font-semibold hover:bg-lightGray hover:outline-1 text-crimsonRed border-crimsonRed"
+                <button 
+                data-testid="confirm-remove-connection-button"
+                className="cursor-pointer border-2 px-5 py-0.5 rounded-full font-semibold hover:bg-lightGray hover:outline-1 text-crimsonRed border-crimsonRed"
                  onClick={handleRemoveConnection}>
                   Remove
                 </button>
-                <button className="cursor-pointer border-2 px-5 py-0.5 rounded-full font-semibold hover:bg-lightGray hover:outline-1 text-darkGray border-darkGray" onClick={handleCloseModal}>
+                <button 
+                data-testid="cancel-remove-connection-button"
+                className="cursor-pointer border-2 px-5 py-0.5 rounded-full font-semibold hover:bg-lightGray hover:outline-1 text-darkGray border-darkGray" onClick={handleCloseModal}>
                   cancel
                 </button>
               </div>

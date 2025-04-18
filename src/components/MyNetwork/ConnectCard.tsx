@@ -1,16 +1,9 @@
 import { useState } from "react";
 import { sendConnectionRequest } from "@services/api/networkServices";
 import NetworkModal from "./NetworkModal";
+import { connectsInterface } from "interfaces/networkInterfaces";
 
-interface ProfilePictureProps {
-  lincbuttonid: string; 
-  profilePicture: string;
-  userName: string; 
-  userBio: string; 
-  Mutuals: string;
-}
-
-function ConnectCard(props: ProfilePictureProps) {
+function ConnectCard(props:connectsInterface) {
   const [isClicked, setIsClicked] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -63,7 +56,7 @@ function ConnectCard(props: ProfilePictureProps) {
       <div className="relative flex flex-col w-full h-13/20 justify-around items-center">
         
         <div className="flex flex-col w-full justify-center items-center mt-12">
-          <p className="font-semibold text-md text-center">{props.userName}</p>
+          <p className="font-semibold text-md text-center">{props.firstName} {props.lastName}</p>
           <p className="line clamp-2 text-gray-500 text-md text-center">{props.userBio}</p>
         </div>
         <div className="flex w-full justify-center items-center">
@@ -73,12 +66,12 @@ function ConnectCard(props: ProfilePictureProps) {
               alt="Mutual Friend Photo"
               className="w-8 h-8 rounded-full top-1/5 object-cover shadow-sm"
             />
-            <span className="line-clamp-3 text-xs text-gray-500 ">{props.Mutuals}</span>
+            <span className="line-clamp-3 text-xs text-gray-500 ">{props.mutuals}</span>
           </p>
         </div>
         <div className="flex flex-col w-full justify-center items-center">
           <button
-            id={props.lincbuttonid}
+            data-testid="linc-button"
             onClick={handlelincClick}
             disabled={loading}
             className={`border-2 px-15 py-0.5 ${

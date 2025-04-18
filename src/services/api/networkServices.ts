@@ -30,17 +30,13 @@ export const getPendingInvitations = async (
 };
 
 export const getUserConnections = async (
-  count: number,
-  signal: AbortSignal
+  userId: string,
 ) => {
   try {
-    const response = await api.get('userconnections', {
-      params: { count },
-      signal,
-    });
+    const response = await api.get(`connection/${userId}/all`);
     return response.data;
   } catch (error) {
-    console.error('Error fetching pending connections:', error);
+    console.error('Error fetching user connections:', error);
     return [];
   }
 };

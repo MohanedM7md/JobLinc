@@ -33,11 +33,11 @@ function ConnectionsGrid() {
         connects.map((connect, index) => (
           <ConnectCard
             key={index}
-            lincbuttonid={connect.lincbuttonid}
             profilePicture={connect.profilePicture}
-            userName={connect.userName}
+            firstName={connect.firstName}
+            lastName={connect.lastName}
             userBio={connect.userBio}
-            Mutuals={connect.mutuals}
+            mutuals={connect.mutuals}
           />
         ))}
     </div>

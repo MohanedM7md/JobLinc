@@ -3,25 +3,34 @@ import ConnectionsHeader from "./ConnectionsHeader";
 import ConnectionCard from "./ConnectionCard";
 import { ConnectionInterface } from "../../interfaces/networkInterfaces";
 import { getUserConnections } from "@services/api/networkServices";
+import { useAppDispatch } from "@store/hooks";
+import store from "@store/store";
 
 function ConnectionsListCard() {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("recentlyadded");
   const [userConnections, setUserConnections] = useState<ConnectionInterface[]>([]);
+  const dispatch = useAppDispatch();
+  const user = store.getState().user;
+  const userId = user?.userId || null;
 
   useEffect(() => {
     const controller = new AbortController();
     const fetchData = async () => {
-      try {
-        const response = await getUserConnections(5, controller.signal);
+      try { 
+        if (userId) {
+          const response = await (getUserConnections(userId));
+        console.log("hena")
         console.log(response);
+        
         const parsedConnections = Array.isArray(response)
-          ? response.map((connection) => ({
+          ? response.map((connection) => ({ 
               ...connection,
               connectedDate: new Date(connection.connectedDate),
             }))
           : [];
         setUserConnections(parsedConnections);
+          }
       } catch (error) {
         console.error("Error fetching network feed:", error);
       }

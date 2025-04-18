@@ -1,7 +1,7 @@
 export interface connectsInterface {
-    lincbuttonid: string,
     profilePicture: string,
-    userName: string,
+    firstName: string,
+    lastName: string,
     userBio: string,
     mutuals: string,
   }
