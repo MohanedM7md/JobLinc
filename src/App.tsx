@@ -82,7 +82,7 @@ function App() {
                 <Route path="/change-password" element={<ChangePassword />} />
                 <Route path="/confirm-email" element={<ConfirmEmail />} />
 
-              <Route path="/" element={<Settings />}>
+                <Route path="/settings" element={<Settings />}>
                   <Route index element={<AccountPreferences />} />
                   <Route
                     path="account-preferences"
