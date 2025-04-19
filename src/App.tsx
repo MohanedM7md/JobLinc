@@ -16,9 +16,7 @@ import PostCreate from "./components/Posts/PostCreate";
 import PostEdit from "./components/Posts/PostEdit";
 import ChangePassword from "./pages/ChangePassword";
 import ResetPassword from "./pages/ResetPassword";
-import UpdateEmail from "./pages/UpdateEmail";
 import UpdateUsername from "./pages/UpdateUsername";
-import ConfirmEmail from "./pages/ConfirmEmail";
 import Error404 from "@pages/Eror404";
 import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -47,6 +45,7 @@ import { Toaster } from "react-hot-toast";
 import SubscriptionManager from "./pages/SubscriptionManager";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import EmailAddress from "@pages/Settings/SignInAndSecurity/AccountAccess/EmailAddress";
+import Metrics from "./components/Company/Metrics";
 
 const queryClient = new QueryClient()
 
@@ -84,8 +83,7 @@ function App() {
                 <Route path="/change-password" element={<ChangePassword />} />
 
               
-
-              {/* <Route path="/update-email" element={<UpdateEmail />} /> */}
+              <Route path="/metrics" element={<Metrics />} />
               <Route path="/update-username" element={<UpdateUsername />} />
               <Route path="/profile/:userId">
                 <Route index element={<ProfileContainer />} />

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { JSX } from "react";
 import SettingsHeader from "../../components/Authentication/Headers/SettingsHeader";
 import { User, Lock, Eye, Shield, Receipt, Bell } from "lucide-react";
@@ -48,6 +48,30 @@ function Settings() {
   const [selected, setSelected] = useState<string>(initialSelected);
   const user = store.getState().user;
 
+  const menuRef = useRef<HTMLDivElement>(null);
+  const menuButtonRef = useRef<HTMLDivElement>(null);
+
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+          if (menuRef.current && 
+            !menuRef.current.contains(event.target as Node) &&
+            menuButtonRef.current &&
+            !menuButtonRef.current.contains(event.target as Node)) {
+            setIsMenuClicked(false);
+        }
+            
+        };
+
+        if (isMenuClicked) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [isMenuClicked]);
+
   useEffect(() => {
     const path = location.pathname;
     const match = path.split("/settings/")[1]; // gets text after /settings/
@@ -62,8 +86,8 @@ function Settings() {
             <SettingsHeader />
 
             <div className="fixed xl:left-0 xl:bottom-0 top-[60px] md:top-[90px] w-full xl:w-[350px] flex flex-col bg-white">
-              <div className="flex items-center justify-start p-5 w-full">
-                  <div className="lg:hidden flex mr-9 hover:cursor-pointer" onClick={handleMenuClick}>
+              <div className="flex items-center justify-center md:justify-start p-5 w-full">
+                  <div className="lg:hidden flex mr-9 hover:cursor-pointer" onClick={handleMenuClick} ref={menuButtonRef}>
                     <Menu />
                   </div>
                   <img 
@@ -93,8 +117,7 @@ function Settings() {
                     ))}
               </div>
 
-              {/* Here */ }
-              <div className="flex flex-col lg:hidden">
+              <div className="flex flex-col lg:hidden" ref={menuRef}>
                 {isMenuClicked && (
                   <div className="absolute left-4  top-[100px] md:top-[100px] w-[250px] bg-white shadow-lg rounded-lg z-50 border border-gray-200">
                     {settingsPages.map((item: SettingsPage) => (
@@ -123,12 +146,12 @@ function Settings() {
             </div>
 
         
-        <div className="xl:ml-[380px] mt-[180px] md:mt-[200px] lg:mt-[300px] xl:mt-[110px] flex flex-col w-[450px] md:w-[600px] lg:w-[800px]">
+        <div className="xl:ml-[380px] mt-[180px] md:mt-[200px] lg:mt-[300px] xl:mt-[110px] flex flex-col w-[330px] md:w-[600px] lg:w-[800px]">
           <Outlet />
         </div>
 
-        <footer className="xl:ml-[380px] w-full text-[10px] md:text-[12px] lg:text-[15px] mb-12 flex flex-col justify-center items-center font-semibold">
-          <div className="flex justify-between gap-5">
+        <footer className="xl:ml-[380px] w-[330px] md:w-[600px] lg:w-[800px] text-[10px] md:text-[12px] lg:text-[15px] mb-12 flex flex-col justify-center items-center font-semibold">
+          <div className="grid grid-rows-2 grid-cols-4 justify-center justify-items-center sm:flex sm:justify-between sm:text-[10px] md:text-[13px] gap-5 text-[8px]">
             <Link className="hover:underline" to="/">
               Help Center
             </Link>
@@ -147,8 +170,7 @@ function Settings() {
             <Link className="hover:underline" to="/">
               Recommendation Transparency
             </Link>
-          </div>
-          <div className="flex justify-between gap-5">
+
             <Link className="hover:underline" to="/">
               User Agreement
             </Link>
@@ -156,6 +178,9 @@ function Settings() {
               End User License Agreement
             </Link>
           </div>
+          {/* <div className="flex justify-between gap-5">
+            
+          </div> */}
           <Logo />
         </footer>
     </div>
