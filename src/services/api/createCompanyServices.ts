@@ -5,7 +5,8 @@ export const slugChecker = async (slug: string) => {
   return response.data;
 };
 
-export const submitForm = async (formData: FormData) => {
-  const response = await api.post(`/companies`, { formData });
+export const submitForm = async (formData) => {
+  console.log("Form Data", formData);
+  const response = await api.post(`/companies`, { ...formData });
   return response;
 };

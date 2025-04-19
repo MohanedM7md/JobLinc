@@ -7,7 +7,7 @@ import {
   ChevronDown,
 } from "lucide-react";
 import { Listbox } from "@headlessui/react";
-
+import { useState } from "react";
 const Spinner = () => (
   <svg
     className="animate-spin h-5 w-5 text-gray-500"
@@ -264,3 +264,166 @@ export const DateInput = ({
     )}
   </div>
 );
+export const LocationInputs = ({
+  locations,
+  onChange,
+  errors,
+}: {
+  locations: {
+    address: string;
+    city: string;
+    country: string;
+    primary?: boolean;
+  }[];
+  onChange: (updatedLocations: typeof locations) => void;
+  errors?: Array<{ address?: string; city?: string; country?: string }>;
+}) => {
+  const [expandedLocation, setExpandedLocation] = useState<number | null>(null);
+
+  const handleLocationChange = (
+    index: number,
+    field: keyof (typeof locations)[0],
+    value: string | boolean,
+  ) => {
+    const updatedLocations = [...locations];
+    updatedLocations[index] = {
+      ...updatedLocations[index],
+      [field]: value,
+    };
+
+    // If setting as primary, ensure no other locations are primary
+    if (field === "primary" && value === true) {
+      updatedLocations.forEach((loc, i) => {
+        if (i !== index) loc.primary = false;
+      });
+    }
+
+    onChange(updatedLocations);
+  };
+
+  const addLocation = () => {
+    const newLocation = {
+      address: "",
+      city: "",
+      country: "",
+      primary: locations.length === 0,
+    };
+    onChange([...locations, newLocation]);
+    setExpandedLocation(locations.length);
+  };
+
+  const removeLocation = (index: number) => {
+    const wasPrimary = locations[index].primary;
+    const updatedLocations = locations.filter((_, i) => i !== index);
+
+    // If we removed the primary location, set the first one as primary
+    if (wasPrimary && updatedLocations.length > 0) {
+      updatedLocations[0].primary = true;
+    }
+
+    onChange(updatedLocations);
+    setExpandedLocation(null);
+  };
+
+  const toggleExpand = (index: number) => {
+    setExpandedLocation(expandedLocation === index ? null : index);
+  };
+
+  return (
+    <div className="space-y-4">
+      {locations.map((location, index) => (
+        <div
+          key={index}
+          className={`border rounded-lg overflow-hidden ${
+            location.primary ? "border-crimsonRed" : "border-gray-200"
+          }`}
+        >
+          <div
+            className="flex justify-between items-center p-3 cursor-pointer hover:bg-gray-50"
+            onClick={() => toggleExpand(index)}
+          >
+            <div className="flex items-center">
+              {location.primary && (
+                <span className="bg-crimsonRed text-white text-xs px-2 py-1 rounded mr-2">
+                  Primary
+                </span>
+              )}
+              <span className="font-medium">
+                {location.address || `Location ${index + 1}`}
+              </span>
+            </div>
+            <div className="flex space-x-2">
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  removeLocation(index);
+                }}
+                className="text-gray-500 hover:text-crimsonRed text-sm"
+              >
+                Remove
+              </button>
+            </div>
+          </div>
+
+          {expandedLocation === index && (
+            <div className="p-4 space-y-3 border-t">
+              <Input
+                label="Address"
+                value={location.address}
+                onChange={(value) =>
+                  handleLocationChange(index, "address", value)
+                }
+                error={errors?.[index]?.address}
+                placeholder="Street address, P.O. box, etc."
+              />
+              <div className="grid grid-cols-2 gap-4">
+                <Input
+                  label="City"
+                  value={location.city}
+                  onChange={(value) =>
+                    handleLocationChange(index, "city", value)
+                  }
+                  error={errors?.[index]?.city}
+                />
+                <Input
+                  label="Country"
+                  value={location.country}
+                  onChange={(value) =>
+                    handleLocationChange(index, "country", value)
+                  }
+                  error={errors?.[index]?.country}
+                />
+              </div>
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id={`primary-${index}`}
+                  checked={location.primary || false}
+                  onChange={(e) =>
+                    handleLocationChange(index, "primary", e.target.checked)
+                  }
+                  className="mr-2 h-4 w-4 text-crimsonRed focus:ring-crimsonRed border-gray-300 rounded"
+                />
+                <label
+                  htmlFor={`primary-${index}`}
+                  className="text-sm text-gray-700"
+                >
+                  Set as primary location
+                </label>
+              </div>
+            </div>
+          )}
+        </div>
+      ))}
+
+      <button
+        type="button"
+        onClick={addLocation}
+        className="mt-2 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-crimsonRed hover:bg-darkBurgundy focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-crimsonRed"
+      >
+        Add Location
+      </button>
+    </div>
+  );
+};

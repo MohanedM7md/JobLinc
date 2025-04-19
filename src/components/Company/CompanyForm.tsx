@@ -1,8 +1,24 @@
-import React, { useState, useReducer, useEffect } from "react";
+import React, { useState, useReducer } from "react";
+import { LocationInput } from "./interfaces/inputs.interface";
 import { z } from "zod";
-import { Building2, Briefcase, Users, Globe, FileText } from "lucide-react";
+import {
+  Building2,
+  Briefcase,
+  Users,
+  Globe,
+  FileText,
+  Phone,
+  Locate,
+} from "lucide-react";
 import { companySizes, companyTypes, workplaceTypes } from "./form-config";
-import { Input, Select, FileUpload, TextArea, DateInput } from "./Inputs";
+import {
+  Input,
+  Select,
+  FileUpload,
+  TextArea,
+  DateInput,
+  LocationInputs,
+} from "./Inputs";
 import { useDebounce } from "./Utils";
 import { submitForm } from "@services/api/createCompanyServices";
 
@@ -19,11 +35,33 @@ const CompanySchema = z.object({
   size: z.string().min(1, "Company size is required"),
   type: z.string().min(1, "Company type is required"),
   overview: z.string().min(1, "Overview is required"),
+  phone: z
+    .string()
+    .optional()
+    .refine((value) => !value || /^[0-9]+$/.test(value), {
+      message: "Phone number must contain only digits",
+    }),
   founded: z.date().optional(),
   tagline: z.string().optional(),
   workplace: z.string().default("Onsite"),
   logo: z.instanceof(File, { message: "Company logo is required" }),
   coverPhoto: z.instanceof(File, { message: "Cover photo is required" }),
+  locations: z
+    .array(
+      z.object({
+        address: z.string().min(1, "Address is required"),
+        city: z.string().min(1, "City is required"),
+        country: z.string().min(1, "Country is required"),
+        primary: z.boolean().optional(),
+      }),
+    )
+    .min(1, "At least one location is required"),
+  website: z
+    .string()
+    .optional()
+    .refine((value) => !value || z.string().url().safeParse(value).success, {
+      message: "Invalid website URL",
+    }),
 });
 
 type FormFields = z.infer<typeof CompanySchema>;
@@ -59,6 +97,9 @@ export const CompanyForm = () => {
   const [overview, setOverview] = useState<string | null>("");
   const [tagline, setTagline] = useState<string | null>("");
   const [workplace, setWorkplace] = useState<string | null>("Onsite");
+  const [phone, setPhoneNumber] = useState<string | null>("");
+  const [website, setWebsite] = useState<string | null>("");
+  const [locations, setLocations] = useState<LocationInput[] | null>([]);
   const [logo, setLogo] = useState<File | null>(null);
   const [coverPhoto, setCoverPhoto] = useState<File | null>(null);
   const [isSlugValidating, setIsSlugValidating] = useState(true);
@@ -102,23 +143,27 @@ export const CompanyForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-
+    console.log("I am submitting");
     try {
       const formData = {
         name,
+        phone,
         urlSlug,
         industry,
+        founded: foundedDate,
         size,
         type,
         overview,
         tagline,
+        website,
         workplace,
         logo: logo || new File([], ""),
         coverPhoto: coverPhoto || new File([], ""),
+        locations,
       };
 
       const result = CompanySchema.safeParse(formData);
-
+      console.log(result);
       if (!result.success) {
         const formattedErrors = result.error.format();
         dispatchError({
@@ -132,19 +177,9 @@ export const CompanyForm = () => {
         console.log("formated error", formattedErrors);
         return;
       }
+      console.log("Outer fomr Data", formData);
 
-      const formDataToSend = new FormData();
-      Object.entries(formData).forEach(([key, value]) => {
-        if (value instanceof File) {
-          if (value.size > 0) formDataToSend.append(key, value);
-        } else {
-          if (value !== null) {
-            formDataToSend.append(key, value);
-          }
-        }
-      });
-
-      const response = await submitForm(formDataToSend);
+      const response = await submitForm(formData);
 
       if (response.status < 200 || response.status >= 300)
         throw new Error("Submission failed");
@@ -261,13 +296,40 @@ export const CompanyForm = () => {
             icon={<FileText className="h-5 w-5" />}
             label="Tagline"
             value={tagline!}
-            onChange={setTagline}
+            onChange={(tagline) => {
+              setTagline(tagline);
+              dispatchError({ type: "CLEAR_ERROR", payload: "tagline" });
+            }}
             placeholder="Empowering businesses through innovation"
             error={errors.tagline}
           />
 
-          <Select
+          <Input
+            icon={<Phone className="h-5 w-5" />}
+            label="Phone"
+            value={phone!}
+            onChange={(phoneNumber) => {
+              setPhoneNumber(phoneNumber);
+              dispatchError({ type: "CLEAR_ERROR", payload: "phone" });
+            }}
+            placeholder="zero onein"
+            error={errors.phone}
+          />
+
+          <Input
             icon={<Globe className="h-5 w-5" />}
+            label="website"
+            value={website!}
+            onChange={(website) => {
+              setWebsite(website);
+              dispatchError({ type: "CLEAR_ERROR", payload: "website" });
+            }}
+            placeholder="www.company.org"
+            error={errors.website}
+          />
+
+          <Select
+            icon={<Locate className="h-5 w-5" />}
             label="Workplace type"
             options={workplaceTypes}
             selected={workplace!}
@@ -301,7 +363,11 @@ export const CompanyForm = () => {
             }
           />
         </div>
-
+        <LocationInputs
+          locations={locations}
+          onChange={setLocations}
+          error={errors.locations}
+        />
         <button
           type="submit"
           disabled={isSubmitting}
