@@ -1,13 +1,8 @@
-import {
-  Building2,
-  Briefcase,
-  Users,
-  Globe,
-  FileText,
-  ChevronDown,
-} from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { Listbox } from "@headlessui/react";
 import { useState } from "react";
+import { Location } from "./interfaces/inputs.interface";
+import axios from "axios";
 const Spinner = () => (
   <svg
     className="animate-spin h-5 w-5 text-gray-500"
@@ -83,6 +78,16 @@ export const Input = ({
         {loading && (
           <div className="absolute right-3 top-1/2 -translate-y-1/2">
             <Spinner />
+          </div>
+        )}
+        {!loading && !error && value && label == "Company URL" && (
+          <div className="absolute right-3 top-1/2 -translate-y-1/2 text-green-500">
+            ✓
+          </div>
+        )}
+        {!loading && error && value && label == "Company URL" && (
+          <div className="absolute right-3 top-1/2 -translate-y-1/2 text-red-500">
+            This slug is already exist
           </div>
         )}
       </div>
@@ -169,34 +174,76 @@ export const FileUpload = ({
 }: {
   label: string;
   accept: string;
-  onChange: (file: File | null) => void;
+  onChange: (url: string | null) => void; // Now returns URL instead of File
   description?: string;
   error?: any;
-}) => (
-  <div>
-    <label className="block text-sm font-medium text-charcoalBlack dark:text-charcoalWhite mb-1">
-      {label}
-    </label>
-    <div className="flex items-center">
-      <input
-        type="file"
-        accept={accept}
-        onChange={(e) => onChange(e.target.files?.[0] || null)}
-        className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-crimsonRed file:text-white hover:file:bg-darkBurgundy"
-      />
+}) => {
+  const [isUploading, setIsUploading] = useState(false);
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+
+    if (!file) {
+      onChange(null);
+      return;
+    }
+
+    setIsUploading(true);
+
+    try {
+      const url = await uploadFile(file);
+      console.log("El URL", url);
+      onChange(url);
+    } catch (err) {
+      console.error("Upload failed:", err);
+      onChange(null);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  return (
+    <div>
+      <label className="block text-sm font-medium text-charcoalBlack dark:text-charcoalWhite mb-1">
+        {label}
+      </label>
+      <div className="flex items-center">
+        <input
+          type="file"
+          accept={accept}
+          onChange={handleFileChange}
+          disabled={isUploading}
+          className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-crimsonRed file:text-white hover:file:bg-darkBurgundy disabled:opacity-50"
+        />
+      </div>
+      {isUploading && (
+        <p className="mt-1 text-sm text-gray-500">Uploading...</p>
+      )}
+      {description && !isUploading && (
+        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+          {description}
+        </p>
+      )}
+      {error && (
+        <p className="text-crimsonRed text-sm mt-1">
+          {error._errors?.toString()}
+        </p>
+      )}
     </div>
-    {description && (
-      <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-        {description}
-      </p>
-    )}
-    {error && (
-      <p className="text-crimsonRed text-sm mt-1">
-        {error._errors?.toString()}
-      </p>
-    )}
-  </div>
-);
+  );
+};
+
+const uploadFile = async (file: File): Promise<string> => {
+  const formData = new FormData();
+  formData.append("image", file);
+
+  const response = await axios.get(
+    "https://run.mocky.io/v3/06451b01-26e1-4b21-9721-01762c680766",
+  );
+
+  const data = await response.data;
+
+  return data.url;
+};
 
 export const TextArea = ({
   label,
@@ -269,12 +316,7 @@ export const LocationInputs = ({
   onChange,
   errors,
 }: {
-  locations: {
-    address: string;
-    city: string;
-    country: string;
-    primary?: boolean;
-  }[];
+  locations: Location[];
   onChange: (updatedLocations: typeof locations) => void;
   errors?: Array<{ address?: string; city?: string; country?: string }>;
 }) => {
@@ -282,7 +324,7 @@ export const LocationInputs = ({
 
   const handleLocationChange = (
     index: number,
-    field: keyof (typeof locations)[0],
+    field: keyof Location[][0],
     value: string | boolean,
   ) => {
     const updatedLocations = [...locations];

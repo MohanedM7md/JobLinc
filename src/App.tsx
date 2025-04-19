@@ -8,6 +8,8 @@ import SignInPage from "./pages/SignIn";
 import ForgotPassword from "./pages/ForgotPassword";
 import UserDetails from "./components/Authentication/UserDetails";
 const Messaging = lazy(() => import("./pages/Messaging"));
+const Admin = lazy(() => import("./pages/Company/Admin"));
+const MyCompanies = lazy(() => import("./pages/Company/MyCompanies"));
 const UserProfile = lazy(() => import("./pages/UserProfile"));
 //const MyNetwork = lazy(() => import("./pages/MyNetwork"));
 import Home from "./pages/Home";
@@ -50,7 +52,7 @@ import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { Toaster } from "react-hot-toast";
 import SubscriptionManager from "./pages/SubscriptionManager";
-import Admin from "@pages/Company/Admin";
+
 const stripePromise = loadStripe("pk_test_...");
 
 function App() {
@@ -152,7 +154,8 @@ function App() {
           </Route>
           <Route path="/company">
             <Route path="setup/new" element={<CreateForm />} />
-            <Route path="admin" element={<Admin />} />
+            <Route path="my-companies" element={<MyCompanies />} />
+            <Route path="admin/:companyId" element={<Admin />} />
           </Route>
 
           <Route path="*" element={<Error404 />} />

@@ -1,5 +1,5 @@
 import React, { useState, useReducer } from "react";
-import { LocationInput } from "./interfaces/inputs.interface";
+import { Location, FormData } from "./interfaces/inputs.interface";
 import { z } from "zod";
 import {
   Building2,
@@ -19,8 +19,8 @@ import {
   DateInput,
   LocationInputs,
 } from "./Inputs";
-import { useDebounce } from "./Utils";
-import { submitForm } from "@services/api/createCompanyServices";
+import { debouncedValidateSlug } from "./Utils";
+import { createCompnay } from "@services/api/companyServices";
 
 const CompanySchema = z.object({
   name: z.string().min(1, "Company name is required"),
@@ -44,8 +44,8 @@ const CompanySchema = z.object({
   founded: z.date().optional(),
   tagline: z.string().optional(),
   workplace: z.string().default("Onsite"),
-  logo: z.instanceof(File, { message: "Company logo is required" }),
-  coverPhoto: z.instanceof(File, { message: "Cover photo is required" }),
+  logo: z.string().optional(),
+  coverPhoto: z.string().optional(),
   locations: z
     .array(
       z.object({
@@ -55,13 +55,14 @@ const CompanySchema = z.object({
         primary: z.boolean().optional(),
       }),
     )
-    .min(1, "At least one location is required"),
+    .optional(),
   website: z
     .string()
     .optional()
     .refine((value) => !value || z.string().url().safeParse(value).success, {
       message: "Invalid website URL",
-    }),
+    })
+    .nullish(),
 });
 
 type FormFields = z.infer<typeof CompanySchema>;
@@ -98,43 +99,11 @@ export const CompanyForm = () => {
   const [tagline, setTagline] = useState<string | null>("");
   const [workplace, setWorkplace] = useState<string | null>("Onsite");
   const [phone, setPhoneNumber] = useState<string | null>("");
-  const [website, setWebsite] = useState<string | null>("");
-  const [locations, setLocations] = useState<LocationInput[] | null>([]);
-  const [logo, setLogo] = useState<File | null>(null);
-  const [coverPhoto, setCoverPhoto] = useState<File | null>(null);
-  const [isSlugValidating, setIsSlugValidating] = useState(true);
-
-  const debouncedValidateSlug = useDebounce(async (slug: string) => {
-    if (!slug) return;
-
-    try {
-      setIsSlugValidating(true);
-      /* const response = await fetch(`/api/validate-slug?slug=${slug}`); //!Need To be change
-      if (!response.ok) throw new Error("Validation failed");
-      const { available } = await response.json(); //! here too
-
-      if (!available) {
-        dispatchError({
-          type: "SET_ERRORS",
-          payload: { urlSlug: "This URL slug is already taken" },
-        });
-      } */
-    } catch (error) {
-      dispatchError({
-        type: "SET_ERRORS",
-        payload: { urlSlug: "Error validating slug" },
-      });
-    } finally {
-      setIsSlugValidating(false);
-    }
-  }, 500);
-
-  /*  useEffect(() => {
-    if (CompanySchema.shape.urlSlug.safeParse(urlSlug).success) {
-      debouncedValidateSlug(urlSlug);
-      dispatchError({ type: "CLEAR_ERROR", payload: "urlSlug" });
-    }
-  }, [urlSlug, debouncedValidateSlug]); */
+  const [website, setWebsite] = useState<string | null>(null);
+  const [locations, setLocations] = useState<Location[] | null>([]);
+  const [logo, setLogo] = useState<string | null>("");
+  const [coverPhoto, setCoverPhoto] = useState<string | null>("");
+  const [isSlugValidating, setIsSlugValidating] = useState(false);
 
   // Validation States
   const [errors, dispatchError] = useReducer(errorReducer, {});
@@ -145,23 +114,23 @@ export const CompanyForm = () => {
     setIsSubmitting(true);
     console.log("I am submitting");
     try {
-      const formData = {
-        name,
-        phone,
-        urlSlug,
-        industry,
-        founded: foundedDate,
-        size,
-        type,
-        overview,
-        tagline,
-        website,
-        workplace,
-        logo: logo || new File([], ""),
-        coverPhoto: coverPhoto || new File([], ""),
-        locations,
+      const formData: FormData = {
+        ...(name && { name }),
+        ...(phone && { phone }),
+        ...(urlSlug && { urlSlug }),
+        ...(industry && { industry }),
+        ...(foundedDate && { founded: foundedDate }),
+        ...(size && { size }),
+        ...(type && { type }),
+        ...(overview && { overview }),
+        ...(tagline && { tagline }),
+        ...(website && { website }),
+        ...(workplace && { workplace }),
+        ...(logo && { logo }),
+        ...(coverPhoto && { coverPhoto }),
+        ...(locations && locations.length > 0 && { locations }),
       };
-
+      console.log("Logo ", logo);
       const result = CompanySchema.safeParse(formData);
       console.log(result);
       if (!result.success) {
@@ -179,7 +148,7 @@ export const CompanyForm = () => {
       }
       console.log("Outer fomr Data", formData);
 
-      const response = await submitForm(formData);
+      const response = await createCompnay(formData);
 
       if (response.status < 200 || response.status >= 300)
         throw new Error("Submission failed");
@@ -230,9 +199,28 @@ export const CompanyForm = () => {
           <Input
             label="Company URL"
             value={urlSlug || ""}
-            onChange={(UrlSlug) => {
+            onChange={async (UrlSlug) => {
               setUrlSlug(UrlSlug);
               dispatchError({ type: "CLEAR_ERROR", payload: "urlSlug" });
+              try {
+                const available: boolean = await debouncedValidateSlug(
+                  UrlSlug,
+                  setIsSlugValidating,
+                );
+                if (available) {
+                  dispatchError({
+                    type: "SET_ERRORS",
+                    payload: { urlSlug: "This URL slug is already taken" },
+                  });
+                }
+              } catch (error) {
+                dispatchError({
+                  type: "SET_ERRORS",
+                  payload: { urlSlug: "Error validating slug" },
+                });
+              } finally {
+                setIsSlugValidating(false);
+              }
             }}
             error={errors.urlSlug}
             prefix="joblinc.me/company/"
@@ -279,7 +267,7 @@ export const CompanyForm = () => {
             label="Foundation date"
             value={foundedDate}
             onChange={setFoundedDate}
-            error={errors.tagline}
+            error={errors.founded}
           />
           <TextArea
             label="Company overview"
@@ -364,9 +352,9 @@ export const CompanyForm = () => {
           />
         </div>
         <LocationInputs
-          locations={locations}
+          locations={locations!}
           onChange={setLocations}
-          error={errors.locations}
+          errors={errors.locations}
         />
         <button
           type="submit"

@@ -1,5 +1,4 @@
-import { useMemo } from "react";
-export default function ModalSidebar() {
+export default function ModalSidebar({ activeContent }) {
   interface MenuItem {
     [key: string]: string[];
   }
@@ -10,7 +9,7 @@ export default function ModalSidebar() {
   ];
   return (
     <>
-      <div className="w-1/4 border-r border-gray-200 dark:border-gray-700 bg-lightGray dark:bg-darkGray">
+      <div className="w-1/4 border-r border-gray-200 dark:border-gray-700 dark:bg-darkGray">
         {mainMenuItems.map((item) => (
           <>
             {Object.entries(item).map(([key, values]) => (
@@ -20,7 +19,10 @@ export default function ModalSidebar() {
                 </h3>
 
                 {values.map((value) => (
-                  <button className="w-full px-4 py-2 text-left hover:bg-SoftRed dark:hover:bg-gray-800 text-charcoalBlack dark:text-charcoalWhite">
+                  <button
+                    onClick={() => activeContent(value)}
+                    className="w-full px-4 py-2 text-left hover:bg-SoftRed dark:hover:bg-gray-800 text-charcoalBlack dark:text-charcoalWhite"
+                  >
                     {value}
                   </button>
                 ))}
