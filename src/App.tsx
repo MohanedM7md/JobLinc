@@ -151,11 +151,11 @@ function App() {
                 <Route path=":postId/edit" element={<PostEdit />} />
               </Route>
             </Route>
-          </Route>
-          <Route path="/company">
-            <Route path="setup/new" element={<CreateForm />} />
-            <Route path="my-companies" element={<MyCompanies />} />
-            <Route path="admin/:companyId" element={<Admin />} />
+            <Route path="/company">
+              <Route path="setup/new" element={<CreateForm />} />
+              <Route path="my-companies" element={<MyCompanies />} />
+              <Route path="admin/:companyId" element={<Admin />} />
+            </Route>
           </Route>
 
           <Route path="*" element={<Error404 />} />

@@ -1,4 +1,5 @@
 import { useCompanyStore } from "@store/comapny/companyStore";
+import { useState } from "react";
 import {
   LayoutDashboard,
   FileText,
@@ -13,7 +14,9 @@ import {
   Settings,
   Eye,
 } from "lucide-react";
-
+import { FileUploadIcon } from "../Inputs";
+import { updateInfo } from "@services/api/companyServices";
+import { z } from "zod";
 type CompanySidebarProps = {
   activeContent: string;
   setActiveContent: (content: string) => void;
@@ -23,8 +26,10 @@ export function CompanySidebar({
   activeContent,
   setActiveContent,
 }: CompanySidebarProps) {
-  const { company } = useCompanyStore();
-
+  const { company, updateCoverPhoto } = useCompanyStore();
+  const [coverPhoto, setCoverPhoto] = useState<string | undefined>(
+    company?.coverPhoto,
+  );
   const mainMenuItems = [
     { icon: LayoutDashboard, title: "Dashboard" },
     { icon: FileText, title: "Page posts" },
@@ -49,7 +54,7 @@ export function CompanySidebar({
         <div className="relative">
           <div className="h-24 w-full overflow-hidden">
             <img
-              src={company?.coverPhoto}
+              src={coverPhoto}
               className="w-full h-full object-cover bg-crimsonRed/10"
               alt="Company cover"
             />
@@ -57,7 +62,15 @@ export function CompanySidebar({
               aria-label="Edit cover image"
               className="absolute right-2 top-2 bg-white dark:bg-darkGray p-1 rounded-full shadow-md"
             >
-              <Edit className="h-4 w-4 text-mutedSilver" />
+              <FileUploadIcon
+                icon={<Edit />}
+                accept="image/*"
+                onChange={(file: string | null) => {
+                  setCoverPhoto(file || undefined);
+                  console.log("ant shaif elfaile 3aml ezay a7a ", file);
+                  updateInfo({ coverPhoto: file });
+                }}
+              />
             </button>
           </div>
 

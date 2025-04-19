@@ -18,7 +18,7 @@ const businessOptions: BusinessOption[] = [
   {
     icon: Eye,
     title: "View my company",
-    path: "/company/admin",
+    path: "/company/my-companies",
     description: "Check profile & analytics",
   },
   {

@@ -52,7 +52,7 @@ export function CompanyEditModal({ onClose }: CompanyEditModalProps) {
         </div>
 
         <div className="flex">
-          <ModalSidebar activeContent={handleActiveContent} />
+          <ModalSidebar setActiveContent={handleActiveContent} />
           {activeContetn.content}
         </div>
       </div>

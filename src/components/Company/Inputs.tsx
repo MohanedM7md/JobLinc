@@ -165,6 +165,74 @@ export const Select = ({
   </div>
 );
 
+export const FileUploadIcon = ({
+  icon,
+  accept,
+  onChange,
+  error,
+}: {
+  icon?: React.ReactNode;
+  accept: string;
+  onChange: (url: string | null) => void; // Now returns URL instead of File
+  description?: string;
+  error?: any;
+}) => {
+  const [isUploading, setIsUploading] = useState(false);
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+
+    if (!file) {
+      onChange(null);
+      return;
+    }
+
+    setIsUploading(true);
+
+    try {
+      const url = await uploadFile(file);
+      console.log("El URL", url);
+      onChange(url);
+    } catch (err) {
+      console.error("Upload failed:", err);
+      onChange(null);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  return (
+    <div>
+      <div className="flex items-center">
+        {icon && (
+          <button
+            type="button"
+            onClick={() => document.getElementById("file-upload")?.click()}
+            className="cursor-pointer"
+          >
+            {icon}
+          </button>
+        )}
+        <input
+          id="file-upload"
+          type="file"
+          accept={accept}
+          onChange={handleFileChange}
+          disabled={isUploading}
+          className="hidden"
+        />
+      </div>
+      {isUploading && (
+        <p className="mt-1 text-sm text-gray-500">Uploading...</p>
+      )}
+      {error && (
+        <p className="text-crimsonRed text-sm mt-1">
+          {error._errors?.toString()}
+        </p>
+      )}
+    </div>
+  );
+};
+
 export const FileUpload = ({
   label,
   accept,

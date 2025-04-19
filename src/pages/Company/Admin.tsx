@@ -6,20 +6,34 @@ import { useEffect, useState } from "react";
 import { enterAdminPage } from "@services/api/companyServices";
 import { useParams } from "react-router-dom";
 export default function Admin() {
-  const { company, loading, error, fetchCompany } = useCompanyStore();
+  const { company, loading, error, fetchCompany, resetCompany } =
+    useCompanyStore();
   const { companyId } = useParams<string>();
   const [activeContent, setActiveContent] = useState("Dashboard");
+  const [err, setErrPage] = useState<string | undefined>(undefined);
   useEffect(() => {
     if (companyId) {
       (async () => {
-        await enterAdminPage(companyId);
-        await fetchCompany();
+        try {
+          await enterAdminPage(companyId);
+          await fetchCompany();
+        } catch (err) {
+          if (err.response?.status === 401) {
+            setErrPage("Unauthorized");
+          } else {
+            setErrPage("An error occurred");
+          }
+          console.error("Error occurred while fetching company data:", err);
+        }
       })();
+      return () => {
+        resetCompany();
+      };
     }
   }, []);
 
+  if (err) return <div>Error: {err}</div>;
   if (loading) return <LoadinScreen />;
-  if (error) return <div>Error: {error}</div>;
   if (!company) return <div>No company data found</div>;
 
   return (

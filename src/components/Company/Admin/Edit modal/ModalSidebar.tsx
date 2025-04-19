@@ -1,4 +1,8 @@
-export default function ModalSidebar({ activeContent }) {
+export default function ModalSidebar({
+  setActiveContent,
+}: {
+  setActiveContent: (value: string) => void;
+}) {
   interface MenuItem {
     [key: string]: string[];
   }
@@ -20,7 +24,7 @@ export default function ModalSidebar({ activeContent }) {
 
                 {values.map((value) => (
                   <button
-                    onClick={() => activeContent(value)}
+                    onClick={() => setActiveContent(value)}
                     className="w-full px-4 py-2 text-left hover:bg-SoftRed dark:hover:bg-gray-800 text-charcoalBlack dark:text-charcoalWhite"
                   >
                     {value}
