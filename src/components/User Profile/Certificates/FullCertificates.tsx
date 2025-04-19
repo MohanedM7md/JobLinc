@@ -2,7 +2,7 @@ import { CertificateInterface } from "interfaces/userInterfaces";
 import { useState, useEffect } from "react";
 import "material-icons";
 import { useParams } from "react-router-dom";
-import Modal from "./../../Authentication/Modal";
+import Modal from "../../utils/Modal";
 import { getCertificate } from "@services/api/userProfileServices";
 import UserCertificate from "./UserCertificate";
 import AddCertificate from "./AddCertificate";
@@ -60,7 +60,7 @@ export default function FullCertificates() {
         {isUser && (
           <button
             onClick={() => setAddCertificateModal(true)}
-            className="material-icons font-medium text-2xl p-2 rounded-full hover:bg-gray-600 -mt-5"
+            className="material-icons font-medium text-2xl p-2 rounded-full hover:bg-gray-600 -mt-5 transition duration-400 ease-in-out"
           >
             add
           </button>
@@ -72,7 +72,7 @@ export default function FullCertificates() {
             <UserCertificate certificate={cert} />
             {isUser && (
               <button
-                className="material-icons absolute top-0 right-0 text-xl p-1 rounded-full hover:bg-gray-600 mr-1"
+                className="material-icons absolute top-0 right-0 text-xl p-1 rounded-full hover:bg-gray-600 mr-1 transition duration-400 ease-in-out"
                 onClick={() => setEditCertificateData(cert)}
               >
                 edit

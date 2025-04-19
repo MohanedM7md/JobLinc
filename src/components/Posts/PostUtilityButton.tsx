@@ -70,7 +70,7 @@ export default function PostUtilityButton(props: UtilityProps) {
                               },
                             });
                           }}
-                          className="w-full flex items-center justify-between px-4 py-2 text-sm hover:bg-gray-100"
+                          className="w-full flex items-center justify-between px-4 py-2 text-sm hover:bg-gray-100 transition duration-200 ease-in-out"
                         >
                           <Pencil className="mr-2" />
                           <span>Edit</span>
@@ -86,7 +86,7 @@ export default function PostUtilityButton(props: UtilityProps) {
                         <button
                           data-testid={`Delete ${props.postId}`}
                           onClick={() => setIsConfirmOpen(true)}
-                          className="w-full flex items-center justify-between px-4 py-2 text-sm text-crimsonRed hover:bg-gray-100 rounded-b-md"
+                          className="w-full flex items-center justify-between px-4 py-2 text-sm text-crimsonRed hover:bg-red-100 rounded-b-md transition duration-200 ease-in-out"
                         >
                           <Trash className="mr-2" />
                           <span>Delete</span>
@@ -106,7 +106,7 @@ export default function PostUtilityButton(props: UtilityProps) {
                           onClick={() => {
                             console.log("Save post clicked");
                           }}
-                          className="w-full flex items-center justify-between px-4 py-2 text-sm hover:bg-gray-100"
+                          className="w-full flex items-center justify-between px-4 py-2 text-sm hover:bg-gray-100 transition duration-200 ease-in-out"
                         >
                           <Save className="mr-2" />
                           <span>Save</span>
@@ -123,7 +123,7 @@ export default function PostUtilityButton(props: UtilityProps) {
                           onClick={() => {
                             console.log("Report post clicked");
                           }}
-                          className="w-full flex items-center justify-between px-4 py-2 text-sm text-crimsonRed hover:bg-gray-100 rounded-b-md"
+                          className="w-full flex items-center justify-between px-4 py-2 text-sm text-crimsonRed hover:bg-red-100 rounded-b-md transition duration-200 ease-in-out"
                         >
                           <FlagTriangleRight className="mr-2" />
                           <span>Report</span>

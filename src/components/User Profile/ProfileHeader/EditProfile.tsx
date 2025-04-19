@@ -150,7 +150,7 @@ function EditProfile({ user, onSave }: EditProfileProps) {
       <div className="flex space-x-2">
         <button
           type="submit"
-          className="bg-crimsonRed text-warmWhite px-4 py-2 rounded-3xl hover:bg-red-700 cursor-pointer"
+          className="bg-crimsonRed text-warmWhite px-4 py-2 rounded-3xl hover:bg-red-700 cursor-pointer transition duration-400 ease-in-out"
           disabled={isPending}
         >
           {isPending ? "Saving..." : "Save changes"}

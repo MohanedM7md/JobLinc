@@ -5,13 +5,12 @@ import store from "../store/store";
 import { changePassword } from "../store/user/userThunks";
 import { ChevronLeftIcon } from "lucide-react";
 
-
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store/store";
 
 import { useNavigate } from "react-router-dom";
 
-import Modal from "../components/Authentication/Modal";
+import Modal from "../components/utils/Modal";
 import { Link } from "react-router-dom";
 
 import PasswordFieldNormal from "../components/Authentication/Utilities/PasswordFieldNormal";
@@ -74,8 +73,9 @@ function ChangePassword() {
       <div
         className="flex items-center w-[60px] hover:underline hover:cursor-pointer"
         onClick={() => {
-        navigate("/settings/sign-in-security");
-        }}>
+          navigate("/settings/sign-in-security");
+        }}
+      >
         <ChevronLeftIcon />
         <span>Back</span>
       </div>
@@ -93,7 +93,9 @@ function ChangePassword() {
       ) : (
         <form onSubmit={isValidSubmit}>
           <div className="flex flex-col gap-6 w-full max-w-md mx-auto bg-gray-50 p-6 rounded-2xl border border-gray-200 shadow-sm">
-            <h1 className="text-xl font-bold text-neutral-800">Change Password</h1>
+            <h1 className="text-xl font-bold text-neutral-800">
+              Change Password
+            </h1>
 
             <PasswordFieldNormal
               labelText="Old password *"
@@ -116,7 +118,10 @@ function ChangePassword() {
             />
 
             {showError && (
-              <p data-testid="errorLogical" className="text-sm text-red-700 mt-[-10px]">
+              <p
+                data-testid="errorLogical"
+                className="text-sm text-red-700 mt-[-10px]"
+              >
                 New password can't be the same as old password.
               </p>
             )}
@@ -127,8 +132,7 @@ function ChangePassword() {
           </div>
         </form>
       )}
-</div>
-
+    </div>
   );
 }
 

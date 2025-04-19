@@ -4,7 +4,7 @@ import { AuthenticationSignInButton } from "./AuthenticationButtons";
 import { useAppDispatch } from "@store/hooks";
 import { AppDispatch } from "@store/store";
 import { loginUser } from "@store/user/userThunks"; // New login thunk
-import Modal from "./Modal";
+import Modal from "../utils/Modal";
 import store from "@store/store";
 // import store from "@store/store";
 import Checkbox from "./Utilities/Checkbox";

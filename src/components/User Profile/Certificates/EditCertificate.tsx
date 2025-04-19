@@ -215,7 +215,7 @@ export default function EditCertificate(props: EditCertificateProps) {
         <div className="flex space-x-2">
           <button
             type="submit"
-            className="bg-crimsonRed text-warmWhite px-4 py-1.5 rounded-3xl cursor-pointer hover:bg-red-700"
+            className="bg-crimsonRed text-warmWhite px-4 py-1.5 rounded-3xl cursor-pointer hover:bg-red-700 transition duration-400 ease-in-out"
             disabled={isProcessing}
           >
             {editCertificateMutation.status === "pending"
@@ -225,7 +225,7 @@ export default function EditCertificate(props: EditCertificateProps) {
           <button
             type="button"
             onClick={() => setShowConfirmDelete(true)}
-            className="bg-gray-500 text-warmWhite px-4 py-1.5 rounded-3xl cursor-pointer hover:bg-gray-700"
+            className="bg-gray-500 text-warmWhite px-4 py-1.5 rounded-3xl cursor-pointer hover:bg-gray-700 transition duration-400 ease-in-out"
             disabled={isProcessing}
           >
             {deleteCertificateMutation.status === "pending"

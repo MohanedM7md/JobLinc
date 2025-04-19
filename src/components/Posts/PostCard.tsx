@@ -31,12 +31,17 @@ export default function Post(props: PostProps) {
   const posterPic: string =
     props.post.profilePicture ?? props.post.companyLogo ?? "NotFound";
 
-  function reactionSuccess() {
-    props.post.likes += 1;
+  function reactionSuccess(newReaction: string, oldReaction: string) {
+    if (oldReaction === "" && newReaction !== "") {
+      props.post.likes++;
+    } else if (oldReaction !== "" && newReaction === "") {
+      props.post.likes--;
+    } else if (oldReaction !== newReaction) {
+    }
   }
 
   function incrementCommentsCount() {
-    props.post.comments += 1; //this counter isn't counting for some reason, look into it later
+    props.post.comments += 1;
   }
 
   return !hide ? (
@@ -63,7 +68,7 @@ export default function Post(props: PostProps) {
         {!props.isRepost ? (
           <button
             onClick={() => setHide(true)}
-            className="material-icons-round cursor-pointer ml-1 text-mutedSilver hover:bg-gray-200 h-fit"
+            className="material-icons-round cursor-pointer ml-1 text-mutedSilver hover:bg-gray-200 h-fit transition duration-400 ease-in-out"
           >
             clear
           </button>
@@ -94,23 +99,23 @@ export default function Post(props: PostProps) {
         <div className="flex flex-grow relative m-auto justify-between">
           <PostReact
             postId={props.post.postId}
-            userReaction="React"
+            userReaction={"React"}
             successHandler={reactionSuccess}
           />
           <button
             onClick={() => {
               setShowComment(!showComment);
             }}
-            className="w-3/12 h-10 cursor-pointer font-medium text-gray-500 hover:bg-gray-200 flex items-center justify-center"
+            className="transition duration-400 ease-in-out w-3/12 h-10 cursor-pointer font-medium text-gray-500 hover:bg-gray-200 flex items-center justify-center"
           >
             <MessageSquareText className="mr-2" />
             <span className="hidden md:inline-block">Comment</span>
           </button>
-          <button className="w-3/12 h-10 cursor-pointer font-medium text-gray-500 hover:bg-gray-200 flex items-center justify-center">
+          <button className="transition duration-400 ease-in-out w-3/12 h-10 cursor-pointer font-medium text-gray-500 hover:bg-gray-200 flex items-center justify-center">
             <Repeat className="mr-2" />
             <span className="hidden md:inline-block">Repost</span>
           </button>
-          <button className="w-3/12 h-10 cursor-pointer font-medium text-gray-500 hover:bg-gray-200 flex items-center justify-center">
+          <button className="transition duration-400 ease-in-out w-3/12 h-10 cursor-pointer font-medium text-gray-500 hover:bg-gray-200 flex items-center justify-center">
             <SendHorizontal className="mr-2" />
             <span className="hidden md:inline-block">Send</span>
           </button>
