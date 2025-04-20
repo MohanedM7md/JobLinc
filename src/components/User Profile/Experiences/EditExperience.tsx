@@ -76,7 +76,11 @@ export default function EditExperience(props: EditExperienceProps) {
   }
 
   function handleDelete() {
-    deleteExperienceMutation.mutate(props._id);
+    toast.promise(deleteExperienceMutation.mutateAsync(props._id), {
+      loading: "Deleting experience...",
+      success: "Experience deleted successfully",
+      error: (error) => error.message,
+    })
   }
 
   useEffect(() => {
