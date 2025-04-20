@@ -1,6 +1,7 @@
 import React, { useState, FormEvent, ChangeEvent } from "react";
 import JobApplicationModal from "./JobApplicationModal";
 import toast from './../../../node_modules/react-hot-toast/src/index';
+// import toast from 'react-hot-toast';
 import { Link } from "react-router-dom";
 import { number } from "prop-types";
 
@@ -8,7 +9,7 @@ interface JobHighlight {
     [index: number]: string;
 }
 
-interface Job {
+export interface Job {
     id: number;
     title: string;
     company: string;
@@ -166,13 +167,50 @@ const Jobs_And_Hiring: React.FC<SaveApplyProps> = ({ jobTitle, companyName }) =>
                     <Link to="/saved-jobs" className="text-blue-600 underline">
                         See saved jobs
                     </Link>
-                </div>, {duration:10000});
-        }
-        if (isSaved) {
+                </div>,
+                { duration: 10000 }
+            );
+        } else {
             setIsSaved(false);
-            toast.success("This job is no longer saved");
+            toast.success("This job is no longer saved", { duration: 10000 });
         }
     };
+
+    const filteredJobs = jobs.filter((job) => {
+        // Remote filter
+        if (filters.remote && !job.remote) return false;
+
+        // Date Posted filter
+        if (filters.datePosted !== "any") {
+            const daysAgo = {
+                day: 1,
+                week: 7,
+                month: 30
+            }[filters.datePosted];
+
+            const postedDaysAgo = parseInt(job.postedDate.split(" ")[0]);
+            const postedUnit = job.postedDate.split(" ")[1];
+
+            let postedInDays = postedDaysAgo;
+            if (postedUnit.startsWith("week")) postedInDays *= 7;
+            else if (postedUnit.startsWith("month")) postedInDays *= 30;
+            // @ts-ignore
+            if (postedInDays > daysAgo) return false;
+        }
+
+        // Experience Level filter (you can customize based on job.title or another field if needed)
+        if (filters.experienceLevel !== "any" && !job.title.toLowerCase().includes(filters.experienceLevel)) {
+            return false;
+        }
+
+        // Job Type filter (you can customize based on job.description or another field)
+        if (filters.jobType !== "any" && !job.description.toLowerCase().includes(filters.jobType)) {
+            return false;
+        }
+
+        return true;
+    });
+
 
     return (
         <div className="flex flex-col min-h-screen bg-warmWhite">
@@ -323,8 +361,8 @@ const Jobs_And_Hiring: React.FC<SaveApplyProps> = ({ jobTitle, companyName }) =>
                 <div className="flex flex-col lg:flex-row gap-6">
                     <div className="lg:w-2/5">
                         <h2 className="font-semibold mb-4 text-charcoalBlack">Jobs for you</h2>
-                        <div className="bg-white rounded-md shadow-sm">
-                            {jobs.map((job) => (
+                        <div className="bg-white rounded-md shadow-sm" data-testid="job-listings-container">
+                            {filteredJobs.map((job) => (
                                 <div
                                     key={job.id}
                                     className={`p-4 border-b border-gray-200 hover:bg-blue-50 cursor-pointer ${selectedJob.id === job.id ? "bg-blue-50" : ""
@@ -422,11 +460,11 @@ const Jobs_And_Hiring: React.FC<SaveApplyProps> = ({ jobTitle, companyName }) =>
                                                 View application
                                             </button>
                                             <button onClick={handleSaveClick} className={`px-4 py-2 rounded-full border ${isSaved
-                                            ? 'text-crimsonRed border-softRosewood bg-hoverSoftRed cursor-default'
-                                            : 'bg-white text-crimsonRed border-softRosewood hover:bg-hoverSoftRed'
-                                            }`}>
-                                            {isSaved ? 'Saved' : 'Save'}
-                                        </button>
+                                                ? 'text-crimsonRed border-softRosewood bg-hoverSoftRed cursor-default'
+                                                : 'bg-white text-crimsonRed border-softRosewood hover:bg-hoverSoftRed'
+                                                }`}>
+                                                {isSaved ? 'Saved' : 'Save'}
+                                            </button>
                                         </div>
                                     </div>
                                 )}

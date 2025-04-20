@@ -23,19 +23,17 @@ const JobApplicationModal: React.FC<JobApplicationModalProps> = ({
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    
-    if (!resume && !existingStatus) {
-      setError("Please upload your resume");
+    setError("");
+
+    const errors = [];
+    if (!resume && !existingStatus) errors.push("resume");
+    if (!email && !existingStatus) errors.push("email");
+
+    if (errors.length > 0) {
+      setError(errors.join(","));
       return;
     }
-    
-    if (!email && !existingStatus) {
-      setError("Please enter your email");
-      return;
-    }
-    
-    // If we're viewing an existing application, keep its status
-    // Otherwise set it as "Pending"
+
     onSubmit(existingStatus || "Pending");
   };
 
@@ -51,6 +49,7 @@ const JobApplicationModal: React.FC<JobApplicationModalProps> = ({
           <button
             onClick={onClose}
             className="text-gray-500 hover:text-gray-700"
+            aria-label="Close"
           >
             <svg
               className="w-6 h-6"
@@ -73,16 +72,15 @@ const JobApplicationModal: React.FC<JobApplicationModalProps> = ({
           <div>
             <div className="mb-4">
               <h3 className="font-medium mb-2">Application Status</h3>
-              <div className={`inline-block px-3 py-1 rounded-full text-sm ${
-                existingStatus === "Pending" ? "bg-yellow-100 text-yellow-800" :
+              <div className={`inline-block px-3 py-1 rounded-full text-sm ${existingStatus === "Pending" ? "bg-yellow-100 text-yellow-800" :
                 existingStatus === "Viewed" ? "bg-blue-100 text-blue-800" :
-                existingStatus === "Rejected" ? "bg-red-100 text-red-800" :
-                "bg-green-100 text-green-800"
-              }`}>
+                  existingStatus === "Rejected" ? "bg-red-100 text-red-800" :
+                    "bg-green-100 text-green-800"
+                }`}>
                 {existingStatus}
               </div>
             </div>
-            
+
             <div className="mb-4">
               <h3 className="font-medium mb-2">Resume</h3>
               <div className="border border-gray-300 rounded-md p-3 flex items-center">
@@ -95,13 +93,13 @@ const JobApplicationModal: React.FC<JobApplicationModalProps> = ({
                 </div>
               </div>
             </div>
-            
+
             <div className="mb-4">
               <h3 className="font-medium mb-2">Contact Information</h3>
               <p className="text-gray-700">Email: john.doe@example.com</p>
               <p className="text-gray-700">Phone: (555) 123-4567</p>
             </div>
-            
+
             <div className="mb-4">
               <h3 className="font-medium mb-2">Cover Letter</h3>
               <div className="border border-gray-300 rounded-md p-3 text-gray-700">
@@ -110,7 +108,7 @@ const JobApplicationModal: React.FC<JobApplicationModalProps> = ({
                 <p>Thank you for considering my application.</p>
               </div>
             </div>
-            
+
             <div className="mt-6 flex justify-end space-x-3">
               <button
                 onClick={onClose}
@@ -128,17 +126,19 @@ const JobApplicationModal: React.FC<JobApplicationModalProps> = ({
             </div>
           </div>
         ) : (
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} data-testid="application-form">
             {error && (
               <div className="mb-4 p-3 bg-red-50 text-red-700 rounded-md">
-                {error}
+                {error.includes("resume") && <div>Please upload your resume</div>}
+                {error.includes("email") && <div>Please enter your email</div>}
               </div>
             )}
-            
+
             <div className="mb-4">
               <label className="block font-medium mb-1">Resume *</label>
               <div className="border border-gray-300 border-dashed rounded-md p-4 text-center cursor-pointer hover:bg-gray-50">
                 <input
+                  data-testid="resume-upload"
                   type="file"
                   accept=".pdf,.doc,.docx"
                   className="hidden"
@@ -173,21 +173,23 @@ const JobApplicationModal: React.FC<JobApplicationModalProps> = ({
                 </label>
               </div>
             </div>
-            
+
             <div className="mb-4">
-              <label className="block font-medium mb-1">Cover Letter</label>
+              <label htmlFor="coverLetter" className="block font-medium mb-1">Cover Letter</label>
               <textarea
+                id="coverLetter"
                 className="w-full border border-gray-300 rounded-md px-3 py-2 h-32"
                 placeholder="Write a cover letter (optional)"
                 value={coverLetter}
                 onChange={(e) => setCoverLetter(e.target.value)}
               ></textarea>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
               <div>
-                <label className="block font-medium mb-1">Email *</label>
+                <label htmlFor="email" className="block font-medium mb-1">Email *</label>
                 <input
+                  id="email"
                   type="email"
                   className="w-full border border-gray-300 rounded-md px-3 py-2"
                   placeholder="Your email"
@@ -199,9 +201,11 @@ const JobApplicationModal: React.FC<JobApplicationModalProps> = ({
                   required
                 />
               </div>
+
               <div>
-                <label className="block font-medium mb-1">Phone</label>
+                <label htmlFor="phone" className="block font-medium mb-1">Phone</label>
                 <input
+                  id="phone"
                   type="tel"
                   className="w-full border border-gray-300 rounded-md px-3 py-2"
                   placeholder="Your phone number"
@@ -210,7 +214,7 @@ const JobApplicationModal: React.FC<JobApplicationModalProps> = ({
                 />
               </div>
             </div>
-            
+
             <div className="mt-6 flex justify-end space-x-3">
               <button
                 type="button"
