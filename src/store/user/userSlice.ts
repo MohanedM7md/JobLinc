@@ -25,12 +25,16 @@ const userSlice = createSlice({
     },
     logOut: (state) => {
       state.userId = null;
+      state.firstname = null;
+      state.lastname = null;
+      state.email = null;
+      state.profilePicture = null;
       state.role = null;
       state.confirmed = null;
       state.status = "IDLE";
       state.loggedIn = false;
       state.accessToken = null;
-      localStorage.removeItem("userState");
+      localStorage.removeItem("userId");
       localStorage.removeItem("refreshToken");
     },
   },
@@ -178,6 +182,8 @@ const userSlice = createSlice({
 
           if (userData) {
             state.loggedIn = true;
+            state.email = userData.email;
+            state.userId = userData.userId || null;
             state.firstname = userData.firstname || null;
             state.lastname = userData.lastname || null;
             state.profilePicture = userData.profilePicture || null;
@@ -203,7 +209,7 @@ const userSlice = createSlice({
 
           if (userData) {
             state.status = "SUCCESS";
-            localStorage.setItem("tokenForOTP", userData.token);
+            // localStorage.setItem("tokenForOTP", userData.token);
           } else {
             console.error("User data missing in API response:", action.payload);
           }

@@ -34,7 +34,7 @@ export const loadState = (): UserState => {
   }
 };
 
-export const saveState = (authData) => {
+export const saveState = (authData: UserState) => {
   try {
     localStorage.setItem("userData", JSON.stringify(authData));
   } catch (err) {

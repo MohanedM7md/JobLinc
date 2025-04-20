@@ -3,10 +3,12 @@ import { SkillInterface } from "interfaces/userInterfaces";
 import { editSkill, deleteSkill } from "@services/api/userProfileServices";
 import ConfirmAction from "../../utils/ConfirmAction";
 import skillLevels from "@utils/skillLevels";
+import { useMutation } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 interface EditSkillProps extends SkillInterface {
   onClose: () => void;
-  onUpdate: () => void;
+  onUpdate: () => void; 
 }
 
 export default function EditSkill(props: EditSkillProps) {
@@ -14,18 +16,44 @@ export default function EditSkill(props: EditSkillProps) {
   const [level, setLevel] = useState<number>(props.level);
   const [showConfirmDelete, setShowConfirmDelete] = useState<boolean>(false);
 
-  async function handleSubmit(e: React.FormEvent) {
+  const editSkillMutation = useMutation({
+    mutationFn: editSkill,
+    onSuccess: () => {
+      props.onUpdate();
+      props.onClose();
+    },
+  });
+
+  const deleteSkillMutation = useMutation({
+    mutationFn: deleteSkill,
+    onSuccess: () => {
+      props.onUpdate();
+      props.onClose();
+    },
+  });
+
+  const isProcessing =
+    editSkillMutation.status === "pending" ||
+    deleteSkillMutation.status === "pending";
+
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const updatedSkill: SkillInterface = { id: props.id, name, level };
-    await editSkill(updatedSkill);
-    props.onUpdate();
-    props.onClose();
+    toast.promise(
+      editSkillMutation.mutateAsync(updatedSkill),{
+        loading: "Saving skill...",
+        success: "Skill updated successfully!",
+        error: (error) => error.message,
+      }
+    )
   }
 
-  async function handleDelete() {
-    await deleteSkill(props.id);
-    props.onUpdate();
-    props.onClose();
+  function handleDelete() {
+    toast.promise(deleteSkillMutation.mutateAsync(props.id),{
+      loading: "Deleting skill...",
+      success: "Skill deleted successfully!",
+      error: (error) => error.message,
+    })
   }
 
   return (
@@ -44,6 +72,7 @@ export default function EditSkill(props: EditSkillProps) {
             onChange={(e) => setName(e.target.value)}
             className="w-full px-2 py-1 border rounded-lg"
             required
+            disabled={isProcessing}
           />
         </div>
         <div className="mb-4">
@@ -55,6 +84,7 @@ export default function EditSkill(props: EditSkillProps) {
             onChange={(e) => setLevel(Number(e.target.value))}
             className="w-full px-2 py-1 border rounded-lg"
             required
+            disabled={isProcessing}
           >
             {skillLevels.map((levelName, index) => (
               <option key={index} value={index + 1}>
@@ -67,15 +97,19 @@ export default function EditSkill(props: EditSkillProps) {
           <button
             type="submit"
             className="bg-crimsonRed text-warmWhite px-4 py-1.5 rounded-3xl cursor-pointer hover:bg-red-700"
+            disabled={isProcessing}
           >
-            Save
+            {editSkillMutation.status === "pending" ? "Saving..." : "Save"}
           </button>
           <button
             type="button"
             className="bg-gray-500 text-warmWhite px-4 py-1.5 rounded-3xl cursor-pointer hover:bg-gray-700"
             onClick={() => setShowConfirmDelete(true)}
+            disabled={isProcessing}
           >
-            Delete
+            {deleteSkillMutation.status === "pending"
+              ? "Deleting..."
+              : "Delete"}
           </button>
         </div>
       </form>

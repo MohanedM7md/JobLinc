@@ -8,12 +8,9 @@ import {
   typing,
   stopTyping,
 } from "@services/api/ChatSocket";
-import {
-  RecievedMessage,
-  MessageStatus,
-} from "./interfaces/Message.interfaces";
+import { RecievedMessage } from "./interfaces/Message.interfaces";
 import { User } from "./interfaces/User.interfaces";
-
+import useChats from "@hooks/useChats";
 import { fetchChatData, createChat } from "@services/api/chatServices";
 import useChatid from "@context/ChatIdProvider";
 import useNetworkUserId from "@context/NetworkUserIdProvider";
@@ -24,6 +21,7 @@ function ChatContent({ className }: { className?: string }) {
   const [users, setUsers] = useState<User[]>([]);
   const [messages, setMessages] = useState<RecievedMessage[]>([]);
   const { chatId, setChatId } = useChatid();
+  const { setOpnedChats } = useChats();
   const { usersId } = useNetworkUserId();
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
@@ -37,8 +35,10 @@ function ChatContent({ className }: { className?: string }) {
         console.log("Create new chat with: ", usersId);
         const data = await createChat(usersId);
         setUsers(data.participants);
+        console.log(data.participants);
         setMessages(data.messages);
         setChatId(data.chatId);
+        setOpnedChats((prev) => [...prev]);
       } else {
         const data = await fetchChatData(chatId);
         setUsers(data.participants);
@@ -70,21 +70,47 @@ function ChatContent({ className }: { className?: string }) {
       unsubscribeFromMessages(chatId);
     };
   }, [chatId]);
-
+  const messageId = Date.now().toString();
   const handleSendMessage = (message: string | File, type: string) => {
-    console.log("message sending");
     const newMessage: any = {
+      messageId,
       senderId: store.getState().user.userId,
       time: new Date(),
       seenBy: [store.getState().user.userId],
-      content: { text: message },
+      status: "sent",
+      content: {},
     };
+    switch (type) {
+      case "text":
+        newMessage.content.text = message as string;
+        break;
 
+      case "image":
+        newMessage.content.image = message;
+        break;
+
+      case "video":
+        newMessage.content.video = message;
+        break;
+
+      case "document":
+        newMessage.content.document = message;
+        break;
+
+      default:
+        console.warn("Unknown message type:", type);
+        newMessage.content.text = typeof message === "string" ? message : "";
+        break;
+    }
     setMessages((prevMsgs) => [...prevMsgs, newMessage]);
 
     if (chatId) {
       sendMessage(chatId, newMessage, () => {
-        console.log("✅ Message delivered");
+        setMessages((prevMsgs) =>
+          prevMsgs.map((msg) =>
+            msg.messageId === messageId ? { ...msg, status: "delivered" } : msg,
+          ),
+        );
       });
     }
   };

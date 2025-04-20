@@ -7,6 +7,8 @@ import { useParams } from "react-router-dom";
 import AddExperience from "./AddExperience";
 import Modal from "./../../Authentication/Modal";
 import { getExperience } from "@services/api/userProfileServices";
+import { useQuery } from "@tanstack/react-query";
+import store from "@store/store";
 
 export default function FullExperiences() {
   const { userId } = useParams();
@@ -16,22 +18,38 @@ export default function FullExperiences() {
   const [editExperienceData, setEditExperienceData] =
     useState<ExperienceInterface | null>(null);
 
+  const {
+    isFetching: isExperiencesFetching,
+    isError: isExperiencesError,
+    refetch: refetchExperiences,
+  } = useQuery({
+    queryKey: ["getExperiences"],
+    queryFn: getExperience,
+    enabled: false,
+  });
+
   useEffect(() => {
-    if (userId === JSON.parse(localStorage.getItem("userState") || "").userId) {
+    if (userId === store.getState().user.userId) {
       setIsUser(true);
       updateExperiences();
-    }
-    else {
+    } else {
       setIsUser(false);
-
     }
   }, [userId]);
 
   async function updateExperiences() {
     if (userId) {
-      const updatedExperiences = await getExperience();
-      setExperiences(updatedExperiences);
+      const { data } = await refetchExperiences();
+      setExperiences(data);
     }
+  }
+
+  if (isExperiencesFetching) {
+    return <div>Loading...</div>;
+  }
+
+  if (isExperiencesError) {
+    return <div>Error loading experiences</div>;
   }
 
   return (
