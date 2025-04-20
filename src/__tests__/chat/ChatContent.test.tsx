@@ -174,9 +174,6 @@ describe("ChatContent Component", () => {
     render(<ChatContent />);
 
     await waitFor(() => {
-      // You would need to trigger typing through the ChatInput mock
-      // This depends on how your actual ChatInput component works
-      // For this example, we'll assume the typing is triggered automatically
       expect(mockTyping).toHaveBeenCalled();
       expect(mockStopTyping).toHaveBeenCalled();
     });
