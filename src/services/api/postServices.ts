@@ -51,9 +51,11 @@ export async function getReplies(postId: string, commentId: string) {
 }
 
 // Create a post
-export async function createPost({text} : {text: string}) {
+export async function createPost({ repost, text } : { repost?: string,text: string }) {
   try {
-    const response = await api.post(`post/add`, { text });
+    const response = repost
+      ? await api.post(`post/add`, { repost, text })
+      : await api.post(`post/add`, { text });
     return response.status;
   } catch (error) {
     console.error("Error creating post:", error);

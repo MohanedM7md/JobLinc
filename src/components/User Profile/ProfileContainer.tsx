@@ -9,7 +9,7 @@ import UserExperience from "./Experiences/UserExperience";
 import ProfileHeader from "./ProfileHeader/ProfileHeader";
 import { useEffect, useState } from "react";
 import { ProfileInterface } from "interfaces/userInterfaces";
-import Modal from "./../Authentication/Modal";
+import Modal from "../utils/Modal";
 import AddExperience from "./Experiences/AddExperience";
 import AddCertificate from "./Certificates/AddCertificate";
 import UserCertificate from "./Certificates/UserCertificate";
@@ -77,7 +77,7 @@ function ProfileContainer() {
   });
 
   useEffect(() => {
-    const loggedInUserId = store.getState().user.userId 
+    const loggedInUserId = store.getState().user.userId;
     if (userId === loggedInUserId) {
       setIsUser(true);
       refetchMe().then(({ data }) => {
@@ -118,7 +118,7 @@ function ProfileContainer() {
     isSkillsFetching ||
     isUserFetching
   ) {
-    return <div>Loading...</div>; 
+    return <div>Loading...</div>;
   }
 
   if (
@@ -170,7 +170,7 @@ function ProfileContainer() {
                 <div className="flex flex-row gap-2">
                   <button
                     onClick={() => setAddExperienceModal(true)}
-                    className="material-icons font-medium text-2xl p-2 rounded-full hover:bg-gray-200"
+                    className="material-icons font-medium text-2xl p-2 rounded-full hover:bg-gray-200 transition duration-400 ease-in-out"
                   >
                     add
                   </button>
@@ -180,7 +180,7 @@ function ProfileContainer() {
                         `/profile/${userData?.userId}/details/experiences`,
                       )
                     }
-                    className="material-icons font-medium text-2xl p-2 rounded-full hover:bg-gray-200"
+                    className="material-icons font-medium text-2xl p-2 rounded-full hover:bg-gray-200 transition duration-400 ease-in-out"
                   >
                     edit
                   </button>
@@ -206,7 +206,7 @@ function ProfileContainer() {
                         `/profile/${userData.userId}/details/experiences`,
                       )
                     }
-                    className="mt-2 px-4 py-1.5 border-1 border-crimsonRed rounded-3xl hover:bg-crimsonRed hover:text-white font-medium"
+                    className="mt-2 px-4 py-1.5 border-1 border-crimsonRed rounded-3xl hover:bg-crimsonRed hover:text-white font-medium transition duration-400 ease-in-out"
                   >
                     Show all {userData.experiences.length} experiences
                   </button>
@@ -222,7 +222,7 @@ function ProfileContainer() {
                 {isUser && (
                   <button
                     onClick={() => setAddExperienceModal(true)}
-                    className="cursor-pointer mt-2 px-4 py-1.5 border-1 border-crimsonRed rounded-3xl hover:bg-crimsonRed hover:text-white font-medium"
+                    className="cursor-pointer mt-2 px-4 py-1.5 border-1 border-crimsonRed rounded-3xl hover:bg-crimsonRed hover:text-white font-medium transition duration-400 ease-in-out"
                   >
                     Add experience
                   </button>
@@ -239,7 +239,7 @@ function ProfileContainer() {
                 <div className="flex flex-row gap-2">
                   <button
                     onClick={() => setAddCertificateModal(true)}
-                    className="material-icons font-medium text-2xl p-2 rounded-full hover:bg-gray-200"
+                    className="material-icons font-medium text-2xl p-2 rounded-full hover:bg-gray-200 transition duration-400 ease-in-out"
                   >
                     add
                   </button>
@@ -249,7 +249,7 @@ function ProfileContainer() {
                         `/profile/${userData?.userId}/details/certificates`,
                       )
                     }
-                    className="material-icons font-medium text-2xl p-2 rounded-full hover:bg-gray-200"
+                    className="material-icons font-medium text-2xl p-2 rounded-full hover:bg-gray-200 transition duration-400 ease-in-out"
                   >
                     edit
                   </button>
@@ -273,7 +273,7 @@ function ProfileContainer() {
                         `/profile/${userData.userId}/details/certificates`,
                       )
                     }
-                    className="mt-2 px-4 py-1.5 border-1 border-crimsonRed rounded-3xl hover:bg-crimsonRed hover:text-white font-medium"
+                    className="mt-2 px-4 py-1.5 border-1 border-crimsonRed rounded-3xl hover:bg-crimsonRed hover:text-white font-medium transition duration-400 ease-in-out"
                   >
                     Show all {userData.certificates.length} certificates
                   </button>
@@ -289,7 +289,7 @@ function ProfileContainer() {
                 {isUser && (
                   <button
                     onClick={() => setAddCertificateModal(true)}
-                    className="cursor-pointer mt-2 px-4 py-1.5 border-1 border-crimsonRed rounded-3xl hover:bg-crimsonRed hover:text-white font-medium"
+                    className="cursor-pointer mt-2 px-4 py-1.5 border-1 border-crimsonRed rounded-3xl hover:bg-crimsonRed hover:text-white font-medium transition duration-400 ease-in-out"
                   >
                     Add certificate
                   </button>
@@ -306,7 +306,7 @@ function ProfileContainer() {
                 <div className="flex flex-row gap-2">
                   <button
                     onClick={() => setAddSkillModal(true)}
-                    className="material-icons font-medium text-2xl p-2 rounded-full hover:bg-gray-200"
+                    className="material-icons font-medium text-2xl p-2 rounded-full hover:bg-gray-200 transition duration-400 ease-in-out"
                   >
                     add
                   </button>
@@ -314,7 +314,7 @@ function ProfileContainer() {
                     onClick={() =>
                       navigate(`/profile/${userData?.userId}/details/skills`)
                     }
-                    className="material-icons font-medium text-2xl p-2 rounded-full hover:bg-gray-200"
+                    className="material-icons font-medium text-2xl p-2 rounded-full hover:bg-gray-200 transition duration-400 ease-in-out"
                   >
                     edit
                   </button>
@@ -336,7 +336,7 @@ function ProfileContainer() {
                     onClick={() =>
                       navigate(`/profile/${userData.userId}/details/skills`)
                     }
-                    className="mt-2 px-4 py-1.5 border-1 border-crimsonRed rounded-3xl hover:bg-crimsonRed hover:text-white font-medium"
+                    className="mt-2 px-4 py-1.5 border-1 border-crimsonRed rounded-3xl hover:bg-crimsonRed hover:text-white font-medium transition duration-400 ease-in-out"
                   >
                     Show all {userData.skills.length} skills
                   </button>
@@ -352,7 +352,7 @@ function ProfileContainer() {
                 {isUser && (
                   <button
                     onClick={() => setAddSkillModal(true)}
-                    className="cursor-pointer mt-2 px-4 py-1.5 border-1 border-crimsonRed rounded-3xl hover:bg-crimsonRed hover:text-white font-medium"
+                    className="cursor-pointer mt-2 px-4 py-1.5 border-1 border-crimsonRed rounded-3xl hover:bg-crimsonRed hover:text-white font-medium transition duration-400 ease-in-out"
                   >
                     Add skill
                   </button>

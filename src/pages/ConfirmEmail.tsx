@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "@store/store";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import Modal from "../components/Authentication/Modal";
+import Modal from "../components/utils/Modal";
 import store from "@store/store";
 import { ChevronLeftIcon } from "lucide-react";
 import UpdatedSuccessfully from "../components/Authentication/Utilities/UpdatedSuccessfully";

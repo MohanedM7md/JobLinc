@@ -1,18 +1,35 @@
-import { useState } from "react";
 import { NewSkill } from "interfaces/userInterfaces";
 import { addSkill } from "@services/api/userProfileServices";
 import skillLevels from "@utils/skillLevels";
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { SubmitHandler, useForm } from "react-hook-form";
 
 interface AddSkillProps {
   onUpdate: () => void;
   onClose: () => void;
 }
 
+const schema = z.object({
+  name: z.string().min(1, "Skill name is required"),
+  level: z.coerce
+    .number()
+    .min(1, "Invalid skill level")
+    .max(5, "Invalid skill level"),
+});
+
+type SkillFields = z.infer<typeof schema>;
+
 export default function AddSkill(props: AddSkillProps) {
-  const [name, setName] = useState<string>("");
-  const [level, setLevel] = useState<number>(1);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SkillFields>({
+    resolver: zodResolver(schema),
+  });
 
   const addSkillMutation = useMutation({
     mutationFn: addSkill,
@@ -22,20 +39,19 @@ export default function AddSkill(props: AddSkillProps) {
     },
   });
 
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    const newSkill: NewSkill = { name, level };
-    toast.promise(addSkillMutation.mutateAsync(newSkill),{
+  const onSubmit: SubmitHandler<SkillFields> = (data) => {
+    const newSkill: NewSkill = { name: data.name, level: data.level };
+    toast.promise(addSkillMutation.mutateAsync(newSkill), {
       loading: "Adding skill...",
       success: "Skill added successfully!",
       error: (error) => error.message,
-    })
-  }
+    });
+  };
 
   return (
     <>
       <form
-        onSubmit={handleSubmit}
+        onSubmit={handleSubmit(onSubmit)}
         className="p-4 bg-lightGray rounded-lg text-charcoalBlack"
       >
         <div className="mb-4">
@@ -44,22 +60,21 @@ export default function AddSkill(props: AddSkillProps) {
           </label>
           <input
             type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            {...register("name")}
             className="w-full px-2 py-1 border rounded-lg"
-            required
             disabled={addSkillMutation.status === "pending"}
           />
+          {errors.name && (
+            <p className="text-red-500 text-sm">{errors.name.message}</p>
+          )}
         </div>
         <div className="mb-4">
           <label className="text-sm font-medium text-charcoalBlack">
             Skill Level
           </label>
           <select
-            value={level}
-            onChange={(e) => setLevel(Number(e.target.value))}
+            {...register("level")}
             className="w-full px-2 py-1 border rounded-lg"
-            required
             disabled={addSkillMutation.status === "pending"}
           >
             {skillLevels.map((levelName, index) => (
@@ -68,11 +83,14 @@ export default function AddSkill(props: AddSkillProps) {
               </option>
             ))}
           </select>
+          {errors.level && (
+            <p className="text-red-500 text-sm">{errors.level.message}</p>
+          )}
         </div>
         <div className="flex space-x-2">
           <button
             type="submit"
-            className="bg-crimsonRed text-warmWhite px-4 py-1.5 rounded-3xl cursor-pointer hover:bg-red-700"
+            className="bg-crimsonRed text-warmWhite px-4 py-1.5 rounded-3xl cursor-pointer hover:bg-red-700 transition duration-400 ease-in-out"
             disabled={addSkillMutation.status === "pending"}
           >
             {addSkillMutation.status === "pending" ? "Adding..." : "Add"}

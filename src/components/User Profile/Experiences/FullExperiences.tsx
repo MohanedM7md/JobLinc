@@ -5,7 +5,7 @@ import EditExperience from "./EditExperience";
 import "material-icons";
 import { useParams } from "react-router-dom";
 import AddExperience from "./AddExperience";
-import Modal from "./../../Authentication/Modal";
+import Modal from "../../utils/Modal";
 import { getExperience } from "@services/api/userProfileServices";
 import { useQuery } from "@tanstack/react-query";
 import store from "@store/store";
@@ -59,7 +59,7 @@ export default function FullExperiences() {
         {isUser && (
           <button
             onClick={() => setAddExperienceModal(true)}
-            className="material-icons font-medium text-2xl p-2 rounded-full hover:bg-gray-600 -mt-5"
+            className="material-icons font-medium text-2xl p-2 rounded-full hover:bg-gray-600 -mt-5 transition duration-400 ease-in-out"
           >
             add
           </button>
@@ -71,7 +71,7 @@ export default function FullExperiences() {
             <UserExperience experience={exp} />
             {isUser && (
               <button
-                className="material-icons absolute top-0 right-0 text-xl p-1 rounded-full hover:bg-gray-600 mr-1"
+                className="material-icons absolute top-0 right-0 text-xl p-1 rounded-full hover:bg-gray-600 mr-1 transition duration-400 ease-in-out"
                 onClick={() => setEditExperienceData(exp)}
               >
                 edit
