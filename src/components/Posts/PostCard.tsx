@@ -133,7 +133,7 @@ export default function Post(props: PostProps) {
           onClose={() => setShowRepostModal(false)}
         >
           <Repost
-            repost={props.post.postId}
+            repost={props.isRepost ? props.post.repost?.postId ?? "" : props.post.postId}
             onSuccess={() => setShowRepostModal(false)}
           />
         </Modal>
