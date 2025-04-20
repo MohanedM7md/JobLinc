@@ -8,7 +8,11 @@ export const connectToChat = () => {
   ChatSocket = connectSocket("chat");
   return ChatSocket;
 };
-
+export const onConnect = (setTrue: (boolean: boolean) => void) => {
+  ChatSocket?.on("connect", () => {
+    setTrue(true);
+  });
+};
 export const subscribeToMessages = (
   chatId: string,
   onMessageReceived: (message: RecievedMessage) => void,
@@ -45,6 +49,7 @@ export const sendMessage = (
   callback?: () => void,
 ) => {
   if (!ChatSocket) return;
+  console.log("message sent ", message);
   ChatSocket.emit("sendMessage", { ...message, chatId }, callback);
 };
 export const typing = (chatId: string) => {

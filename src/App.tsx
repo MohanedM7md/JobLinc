@@ -8,8 +8,7 @@ import SignInPage from "./pages/SignIn";
 import ForgotPassword from "./pages/ForgotPassword";
 import UserDetails from "./components/Authentication/UserDetails";
 const Messaging = lazy(() => import("./pages/Messaging"));
-const UserProfile = lazy(() => import("./pages/UserProfile"));
-//const MyNetwork = lazy(() => import("./pages/MyNetwork"));
+
 import Home from "./pages/Home";
 import MyNetwork from "./pages/MyNetwork";
 import PostCreate from "./components/Posts/PostCreate";
