@@ -5,10 +5,10 @@ import SignInInformation from "../../../components/Authentication/SignInInformat
 import userEvent from "@testing-library/user-event";
 import { Provider } from "react-redux";
 import store from "../../../store/store";
-import api from "../../../services/api/api";
+import { api } from "@services/api/api";
 import { cleanup } from "@testing-library/react";
 
-import MainPage from "../../../pages/Main";
+import Home from "@pages/Home";
 import "@testing-library/jest-dom/vitest";
 
 
@@ -53,7 +53,7 @@ describe("SignInInformation Component", () => {
                     <SignInInformation />
                 </MemoryRouter>
             </Provider>
-            
+
         );
 
         expect(screen.getByLabelText("Email")).toBeInTheDocument();
@@ -166,7 +166,7 @@ describe("SignInInformation Component", () => {
     });
 
 
-    it("logs in the user and navigates to /MainPage", async () => {
+    it("logs in the user and navigates to /home", async () => {
         global.window.grecaptcha.getResponse = vi.fn(() => "valid-recaptcha-response");
     
         vi.spyOn(api, "post").mockResolvedValue({
@@ -182,7 +182,7 @@ describe("SignInInformation Component", () => {
                 <MemoryRouter initialEntries={["/signin"]}> 
                     <Routes>
                         <Route path="/signin" element={<SignInInformation />} />
-                        <Route path="/MainPage" element={<MainPage />} />
+                        <Route path="/home" element={<Home />} />
                     </Routes>
                 </MemoryRouter>
             </Provider>
@@ -197,7 +197,7 @@ describe("SignInInformation Component", () => {
         await userEvent.click(signInButton);
         
         await waitFor(() => {
-            expect(navigate).toHaveBeenCalledWith("/MainPage");
+            expect(navigate).toHaveBeenCalledWith("/home");
         });
 
         
