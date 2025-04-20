@@ -4,14 +4,15 @@ import useChats from "@hooks/useChats";
 import { ChatIdProvider } from "@context/ChatIdProvider";
 import { NetworkUserIdProvider } from "@context/NetworkUserIdProvider";
 import connectToChat, { disconnectChatSocket } from "@services/api/ChatSocket";
+import { onConnect } from "@services/api/ChatSocket";
 import { useEffect, useState } from "react";
 function FloatingChatSystem() {
   const { opnedChats = [] } = useChats();
   const [isConnected, setIsConnected] = useState<boolean>(false);
   useEffect(() => {
     const initializeChat = async () => {
-      await connectToChat();
-      setIsConnected(true);
+      connectToChat();
+      onConnect(setIsConnected);
     };
 
     initializeChat();

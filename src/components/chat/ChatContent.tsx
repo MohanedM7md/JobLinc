@@ -23,7 +23,7 @@ function ChatContent({ className }: { className?: string }) {
   const { chatId, setChatId } = useChatid();
   const { setOpnedChats } = useChats();
   const { usersId } = useNetworkUserId();
-
+  const userIdRef = useRef<string | null>(localStorage.getItem("userId"));
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const [typingUsers, setTypingUsers] = useState<string[]>([]);
   useEffect(() => {
@@ -71,37 +71,38 @@ function ChatContent({ className }: { className?: string }) {
     };
   }, [chatId]);
   const messageId = Date.now().toString();
-  const handleSendMessage = (message: string | File, type: string) => {
+  const handleSendMessage = async (
+    message: string | File | string,
+    type: string,
+  ) => {
     const newMessage: any = {
       messageId,
-      senderId: store.getState().user.userId,
+      senderId: userIdRef.current,
       time: new Date(),
-      seenBy: [store.getState().user.userId],
+      seenBy: [userIdRef.current],
       status: "sent",
       content: {},
     };
+
     switch (type) {
       case "text":
-        newMessage.content.text = message as string;
+        newMessage.content.text = message;
         break;
-
       case "image":
-        newMessage.content.image = message;
+        newMessage.content.image = message; // This will now be the URL string
         break;
-
       case "video":
-        newMessage.content.video = message;
+        newMessage.content.video = message; // This will now be the URL string
         break;
-
       case "document":
-        newMessage.content.document = message;
+        newMessage.content.document = message; // This will now be the URL string
         break;
-
       default:
         console.warn("Unknown message type:", type);
         newMessage.content.text = typeof message === "string" ? message : "";
         break;
     }
+
     setMessages((prevMsgs) => [...prevMsgs, newMessage]);
 
     if (chatId) {
@@ -114,6 +115,7 @@ function ChatContent({ className }: { className?: string }) {
       });
     }
   };
+
   const handleTypingMessage = (isTyping: boolean) => {
     if (!chatId) return;
     switch (isTyping) {
