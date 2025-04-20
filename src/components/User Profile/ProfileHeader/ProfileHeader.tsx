@@ -1,5 +1,5 @@
 import EditProfile from "./EditProfile";
-import Modal from "../../Authentication/Modal";
+import Modal from "../../utils/Modal";
 import { useState } from "react";
 import EditProfilePicture from "./EditProfilePicture";
 import EditCoverPicture from "./EditCoverPicture";
@@ -53,7 +53,7 @@ function ProfileHeader(props: ProfileProps & { isUser: boolean }) {
         />
         {props.isUser && (
           <button
-            className="material-icons-outlined hover:material-icons-round cursor-pointer absolute top-2 right-2 bg-crimsonRed hover:bg-red-800 text-white p-1 rounded-full shadow-md"
+            className="material-icons-outlined hover:material-icons-round cursor-pointer absolute top-2 right-2 bg-crimsonRed hover:bg-red-800 text-white p-1 rounded-full shadow-md transition duration-400 ease-in-out"
             onClick={() => setIsEditCoverPictureModalOpen(true)}
           >
             camera_alt
@@ -84,7 +84,7 @@ function ProfileHeader(props: ProfileProps & { isUser: boolean }) {
               {props.city}, {props.country}
             </p>
             <span className="text-crimsonRed font-medium cursor-pointer ml-2 hover:underline">
-              Contant Info
+              Contact Info
             </span>
           </div>
           <p className="text-crimsonRed font-medium cursor-pointer hover:underline">
@@ -94,27 +94,29 @@ function ProfileHeader(props: ProfileProps & { isUser: boolean }) {
         {props.isUser && (
           <button
             onClick={() => setIsEditUserModalOpen(true)}
-            className="material-icons w-10 h-10 flex items-center justify-center hover:bg-gray-200 rounded-full cursor-pointer"
+            className="material-icons w-10 h-10 flex items-center justify-center hover:bg-gray-200 rounded-full cursor-pointer transition duration-400 ease-in-out"
           >
             edit
           </button>
         )}
       </div>
 
-      {props.isUser && <div className="flex mt-4 space-x-2">
-        <button className="bg-crimsonRed text-warmWhite px-4 py-1.5 rounded-3xl">
-          Open to Work
-        </button>
-        <button className="bg-darkBurgundy text-warmWhite px-4 py-1.5 rounded-3xl">
-          Add Profile Section
-        </button>
-        <button className="bg-darkBurgundy text-warmWhite px-4 py-1.5 rounded-3xl">
-          Enhance Profile
-        </button>
-        <button className="bg-darkBurgundy text-warmWhite px-4 py-1.5 rounded-3xl">
-          Resources
-        </button>
-      </div> }
+      {props.isUser && (
+        <div className="flex mt-4 space-x-2">
+          <button className="bg-crimsonRed text-warmWhite px-4 py-1.5 rounded-3xl">
+            Open to Work
+          </button>
+          <button className="bg-darkBurgundy text-warmWhite px-4 py-1.5 rounded-3xl">
+            Add Profile Section
+          </button>
+          <button className="bg-darkBurgundy text-warmWhite px-4 py-1.5 rounded-3xl">
+            Enhance Profile
+          </button>
+          <button className="bg-darkBurgundy text-warmWhite px-4 py-1.5 rounded-3xl">
+            Resources
+          </button>
+        </div>
+      )}
 
       <Modal
         isOpen={isEditUserModalOpen}

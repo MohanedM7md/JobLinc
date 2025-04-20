@@ -46,6 +46,9 @@ export default function PostContainerHeader(props: HeaderProps) {
             handleAddPost();
             setPostText("");
           }
+          else {
+            toast.error("Please enter a post text.");
+          }
         }}
         className="material-icons-round cursor-pointer rounded-full p-1 mt-1 mx-2 text-gray-500 hover:bg-gray-200 h-fit"
       >

@@ -8,7 +8,8 @@ import { ChevronLeftIcon } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store/store";
 import { useNavigate } from "react-router-dom";
-import Modal from "../components/Authentication/Modal";
+
+import Modal from "../components/utils/Modal";
 import { Link } from "react-router-dom";
 import PasswordFieldNormal from "../components/Authentication/Utilities/PasswordFieldNormal";
 import { isValidPassword } from "../components/Authentication/Utilities/Validations";

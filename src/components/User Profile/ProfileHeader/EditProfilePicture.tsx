@@ -168,14 +168,14 @@ export default function EditProfilePicture(props: EditProfilePictureProps) {
       <div className="flex justify-between mt-4 space-x-2">
         <button
           onClick={confirmPicture}
-          className="bg-crimsonRed text-warmWhite px-4 py-1.5 rounded-3xl cursor-pointer hover:bg-red-700"
+          className="bg-crimsonRed text-warmWhite px-4 py-1.5 rounded-3xl cursor-pointer hover:bg-red-700 transition duration-400 ease-in-out"
           disabled={isPending}
         >
           {isPending ? "Saving" : "Confirm picture"}
         </button>
         <button
           onClick={removePicture}
-          className="bg-gray-500 text-warmWhite px-4 py-1.5 rounded-3xl cursor-pointer hover:bg-gray-700"
+          className="bg-gray-500 text-warmWhite px-4 py-1.5 rounded-3xl cursor-pointer hover:bg-gray-700 transition duration-400 ease-in-out"
           disabled={isPending}
         >
           Remove Picture

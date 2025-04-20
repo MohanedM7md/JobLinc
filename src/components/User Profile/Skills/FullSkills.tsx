@@ -1,6 +1,6 @@
 import { SkillInterface } from "interfaces/userInterfaces";
 import { useState, useEffect } from "react";
-import Modal from "../../Authentication/Modal";
+import Modal from "../../utils/Modal";
 import { getSkills } from "@services/api/userProfileServices";
 import AddSkill from "./AddSkill";
 import EditSkill from "./EditSkill";
@@ -45,15 +45,11 @@ export default function FullSkills() {
   }
 
   if (isSkillsFetching) {
-    return (
-    <div>Loading...</div>
-    )
+    return <div>Loading...</div>;
   }
 
   if (isSkillsError) {
-    return (
-    <div>Error loading skills</div>
-    )
+    return <div>Error loading skills</div>;
   }
 
   return (
@@ -63,7 +59,7 @@ export default function FullSkills() {
         {isUser && (
           <button
             onClick={() => setAddSkillModal(true)}
-            className="material-icons font-medium text-2xl p-2 rounded-full hover:bg-gray-600"
+            className="material-icons font-medium text-2xl p-2 rounded-full hover:bg-gray-600 transition duration-400 ease-in-out"
           >
             add
           </button>
@@ -75,7 +71,7 @@ export default function FullSkills() {
             <UserSkill skill={skill} />
             {isUser && (
               <button
-                className="material-icons absolute top-0 right-0 text-xl p-1 rounded-full hover:bg-gray-600 mr-1"
+                className="material-icons absolute top-0 right-0 text-xl p-1 rounded-full hover:bg-gray-600 mr-1 transition duration-400 ease-in-out"
                 onClick={() => setEditSkillData(skill)}
               >
                 edit
