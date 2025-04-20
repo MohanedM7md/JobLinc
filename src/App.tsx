@@ -8,11 +8,9 @@ import SignInPage from "./pages/SignIn";
 import ForgotPassword from "./pages/ForgotPassword";
 import UserDetails from "./components/Authentication/UserDetails";
 const Messaging = lazy(() => import("./pages/Messaging"));
-const UserProfile = lazy(() => import("./pages/UserProfile"));
-//const MyNetwork = lazy(() => import("./pages/MyNetwork"));
+
 import Home from "./pages/Home";
 import MyNetwork from "./pages/MyNetwork";
-import PostContainer from "./components/Posts/PostContainer";
 import PostCreate from "./components/Posts/PostCreate";
 import PostEdit from "./components/Posts/PostEdit";
 import ChangePassword from "./pages/ChangePassword";
@@ -37,11 +35,8 @@ import Visibility from "@pages/Settings/Visibility";
 import DataAndPrivacy from "@pages/Settings/DataAndPrivacy";
 import AdvertisingData from "@pages/Settings/AdvertisingData";
 import DarkMode from "@pages/Settings/AccountPreferences/Display/DarkMode";
-
 import CloseAccount from "@pages/Settings/AccountPreferences/AccountManagement/CloseAccount";
-
 import ThankYouPage from "./pages/ThankYouPage";
-
 import SubscriptionLandingPage from "./pages/SubscriptionLandingPage";
 import SubscriptionManagePage from "./pages/SubscriptionManagePage";
 import RecurringPaymentPage from "./pages/RecurringPaymentPage";
