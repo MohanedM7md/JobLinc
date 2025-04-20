@@ -110,7 +110,7 @@ function PendingInvitationsCard() {
                 </div>
                 <div>
                   <button
-                    data-testid="ignore-button"
+                    data-testid="ignore-inv-button"
                     className="text-darkGray font-semibold hover:bg-lightGray p-1 rounded-md m-1 mx-2"
                     onClick={() => handleReject(index)}
                   >

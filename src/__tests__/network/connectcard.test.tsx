@@ -9,11 +9,11 @@ vi.mock("@services/api/networkServices", () => ({
 
 describe("ConnectCard Component", () => {
   const mockProps = {
-    lincbuttonid: "connect-button",
     profilePicture: "test-profile.jpg",
-    userName: "Test User",
+    firstName: "Test",
+    lastName: "User",
     userBio: "Test Bio",
-    Mutuals: "You have 5 mutual connections",
+    mutuals: "You have 5 mutual connections",
   };
 
   beforeEach(() => {

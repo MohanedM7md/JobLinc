@@ -2,25 +2,32 @@ import { ConnectionInterface } from "interfaces/networkInterfaces";
 import ManageNetworkIcons from "./ManageNetworkIcons";
 import { useEffect, useState } from "react";
 import { getUserConnections } from "@services/api/networkServices";
+import store from "@store/store";
 
 
 
 const ManageNetworkCard: React.FC = () => {
   const [userConnections, setUserConnections] = useState<ConnectionInterface[]>([]);
+  const user = store.getState().user;
+  const userId = user?.userId || null;
   
     useEffect(() => {
       const controller = new AbortController();
       const fetchData = async () => {
         try {
-          const response = await getUserConnections(5, controller.signal);
-          console.log(response);
-          const parsedConnections = Array.isArray(response)
-            ? response.map((connection) => ({
-                ...connection,
-                connectedDate: new Date(connection.connectedDate),
-              }))
-            : [];
-          setUserConnections(parsedConnections);
+          if (userId) {
+            const response = await getUserConnections(userId);
+            console.log(response);
+            const parsedConnections = Array.isArray(response)
+              ? response.map((connection) => ({
+                  ...connection,
+                  connectedDate: new Date(connection.connectedDate),
+                }))
+              : [];
+            setUserConnections(parsedConnections);
+          } else {
+            console.warn("User ID is null. Cannot fetch connections.");
+          }
         } catch (error) {
           console.error("Error fetching network feed:", error);
         }
