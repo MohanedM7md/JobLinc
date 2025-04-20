@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { NewCertificate } from "interfaces/userInterfaces";
 import { addCertificate } from "@services/api/userProfileServices";
-import { months } from "../../../utils/months";
+import { months } from "@utils/months";
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 

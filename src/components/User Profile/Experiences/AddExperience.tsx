@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { months } from "../../../utils/months";
+import { months } from "@utils/months";
 import { NewExperience } from "interfaces/userInterfaces";
 import { addExperience } from "@services/api/userProfileServices";
 import { useMutation } from "@tanstack/react-query";

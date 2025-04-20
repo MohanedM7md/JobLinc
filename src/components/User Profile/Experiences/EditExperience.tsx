@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { months } from "../../../utils/months";
+import { months } from "@utils/months";
 import { ExperienceInterface } from "interfaces/userInterfaces";
 import {
   deleteExperience,
