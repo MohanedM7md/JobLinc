@@ -2,7 +2,6 @@ import { Route, Routes } from "react-router-dom";
 import "./context/ThemeProvider";
 import { lazy } from "react";
 import { ThemeProvider } from "./context/ThemeProvider";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import LandPage from "./pages/Land";
 import SignUpPage from "./pages/SignUp";
 import SignInPage from "./pages/SignIn";
@@ -17,9 +16,7 @@ import PostCreate from "./components/Posts/PostCreate";
 import PostEdit from "./components/Posts/PostEdit";
 import ChangePassword from "./pages/ChangePassword";
 import ResetPassword from "./pages/ResetPassword";
-import UpdateEmail from "./pages/UpdateEmail";
 import UpdateUsername from "./pages/UpdateUsername";
-import ConfirmEmail from "./pages/ConfirmEmail";
 import Error404 from "@pages/Eror404";
 import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -46,8 +43,13 @@ import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { Toaster } from "react-hot-toast";
 import SubscriptionManager from "./pages/SubscriptionManager";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import EmailAddress from "@pages/Settings/SignInAndSecurity/AccountAccess/EmailAddress";
+import Metrics from "./components/Company/Metrics";
 
 const queryClient = new QueryClient()
+
+
 const stripePromise = loadStripe("pk_test_...");
 
 function App() {
@@ -79,42 +81,9 @@ function App() {
                 <Route path="/connections" element={<Connections />} />
                 <Route path="/messaging" element={<Messaging />} />
                 <Route path="/change-password" element={<ChangePassword />} />
-                <Route path="/confirm-email" element={<ConfirmEmail />} />
 
-              <Route path="/settings" element={<Settings />}>
-                <Route index element={<AccountPreferences />} />
-                <Route
-                  path="account-preferences"
-                  element={<AccountPreferences />}
-                />
-                <Route
-                  path="account-preferences/display/dark-mode"
-                  element={<DarkMode />}
-                />
-                <Route
-                  path="account-preferences/account-management/close-account"
-                  element={<CloseAccount />}
-                />
-
-                <Route
-                  path="sign-in-security"
-                  element={<SignInAndSecurity />}
-                />
-                <Route
-                  path="sign-in-security/account-access/change-password"
-                  element={<ChangePassword />}
-                />
-
-                  <Route path="visibility" element={<Visibility />} />
-                  <Route path="data-privacy" element={<DataAndPrivacy />} />
-                  <Route
-                    path="advertising-data"
-                    element={<AdvertisingData />}
-                  ></Route>
-                  <Route path="notifications" element={<Notifications />} />
-                </Route>
-
-              <Route path="/update-email" element={<UpdateEmail />} />
+              
+              <Route path="/metrics" element={<Metrics />} />
               <Route path="/update-username" element={<UpdateUsername />} />
               <Route path="/profile/:userId">
                 <Route index element={<ProfileContainer />} />
@@ -148,6 +117,41 @@ function App() {
                 <Route path=":postId/edit" element={<PostEdit />} />
               </Route>
             </Route>
+            <Route path="/settings" element={<Settings />}>
+                <Route index element={<AccountPreferences />} />
+                <Route
+                  path="account-preferences"
+                  element={<AccountPreferences />}
+                />
+                <Route
+                  path="account-preferences/display/dark-mode"
+                  element={<DarkMode />}
+                />
+                <Route
+                  path="account-preferences/account-management/close-account"
+                  element={<CloseAccount />}
+                />
+
+                <Route
+                  path="sign-in-security"
+                  element={<SignInAndSecurity />}
+                />
+                <Route
+                  path="sign-in-security/account-access/change-password"
+                  element={<ChangePassword />}
+                />
+                <Route
+                  path="sign-in-security/account-access/email-address" 
+                  element={<EmailAddress />} />
+
+                  <Route path="visibility" element={<Visibility />} />
+                  <Route path="data-privacy" element={<DataAndPrivacy />} />
+                  <Route
+                    path="advertising-data"
+                    element={<AdvertisingData />}
+                  ></Route>
+                  <Route path="notifications" element={<Notifications />} />
+                </Route>
           </Route>
 
             <Route path="*" element={<Error404 />} />
