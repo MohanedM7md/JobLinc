@@ -13,6 +13,8 @@ import {
 import { AnimatePresence } from "framer-motion";
 import CommentsContainer from "./Comments/CommentsContainer";
 import PostHeader from "./PostHeader";
+import Repost from "./Repost";
+import Modal from "../utils/Modal";
 
 interface PostProps {
   post: PostInterface;
@@ -22,6 +24,7 @@ interface PostProps {
 export default function Post(props: PostProps) {
   const [hide, setHide] = useState<boolean>(false);
   const [showComment, setShowComment] = useState<boolean>(false);
+  const [showRepostModal, setShowRepostModal] = useState<boolean>(false);
 
   const posterId: string = props.post.userId ?? props.post.companyId ?? "0";
   const name: string =
@@ -111,7 +114,10 @@ export default function Post(props: PostProps) {
             <MessageSquareText className="mr-2" />
             <span className="hidden md:inline-block">Comment</span>
           </button>
-          <button className="transition duration-400 ease-in-out w-3/12 h-10 cursor-pointer font-medium text-gray-500 hover:bg-gray-200 flex items-center justify-center">
+          <button
+            onClick={() => setShowRepostModal(true)}
+            className="transition duration-400 ease-in-out w-3/12 h-10 cursor-pointer font-medium text-gray-500 hover:bg-gray-200 flex items-center justify-center"
+          >
             <Repeat className="mr-2" />
             <span className="hidden md:inline-block">Repost</span>
           </button>
@@ -121,6 +127,17 @@ export default function Post(props: PostProps) {
           </button>
         </div>
       ) : null}
+      {showRepostModal && (
+        <Modal
+          isOpen={showRepostModal}
+          onClose={() => setShowRepostModal(false)}
+        >
+          <Repost
+            repost={props.post.postId}
+            onSuccess={() => setShowRepostModal(false)}
+          />
+        </Modal>
+      )}
       {showComment ? (
         <CommentsContainer
           postId={props.post.postId}
