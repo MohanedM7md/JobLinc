@@ -1,7 +1,7 @@
 import { api } from "./api";
 export const getNetworkFeed = async (count: number, signal: AbortSignal) => {
     try {
-      const response = await api.get(`connection/connected`, {
+      const response = await api.get(`connection/feed`, {
         params: {
           count: count,
           signal,
@@ -13,14 +13,14 @@ export const getNetworkFeed = async (count: number, signal: AbortSignal) => {
     }
   };
 
-  export const getNetworkFeedTest = async () => {
-    try {
-      const response = await api.get(`connection/connected`);
-      return response.data;
-    } catch (error) {
-      console.error("Error fetching feed:", error);
-    }
-  };
+  // export const getNetworkFeedTest = async () => {
+  //   try {
+  //     const response = await api.get(`connection/connected`);
+  //     return response.data;
+  //   } catch (error) {
+  //     console.error("Error fetching feed:", error);
+  //   }
+  // };
 export const getPendingInvitations = async (
   count: number,
   signal: AbortSignal
@@ -42,6 +42,17 @@ export const getUserConnections = async (
 ) => {
   try {
     const response = await api.get(`connection/${userId}/all`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching user connections:', error);
+    return [];
+  }
+};
+
+export const getConnections = async (
+) => {
+  try {
+    const response = await api.get(`connection/connected`);
     return response.data;
   } catch (error) {
     console.error('Error fetching user connections:', error);

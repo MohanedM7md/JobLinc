@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { ConnectionInterface } from "../../interfaces/networkInterfaces";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import NetworkModal from "../../components/MyNetwork/NetworkModal";
 
 function  ConnectionCard(props: ConnectionInterface & { onRemove: (id: string) => void }) {
@@ -8,6 +8,7 @@ function  ConnectionCard(props: ConnectionInterface & { onRemove: (id: string) =
   const popupRef = useRef<HTMLButtonElement>(null);
   const divRef = useRef<HTMLDivElement>(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   
   function getRelativeTime(connectedDate: Date): string {
@@ -42,7 +43,7 @@ function  ConnectionCard(props: ConnectionInterface & { onRemove: (id: string) =
     setShowPopup(!showPopup);
   };
   const handleRemoveConnection= () => {
-    props.onRemove(props.id);
+    props.onRemove(props.userId);
     handleCloseModal();
   }
   const handleOpenModal = () => {
@@ -52,7 +53,9 @@ function  ConnectionCard(props: ConnectionInterface & { onRemove: (id: string) =
   const handleCloseModal = () => {
     setModalOpen(false);
   }
-
+  const handleUserClick= () => {  
+    navigate(`/profile/${props.userId}`);
+  }
   
 
   useEffect(() => {
@@ -79,19 +82,20 @@ function  ConnectionCard(props: ConnectionInterface & { onRemove: (id: string) =
         src={profileImage}
         alt="Profile Picture"
         className="w-15 h-15 rounded-full object-cover cursor-pointer"
+        onClick={handleUserClick}
       />
-      <div className="ml-4 flex-grow">
-        <h3 role="heading" className="font-semibold cursor-pointer hover:underline">
+      <div className="ml-4 flex-grow mr-7">
+        <h3 role="heading" className="font-semibold cursor-pointer hover:underline" onClick={handleUserClick}>
           {firstName} {lastName}
         </h3>
-        <p className="text-gray-500 cursor-pointer">{userBio}</p>
+        <p className="text-gray-500 cursor-pointer text-base line-clamp-2" onClick={handleUserClick}>{userBio}</p>
         <p className="text-xs text-gray-500">{getRelativeTime(connectedDate)}</p>
       </div>
       <div className="w-1/3 flex justify-end items-center">
         <Link data-testid="message-button-route" to="/messaging">
           <button
             data-testid="message-button"
-            className="border-2 px-5 py-0.5 text-crimsonRed border-crimsonRed rounded-full font-semibold hover:bg-lightGray hover:outline-1 cursor-pointer"
+            className="border-2 px-5 py-0.5 text-crimsonRed border-crimsonRed rounded-full font-semibold hover:bg-lightGray hover:outline-1 cursor-pointer "
           >
             Message
           </button>

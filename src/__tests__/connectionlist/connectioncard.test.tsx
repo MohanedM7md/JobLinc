@@ -6,7 +6,7 @@ import { vi } from "vitest";
 const mockOnRemove = vi.fn(); 
 
 const mockProps = {
-  id: "1",
+  userId: "1",
   profileImage: "test-image.jpg",
   firstName: "John",
   lastName: "Doe",
@@ -79,7 +79,7 @@ describe("ConnectionCard component", () => {
 
     const confirmButton = screen.getByTestId("confirm-remove-connection-button");
     fireEvent.click(confirmButton);
-
+    
     expect(mockOnRemove).toHaveBeenCalledWith("1");
   });
 

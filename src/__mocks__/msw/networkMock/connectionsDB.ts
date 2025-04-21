@@ -2,7 +2,7 @@ import { ConnectionInterface } from "../../../interfaces/networkInterfaces";
 
 export const connectionresponse: ConnectionInterface[] = [
   {
-    id: "1",
+    userId: "1",
     profileImage: "src/assets/Tyrone.jpg",
     firstName: "John",
     lastName: "Doe",
@@ -10,7 +10,7 @@ export const connectionresponse: ConnectionInterface[] = [
     connectedDate: new Date("2023-05-12"),
   },
   {
-    id: "2",
+    userId: "2",
     profileImage: "src/assets/Tyrone.jpg",
     firstName: "Jane",
     lastName: "Smith",
@@ -18,7 +18,7 @@ export const connectionresponse: ConnectionInterface[] = [
     connectedDate: new Date("2022-11-05"),
   },
   {
-    id: "3",
+    userId: "3",
     profileImage: "src/assets/Tyrone.jpg",
     firstName: "Ali",
     lastName: "Khaled",
@@ -26,7 +26,7 @@ export const connectionresponse: ConnectionInterface[] = [
     connectedDate: new Date("2023-01-20"),
   },
   {
-    id: "4",
+    userId: "4",
     profileImage: "src/assets/Tyrone.jpg",
     firstName: "Emma",
     lastName: "Brown",

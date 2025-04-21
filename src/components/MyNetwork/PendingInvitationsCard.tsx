@@ -76,7 +76,7 @@ function PendingInvitationsCard() {
           <li key={index} className="m-2">
             {invitation.acknowledged ? (
               
-              <div className="flex items-center bg-gray-100 p-2 rounded-md">
+              <div className="flex items-center bg-gray-100 p-2 rounded-md cursor-pointer">
                 <img
                   src={invitation.profilePicture}
                   alt="Profile Picture"
@@ -84,7 +84,7 @@ function PendingInvitationsCard() {
                 />
                 <div className="ml-4 flex-grow">
                   <p className="font-semibold">
-                    {invitation.userName} is now a connection!
+                    {invitation.firstName} {invitation.lastName} is now a connection!
                   </p>
                 </div>
                 <button
@@ -104,7 +104,7 @@ function PendingInvitationsCard() {
                   className="w-15 h-15 rounded-full object-cover"
                 />
                 <div className="ml-4 flex-grow">
-                  <h3 className="font-semibold">{invitation.userName}</h3>
+                  <h3 className="font-semibold">{invitation.firstName} {invitation.lastName}</h3>
                   <p className="text-gray-500">{invitation.userBio}</p>
                   <p className="text-xs text-gray-500">{invitation.Mutuals}</p>
                 </div>
@@ -132,7 +132,7 @@ function PendingInvitationsCard() {
 
       <NetworkModal isOpen={isModalOpen} onClose={handleCloseModal}>
         <h2 className="font-semibold mb-4">All Invitations </h2>
-        <p className="text-center text-gray-500">{invitations.length>0 ? "" : "No pending invitations"}</p>
+        <p className="text-center text-gray-500">{invitations.length > 0 ? "" : "No pending invitations"}</p>
         <ul>
           {invitations.map((invitation, index) => (
             <li key={index} className="mb-4 flex items-center">
@@ -146,7 +146,7 @@ function PendingInvitationsCard() {
                 />
                 <div className="ml-4 flex-grow">
                   <p className="font-semibold">
-                    {invitation.userName} is now a connection!
+                    {invitation.firstName} {invitation.lastName} is now a connection!
                   </p>
                 </div>
                 <button
@@ -166,7 +166,7 @@ function PendingInvitationsCard() {
                     className="w-10 h-10 rounded-full object-cover"
                   />
                   <div className="ml-4 flex-grow">
-                    <h3 className="font-semibold">{invitation.userName}</h3>
+                    <h3 className="font-semibold">{invitation.firstName} {invitation.lastName}</h3>
                     <p className="text-gray-500">{invitation.userBio}</p>
                     <p className="text-xs text-gray-500">{invitation.Mutuals}</p>
                   </div>

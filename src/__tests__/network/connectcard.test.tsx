@@ -2,6 +2,7 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import ConnectCard from "../../components/MyNetwork/ConnectCard";
 import { sendConnectionRequest } from "@services/api/networkServices";
 import { Mock, vi } from "vitest";
+import { MemoryRouter } from "react-router-dom";
 
 vi.mock("@services/api/networkServices", () => ({
   sendConnectionRequest: vi.fn(),
@@ -9,6 +10,7 @@ vi.mock("@services/api/networkServices", () => ({
 
 describe("ConnectCard Component", () => {
   const mockProps = {
+    userId: "67fbcbde912042b8580eed94",
     profilePicture: "test-profile.jpg",
     firstName: "Test",
     lastName: "User",
@@ -21,7 +23,11 @@ describe("ConnectCard Component", () => {
   });
 
   it("renders user information correctly", () => {
-    render(<ConnectCard {...mockProps} />);
+    render(
+    <MemoryRouter>
+      <ConnectCard {...mockProps} />
+    </MemoryRouter>
+  );
 
     expect(screen.getByText("Test User")).toBeInTheDocument();
     expect(screen.getByText("Test Bio")).toBeInTheDocument();
@@ -33,7 +39,11 @@ describe("ConnectCard Component", () => {
   });
 
   it("button shows 'Linc' initially and calls the API on click", async () => {
-    render(<ConnectCard {...mockProps} />);
+    render(
+      <MemoryRouter>
+        <ConnectCard {...mockProps} />
+      </MemoryRouter>
+    );
     const button = screen.getByRole("button", { name: /linc/i });
 
     fireEvent.click(button);
@@ -47,7 +57,11 @@ describe("ConnectCard Component", () => {
   it("displays error message when the API call fails", async () => {
     (sendConnectionRequest as Mock).mockRejectedValueOnce(new Error("API error"));
 
-    render(<ConnectCard {...mockProps} />);
+    render(
+      <MemoryRouter>
+        <ConnectCard {...mockProps} />
+      </MemoryRouter>
+    );
     const button = screen.getByRole("button", { name: /linc/i });
 
     fireEvent.click(button);
@@ -60,7 +74,11 @@ describe("ConnectCard Component", () => {
   it("opens and closes the modal when the button is clicked after 'Pending' state", async () => {
     (sendConnectionRequest as Mock).mockResolvedValueOnce({ success: true });
 
-    render(<ConnectCard {...mockProps} />);
+    render(
+      <MemoryRouter>
+        <ConnectCard {...mockProps} />
+      </MemoryRouter>
+    );
     const button = screen.getByRole("button", { name: /linc/i });
 
     fireEvent.click(button);
@@ -79,7 +97,11 @@ describe("ConnectCard Component", () => {
   it("withdraws invitation and resets state", async () => {
     (sendConnectionRequest as Mock).mockResolvedValueOnce({ success: true });
 
-    render(<ConnectCard {...mockProps} />);
+    render(
+      <MemoryRouter>
+        <ConnectCard {...mockProps} />
+      </MemoryRouter>
+    );
     const button = screen.getByRole("button", { name: /linc/i });
 
     fireEvent.click(button);

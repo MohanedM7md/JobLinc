@@ -24,7 +24,7 @@ interface ConnectionRequestBody {
 const connectionRequests: ConnectionRequestResponse[] = [];
 
 export const connectsHandler = [
-    http.get(`${API_URL}connection/connected`, async ({ params }) => {
+    http.get(`${API_URL}connection/feed`, async ({ params }) => {
       return HttpResponse.json<connectsInterface[]>(connectsResponse, {
         status: 200,
         statusText: "OK",
@@ -38,12 +38,19 @@ export const connectsHandler = [
     });
   }),
   
-  http.get(`${API_URL}connection/:userId/all`, async ({ params }) => {
+  http.get(`${API_URL}connection/connected`, async ({ params }) => {
     return HttpResponse.json<ConnectionInterface[]>(connectionresponse, {
       status: 200,
       statusText: 'OK',
     });
   }),
+
+    // http.get(`${API_URL}connection/:userId/all`, async ({ params }) => {
+  //   return HttpResponse.json<ConnectionInterface[]>(connectionresponse, {
+  //     status: 200,
+  //     statusText: 'OK',
+  //   });
+  // }),
   
   
   http.post<{}, ConnectionRequestBody>(

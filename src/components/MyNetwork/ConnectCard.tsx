@@ -3,10 +3,12 @@ import { sendConnectionRequest } from "@services/api/networkServices";
 import { toast } from "react-hot-toast";
 import NetworkModal from "./NetworkModal";
 import { connectsInterface } from "interfaces/networkInterfaces";
+import { useNavigate } from "react-router-dom";
 
 function ConnectCard(props: connectsInterface) {
   const [isClicked, setIsClicked] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handlelincClick = async () => {
     if (!isClicked) {
@@ -45,6 +47,9 @@ function ConnectCard(props: connectsInterface) {
     <div
       data-testid="connect-card"
       className="border-2 border-gray-200 rounded-xl flex-col w-57 h-80 justify-center items-center cursor-pointer"
+      onClick={() => {
+        navigate(`/profile/${props.userId}`);
+      }}
     >
       <div className="relative flex flex-col w-full h-7/20 justify-center items-center">
         <img

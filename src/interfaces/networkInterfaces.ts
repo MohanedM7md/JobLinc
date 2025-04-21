@@ -1,4 +1,5 @@
 export interface connectsInterface {
+    userId: string;
     profilePicture: string,
     firstName: string,
     lastName: string,
@@ -6,14 +7,16 @@ export interface connectsInterface {
     mutuals: string,
   }
 export interface invitationInterface {
-    profilePicture: string; 
-    userName: string;
+    userId: string;
+    profilePicture: string;
+    firstName: string;
+    lastName: string;
     userBio: string;
     Mutuals: string;
     acknowledged?: boolean;
   }
   export interface ConnectionInterface {
-    id: string;
+    userId: string;
     profileImage: string;
     firstName: string;
     lastName: string;

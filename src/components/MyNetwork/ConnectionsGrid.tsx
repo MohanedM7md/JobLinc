@@ -48,12 +48,13 @@ function ConnectionsGrid() {
   return (
     <div
       role="grid"
-      className="grid sm:grid-cols-2 lg:grid-cols-4 bg-white rounded-md border-2 border-gray-200 p-4"
+      className="grid sm:grid-cols-2 md:grid-col-2 lg:grid-cols-3 xl:grid-cols-4 bg-white rounded-md border-2 border-gray-200 p-4"
     >
       {Array.isArray(connects) &&
         connects.map((connect, index) => (
           <ConnectCard
             key={index}
+            userId={connect.userId}
             profilePicture={connect.profilePicture}
             firstName={connect.firstName}
             lastName={connect.lastName}
