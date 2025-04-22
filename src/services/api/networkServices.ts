@@ -22,14 +22,9 @@ export const getNetworkFeed = async (count: number, signal: AbortSignal) => {
   //   }
   // };
 export const getPendingInvitations = async (
-  count: number,
-  signal: AbortSignal
 ) => {
   try {
-    const response = await api.get('pendinginvitations', {
-      params: { count },
-      signal,
-    });
+    const response = await api.get('connection/received');
     return response.data;
   } catch (error) {
     console.error('Error fetching pending invitations:', error);

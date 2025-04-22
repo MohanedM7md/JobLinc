@@ -6,7 +6,7 @@ export const connectsResponse: connectsInterface[] = [
         firstName: "Tyrone",
         lastName: "Smith",
         userBio: "Junior plumbing student @ Waterloo University",
-        mutuals: "Abdelrahman Fathy and 3 others are mutual connections"
+        Mutuals: 3 
     },
     {
         userId: "67fbcbde912042b8580eed94",
@@ -14,7 +14,7 @@ export const connectsResponse: connectsInterface[] = [
         firstName: "Jane",
         lastName: "Doe",
         userBio: "Senior graphic designer @ Creative Arts",
-        mutuals: "Ahmed El-Sayed and 5 others are mutual connections"
+        Mutuals: 5
     },
     {
         userId: "67fbcbde912042b8580eed94",
@@ -22,7 +22,7 @@ export const connectsResponse: connectsInterface[] = [
         firstName: "John",
         lastName: "Brown",
         userBio: "Software engineer @ Tech Solutions",
-        mutuals: "Sara Ibrahim and 2 others are mutual connections"
+        Mutuals: 2
     },
     {
         userId: "67fbcbde912042b8580eed94",
@@ -30,7 +30,7 @@ export const connectsResponse: connectsInterface[] = [
         firstName: "Tyrone",
         lastName: "Johnson",
         userBio: "Junior plumbing student @ Waterloo University",
-        mutuals: "Abdelrahman Fathy and 3 others are mutual connections"
+        Mutuals: 3
     },
     {
         userId: "67fbcbde912042b8580eed94",
@@ -38,6 +38,6 @@ export const connectsResponse: connectsInterface[] = [
         firstName: "Tyrone",
         lastName: "Lee",
         userBio: "Junior plumbing student @ Waterloo University",
-        mutuals: "Abdelrahman Fathy and 3 others are mutual connections"
+        Mutuals: 3
     },
 ];

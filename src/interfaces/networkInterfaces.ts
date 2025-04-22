@@ -4,7 +4,7 @@ export interface connectsInterface {
     firstName: string,
     lastName: string,
     userBio: string,
-    mutuals: string,
+    Mutuals: Number;
   }
 export interface invitationInterface {
     userId: string;
@@ -12,7 +12,7 @@ export interface invitationInterface {
     firstName: string;
     lastName: string;
     userBio: string;
-    Mutuals: string;
+    Mutuals: Number;
     acknowledged?: boolean;
   }
   export interface ConnectionInterface {

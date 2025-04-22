@@ -6,6 +6,7 @@ import NetworkModal from "../../components/MyNetwork/NetworkModal";
 function  ConnectionCard(props: ConnectionInterface & { onRemove: (id: string) => void }) {
   const [showPopup, setShowPopup] = useState(false);
   const popupRef = useRef<HTMLButtonElement>(null);
+  const iconRef = useRef<HTMLButtonElement>(null);
   const divRef = useRef<HTMLDivElement>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const navigate = useNavigate();
@@ -60,7 +61,7 @@ function  ConnectionCard(props: ConnectionInterface & { onRemove: (id: string) =
 
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
-      if (popupRef.current && (!popupRef.current.contains(event.target as Node))) {
+      if (popupRef.current && (!popupRef.current.contains(event.target as Node)) && iconRef.current && !iconRef.current.contains(event.target as Node)) {
         setShowPopup(false);
       }
     };
@@ -105,6 +106,7 @@ function  ConnectionCard(props: ConnectionInterface & { onRemove: (id: string) =
             data-testid="ellipsis-button"
             className="fa-solid fa-ellipsis mx-3 rounded-full hover:bg-gray-200 p-2 cursor-pointer relative"
             onClick={handleellipsisClick}
+            ref={iconRef}
           ></i>
           {showPopup ? (
             <div

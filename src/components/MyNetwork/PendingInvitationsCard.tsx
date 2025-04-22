@@ -11,8 +11,20 @@ function PendingInvitationsCard() {
     const controller = new AbortController();
     const fetchData = async () => {
       try {
-        const response = await getPendingInvitations(5, controller.signal);
-        console.log(response);
+        const response = await getPendingInvitations();
+        console.log("Invitations:", response);
+        // const parsedInvitations = Array.isArray(response)
+        //   ? response.map((invitation) => ({
+        //     userId: invitation.userId,
+        //     profilePicture: invitation.profilePicture,
+        //     firstName: invitation.firstname,
+        //     lastName: invitation.lastname,
+        //     userBio: invitation.userBio || "No bio provided",
+        //     Mutuals: invitation.mutuals || 0,
+        //     acknowledged: invitation.connectionStatus === "Pending" ? false : true,          
+        //   }))
+        //   : [];
+        // setInvitations(parsedInvitations);
         setInvitations(Array.isArray(response) ? response : []);
       } catch (error) {
         console.error("Error fetching network feed:", error);
@@ -105,8 +117,8 @@ function PendingInvitationsCard() {
                 />
                 <div className="ml-4 flex-grow">
                   <h3 className="font-semibold">{invitation.firstName} {invitation.lastName}</h3>
-                  <p className="text-gray-500">{invitation.userBio}</p>
-                  <p className="text-xs text-gray-500">{invitation.Mutuals}</p>
+                  <p className="text-gray-500 line-clamp-2">{invitation.userBio}</p>
+                  <p className="text-xs text-gray-500">{`${invitation.Mutuals} Mutual Connections.`}</p>
                 </div>
                 <div>
                   <button
@@ -167,8 +179,8 @@ function PendingInvitationsCard() {
                   />
                   <div className="ml-4 flex-grow">
                     <h3 className="font-semibold">{invitation.firstName} {invitation.lastName}</h3>
-                    <p className="text-gray-500">{invitation.userBio}</p>
-                    <p className="text-xs text-gray-500">{invitation.Mutuals}</p>
+                    <p className="text-gray-500 line-clamp-2">{invitation.userBio}</p>
+                    <p className="text-xs text-gray-500">{invitation.Mutuals.toString()} Mutual connections.</p>
                   </div>
                   <div>
                     <button

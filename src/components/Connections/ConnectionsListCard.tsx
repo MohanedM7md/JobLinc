@@ -80,7 +80,7 @@ const filteredConnections = userConnections.filter((connection) => {
   });
 
   return (
-    <div className=" lg:w-6/10 border border-gray-200 rounded-md m-10">
+    <div className=" lg:w-6/10 border border-gray-200 rounded-md m-10 bg-white">
       <div className="w-full">
         <ConnectionsHeader
           searchTerm={searchTerm}

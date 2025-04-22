@@ -2,7 +2,6 @@ import ConnectCard from "./ConnectCard";
 import { useEffect, useState } from "react";
 import { getNetworkFeed } from "../../services/api/networkServices";
 import { connectsInterface } from "interfaces/networkInterfaces";
-import { getNetworkFeedTest } from "../../services/api/networkServices";
 import { testconnectsInterface } from "interfaces/networkInterfaces";
 
 function ConnectionsGrid() {
@@ -59,7 +58,7 @@ function ConnectionsGrid() {
             firstName={connect.firstName}
             lastName={connect.lastName}
             userBio={connect.userBio}
-            mutuals={connect.mutuals}
+            Mutuals={connect.Mutuals}
           />
         ))}
     </div>

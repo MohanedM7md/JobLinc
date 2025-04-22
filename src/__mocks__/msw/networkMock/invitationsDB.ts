@@ -7,7 +7,7 @@ export const invitationsResponse: invitationInterface[] = [
       firstName: "Ben",
       lastName: "Allen",
       userBio: "Frontend Developer at Tech Inc.",
-      Mutuals: "5 mutual connections"
+      Mutuals: 5
   },
   {
       userId: "67fbcbde912042b8580eed94",
@@ -15,7 +15,7 @@ export const invitationsResponse: invitationInterface[] = [
       firstName: "Abdelrahman",
       lastName: "Sakr",
       userBio: "UI/UX Designer at Design Studio",
-      Mutuals: "2 mutual connections"
+      Mutuals: 2
   },
   {
       userId: "67fbcbde912042b8580eed94",
@@ -23,7 +23,7 @@ export const invitationsResponse: invitationInterface[] = [
       firstName: "Abdelrahman",
       lastName: "Fathy",
       userBio: "Mobile Developer at Monster Inc.",
-      Mutuals: "2 mutual connections"
+      Mutuals: 2
   },
   {
       userId: "67fbcbde912042b8580eed94",
@@ -31,7 +31,7 @@ export const invitationsResponse: invitationInterface[] = [
       firstName: "Ben",
       lastName: "Allen",
       userBio: "Frontend Developer at Tech Inc.",
-      Mutuals: "5 mutual connections"
+      Mutuals: 5
   },
   {
       userId: "67fbcbde912042b8580eed94",
@@ -39,7 +39,7 @@ export const invitationsResponse: invitationInterface[] = [
       firstName: "Ben",
       lastName: "Allen",
       userBio: "Frontend Developer at Tech Inc.",
-      Mutuals: "5 mutual connections"
+      Mutuals:5
   },
   {
       userId: "67fbcbde912042b8580eed94",
@@ -47,7 +47,7 @@ export const invitationsResponse: invitationInterface[] = [
       firstName: "Ben",
       lastName: "Allen",
       userBio: "Frontend Developer at Tech Inc.",
-      Mutuals: "5 mutual connections"
+      Mutuals: 5,
   },
   {
       userId: "67fbcbde912042b8580eed94",
@@ -55,7 +55,7 @@ export const invitationsResponse: invitationInterface[] = [
       firstName: "Ben",
       lastName: "Allen",
       userBio: "Frontend Developer at Tech Inc.",
-      Mutuals: "5 mutual connections"
+      Mutuals: 5
   },
   {
       userId: "67fbcbde912042b8580eed94",
@@ -63,6 +63,6 @@ export const invitationsResponse: invitationInterface[] = [
       firstName: "Ben",
       lastName: "Allen",
       userBio: "Frontend Developer at Tech Inc.",
-      Mutuals: "5 mutual connections"
+      Mutuals: 5
   }
 ];
