@@ -25,7 +25,7 @@ export interface ProfileUpdateInterface {
   headline: string;
   country: string;
   city: string;
-  phoneNumber:string;
+  phoneNumber?:string;
 }
 
 export interface EducationInterface {

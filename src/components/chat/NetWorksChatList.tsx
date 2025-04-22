@@ -13,7 +13,7 @@ const NetWorksChatList = ({
   className?: string;
 }) => {
   const [users, setUsers] = useState<NetWorkCard[]>([]);
-  const user = store.getState().user.userId;
+  const user = localStorage.getItem("userId");
   const [isLoading, setIsLoading] = useState(true);
 
   console.log(
