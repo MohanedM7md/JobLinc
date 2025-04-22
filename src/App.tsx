@@ -52,6 +52,7 @@ import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { Toaster } from "react-hot-toast";
 import SubscriptionManager from "./pages/SubscriptionManager";
+import Member from "@pages/Company/Member";
 
 const stripePromise = loadStripe("pk_test_...");
 
@@ -155,6 +156,8 @@ function App() {
               <Route path="setup/new" element={<CreateForm />} />
               <Route path="my-companies" element={<MyCompanies />} />
               <Route path="admin/:companyId" element={<Admin />} />
+              <Route path="member/:slug" element={<Member />} />
+              
             </Route>
           </Route>
 

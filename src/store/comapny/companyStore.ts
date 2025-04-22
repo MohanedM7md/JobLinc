@@ -1,17 +1,17 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { CompanyStoreState } from "./interfaces";
-import { getMyCompany } from "@services/api/companyServices";
+import { getCompanyBySlug, getMyCompany } from "@services/api/companyServices";
 
 export const useCompanyStore = create<CompanyStoreState>()((set) => ({
   company: null,
   loading: true,
   error: null,
 
-  fetchCompany: async () => {
+  fetchCompany: async (slug) => {
     set({ loading: true, error: null });
     try {
-      const response = await getMyCompany();
+      const response = await getCompanyBySlug(String(slug));
       if (!(response.status == 200)) throw new Error("Failed to fetch company");
       const data = response.data;
       set({ company: data, loading: false });

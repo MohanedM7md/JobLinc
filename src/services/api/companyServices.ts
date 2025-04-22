@@ -47,3 +47,8 @@ export const getMyCompanies = async () => {
   const response = await api.get(`/companies`);
   return response;
 };
+
+export const getCompanyBySlug = async (slug: string) => {
+  const response = await api.get(`/companies/${slug}`);
+  return response;
+}

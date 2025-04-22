@@ -1,7 +1,7 @@
 import { CompanySidebar } from "../../components/Company/Admin/CompanySidebar ";
 import { CompanyContent } from "../../components/Company/Admin/CompanyContent";
 import { useCompanyStore } from "@store/comapny/companyStore";
-import LoadinScreen from "../LoadingScreen";
+import LoadingScreen from "../LoadingScreen";
 import { useEffect, useState } from "react";
 import { enterAdminPage } from "@services/api/companyServices";
 import { useParams } from "react-router-dom";
@@ -20,6 +20,7 @@ export default function Admin() {
         } catch (err) {
           if (err.response?.status === 401) {
             setErrPage("Unauthorized");
+            
           } else {
             setErrPage("An error occurred");
           }
@@ -33,7 +34,7 @@ export default function Admin() {
   }, []);
 
   if (err) return <div>Error: {err}</div>;
-  if (loading) return <LoadinScreen />;
+  if (loading) return <LoadingScreen />;
   if (!company) return <div>No company data found</div>;
 
   return (

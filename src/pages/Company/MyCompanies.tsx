@@ -1,17 +1,29 @@
-import { getMyCompanies } from "@services/api/companyServices";
-import React, { useEffect, useState } from "react";
+import { getMyCompanies, getMyCompany } from "@services/api/companyServices";
+import { useEffect, useState } from "react";
 import { Company } from "@store/comapny/interfaces";
 import { useNavigate } from "react-router-dom";
+import { useCompanyStore } from "@store/comapny/companyStore";
+import { FaCommentsDollar } from "react-icons/fa";
 
 function MyCompanies() {
   const [companies, setCompanies] = useState<Company[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-
+  const { company } = useCompanyStore();
+  console.log("company id from store: ", company?._id);
   useEffect(() => {
     const fetchCompanies = async () => {
       try {
         const response = await getMyCompanies();
+        // response.data.map((isMyCompany: Company) => {
+        //   if (isMyCompany._id === company?._id) {
+        //     console.log("comapny id: ", company?.id);
+        //     setCompanies([
+        //       ...companies,
+        //       isMyCompany
+        //     ]);
+        //   }
+        // })
         setCompanies(response.data);
       } catch (error) {
         console.error("Failed to fetch companies:", error);
@@ -64,7 +76,7 @@ function MyCompanies() {
           </p>
           <button
             className="px-8 py-3 bg-crimsonRed text-white rounded-lg hover:bg-darkBurgundy transition-colors shadow-md hover:shadow-lg"
-            onClick={() => navigate("/company/new")}
+            onClick={() => navigate("/company/setup/new")}
           >
             Create Your First Company
           </button>

@@ -17,6 +17,7 @@ import {
 import { FileUploadIcon } from "../Inputs";
 import { updateInfo } from "@services/api/companyServices";
 import { z } from "zod";
+import { useNavigate } from "react-router-dom";
 type CompanySidebarProps = {
   activeContent: string;
   setActiveContent: (content: string) => void;
@@ -47,7 +48,7 @@ export function CompanySidebar({
     { icon: BadgePercent, title: "Advertise today" },
     { icon: Settings, title: "Settings" },
   ];
-
+  const navigate = useNavigate();
   return (
     <div className="w-64 bg-white dark:bg-darkGray border-r border-gray-200 dark:border-gray-700 flex flex-col">
       <div className="p-0">
@@ -101,7 +102,9 @@ export function CompanySidebar({
             <button className="flex items-center text-xs gap-1 px-3 py-1.5 bg-transparent border border-mutedSilver rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-charcoalBlack dark:text-charcoalWhite">
               <span className="text-lg">+</span> Create
             </button>
-            <button className="flex items-center text-xs gap-1 px-3 py-1.5 bg-transparent border border-mutedSilver rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-charcoalBlack dark:text-charcoalWhite">
+            <button className="flex items-center text-xs gap-1 px-3 py-1.5 bg-transparent border border-mutedSilver rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-charcoalBlack dark:text-charcoalWhite"
+            onClick={() => {navigate(`/company/member/${company?.urlSlug}`)}}
+            >
               <Eye className="h-3 w-3" /> View as member
             </button>
           </div>
