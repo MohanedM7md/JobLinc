@@ -46,6 +46,17 @@ export async function updateProfilePicture(file: File) {
   }
 }
 
+export async function deleteProfilePicture() {
+  try {
+    const response = await api.delete("user/edit/profile-picture")
+    return response.status
+  }
+  catch (error) {
+    console.error("Error deleting profile picture:", error)
+    throw error;
+  }
+}
+
 export async function updateCoverPicture(file: File) {
   try {
     const form = new FormData();
@@ -58,6 +69,16 @@ export async function updateCoverPicture(file: File) {
     return response.data;
   } catch (error) {
     console.error("Error updating cover picture:", error);
+    throw error;
+  }
+}
+
+export async function deleteCoverPicture() {
+  try {
+    const response = await api.delete("user/edit/cover-picture")
+    return response.status
+  } catch (error) {
+    console.error("Error deleting cover picture:", error)
     throw error;
   }
 }

@@ -1,9 +1,13 @@
 import { useEffect, useState } from "react";
 import "material-icons";
 import { useMutation } from "@tanstack/react-query";
-import { updateProfilePicture } from "@services/api/userProfileServices";
+import {
+  deleteProfilePicture,
+  updateProfilePicture,
+} from "@services/api/userProfileServices";
 import toast from "react-hot-toast";
 import { LoaderCircle } from "lucide-react";
+import ConfirmAction from "../../utils/ConfirmAction";
 
 interface EditProfilePictureProps {
   profilePicture: string;
@@ -14,6 +18,7 @@ export default function EditProfilePicture(props: EditProfilePictureProps) {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState(props.profilePicture);
   const [isImage, setIsImage] = useState<boolean>(true);
+  const [confirmDelete, setConfirmDelete] = useState<boolean>(false);
   const imageValidation = isImage
     ? ""
     : "Invalid image format. Please upload a JPG, JPEG, or PNG file.";
@@ -25,7 +30,16 @@ export default function EditProfilePicture(props: EditProfilePictureProps) {
     },
   });
 
-  const isPending = updateProfilePictureMutation.isPending;
+  const deleteProfilePictureMutation = useMutation({
+    mutationFn: deleteProfilePicture,
+    onSuccess: () => {
+      props.onSave();
+    },
+  });
+
+  const isPending =
+    updateProfilePictureMutation.isPending ||
+    deleteProfilePictureMutation.isPending;
 
   function fileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const selectedFile = event.target.files?.[0] || null;
@@ -108,11 +122,12 @@ export default function EditProfilePicture(props: EditProfilePictureProps) {
     }
   }
 
-  function removePicture() {
-    setPreview(
-      "https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg",
-    );
-    setFile(null);
+  async function deletePicture() {
+    toast.promise(deleteProfilePictureMutation.mutateAsync(), {
+      loading: "Deleting profile picture...",
+      success: "Profile picture deleted successfully!",
+      error: (error) => error.message,
+    });
   }
 
   return (
@@ -171,16 +186,26 @@ export default function EditProfilePicture(props: EditProfilePictureProps) {
           className="bg-crimsonRed text-warmWhite px-4 py-1.5 rounded-3xl cursor-pointer hover:bg-red-700 transition duration-400 ease-in-out"
           disabled={isPending}
         >
-          {isPending ? "Saving" : "Confirm picture"}
+          {updateProfilePictureMutation.isPending
+            ? "Saving"
+            : "Confirm picture"}
         </button>
         <button
-          onClick={removePicture}
+          onClick={() => setConfirmDelete(true)}
           className="bg-gray-500 text-warmWhite px-4 py-1.5 rounded-3xl cursor-pointer hover:bg-gray-700 transition duration-400 ease-in-out"
           disabled={isPending}
         >
-          Remove Picture
+          {deleteProfilePictureMutation.isPending
+            ? "Removing"
+            : "Remove picture"}
         </button>
       </div>
+      {confirmDelete && (
+        <ConfirmAction
+          action={deletePicture}
+          onClose={() => setConfirmDelete(false)}
+        />
+      )}
     </div>
   );
 }
