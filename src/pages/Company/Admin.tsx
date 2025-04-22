@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { enterAdminPage } from "@services/api/companyServices";
 import { useParams } from "react-router-dom";
 export default function Admin() {
-  const { company, loading, error, fetchCompany, resetCompany } =
+  const { company, loading, error, resetCompany, fetchAdminCompany } =
     useCompanyStore();
   const { companyId } = useParams<string>();
   const [activeContent, setActiveContent] = useState("Dashboard");
@@ -16,7 +16,7 @@ export default function Admin() {
       (async () => {
         try {
           await enterAdminPage(companyId);
-          await fetchCompany();
+          fetchAdminCompany();
         } catch (err) {
           if (err.response?.status === 401) {
             setErrPage("Unauthorized");

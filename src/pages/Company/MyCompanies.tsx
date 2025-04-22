@@ -15,15 +15,7 @@ function MyCompanies() {
     const fetchCompanies = async () => {
       try {
         const response = await getMyCompanies();
-        // response.data.map((isMyCompany: Company) => {
-        //   if (isMyCompany._id === company?._id) {
-        //     console.log("comapny id: ", company?.id);
-        //     setCompanies([
-        //       ...companies,
-        //       isMyCompany
-        //     ]);
-        //   }
-        // })
+        
         setCompanies(response.data);
       } catch (error) {
         console.error("Failed to fetch companies:", error);

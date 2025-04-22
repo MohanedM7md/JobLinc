@@ -42,7 +42,8 @@ export interface CompanyStoreState {
   company: Company | null;
   loading: boolean;
   error: string | null;
-  fetchCompany: (getCompany:(slug:string) => Company) => Promise<void>;
+  fetchCompany: (slug:string) => Promise<void>;
+  fetchAdminCompany: () => void;
   resetCompany: () => void;
   updateBasicInfo: (updates: Partial<Company>) => void;
   updateLogo: (logoUrl: string) => void;

@@ -11,7 +11,21 @@ export const useCompanyStore = create<CompanyStoreState>()((set) => ({
   fetchCompany: async (slug) => {
     set({ loading: true, error: null });
     try {
-      const response = await getCompanyBySlug(String(slug));
+      const response = await getCompanyBySlug(slug);
+      if (!(response.status == 200)) throw new Error("Failed to fetch company");
+      const data = response.data;
+      set({ company: data, loading: false });
+    } catch (error) {
+      set({
+        error: error instanceof Error ? error.message : "Unknown error",
+        loading: false,
+      });
+    }
+  },
+  fetchAdminCompany: async () => {
+    set({ loading: true, error: null });
+    try {
+      const response = await getMyCompany();
       if (!(response.status == 200)) throw new Error("Failed to fetch company");
       const data = response.data;
       set({ company: data, loading: false });
