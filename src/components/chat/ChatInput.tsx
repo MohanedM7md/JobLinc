@@ -125,19 +125,34 @@ function ChatInput({
           ))}
         </div>
       )}
+      <div className="flex w-full items-center">
+        <textarea
+          name="msg"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+          className={`flex-1 w-full bg-warmWhite dark:bg-darkGray text-charcoalBlack dark:text-charcoalWhite p-2 rounded-lg resize-none h-20 focus:outline-none shadow-inner transition-all ${
+            isFocused ? "ring-2 ring-crimsonRed" : "ring-1 ring-gray-400"
+          }`}
+          placeholder="Write a message..."
+        />
 
-      <textarea
-        name="msg"
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
-        className={`flex-1 w-full bg-warmWhite dark:bg-darkGray text-charcoalBlack dark:text-charcoalWhite p-2 rounded-lg resize-none h-10 focus:outline-none shadow-inner transition-all ${
-          isFocused ? "ring-2 ring-crimsonRed" : "ring-1 ring-gray-400"
-        }`}
-        placeholder="Write a message..."
-      />
-
+        <button
+          id="send-msg-btn"
+          onClick={handleSendMessage}
+          disabled={
+            (!message.trim() && selectedFiles.length === 0) || uploading
+          }
+          className={`ml-2 p-1 font-bold rounded-md h-2/4 align-bottom transition-colors flex items-center justify-center min-w-20 ${
+            (message.trim() || selectedFiles.length > 0) && !uploading
+              ? "bg-crimsonRed hover:bg-darkBurgundy text-warmWhite"
+              : "bg-mutedSilver text-charcoalBlack cursor-not-allowed"
+          }`}
+        >
+          {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Send"}
+        </button>
+      </div>
       <div className="flex justify-between w-full pt-4">
         <div>
           <input
@@ -169,21 +184,6 @@ function ChatInput({
             <Smile size={20} />
           </button>
         </div>
-
-        <button
-          id="send-msg-btn"
-          onClick={handleSendMessage}
-          disabled={
-            (!message.trim() && selectedFiles.length === 0) || uploading
-          }
-          className={`ml-2 p-1 rounded-l-full font-bold rounded-r-full transition-colors flex items-center justify-center min-w-20 ${
-            (message.trim() || selectedFiles.length > 0) && !uploading
-              ? "bg-crimsonRed hover:bg-darkBurgundy text-warmWhite"
-              : "bg-mutedSilver text-charcoalBlack cursor-not-allowed"
-          }`}
-        >
-          {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Send"}
-        </button>
       </div>
     </div>
   );

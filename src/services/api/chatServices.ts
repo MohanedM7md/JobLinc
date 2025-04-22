@@ -13,7 +13,7 @@ export const fetchChats = async () => {
 
 export const fetchNetWorks = async (Id: string) => {
   console.log("getting connection");
-  const response = await api.get(`/connection/${Id}/all`);
+  const response = await api.get(`/connection/${Id}/mutual`);
   const users = response.data.map(
     ({
       userId,
@@ -33,7 +33,7 @@ export const fetchChatData = async (chatId: string) => {
 };
 
 export const createChat = async (recievers: string[]) => {
-  const response = await api.post(`/chat/create`, { receiverIDs: recievers });
+  const response = await api.post(`/chat/create`, { receiverIds: recievers });
   return response.data;
 };
 

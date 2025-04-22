@@ -51,6 +51,7 @@ export const sendMessage = (
   if (!ChatSocket) return;
   console.log("message sent ", message);
   ChatSocket.emit("sendMessage", { ...message, chatId }, callback);
+  console.log("📩 Sended Message:", message);
 };
 export const typing = (chatId: string) => {
   if (!ChatSocket) return;
