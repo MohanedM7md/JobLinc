@@ -16,11 +16,10 @@ export default function Admin() {
       (async () => {
         try {
           await enterAdminPage(companyId);
-          fetchAdminCompany();
+          await fetchAdminCompany();
         } catch (err) {
           if (err.response?.status === 401) {
             setErrPage("Unauthorized");
-            
           } else {
             setErrPage("An error occurred");
           }
