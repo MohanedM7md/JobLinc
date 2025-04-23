@@ -51,11 +51,11 @@ function FloatingChatWindow({
       initial={{ x: -100 }}
       animate={{ x: 10 }}
       exit={{ x: -50 }}
-      transition={{ duration: 0.3, ease: "easeInOut" }} // ✅ Smooth animation
+      transition={{ duration: 0.3, ease: "easeInOut" }}
       className={`shadow-xl border border-gray-200 rounded-t-lg 
-        transition-transform duration-300
+      
         sm:w-[400px] w-[80vw] mr-10
-        ${className} ${!isActive ? "translate-y-[calc(100%-60px)]" : ""}`}
+        relative bottom-0  ${className} ${!isActive ? "translate-y-[calc(100%-60px)]" : ""}`}
       data-testid="test-floatingWindow"
     >
       <FloatingChatHeader

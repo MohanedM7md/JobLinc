@@ -68,7 +68,6 @@ function ChatInput({
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files && files.length > 0) {
-      // Check file sizes
       const validFiles = Array.from(files).filter((file) => {
         const isImage =
           file.type.startsWith("image/") ||
@@ -104,7 +103,6 @@ function ChatInput({
     <div
       className={`flex flex-col items-center p-3 ${className} bg-charcoalWhite dark:bg-warmBlack border-t border-gray-200 relative`}
     >
-      {/* Selected files preview */}
       {selectedFiles.length > 0 && (
         <div className="w-full mb-2 max-h-20 overflow-y-auto">
           {selectedFiles.map((file, index) => (
