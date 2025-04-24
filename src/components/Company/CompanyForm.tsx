@@ -21,6 +21,7 @@ import {
 } from "./Inputs";
 import { debouncedValidateSlug } from "./Utils";
 import { createCompnay } from "@services/api/companyServices";
+import { useNavigate } from "react-router-dom";
 
 const CompanySchema = z.object({
   name: z.string().min(1, "Company name is required"),
@@ -109,6 +110,8 @@ export const CompanyForm = () => {
   const [errors, dispatchError] = useReducer(errorReducer, {});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const navigate = useNavigate();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -152,6 +155,7 @@ export const CompanyForm = () => {
 
       if (response.status < 200 || response.status >= 300)
         throw new Error("Submission failed");
+      const companyId: string = response.data.id;
       setName("");
       setUrlSlug("");
       setIndustry("");
@@ -162,6 +166,7 @@ export const CompanyForm = () => {
       setWorkplace("Onsite");
       setLogo(null);
       setCoverPhoto(null);
+      navigate(`/company/admin/${companyId}`);
     } catch (error) {
       console.error("Submission error:", error);
       dispatchError({

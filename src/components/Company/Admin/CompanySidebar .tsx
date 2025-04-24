@@ -102,8 +102,11 @@ export function CompanySidebar({
             <button className="flex items-center text-xs gap-1 px-3 py-1.5 bg-transparent border border-mutedSilver rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-charcoalBlack dark:text-charcoalWhite">
               <span className="text-lg">+</span> Create
             </button>
-            <button className="flex items-center text-xs gap-1 px-3 py-1.5 bg-transparent border border-mutedSilver rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-charcoalBlack dark:text-charcoalWhite"
-            onClick={() => {navigate(`/company/member/${company?.urlSlug}`)}}
+            <button
+              className="flex items-center text-xs gap-1 px-3 py-1.5 bg-transparent border border-mutedSilver rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-charcoalBlack dark:text-charcoalWhite"
+              onClick={() => {
+                navigate(`/company/member/${company?.urlSlug}`);
+              }}
             >
               <Eye className="h-3 w-3" /> View as member
             </button>
