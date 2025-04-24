@@ -42,12 +42,11 @@ import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { Toaster } from "react-hot-toast";
 import SubscriptionManager from "./pages/SubscriptionManager";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import EmailAddress from "@pages/Settings/SignInAndSecurity/AccountAccess/EmailAddress";
 import Metrics from "./components/Company/Metrics";
 
-const queryClient = new QueryClient()
-
+const queryClient = new QueryClient();
 
 const stripePromise = loadStripe("pk_test_...");
 
@@ -55,9 +54,19 @@ function App() {
   return (
     <>
       {/*<ThemeProvider> */}
-        <QueryClientProvider client={queryClient}>
-          <Elements stripe={stripePromise}>
-            <Routes>
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          duration: 4000,
+          style: {
+            background: "#363636",
+            color: "#fff",
+          },
+        }}
+      />
+      <QueryClientProvider client={queryClient}>
+        <Elements stripe={stripePromise}>
+          <Routes>
             <Route element={<AuthRoute />}>
               <Route path="/" element={<LandPage />} />
               <Route path="/signup" element={<SignUpPage />} />
@@ -81,42 +90,41 @@ function App() {
                 <Route path="/messaging" element={<Messaging />} />
                 <Route path="/change-password" element={<ChangePassword />} />
 
-              
-              <Route path="/metrics" element={<Metrics />} />
-              <Route path="/update-username" element={<UpdateUsername />} />
-              <Route path="/profile/:userId">
-                <Route index element={<ProfileContainer />} />
+                <Route path="/metrics" element={<Metrics />} />
+                <Route path="/update-username" element={<UpdateUsername />} />
+                <Route path="/profile/:userId">
+                  <Route index element={<ProfileContainer />} />
+                  <Route
+                    path="details/experiences"
+                    element={<FullExperiences />}
+                  />
+                  <Route
+                    path="details/certificates"
+                    element={<FullCertificates />}
+                  />
+                  <Route path="details/skills" element={<FullSkills />} />
+                </Route>
+                <Route path="/thank-you" element={<ThankYouPage />} />
+                <Route path="/premium" element={<SubscriptionLandingPage />} />
                 <Route
-                  path="details/experiences"
-                  element={<FullExperiences />}
+                  path="/manage-subscription"
+                  element={<SubscriptionManager />}
                 />
-                <Route
-                  path="details/certificates"
-                  element={<FullCertificates />}
-                />
-                <Route path="details/skills" element={<FullSkills />} />
-              </Route>
-              <Route path="/thank-you" element={<ThankYouPage />} />
-              <Route path="/premium" element={<SubscriptionLandingPage />} />
-              <Route
-                path="/manage-subscription"
-                element={<SubscriptionManager />}
-              />
 
-              <Route
-                path="/subscription-manage"
-                element={<SubscriptionManagePage />}
-              />
-              <Route
-                path="/recurring-payment"
-                element={<RecurringPaymentPage />}
-              />
-              <Route path="/post">
-                <Route path="create" element={<PostCreate />} />
-                <Route path=":postId/edit" element={<PostEdit />} />
+                <Route
+                  path="/subscription-manage"
+                  element={<SubscriptionManagePage />}
+                />
+                <Route
+                  path="/recurring-payment"
+                  element={<RecurringPaymentPage />}
+                />
+                <Route path="/post">
+                  <Route path="create" element={<PostCreate />} />
+                  <Route path=":postId/edit" element={<PostEdit />} />
+                </Route>
               </Route>
-            </Route>
-            <Route path="/settings" element={<Settings />}>
+              <Route path="/settings" element={<Settings />}>
                 <Route index element={<AccountPreferences />} />
                 <Route
                   path="account-preferences"
@@ -140,28 +148,25 @@ function App() {
                   element={<ChangePassword />}
                 />
                 <Route
-                  path="sign-in-security/account-access/email-address" 
-                  element={<EmailAddress />} />
+                  path="sign-in-security/account-access/email-address"
+                  element={<EmailAddress />}
+                />
 
-                  <Route path="visibility" element={<Visibility />} />
-                  <Route path="data-privacy" element={<DataAndPrivacy />} />
-                  <Route
-                    path="advertising-data"
-                    element={<AdvertisingData />}
-                  ></Route>
-                  <Route path="notifications" element={<Notifications />} />
-                </Route>
-          </Route>
+                <Route path="visibility" element={<Visibility />} />
+                <Route path="data-privacy" element={<DataAndPrivacy />} />
+                <Route
+                  path="advertising-data"
+                  element={<AdvertisingData />}
+                ></Route>
+                <Route path="notifications" element={<Notifications />} />
+              </Route>
+            </Route>
 
             <Route path="*" element={<Error404 />} />
           </Routes>
-          <Toaster
-          position="bottom-center"
-          toastOptions={{
-            
-          }} />
-          </Elements>
-        </QueryClientProvider>
+          <Toaster position="bottom-center" toastOptions={{}} />
+        </Elements>
+      </QueryClientProvider>
       {/*</ThemeProvider>*/}
     </>
   );

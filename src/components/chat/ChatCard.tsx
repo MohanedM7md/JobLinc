@@ -68,9 +68,7 @@ export default function ChatCard({
       onClick();
     }
   };
-  console.log("chat cards updating chatName", chatName);
-  console.log("is my crad Read", isRead);
-  console.log("is my crad Read", unreadCount);
+
   return (
     <div
       onClick={handleClick}

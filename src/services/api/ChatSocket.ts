@@ -1,6 +1,7 @@
 import { connectSocket } from "./socket";
 import { RecievedMessage } from "@chatComponent/interfaces/Message.interfaces";
 import { ChatCardInterface } from "@chatComponent/interfaces/Chat.interfaces";
+import toast from "react-hot-toast";
 
 let ChatSocket: SocketIOClient.Socket | null = null;
 
@@ -86,5 +87,14 @@ export const subscribeToChats = (
     onNewChat(chatCard);
   });
 };
+export const listenToOpenChatErrors = () => {
+  if (!ChatSocket) return;
 
+  ChatSocket.on("openChat", (event: string, message: string) => {
+    if (event === "openChat" && message) {
+      toast.error(message);
+      console.error("⚠️ OpenChat Error:", message);
+    }
+  });
+};
 export default connectToChat;

@@ -20,7 +20,7 @@ const ChatCardsList = ({
     const fetchData = async () => {
       try {
         const data = await fetchChats();
-        setChats(data.chats);
+        setChats(data);
       } catch (error) {
         console.error("Error fetching chat data:", error);
       } finally {
