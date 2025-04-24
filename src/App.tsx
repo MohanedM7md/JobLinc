@@ -157,7 +157,6 @@ function App() {
               <Route path="my-companies" element={<MyCompanies />} />
               <Route path="admin/:companyId" element={<Admin />} />
               <Route path="member/:slug" element={<Member />} />
-              
             </Route>
           </Route>
 

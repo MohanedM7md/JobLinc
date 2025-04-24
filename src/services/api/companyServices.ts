@@ -1,5 +1,5 @@
 import { api } from "./api";
-import { FormData } from "../../components/Company/interfaces/inputs.interface";
+import { FormData_Interface } from "../../components/Company/interfaces/inputs.interface";
 import store from "@store/store";
 
 import { updateAccessToken } from "@store/user/userSlice";
@@ -22,13 +22,13 @@ export const enterAdminPage = async (companyId: string) => {
   localStorage.setItem("refreshToken", data.refreshToken);
   localStorage.setItem("companyId", companyId);
 };
-export const createCompnay = async (formData: FormData) => {
+export const createCompnay = async (formData: FormData_Interface) => {
   console.log("Form Data", formData);
   const response = await api.post(`/companies`, { ...formData });
   return response;
 };
 
-export const updateInfo = async (formData: FormData) => {
+export const updateInfo = async (formData: FormData_Interface) => {
   console.log("Form Data", formData);
   const response = await api.patch(`/companies`, { ...formData });
   return response;
@@ -51,4 +51,17 @@ export const getMyCompanies = async () => {
 export const getCompanyBySlug = async (slug: string) => {
   const response = await api.get(`/companies/${slug}`);
   return response;
-}
+};
+
+export const uploadFile = async (file: File): Promise<string> => {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const response = await api.post(`/chat/upload-media`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+
+  return response.data;
+};

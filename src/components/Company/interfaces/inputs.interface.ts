@@ -5,7 +5,7 @@ export interface Location {
   primary?: boolean;
 }
 
-export interface FormData {
+export interface FormData_Interface {
   name?: string;
   phone?: string;
   urlSlug?: string;

@@ -16,7 +16,6 @@ import {
 } from "lucide-react";
 import { FileUploadIcon } from "../Inputs";
 import { updateInfo } from "@services/api/companyServices";
-import { z } from "zod";
 import { useNavigate } from "react-router-dom";
 type CompanySidebarProps = {
   activeContent: string;
@@ -27,7 +26,7 @@ export function CompanySidebar({
   activeContent,
   setActiveContent,
 }: CompanySidebarProps) {
-  const { company, updateCoverPhoto } = useCompanyStore();
+  const { company } = useCompanyStore();
   const [coverPhoto, setCoverPhoto] = useState<string | undefined>(
     company?.coverPhoto,
   );

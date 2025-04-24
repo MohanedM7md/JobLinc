@@ -1,5 +1,5 @@
 import React, { useState, useReducer } from "react";
-import { Location, FormData } from "./interfaces/inputs.interface";
+import { Location, FormData_Interface } from "./interfaces/inputs.interface";
 import { z } from "zod";
 import {
   Building2,
@@ -117,7 +117,7 @@ export const CompanyForm = () => {
     setIsSubmitting(true);
     console.log("I am submitting");
     try {
-      const formData: FormData = {
+      const formData: FormData_Interface = {
         ...(name && { name }),
         ...(phone && { phone }),
         ...(urlSlug && { urlSlug }),

@@ -2,7 +2,7 @@ import { ChevronDown } from "lucide-react";
 import { Listbox } from "@headlessui/react";
 import { useState } from "react";
 import { Location } from "./interfaces/inputs.interface";
-import axios from "axios";
+import { uploadFile } from "@services/api/companyServices";
 const Spinner = () => (
   <svg
     className="animate-spin h-5 w-5 text-gray-500"
@@ -298,19 +298,6 @@ export const FileUpload = ({
       )}
     </div>
   );
-};
-
-const uploadFile = async (file: File): Promise<string> => {
-  const formData = new FormData();
-  formData.append("image", file);
-
-  const response = await axios.get(
-    "https://run.mocky.io/v3/06451b01-26e1-4b21-9721-01762c680766",
-  );
-
-  const data = await response.data;
-
-  return data.url;
 };
 
 export const TextArea = ({
