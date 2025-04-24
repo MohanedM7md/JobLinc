@@ -3,7 +3,7 @@ import { useCompanyStore } from "@store/comapny/companyStore";
 import { useState, useReducer, useEffect } from "react";
 import { z } from "zod";
 import { updateInfo } from "@services/api/companyServices";
-import { FormData } from "../../interfaces/inputs.interface";
+import { FormData_Interface } from "../../interfaces/inputs.interface";
 import { Input, FileUpload } from "../../Inputs";
 import { debouncedValidateSlug } from "../../Utils";
 
@@ -104,7 +104,7 @@ export default function PageInfo() {
         return;
       }
 
-      const response = await updateInfo(formData as FormData);
+      const response = await updateInfo(formData as FormData_Interface);
 
       if (response.status < 200 || response.status >= 300) {
         throw new Error("Submission failed");

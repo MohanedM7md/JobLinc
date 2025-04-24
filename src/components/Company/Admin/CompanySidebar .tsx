@@ -17,11 +17,7 @@ import {
 import { FileUploadIcon } from "../Inputs";
 import { updateInfo } from "@services/api/companyServices";
 import { useNavigate } from "react-router-dom";
-type CompanySidebarProps = {
-  activeContent: string;
-  setActiveContent: (content: string) => void;
-};
-
+import { CompanySidebarProps } from "../interfaces/company.interface";
 export function CompanySidebar({
   activeContent,
   setActiveContent,

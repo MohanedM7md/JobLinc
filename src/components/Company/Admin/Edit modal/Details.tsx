@@ -2,7 +2,16 @@ import React, { useState, useReducer, useEffect, useMemo } from "react";
 import { Input, TextArea, Select, DateInput } from "../../Inputs";
 import { companySizes, companyTypes } from "../../form-config";
 import { z } from "zod";
-import { Hammer } from "lucide-react";
+import {
+  Globe,
+  BriefcaseBusiness,
+  Users,
+  Building2,
+  Phone,
+  CalendarDays,
+  AlignLeft,
+} from "lucide-react";
+
 import { updateInfo } from "@services/api/companyServices";
 import { useCompanyStore } from "@store/comapny/companyStore";
 
@@ -150,10 +159,9 @@ const OrganizationEditForm = () => {
   return (
     <div className="org-page-edit-modal__spacing-wrapper flex justify-center w-full bg-warmWhite">
       <form className="org-page-edit-modal__form w-4/5" onSubmit={handleSubmit}>
-        <h3 className="text-base font-normal text-gray-900">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4 ">
           Provide details to display on your page
         </h3>
-        <p className="text-xs text-gray-500 my-3">indicates required</p>
 
         <fieldset>
           <TextArea
@@ -165,8 +173,8 @@ const OrganizationEditForm = () => {
           />
 
           <Input
-            icon={<Hammer className="h-5 w-5" />}
-            label="website"
+            icon={<Globe className="h-5 w-5 text-mutedSilver" />}
+            label="Website"
             value={formData.website || ""}
             onChange={(value) => handleFieldChange("website", value)}
             placeholder="www.company.org"
@@ -174,16 +182,16 @@ const OrganizationEditForm = () => {
           />
 
           <Input
-            icon={<Hammer className="h-5 w-5" />}
+            icon={<BriefcaseBusiness className="h-5 w-5 text-mutedSilver" />}
             label="Industry"
             value={formData.industry || ""}
             onChange={(value) => handleFieldChange("industry", value)}
             error={errors.industry}
-            placeholder="ex: Information Services"
+            placeholder="e.g., Information Services"
           />
 
           <Select
-            icon={<Hammer className="h-5 w-5" />}
+            icon={<Users className="h-5 w-5 text-mutedSilver" />}
             label="Company size"
             options={companySizes}
             selected={formData.size || ""}
@@ -192,7 +200,7 @@ const OrganizationEditForm = () => {
           />
 
           <Select
-            icon={<Hammer className="h-5 w-5" />}
+            icon={<Building2 className="h-5 w-5 text-mutedSilver" />}
             label="Company type"
             options={companyTypes}
             selected={formData.type || ""}
@@ -201,11 +209,11 @@ const OrganizationEditForm = () => {
           />
 
           <Input
-            icon={<Hammer className="h-5 w-5" />}
+            icon={<Phone className="h-5 w-5 text-mutedSilver" />}
             label="Phone"
             value={formData.phone || ""}
             onChange={(value) => handleFieldChange("phone", value)}
-            placeholder="zero onein"
+            placeholder="e.g., 01001234567"
             error={errors.phone}
           />
 
@@ -220,11 +228,11 @@ const OrganizationEditForm = () => {
         <button
           type="submit"
           disabled={isSubmitting || !hasChanges}
-          className={`w-2/6 mt-3 mb-1 px-4 py-2 text-white font-medium rounded-md transition-colors ${
+          className={`w-2/6 mt-5 mb-2 px-5 py-2.5 text-white font-semibold rounded-lg transition-colors shadow-sm ${
             !hasChanges
               ? "bg-gray-400 cursor-not-allowed"
               : "bg-crimsonRed hover:bg-darkBurgundy"
-          } ${isSubmitting ? "bg-mutedSilver cursor-not-allowed" : ""}`}
+          } ${isSubmitting ? "bg-mutedSilver cursor-wait" : ""}`}
         >
           {isSubmitting ? "Saving..." : "Save Changes"}
         </button>

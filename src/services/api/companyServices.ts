@@ -65,3 +65,20 @@ export const uploadFile = async (file: File): Promise<string> => {
 
   return response.data;
 };
+
+export const addAdmin = async (userId: string) => {
+  const response = await api.post(`/companies/admins`, { userId: userId });
+  return response;
+};
+
+export const deleteAdmin = async (userId: string) => {
+  const response = await api.delete(`/companies/admins/${userId}`);
+  return response;
+};
+
+export const getConnections = async () => {
+  const response = await api.get("/connection/connected");
+  if (response.status != 200)
+    throw new Error("Failed to fetch connection. Please try again.");
+  return response.data;
+};

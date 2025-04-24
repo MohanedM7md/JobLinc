@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
 import { CompanyStoreState } from "./interfaces";
 import { getCompanyBySlug, getMyCompany } from "@services/api/companyServices";
 

@@ -14,7 +14,7 @@ const CompanySchema = z.object({
         primary: z.boolean().optional(),
       }),
     )
-    .min(1, "At least one location is required"),
+    .optional(),
 });
 
 type FormFields = z.infer<typeof CompanySchema>;
@@ -50,13 +50,11 @@ export default function LocationsForm() {
     company?.locations || [],
   );
 
-  // Check for changes
   const hasChanges = !arraysEqual(locations, initialLocations);
 
-  // Helper function to compare location arrays
   function arraysEqual(a: FormFields["locations"], b: FormFields["locations"]) {
-    if (a.length !== b.length) return false;
-    return a.every(
+    if (a?.length !== b?.length) return false;
+    return a?.every(
       (loc, i) =>
         loc.address === b[i].address &&
         loc.city === b[i].city &&
@@ -67,13 +65,13 @@ export default function LocationsForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("is return?");
     if (!hasChanges) return;
-
+    console.log("nope");
     setIsSubmitting(true);
     try {
       const formData = { locations };
       const result = CompanySchema.safeParse(formData);
-
       if (!result.success) {
         const formattedErrors = result.error.format();
         dispatchError({
@@ -81,12 +79,12 @@ export default function LocationsForm() {
           payload: {
             locations: formattedErrors.locations
               ? [{ address: "", city: "", country: "", primary: false }]
-              : undefined,
+              : [],
           },
         });
         return;
       }
-
+      console.log("empty ", locations);
       const response = await updateInfo(formData);
       if (response.status < 200 || response.status >= 300) {
         throw new Error("Submission failed");

@@ -1,5 +1,5 @@
 import { CompanyEditModal } from "./Edit modal/CompanyEditModal";
-
+import SettingsContent from "./Settings/SettingsContent";
 type CompanyContentProps = {
   activeContent: string;
   setActiveContent: (activeContent: string) => void;
@@ -46,7 +46,7 @@ export function CompanyContent({
       case "Advertise today":
         return <div>Advertise Content</div>;
       case "Settings":
-        return <div>Settings Content</div>;
+        return <SettingsContent />;
       default:
         return (
           <div className="space-y-6">
@@ -61,7 +61,7 @@ export function CompanyContent({
   };
 
   return (
-    <div className="flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-800 p-6">
+    <div className="flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-800 ">
       {getContent()}
     </div>
   );
