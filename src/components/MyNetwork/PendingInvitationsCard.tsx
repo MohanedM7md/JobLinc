@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { invitationInterface } from "interfaces/networkInterfaces";
-import { getPendingInvitations } from "../../services/api/networkServices";
+import { AcceptConnectionRequest, getPendingInvitations } from "../../services/api/networkServices";
 import NetworkModal from "./NetworkModal";
+import toast from "react-hot-toast";
 
 function PendingInvitationsCard() {
   const [invitations, setInvitations] = useState<invitationInterface[]>([]);
@@ -19,7 +20,7 @@ function PendingInvitationsCard() {
         //     profilePicture: invitation.profilePicture,
         //     firstName: invitation.firstname,
         //     lastName: invitation.lastname,
-        //     userBio: invitation.userBio || "No bio provided",
+        //     headline: invitation.headline || "",
         //     Mutuals: invitation.mutuals || 0,
         //     acknowledged: invitation.connectionStatus === "Pending" ? false : true,          
         //   }))
@@ -37,23 +38,51 @@ function PendingInvitationsCard() {
     };
   }, []);
 
-  const handleAccept = (index: number) => {
-    setInvitations((prevInvitations) =>
-      prevInvitations.map((invitation, i) =>
-        i === index
-          ? {
-              ...invitation,
-              acknowledged: true,
-            }
-          : invitation
-      )
-    );
+  const handleAccept = async (index: number) => {
+    const AcceptPromise = AcceptConnectionRequest(invitations[index].userId);
+    try {
+      const response = await AcceptPromise;
+      toast.promise(AcceptPromise, {
+        loading: `Accepting Invitation...`,
+        success: `${invitations[index].firstName} ${invitations[index].lastName} is now a connection!`,
+        error: "Failed to Accept Invitation. Please try again.",
+      });
+      if(response?.status == 200){
+      console.log("Connection Request Accepted:", response);
+      setInvitations((prevInvitations) =>
+        prevInvitations.map((invitation, i) =>
+          i === index
+            ? {
+                ...invitation,
+                acknowledged: true,
+              }
+            : invitation
+        )
+      );
+    }
+    } catch (err) {
+      console.error("Failed to accept connection request:", err);
+    }
   };
 
-  const handleReject = (index: number) => {
+  const handleReject = async (index: number) => {
+    const RejectPromise = AcceptConnectionRequest(invitations[index].userId);
+    try {
+      const response = await RejectPromise;
+      toast.promise(RejectPromise, {
+        loading: `Rejecting Invitation...`,
+        success: `${invitations[index].firstName} ${invitations[index].lastName}'s Invitation is rejected`,
+        error: "Failed to Reject Invitation. Please try again.",
+      });
+      if(response?.status == 200){
+      console.log("Connection Request Accepted:", response);
     setInvitations((prevInvitations) =>
       prevInvitations.filter((_, i) => i !== index)
     );
+  }
+  } catch (err) {
+  console.error("Failed to reject connection request:", err);
+  }
   };
 
   const handleRemoveAcknowledgment = (index: number) => {
@@ -117,7 +146,7 @@ function PendingInvitationsCard() {
                 />
                 <div className="ml-4 flex-grow">
                   <h3 className="font-semibold">{invitation.firstName} {invitation.lastName}</h3>
-                  <p className="text-gray-500 line-clamp-2">{invitation.userBio}</p>
+                  <p className="text-gray-500 line-clamp-2">{invitation.headline}</p>
                   <p className="text-xs text-gray-500">{`${invitation.Mutuals} Mutual Connections.`}</p>
                 </div>
                 <div>
@@ -179,7 +208,7 @@ function PendingInvitationsCard() {
                   />
                   <div className="ml-4 flex-grow">
                     <h3 className="font-semibold">{invitation.firstName} {invitation.lastName}</h3>
-                    <p className="text-gray-500 line-clamp-2">{invitation.userBio}</p>
+                    <p className="text-gray-500 line-clamp-2">{invitation.headline}</p>
                     <p className="text-xs text-gray-500">{invitation.Mutuals.toString()} Mutual connections.</p>
                   </div>
                   <div>

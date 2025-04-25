@@ -6,7 +6,7 @@ export const invitationsResponse: invitationInterface[] = [
       profilePicture: "src/assets/Tyrone.jpg",
       firstName: "Ben",
       lastName: "Allen",
-      userBio: "Frontend Developer at Tech Inc.",
+      headline: "Frontend Developer at Tech Inc.",
       Mutuals: 5
   },
   {
@@ -14,7 +14,7 @@ export const invitationsResponse: invitationInterface[] = [
       profilePicture: "src/assets/Tyrone.jpg",
       firstName: "Abdelrahman",
       lastName: "Sakr",
-      userBio: "UI/UX Designer at Design Studio",
+      headline: "UI/UX Designer at Design Studio",
       Mutuals: 2
   },
   {
@@ -22,7 +22,7 @@ export const invitationsResponse: invitationInterface[] = [
       profilePicture: "src/assets/Tyrone.jpg",
       firstName: "Abdelrahman",
       lastName: "Fathy",
-      userBio: "Mobile Developer at Monster Inc.",
+      headline: "Mobile Developer at Monster Inc.",
       Mutuals: 2
   },
   {
@@ -30,7 +30,7 @@ export const invitationsResponse: invitationInterface[] = [
       profilePicture: "src/assets/Tyrone.jpg",
       firstName: "Ben",
       lastName: "Allen",
-      userBio: "Frontend Developer at Tech Inc.",
+      headline: "Frontend Developer at Tech Inc.",
       Mutuals: 5
   },
   {
@@ -38,7 +38,7 @@ export const invitationsResponse: invitationInterface[] = [
       profilePicture: "src/assets/Tyrone.jpg",
       firstName: "Ben",
       lastName: "Allen",
-      userBio: "Frontend Developer at Tech Inc.",
+      headline: "Frontend Developer at Tech Inc.",
       Mutuals:5
   },
   {
@@ -46,7 +46,7 @@ export const invitationsResponse: invitationInterface[] = [
       profilePicture: "src/assets/Tyrone.jpg",
       firstName: "Ben",
       lastName: "Allen",
-      userBio: "Frontend Developer at Tech Inc.",
+      headline: "Frontend Developer at Tech Inc.",
       Mutuals: 5,
   },
   {
@@ -54,7 +54,7 @@ export const invitationsResponse: invitationInterface[] = [
       profilePicture: "src/assets/Tyrone.jpg",
       firstName: "Ben",
       lastName: "Allen",
-      userBio: "Frontend Developer at Tech Inc.",
+      headline: "Frontend Developer at Tech Inc.",
       Mutuals: 5
   },
   {
@@ -62,7 +62,7 @@ export const invitationsResponse: invitationInterface[] = [
       profilePicture: "src/assets/Tyrone.jpg",
       firstName: "Ben",
       lastName: "Allen",
-      userBio: "Frontend Developer at Tech Inc.",
+      headline: "Frontend Developer at Tech Inc.",
       Mutuals: 5
   }
 ];

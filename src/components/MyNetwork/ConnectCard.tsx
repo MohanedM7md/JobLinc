@@ -42,16 +42,16 @@ function ConnectCard(props: connectsInterface) {
     setModalOpen(false);
     setIsClicked(false);
   };
+  const handleNavigate = () => {
+    navigate(`/profile/${props.userId}`);
+  }
 
   return (
     <div
       data-testid="connect-card"
       className="border-2 border-gray-200 rounded-xl flex-col w-57 h-80 justify-center items-center cursor-pointer"
-      onClick={() => {
-        navigate(`/profile/${props.userId}`);
-      }}
     >
-      <div className="relative flex flex-col w-full h-7/20 justify-center items-center">
+      <div className="relative flex flex-col w-full h-7/20 justify-center items-center" onClick={()=>handleNavigate()}>
         <img
           src={props.profilePicture}
           alt={`User Profile Photo`}
@@ -63,14 +63,14 @@ function ConnectCard(props: connectsInterface) {
           className="w-full h-full border-b-1 border-gray-300 rounded-t-lg"
         />
       </div>
-      <div className="relative flex flex-col w-full h-13/20 justify-around items-center">
+      <div className="relative flex flex-col w-full h-13/20 justify-around items-center" onClick={()=>handleNavigate()}>
         <div className="flex flex-col w-full justify-center items-center mt-12">
           <p className="font-semibold text-md text-center">
             {props.firstName} {props.lastName}
           </p>
-          <p className="line clamp-2 text-gray-500 text-md text-center">{props.userBio}</p>
+          <p className="line clamp-2 text-gray-500 text-md text-center">{props.headline}</p>
         </div>
-        <div className="flex w-full justify-center items-center">
+        <div className="flex w-full justify-center items-center" onClick={()=>handleNavigate()} >
           <p className="flex items-center space-x-2">
             <img
               src={props.profilePicture}

@@ -57,7 +57,7 @@ function ConnectionsGrid() {
             profilePicture={connect.profilePicture}
             firstName={connect.firstName}
             lastName={connect.lastName}
-            userBio={connect.userBio}
+            headline={connect.headline}
             Mutuals={connect.Mutuals}
           />
         ))}

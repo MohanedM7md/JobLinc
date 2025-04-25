@@ -69,3 +69,31 @@ export const sendConnectionRequest = async (targetId: string, userId: string) =>
     console.error("Error sending connection request:", error);
   }
 };
+
+export const AcceptConnectionRequest = async (
+  userId: string,
+) => {
+  try {
+    const payload = {
+      status: "Accepted",
+    };
+    const response = await api.post(`connection/${userId}/respond`, payload);
+    return response;
+  } catch (error) {
+    console.error("Error Accepting connection request:", error);
+  }
+};
+
+export const RejectConnectionRequest = async (
+  userId: string,
+) => {
+  try {
+    const payload = {
+      status: "Rejected",
+    };
+    const response = await api.post(`connection/${userId}/respond`, payload);
+    return response;
+  } catch (error) {
+    console.error("Error Rejecting connection request:", error);
+  }
+};

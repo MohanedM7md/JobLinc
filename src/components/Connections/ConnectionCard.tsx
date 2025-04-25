@@ -73,7 +73,7 @@ function  ConnectionCard(props: ConnectionInterface & { onRemove: (id: string) =
     };
   }, []);
 
-  const { profileImage, firstName, lastName, userBio, connectedDate} = props;
+  const { profileImage, firstName, lastName, headline: userBio, connectedDate} = props;
 
   return (
     <div 

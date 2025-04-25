@@ -3,7 +3,7 @@ export interface connectsInterface {
     profilePicture: string,
     firstName: string,
     lastName: string,
-    userBio: string,
+    headline: string,
     Mutuals: Number;
   }
 export interface invitationInterface {
@@ -11,7 +11,7 @@ export interface invitationInterface {
     profilePicture: string;
     firstName: string;
     lastName: string;
-    userBio: string;
+    headline: string;
     Mutuals: Number;
     acknowledged?: boolean;
   }
@@ -20,7 +20,7 @@ export interface invitationInterface {
     profileImage: string;
     firstName: string;
     lastName: string;
-    userBio: string;
+    headline: string;
     connectedDate: Date;
   }
   export interface ConnectionRequestInterface {

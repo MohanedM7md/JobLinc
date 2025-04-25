@@ -17,26 +17,26 @@ function ConnectionsListCard() {
         console.log("hena");
         console.log(response);
           
-          // const parsedConnections = Array.isArray(response)
-          // ? response.map((connection) => ({
-          //   userId: connection.userId,
-          //   profileImage: connection.profilePicture,
-          //   firstName: connection.firstname,
-          //   lastName: connection.lastname,
-          //   userBio: connection.userBio || "No bio provided",
-          //   connectedDate: new Date(connection.time),
-          // }))
-          // : [];
-          // setUserConnections(parsedConnections);
           const parsedConnections = Array.isArray(response)
           ? response.map((connection) => ({
-              ...connection,
-              connectedDate: connection.connectedDate 
-                ? new Date(connection.connectedDate)
-                : null, 
-            }))
+            userId: connection.userId,
+            profileImage: connection.profilePicture,
+            firstName: connection.firstname,
+            lastName: connection.lastname,
+            headline: connection.headline || "",
+            connectedDate: new Date(connection.time),
+          }))
           : [];
           setUserConnections(parsedConnections);
+          // const parsedConnections = Array.isArray(response)
+          // ? response.map((connection) => ({
+          //     ...connection,
+          //     connectedDate: connection.connectedDate 
+          //       ? new Date(connection.connectedDate)
+          //       : null, 
+          //   }))
+          // : [];
+          // setUserConnections(parsedConnections);
           console.log(userConnections);
         } catch (error) {
           console.error("Error fetching network feed:", error);
@@ -50,9 +50,9 @@ function ConnectionsListCard() {
     };
   }, []);
 
-  useEffect(() => {
-    console.log("Updated userConnections:", userConnections);
-  }, [userConnections]);
+  // useEffect(() => {
+  //   console.log("Updated userConnections:", userConnections);
+  // }, [userConnections]);
 
   const removeConnection = (connectionId: string) => {
     setUserConnections((prevConnections) =>
