@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { fetchNetWorks } from "@services/api/chatServices";
+import { useUser } from "./mockUse";
 import { NetWorkCard } from "./interfaces/Chat.interfaces";
 import NetworkCard from "./NetworkCard";
 import SelectedUserBox from "./UI/SelctedUserBox";
 import useNetworkUserId from "@context/NetworkUserIdProvider";
 import useChatId from "@context/ChatIdProvider";
-import store from "@store/store";
 
 interface ConnectionsListProps {
   onClose?: () => void;
@@ -23,7 +23,7 @@ function ConnectionsList({
 }: ConnectionsListProps) {
   const [users, setUsers] = useState<NetWorkCard[]>([]);
   const [selectedUsers, setSelectedUsers] = useState<NetWorkCard[]>([]);
-  const user = store.getState().user.userId;
+  const { user } = useUser();
   const { setUsersId } = useNetworkUserId();
   const { setChatId } = useChatId();
 

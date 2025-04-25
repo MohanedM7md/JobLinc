@@ -88,7 +88,7 @@ function AccountPreferences ()
             />
 
             <SettingsSection 
-                title="Account management" 
+                title="Account Management" 
                 items={[
                     "Hibernate account",
                     "Close account",

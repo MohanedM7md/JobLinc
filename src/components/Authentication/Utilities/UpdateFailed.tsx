@@ -33,7 +33,7 @@ function UpdateFailed({ WhatFailed, errorText, setVisible, helperText, goTo }: U
       <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3">
         <XCircle className="text-red-600 w-12 h-12" />
         <h2 className="text-2xl sm:text-3xl font-bold text-center sm:text-left text-charcoalBlack">
-          {WhatFailed}
+          Failed to Change {WhatFailed}
         </h2>
       </div>
       <p className="text-base sm:text-lg text-center sm:text-left text-gray-700">

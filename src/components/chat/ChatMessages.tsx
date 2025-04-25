@@ -1,12 +1,15 @@
+import { memo } from "react";
 import MessageBubble from "./MessageBubble";
-import { ChatMessagesProbs } from "./interfaces/Message.interfaces";
-import { User } from "./interfaces/User.interfaces";
 
+import { ChatMessagesProbs } from "./interfaces/Message.interfaces";
+import { RecievedMessage } from "./interfaces/Message.interfaces";
+import { User } from "./interfaces/User.interfaces";
+import store from "@store/store";
 function ChatMessages({ users, messages, className }: ChatMessagesProbs) {
   return (
     <div className="flex-1 space-y-2 bg-gray-100 flex flex-col pt-2 h-auto">
       {messages.length > 0 ? (
-        messages.map((message, index) => {
+        messages.map((message) => {
           const sender = {
             ...(users.find((user: User) => user.userId == message.senderId) || {
               userId: "",
@@ -17,11 +20,13 @@ function ChatMessages({ users, messages, className }: ChatMessagesProbs) {
           };
 
           return (
-            <MessageBubble
-              users={users}
-              key={index % 7}
-              message={{ sender, ...message }}
-            />
+            <>
+              <MessageBubble
+                users={users}
+                key={message.messageId}
+                message={{ sender, ...message }}
+              />
+            </>
           );
         })
       ) : (

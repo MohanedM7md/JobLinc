@@ -15,7 +15,7 @@ function UpdatedSuccessfully(props: UpdatedSuccessfullyProps) {
       <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3">
         <CheckCircle className="text-green-600 w-12 h-12" />
         <h2 className="text-2xl sm:text-3xl font-bold text-center sm:text-left text-charcoalBlack">
-          {props.WhatIsUpdated}
+          {props.WhatIsUpdated} Changed Successfully!
         </h2>
       </div>
 

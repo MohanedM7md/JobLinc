@@ -1,18 +1,12 @@
 import SignHeader from "../components/Authentication/Headers/SignHeader";
 import EmailFieldNormal from "../components/Authentication/Utilities/EmailFieldNormal";
-import { SetStateAction, useState } from "react";
+import { useState } from "react";
 import { AuthenticationSignInButton } from "../components/Authentication/AuthenticationButtons";
 import { updateEmail } from "@store/user/userThunks";
 import { useAppDispatch } from "@store/hooks";
 import UpdatedSuccessfully from "../components/Authentication/Utilities/UpdatedSuccessfully";
 import UpdateFailed from "../components/Authentication/Utilities/UpdateFailed";
-import { ChevronLeftIcon } from "lucide-react";
-import store from "@store/store";
-
-type UpdateEmailProps = {
-    setIsUpdateEmailClicked: React.Dispatch<SetStateAction<boolean>>;
-}
-function UpdateEmail(props: UpdateEmailProps)
+function UpdateEmail()
 {
     const [emailText, setEmailText] = useState("");
     const [emailUpdatedSuccessfully, setEmailUpdatedSuccessfully] = useState(false);
@@ -23,21 +17,23 @@ function UpdateEmail(props: UpdateEmailProps)
     async function isValidSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
         if (!showErrorEmailEmpty && !showErrorEmailInvalid) {
-            const user = store.getState().user
-            if (emailText === user.email)
-            {
-                setEmailUpdateFailed(true);
-                return;
-            }
+            const storedUser = localStorage.getItem("userState");
+            const user = JSON.parse(storedUser || "{}");
+        
             const userId = user.userId;
             const userData = {
-                userId: userId || "",
+                userId: userId,
                 email: emailText,
             };
         
             dispatch(updateEmail(userData))
             .then(() => {
                 setEmailUpdatedSuccessfully(true);
+                const updatedUser = {
+                    ...user,
+                    email: emailText
+                };
+                localStorage.setItem("userState", JSON.stringify(updatedUser));
             })
             .catch((err) => {
                 console.error(err);
@@ -54,12 +50,13 @@ function UpdateEmail(props: UpdateEmailProps)
 
     }
     return (
-        <div className="flex flex-col items-center justify-center w-full bg-white">
+        <div className="flex flex-col items-center justify-center w-full h-screen bg-white">
+        <SignHeader />
 
         {emailUpdatedSuccessfully ? 
-        (<UpdatedSuccessfully WhatIsUpdated="Email updated successfully!" goTo="/home" />) : emailUpdateFailed ? 
+        (<UpdatedSuccessfully WhatIsUpdated="Email" goTo="/home" />) : emailUpdateFailed ? 
         (   <UpdateFailed
-            WhatFailed="Email update failed"
+            WhatFailed="Email"
             errorText="Please enter a valid email address. Click the button below to try again."
             setVisible={setEmailUpdateFailed}
             />
@@ -68,10 +65,6 @@ function UpdateEmail(props: UpdateEmailProps)
             onSubmit={isValidSubmit}
             className="flex flex-col w-80 items-start gap-3 mb-3 bg-lightGray p-5 rounded-xl"
             >
-            <div className="flex items-center w-[60px] hover:underline hover:cursor-pointer" onClick={() => {props.setIsUpdateEmailClicked(false)}}>
-                <ChevronLeftIcon/>
-                <p>Back</p>
-            </div>
             <EmailFieldNormal
                 emailText={emailText}
                 setEmailText={setEmailText}

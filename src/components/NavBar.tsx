@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
-import Searchbar from "./SearchBar";
-import NavIcon from "./NavIcon";
-import Logo from "./Logo";
+import Searchbar from "../components/SearchBar";
+import NavIcon from "../components/NavIcon";
+import Logo from "./utils/Logo";
 function NavBar() {
   const [isLargeScreen, setIsLargeScreen] = useState<boolean>(
     window.innerWidth > 1280,
-  );
+  ); // Typed as boolean
   const [loggedInUserId, setLoggedInUserId] = useState<string | null>("");
+
   useEffect(() => {
     setLoggedInUserId(
       JSON.parse(localStorage.getItem("userState") || "").userId,
@@ -25,7 +26,7 @@ function NavBar() {
     <>
       <nav className="flex flex-row border border-gray-100 shadow-lg rounded overflow-hidden w-full">
         <div className="flex flex-row items-center lg:w-7/20 sm:w-auto overflow-hidden flex-shrink-0 sm:ml-0 md:ml-[5%] mr-3">
-          <Logo id="lincbuttonid" />
+          <Logo />
           <div className="hidden md:flex flex-grow">
             <Searchbar />
           </div>

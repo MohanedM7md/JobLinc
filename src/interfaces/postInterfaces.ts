@@ -37,5 +37,5 @@ export interface PostInterface {
   likes: number;
   comments: number;
   reposts: number;
-  repost: PostInterface | null;
+  repost: string | null;
 }

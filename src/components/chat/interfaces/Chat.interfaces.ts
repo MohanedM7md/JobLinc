@@ -54,7 +54,7 @@ export interface ChatCardInterface {
   chatName: string;
   chatPicture: string[];
   lastMessage: string;
-  sentDate: Date;
-  unreadCount: number;
+  sentDate: string;
+  unseenCount: number;
   isRead: boolean;
 }

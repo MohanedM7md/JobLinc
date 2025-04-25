@@ -124,7 +124,7 @@ export const updateEmail = createAsyncThunk(
   },
 );
 
-export const setUserDetails = createAsyncThunk(
+export const getUserDetails = createAsyncThunk(
   "user/getUserDetails",
   async (_, { rejectWithValue }) => {
     try {

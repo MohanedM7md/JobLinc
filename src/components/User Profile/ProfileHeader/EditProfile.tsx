@@ -1,9 +1,4 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { updateMe } from "@services/api/userProfileServices";
-import { useMutation } from "@tanstack/react-query";
-import { SubmitHandler, useForm } from "react-hook-form";
-import toast from "react-hot-toast";
-import { z } from "zod";
+import React, { useState } from "react";
 
 interface EditProfileProps {
   user: {
@@ -14,59 +9,27 @@ interface EditProfileProps {
     city: string;
     phoneNumber: string;
   };
-  onSave: () => void;
+  onSave: (updatedUser: any) => void;
 }
 
-const schema = z.object({
-  firstname: z.string().min(1, "First name is required"),
-  lastname: z.string().min(1, "Last name is required"),
-  headline: z.string().min(1, "Headline is required"),
-  country: z.string().min(1, "Country is required"), //should be a select
-  city: z.string().min(1, "City is required"), //should be a select
-  phoneNumber: z
-    .string()
-    .regex(/^\d{10}$/, "Phone number must be exactly 10 digits")
-    .or(z.literal("").optional()),
-});
-
-type ProfileFields = z.infer<typeof schema>;
-
 function EditProfile({ user, onSave }: EditProfileProps) {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<ProfileFields>({
-    resolver: zodResolver(schema),
-    defaultValues: {
-      firstname: user.firstname,
-      lastname: user.lastname,
-      headline: user.headline,
-      country: user.country,
-      city: user.city,
-      phoneNumber: user.phoneNumber,
-    },
-  });
-  const editUserMutation = useMutation({
-    mutationFn: updateMe,
-    onSuccess: () => {
-      onSave();
-    },
-  });
+  const [formData, setFormData] = useState({ ...user });
 
-  const isPending = editUserMutation.isPending;
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
 
-  const onSubmit: SubmitHandler<ProfileFields> = (data) => {
-    toast.promise(editUserMutation.mutateAsync(data), {
-      loading: "Saving changes...",
-      success: "Saved changes!",
-      error: (error) => error.message,
-    });
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSave(formData);
   };
 
   return (
     <form
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit}
       className="profile-form p-4 bg-lightGray rounded-lg"
     >
       <div className="max-h-[80vh] overflow-y-auto">
@@ -76,13 +39,12 @@ function EditProfile({ user, onSave }: EditProfileProps) {
           </label>
           <input
             type="text"
-            {...register("firstname")}
+            name="firstname"
+            value={formData.firstname}
+            onChange={handleInputChange}
             className="w-full px-2 py-1 border rounded-lg"
-            readOnly={isPending}
+            required
           />
-          {errors.firstname && (
-            <p className="text-red-500 text-sm">{errors.firstname.message}</p>
-          )}
         </div>
 
         <div className="mb-4">
@@ -91,13 +53,12 @@ function EditProfile({ user, onSave }: EditProfileProps) {
           </label>
           <input
             type="text"
-            {...register("lastname")}
+            name="lastname"
+            value={formData.lastname}
+            onChange={handleInputChange}
             className="w-full px-2 py-1 border rounded-lg"
-            readOnly={isPending}
+            required
           />
-          {errors.lastname && (
-            <p className="text-red-500 text-sm">{errors.lastname.message}</p>
-          )}
         </div>
 
         <div className="mb-4">
@@ -105,14 +66,12 @@ function EditProfile({ user, onSave }: EditProfileProps) {
             Headline
           </label>
           <textarea
-            {...register("headline")}
+            name="headline"
+            value={formData.headline}
+            onChange={handleInputChange}
             className="w-full px-2 py-1 border rounded-lg"
             rows={4}
-            readOnly={isPending}
           />
-          {errors.headline && (
-            <p className="text-red-500 text-sm">{errors.headline.message}</p>
-          )}
         </div>
 
         <div className="mb-4">
@@ -123,23 +82,19 @@ function EditProfile({ user, onSave }: EditProfileProps) {
           </label>
           <input
             type="text"
-            {...register("country")}
+            name="country"
+            value={formData.country}
+            onChange={handleInputChange}
             className="w-full px-2 py-1 border rounded-lg"
-            readOnly={isPending}
           />
-          {errors.country && (
-            <p className="text-red-500 text-sm">{errors.country.message}</p>
-          )}
           <label className="text-sm font-medium text-charcoalBlack">City</label>
           <input
             type="text"
-            {...register("city")}
+            name="city"
+            value={formData.city}
+            onChange={handleInputChange}
             className="w-full px-2 py-1 border rounded-lg"
-            readOnly={isPending}
           />
-          {errors.city && (
-            <p className="text-red-500 text-sm">{errors.city.message}</p>
-          )}
         </div>
 
         <div className="mb-4">
@@ -148,22 +103,32 @@ function EditProfile({ user, onSave }: EditProfileProps) {
           </label>
           <input
             type="text"
-            {...register("phoneNumber")}
+            name="phonenumber"
+            value={formData.phoneNumber}
+            onChange={handleInputChange}
             className="w-full px-2 py-1 border rounded-lg"
-            readOnly={isPending}
           />
-          {errors.phoneNumber && (
-            <p className="text-red-500 text-sm">{errors.phoneNumber.message}</p>
-          )}
+        </div>
+
+        <div className="mb-4">
+          <label className="text-sm font-medium text-charcoalBlack">
+            Industry
+          </label>
+          <input
+            type="text"
+            name="industry"
+            value="Not sent by backend as of now"
+            onChange={handleInputChange}
+            className="w-full px-2 py-1 border rounded-lg"
+          />
         </div>
       </div>
       <div className="flex space-x-2">
         <button
           type="submit"
-          className="bg-crimsonRed text-warmWhite px-4 py-2 rounded-3xl hover:bg-red-700 cursor-pointer transition duration-400 ease-in-out"
-          disabled={isPending}
+          className="bg-crimsonRed text-warmWhite px-4 py-2 rounded-3xl hover:bg-red-700 cursor-pointer"
         >
-          {isPending ? "Saving..." : "Save changes"}
+          Save Changes
         </button>
       </div>
     </form>

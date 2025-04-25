@@ -7,9 +7,8 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
-      "@chatComponent": "/src/components/chat",
-      "@component": "/src/components",
-      "@context": "/src/context",
+      "@chatComponent": "/src/components/chat", // Remove path.resolve and /*
+      "@context": "/src/context", // Use absolute paths starting with /
       "@hooks": "/src/hooks",
       "@pages": "/src/pages",
       "@services": "/src/services",

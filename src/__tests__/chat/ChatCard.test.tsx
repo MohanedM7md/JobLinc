@@ -10,7 +10,7 @@ const mockProps: ChatCardProps = {
   chatPicture: ["https://via.placeholder.com/50"],
   chatName: "John Doe",
   lastMessage: "Hello, how are you?",
-  sentDate: new Date("2023-03-15T10:30:00"), // Replace with an appropriate date-time string
+  sentDate: "10:30 AM",
   onClick: vi.fn(),
   isRead: true,
   unseenCount: 0,
@@ -22,7 +22,7 @@ describe("ChatCard Component", () => {
 
     expect(screen.getByText(/John Doe/i)).toBeInTheDocument();
     expect(screen.getByText(/Hello, how are you?/i)).toBeInTheDocument();
-    expect(screen.getByText("3/15/2023")).toBeInTheDocument();
+    expect(screen.getByText(/10:30 AM/i)).toBeInTheDocument();
   });
 
   it("does not show unseen count when it is zero", () => {

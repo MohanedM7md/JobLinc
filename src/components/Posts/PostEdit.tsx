@@ -1,35 +1,16 @@
 import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { editPost } from "../../services/api/postServices";
-import { useMutation } from "@tanstack/react-query";
-import toast from "react-hot-toast";
 
 export default function PostEdit() {
   const location = useLocation();
   const navigate = useNavigate();
   const [newText, setNewText] = useState<string>(location.state.postText);
 
-  const postEdit = useMutation({
-    mutationFn: editPost,
-    onSuccess: () => {
-      navigate("/home");
-    },
-  });
-
   function submitEdit() {
-    if (newText === "" || newText === location.state.postText) {
-      toast.error("Please enter a new text for the post.");
-      return;
-    } else {
-      toast.promise(
-        postEdit.mutateAsync({ postId: location.state.postId, text: newText }),
-        {
-          loading: "Saving post...",
-          success: "Post edited successfully!",
-          error: (error) => error.message,
-        },
-      );
-    }
+    editPost(location.state.postID, newText).then(() => {
+      navigate("/home");
+    });
   }
 
   return (
@@ -55,12 +36,11 @@ export default function PostEdit() {
             Submit
           </button>
           <div className="flex flex-row w-1/1 justify-end">
-            <button
-              className="cursor-pointer hover:bg-gray-200 rounded-xl h-fit"
-              onClick={() => navigate(-1)}
-            >
-              Cancel
-            </button>
+            <Link to="/post">
+              <button className="cursor-pointer hover:bg-gray-200 rounded-xl h-fit">
+                Cancel
+              </button>
+            </Link>
           </div>
         </div>
       </div>

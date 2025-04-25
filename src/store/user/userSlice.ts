@@ -6,12 +6,11 @@ import {
   resetPassword,
   confirmOTP,
   changePassword,
-  setUserDetails,
+  getUserDetails,
   sendConfirmationEmail,
   confirmEmail,
   updateEmail,
 } from "./userThunks";
-import store from "@store/store";
 import { loadState, saveState } from "./userUtils";
 import { UserState } from "./user.interface";
 
@@ -25,16 +24,12 @@ const userSlice = createSlice({
     },
     logOut: (state) => {
       state.userId = null;
-      state.firstname = null;
-      state.lastname = null;
-      state.email = null;
-      state.profilePicture = null;
       state.role = null;
       state.confirmed = null;
       state.status = "IDLE";
       state.loggedIn = false;
       state.accessToken = null;
-      localStorage.removeItem("userId");
+      localStorage.removeItem("userState");
       localStorage.removeItem("refreshToken");
     },
   },
@@ -49,15 +44,14 @@ const userSlice = createSlice({
 
         if (userData) {
           console.log("Login Response Payload:", userData);
-          state.userId = userData.userId || null;
+          state.userId = userData.userID || null;
           state.role = userData.role || null;
           state.accessToken = userData.accessToken || null;
           state.confirmed = userData.confirmed || null;
-          state.email = userData.email || null;
           state.status = "SUCCESS";
           state.loggedIn = true;
           localStorage.setItem("refreshToken", userData.refreshToken);
-          localStorage.setItem("userId", userData.userId);
+          saveState(userData);
         } else {
           console.error("User data missing in API response:", action.payload);
         }
@@ -77,11 +71,10 @@ const userSlice = createSlice({
           state.role = userData.role || null;
           state.accessToken = userData.accessToken || null;
           state.confirmed = userData.confirmed || false;
-          state.email = userData.email || null;
           state.status = "SUCCESS";
           state.loggedIn = true;
           localStorage.setItem("refreshToken", userData.refreshToken);
-          localStorage.setItem("userId", userData.userId);
+          saveState(userData);
         }
       })
       .addCase(registerUser.rejected, (state) => {
@@ -132,7 +125,7 @@ const userSlice = createSlice({
           state.accessToken = userData.accessToken || null;
           state.status = "SUCCESS";
           localStorage.setItem("refreshToken", userData.refreshToken);
-          localStorage.setItem("userId", userData.userId);
+          saveState(userData);
         }
       })
       .addCase(resetPassword.rejected, (state) => {
@@ -171,33 +164,30 @@ const userSlice = createSlice({
         state.status = "FAILED";
       })
       // Get User Details
-      .addCase(setUserDetails.pending, (state) => {
+      .addCase(getUserDetails.pending, (state) => {
         state.status = "LOADING";
       })
       .addCase(
-        setUserDetails.fulfilled,
+        getUserDetails.fulfilled,
         (state, action: PayloadAction<any>) => {
           const userData = action.payload;
           console.log("set in storage");
 
           if (userData) {
-            state.userId = userData.userId;
-            state.email = userData.email;
-            state.loggedIn = true;
-            state.email = userData.email;
+            console.log("get user details Payload:", userData);
+
             state.userId = userData.userId || null;
-            state.firstname = userData.firstname || null;
-            state.lastname = userData.lastname || null;
-            state.profilePicture = userData.profilePicture || null;
-            state.role = userData.role || null;
-            state.confirmed = userData.confirmed || null;
+            state.loggedIn = true;
+            localStorage.setItem("profilePicture", userData.profilePicture);
+            localStorage.setItem("coverPicture", userData.coverPicture);
+
             state.status = "SUCCESS";
           } else {
             console.error("User data missing in API response:", action.payload);
           }
         },
       )
-      .addCase(setUserDetails.rejected, (state) => {
+      .addCase(getUserDetails.rejected, (state) => {
         state.status = "FAILED";
       })
       // Send Confirmation Email
@@ -211,7 +201,6 @@ const userSlice = createSlice({
 
           if (userData) {
             state.status = "SUCCESS";
-            // localStorage.setItem("tokenForOTP", userData.token);
           } else {
             console.error("User data missing in API response:", action.payload);
           }
@@ -229,12 +218,12 @@ const userSlice = createSlice({
         console.log("Redux Payload: " + JSON.stringify(action.payload));
         if (userData) {
           state.status = "SUCCESS";
-          state.userId = userData.userId;
+          state.userId = userData.userID;
           state.role = userData.role;
           state.accessToken = userData.accessToken;
           state.confirmed = userData.confirmed;
           localStorage.setItem("refreshToken", userData.refreshToken);
-          localStorage.setItem("userId", userData.userId);
+          saveState(userData);
         } else {
           console.error("User data missing in API response:", action.payload);
         }

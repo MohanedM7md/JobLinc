@@ -1,109 +1,99 @@
-import { months } from "@utils/months";
+import { useEffect, useState } from "react";
+import { months } from "../../../utils/months";
 import { NewExperience } from "interfaces/userInterfaces";
 import { addExperience } from "@services/api/userProfileServices";
-import { useMutation } from "@tanstack/react-query";
-import toast from "react-hot-toast";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { SubmitHandler, useForm } from "react-hook-form";
-import z from "zod";
 
 interface AddExperienceProps {
   onUpdate: () => void;
   onClose: () => void;
 }
 
-const schema = z
-  .object({
-    position: z.string().min(1, "Position is required"),
-    company: z.string().min(1, "Company is required"),
-    description: z.string().min(1, "Description is required"), //this shouldn't be a required field (god damn backend)
-    startMonth: z.coerce.number().min(1, "Invalid start month").max(12),
-    startYear: z.coerce.number().min(1900, "Invalid start year"),
-    endMonth: z.coerce.number().min(1, "Invalid end month").max(12),
-    endYear: z.coerce.number().min(1900, "Invalid end year"),
-  })
-  .refine(
-    (data) =>
-      data.startYear < data.endYear ||
-      (data.startYear === data.endYear && data.startMonth < data.endMonth),
-    {
-      message: "Start date must be before end date",
-      path: ["endYear"],
-    },
-  );
-
-type ExperienceFields = z.infer<typeof schema>;
-
 export default function AddExperience(props: AddExperienceProps) {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<ExperienceFields>({
-    resolver: zodResolver(schema),
-  });
+  const [position, setPosition] = useState<string>("");
+  const [company, setCompany] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [startMonth, setStartMonth] = useState<number>(0);
+  const [startYear, setStartYear] = useState<number>(0);
+  const [endMonth, setEndMonth] = useState<number>(0);
+  const [endYear, setendYear] = useState<number>(0);
+  const [dateValidation, setDateValidation] = useState<boolean>(false);
 
-  const addExperienceMutation = useMutation({
-    mutationFn: addExperience,
-    onSuccess: () => {
-      props.onUpdate();
-      props.onClose();
-    },
-  });
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (dateValidation) {
+      const newExperience: NewExperience = {
+        position: position,
+        company: company,
+        description: description,
+        startDate: new Date(startYear, startMonth, 1),
+        endDate: new Date(endYear, endMonth, 1),
+      };
+      addExperience(newExperience).then(() => {
+        props.onUpdate();
+        props.onClose();
+      });
+    }
+  }
 
-  const onSubmit: SubmitHandler<ExperienceFields> = (data) => {
-    const newExperience: NewExperience = {
-      position: data.position,
-      company: data.company,
-      description: data.description,
-      startDate: new Date(data.startYear, data.startMonth - 1, 1),
-      endDate: new Date(data.endYear, data.endMonth - 1, 1),
-    };
-    toast.promise(addExperienceMutation.mutateAsync(newExperience), {
-      loading: "Adding experience...",
-      success: "Experience added successfully",
-      error: (error) => error.message,
-    });
-  };
+  useEffect(() => {
+    if (
+      startMonth !== 0 &&
+      startYear !== 0 &&
+      endMonth !== 0 &&
+      endYear !== 0
+    ) {
+      if (startYear > endYear) {
+        setDateValidation(false);
+      } else if (startYear === endYear && startMonth > startYear) {
+        setDateValidation(false);
+      } else {
+        setDateValidation(true);
+      }
+    } else {
+      setDateValidation(false);
+    }
+  }, [startMonth, startYear, endMonth, endYear]);
 
   return (
     <form
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit}
       className="p-4 bg-lightGray rounded-lg text-charcoalBlack"
     >
       <div className="mb-4">
-        <label className="text-sm font-medium">Title</label>
+        <label className="text-sm font-medium text-charcoalBlack">Title</label>
         <input
           type="text"
-          {...register("position")}
+          name="title"
+          value={position}
+          onChange={(e) => setPosition(e.target.value)}
           className="w-full px-2 py-1 border rounded-lg"
-          disabled={addExperienceMutation.status === "pending"}
+          required
         />
-        {errors.position && (
-          <p className="text-sm text-red-600">{errors.position.message}</p>
-        )}
       </div>
       <div className="mb-4">
-        <label className="text-sm font-medium">Company</label>
+        <label className="text-sm font-medium text-charcoalBlack">
+          Company
+        </label>
         <input
           type="text"
-          {...register("company")}
+          name="company"
+          value={company}
+          onChange={(e) => setCompany(e.target.value)}
           className="w-full px-2 py-1 border rounded-lg"
-          disabled={addExperienceMutation.status === "pending"}
+          required
         />
-        {errors.company && (
-          <p className="text-sm text-red-600">{errors.company.message}</p>
-        )}
       </div>
       <div className="mb-4">
-        <label className="text-sm font-medium">Start Date</label>
+        <label className="text-sm font-medium text-charcoalBlack">
+          Start Date
+        </label>
         <div className="flex gap-2">
           <select
-            {...register("startMonth")}
+            value={startMonth}
+            onChange={(e) => setStartMonth(Number(e.target.value))}
             className="w-1/2 px-2 py-1 border rounded-lg"
-            disabled={addExperienceMutation.status === "pending"}
           >
-            <option value="">Month</option>
+            <option value={0}>Month</option>
             {months.map((month, index) => (
               <option key={index + 1} value={index + 1}>
                 {month}
@@ -111,11 +101,11 @@ export default function AddExperience(props: AddExperienceProps) {
             ))}
           </select>
           <select
-            {...register("startYear")}
+            value={startYear}
+            onChange={(e) => setStartYear(Number(e.target.value))}
             className="w-1/2 px-2 py-1 border rounded-lg"
-            disabled={addExperienceMutation.status === "pending"}
           >
-            <option value="">Year</option>
+            <option value={0}>Year</option>
             {Array.from(
               { length: 50 },
               (_, i) => new Date().getFullYear() - i,
@@ -126,22 +116,18 @@ export default function AddExperience(props: AddExperienceProps) {
             ))}
           </select>
         </div>
-        {errors.startMonth && (
-          <p className="text-sm text-red-600">{errors.startMonth.message}</p>
-        )}
-        {errors.startYear && (
-          <p className="text-sm text-red-600">{errors.startYear.message}</p>
-        )}
       </div>
       <div className="mb-4">
-        <label className="text-sm font-medium">End Date</label>
+        <label className="text-sm font-medium text-charcoalBlack">
+          End Date
+        </label>
         <div className="flex gap-2">
           <select
-            {...register("endMonth")}
+            value={endMonth}
+            onChange={(e) => setEndMonth(Number(e.target.value))}
             className="w-1/2 px-2 py-1 border rounded-lg"
-            disabled={addExperienceMutation.status === "pending"}
           >
-            <option value="">Month</option>
+            <option value={0}>Month</option>
             {months.map((month, index) => (
               <option key={index + 1} value={index + 1}>
                 {month}
@@ -149,11 +135,11 @@ export default function AddExperience(props: AddExperienceProps) {
             ))}
           </select>
           <select
-            {...register("endYear")}
+            value={endYear}
+            onChange={(e) => setendYear(Number(e.target.value))}
             className="w-1/2 px-2 py-1 border rounded-lg"
-            disabled={addExperienceMutation.status === "pending"}
           >
-            <option value="">Year</option>
+            <option value={0}>Year</option>
             {Array.from(
               { length: 50 },
               (_, i) => new Date().getFullYear() - i,
@@ -164,32 +150,25 @@ export default function AddExperience(props: AddExperienceProps) {
             ))}
           </select>
         </div>
-        {errors.endMonth && (
-          <p className="text-sm text-red-600">{errors.endMonth.message}</p>
-        )}
-        {errors.endYear && (
-          <p className="text-sm text-red-600">{errors.endYear.message}</p>
-        )}
       </div>
       <div className="mb-4">
-        <label className="text-sm font-medium">Description</label>
+        <label className="text-sm font-medium text-charcoalBlack">
+          Description
+        </label>
         <textarea
-          {...register("description")}
+          name="headline"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
           className="w-full px-2 py-1 border rounded-lg"
           rows={4}
-          disabled={addExperienceMutation.status === "pending"}
         />
-        {errors.description && (
-          <p className="text-sm text-red-600">{errors.description.message}</p>
-        )}
       </div>
       <div className="flex space-x-2">
         <button
           type="submit"
-          className="bg-crimsonRed text-warmWhite px-4 py-1.5 rounded-3xl cursor-pointer hover:bg-red-700 transition duration-400 ease-in-out"
-          disabled={addExperienceMutation.status === "pending"}
+          className="bg-crimsonRed text-warmWhite px-4 py-1.5 rounded-3xl cursor-pointer hover:bg-red-700"
         >
-          {addExperienceMutation.status === "pending" ? "Adding..." : "Add"}
+          Add
         </button>
       </div>
     </form>

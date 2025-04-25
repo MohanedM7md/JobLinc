@@ -40,7 +40,6 @@ const PasswordFieldWithMovingLabel: React.FC<PasswordFieldWithMovingLabelProps> 
                     onChange={handleChange}
                     onFocus={handleFocus}
                     onBlur={handleFocusOut}
-                    onKeyDown={()=>{}}
                     id="password"
                     placeholder=" "
                     className="peer z-1 border w-full h-11 rounded-sm absolute pl-2 pr-12 hover:cursor-text focus:outline-black transition-all"

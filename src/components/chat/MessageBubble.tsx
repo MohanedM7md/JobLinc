@@ -2,18 +2,55 @@ import React, { useState } from "react";
 import { Img } from "react-image";
 import { isRTL } from "../../utils/IsArabic";
 import { MessageBubbleInterface } from "./interfaces/Message.interfaces";
-import { motion, AnimatePresence } from "framer-motion";
 import { User } from "./interfaces/User.interfaces";
-import SeenBy from "./SeenBy";
+import { motion, AnimatePresence } from "framer-motion";
+import store from "@store/store";
 
-interface MessageBubbleProps {
-  message: MessageBubbleInterface;
-  users: User[];
+function SeenByList({ seenBy, users }: { seenBy: string[]; users: User[] }) {
+  const seenUsers = users.filter(
+    (user) =>
+      seenBy.includes(user.userId) &&
+      user.userId != store.getState().user.userId,
+  );
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="p-2 bg-gray-100 rounded-md text-sm  space-x-2 flex text-gray-700"
+    >
+      {seenUsers.length > 0 && <p className="font-semibold">Seen by:</p>}
+
+      {seenUsers.map((user) => (
+        <div
+          key={user.userId}
+          className="flex items-center gap-2 rounded-md shadow-sm"
+        >
+          <img
+            src={user.profilePicture}
+            alt={user.firstName}
+            className="w-6 h-6 rounded-full"
+          />
+          <span>
+            {user.firstName} {user.lastName}
+          </span>
+        </div>
+      ))}
+    </motion.div>
+  );
 }
 
-const MessageBubble = React.memo(({ message, users }: MessageBubbleProps) => {
+function MessageBubble({
+  message,
+  users,
+}: {
+  message: MessageBubbleInterface;
+  users: User[];
+}) {
   const rtl = isRTL(message.content.text);
   const [isExpanded, setIsExpanded] = useState(false);
+
   return (
     <div
       data-testid={message.messageId}
@@ -34,7 +71,7 @@ const MessageBubble = React.memo(({ message, users }: MessageBubbleProps) => {
 
           <div
             className={`hover:bg-gray-200 rounded-md bg-gray-100 p-2 w-full 
-            ${rtl ? "text-right" : "text-left"}`}
+          ${rtl ? "text-right" : "text-left"}`}
           >
             {message.content.text && (
               <p className="transition-all duration-200">
@@ -47,7 +84,7 @@ const MessageBubble = React.memo(({ message, users }: MessageBubbleProps) => {
                 src={message.content.image}
                 alt="Sent Image"
                 className="rounded mt-2 w-full max-w-xs object-cover hover:opacity-80 
-                hover:scale-105 transition-all duration-300 cursor-pointer"
+              hover:scale-105 transition-all duration-300 cursor-pointer"
               />
             )}
 
@@ -76,16 +113,12 @@ const MessageBubble = React.memo(({ message, users }: MessageBubbleProps) => {
       </div>
 
       <AnimatePresence>
-        {isExpanded && (
-          <SeenBy
-            senderId={message.sender.userId}
-            users={users}
-            seenBy={message.seenBy}
-            messageStatus={message.status}
-          />
+        {isExpanded && message.seenBy.length > 0 && (
+          <SeenByList users={users} seenBy={message.seenBy} />
         )}
       </AnimatePresence>
     </div>
   );
-});
-export default MessageBubble;
+}
+
+export default React.memo(MessageBubble);

@@ -1,13 +1,11 @@
 import { SkillInterface } from "interfaces/userInterfaces";
 import { useState, useEffect } from "react";
-import Modal from "../../utils/Modal";
+import Modal from "../../Authentication/Modal";
 import { getSkills } from "@services/api/userProfileServices";
 import AddSkill from "./AddSkill";
 import EditSkill from "./EditSkill";
 import UserSkill from "./UserSkill";
 import { useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import store from "@store/store";
 
 export default function FullSkills() {
   const { userId } = useParams();
@@ -18,38 +16,22 @@ export default function FullSkills() {
     null,
   );
 
-  const {
-    isFetching: isSkillsFetching,
-    isError: isSkillsError,
-    refetch: refetchSkills,
-  } = useQuery({
-    queryKey: ["getSkills"],
-    queryFn: getSkills,
-    enabled: false,
-  });
-
   useEffect(() => {
-    if (userId === store.getState().user.userId) {
+    if (userId === JSON.parse(localStorage.getItem("userState") || "").userId) {
       setIsUser(true);
       updateSkills();
-    } else {
+    }
+    else {
       setIsUser(false);
+
     }
   }, [userId]);
 
   async function updateSkills() {
     if (userId) {
-      const { data } = await refetchSkills();
-      setSkills(data);
+      const updatedSkills = await getSkills();
+      setSkills(updatedSkills);
     }
-  }
-
-  if (isSkillsFetching) {
-    return <div>Loading...</div>;
-  }
-
-  if (isSkillsError) {
-    return <div>Error loading skills</div>;
   }
 
   return (
@@ -59,7 +41,7 @@ export default function FullSkills() {
         {isUser && (
           <button
             onClick={() => setAddSkillModal(true)}
-            className="material-icons font-medium text-2xl p-2 rounded-full hover:bg-gray-600 transition duration-400 ease-in-out"
+            className="material-icons font-medium text-2xl p-2 rounded-full hover:bg-gray-600"
           >
             add
           </button>
@@ -71,7 +53,7 @@ export default function FullSkills() {
             <UserSkill skill={skill} />
             {isUser && (
               <button
-                className="material-icons absolute top-0 right-0 text-xl p-1 rounded-full hover:bg-gray-600 mr-1 transition duration-400 ease-in-out"
+                className="material-icons absolute top-0 right-0 text-xl p-1 rounded-full hover:bg-gray-600 mr-1"
                 onClick={() => setEditSkillData(skill)}
               >
                 edit

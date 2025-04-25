@@ -10,8 +10,39 @@ import Visibility from "@pages/Settings/Visibility";
 import DataAndPrivacy from "@pages/Settings/DataAndPrivacy";
 import AdvertisingData from "@pages/Settings/AdvertisingData";
 import Notifications from "@pages/Settings/Notifications";
-import DarkMode from "@pages/Settings/AccountPreferences/Display/DarkMode";
 
+
+vi.mock("../../components/Authentication/Headers/SignHeader", () => ({
+  default: () => <div data-testid="sign-header">SignHeader</div>
+}));
+
+vi.mock("../../components/Logo", () => ({
+  default: () => <div data-testid="logo">Logo</div>
+}));
+
+vi.mock("./AccountPreferences", () => ({
+  default: () => <div data-testid="account-preferences">Account Preferences Section</div>
+}));
+
+vi.mock("./Notifications", () => ({
+  default: () => <div data-testid="notifications">Notifications Section</div>
+}));
+
+vi.mock("./SignInAndSecurity", () => ({
+  default: () => <div data-testid="sign-in-security">Sign In & Security Section</div>
+}));
+
+vi.mock("./Visibility", () => ({
+  default: () => <div data-testid="visibility">Visibility Section</div>
+}));
+
+vi.mock("./DataAndPrivacy", () => ({
+  default: () => <div data-testid="data-privacy">Data Privacy Section</div>
+}));
+
+vi.mock("./AdvertisingData", () => ({
+  default: () => <div data-testid="advertising-data">Advertising Data Section</div>
+}));
 
 describe("Settings Component", () => {
   beforeEach(() => {
@@ -20,7 +51,6 @@ describe("Settings Component", () => {
         <Routes>
           <Route path="/settings" element={<Settings />}>
             <Route path="account-preferences" element={<AccountPreferences />} />
-            <Route path="account-preferences/display/dark-mode" element={<DarkMode />} />
             <Route path="sign-in-security" element={<SignInAndSecurity />} />
             <Route path="visibility" element={<Visibility />} />
             <Route path="data-privacy" element={<DataAndPrivacy />} />
@@ -46,51 +76,33 @@ describe("Settings Component", () => {
   });
 
   it("renders Account Preferences by default", () => {
-    expect(screen.getByText("Profile information")).toBeInTheDocument();
-    expect(screen.getByText("Display")).toBeInTheDocument();
-    expect(screen.getByText("General preferences")).toBeInTheDocument();
-    expect(screen.getByText("Syncing options")).toBeInTheDocument();
-    expect(screen.getByText("Subscriptions & payments")).toBeInTheDocument();
-    expect(screen.getByText("Partners & services")).toBeInTheDocument();
-    expect(screen.getByText("Account management")).toBeInTheDocument();
-
-
+    expect(screen.getByTestId("account-preferences")).toBeInTheDocument();
   });
 
   it("renders Notifications section on click", () => {
     const notificationsTab = screen.getByText("Notifications");
     fireEvent.click(notificationsTab);
-    expect(screen.getByText("Notifications you receive")).toBeInTheDocument();
+    expect(screen.getByTestId("notifications")).toBeInTheDocument();
   });
 
   it("renders Sign in & Security section on click", () => {
     const signInTab = screen.getByText("Sign in & security");
     fireEvent.click(signInTab);
-    expect(screen.getByText("Account access")).toBeInTheDocument();
+    expect(screen.getByTestId("sign-in-security")).toBeInTheDocument();
   });
 
   it("renders Visibility section on click", () => {
     fireEvent.click(screen.getByText("Visibility"));
-    expect(screen.getByText("Visibility of your profile & network")).toBeInTheDocument();
-    expect(screen.getByText("Visibility of your JobLinc activity")).toBeInTheDocument();
-
+    expect(screen.getByTestId("visibility")).toBeInTheDocument();
   });
 
   it("renders Data Privacy section on click", () => {
     fireEvent.click(screen.getByText("Data privacy"));
-    expect(screen.getByText("How JobLinc uses your data")).toBeInTheDocument();
-    expect(screen.getByText("Who can reach you")).toBeInTheDocument();
-    expect(screen.getByText("Messaging experience")).toBeInTheDocument();
-    expect(screen.getByText("Job seeking preferences")).toBeInTheDocument();
-    expect(screen.getByText("Other applications")).toBeInTheDocument();
-
+    expect(screen.getByTestId("data-privacy")).toBeInTheDocument();
   });
 
   it("renders Advertising Data section on click", () => {
     fireEvent.click(screen.getByText("Advertising data"));
-    expect(screen.getByText("Profile data")).toBeInTheDocument();
-    expect(screen.getByText("Activity and inferred data")).toBeInTheDocument();
-    expect(screen.getByText("Third-party data")).toBeInTheDocument();
-
+    expect(screen.getByTestId("advertising-data")).toBeInTheDocument();
   });
 });

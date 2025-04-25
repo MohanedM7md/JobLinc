@@ -1,7 +1,6 @@
 import { useState } from "react";
 import "material-icons/iconfont/material-icons.css";
 import { useNavigate } from "react-router-dom";
-import timeDifference from "@utils/timeDifferenceCalculator";
 
 interface ProfileDetailsProps {
   id: string;
@@ -9,14 +8,13 @@ interface ProfileDetailsProps {
   headline: string;
   profilePicture: string;
   isFollowing: boolean;
-  time: Date;
 }
 
-export default function PostHeader(props: ProfileDetailsProps) {
+export default function ProfileDetails(props: ProfileDetailsProps) {
   const navigate = useNavigate();
   const [isFollowing, setIsFollowing] = useState<boolean>(props.isFollowing);
   const Followed = !isFollowing ? "Follow" : "Followed";
-
+ 
   return (
     <>
       <img
@@ -27,14 +25,7 @@ export default function PostHeader(props: ProfileDetailsProps) {
       <div className="mt-5 w-1/1 min-w-0">
         <div className="flex flex-row justify-between w-1/1">
           <div className="flex flex-row">
-            <p
-              onClick={() => {
-                navigate(`/profile/${props.id}`);
-              }}
-              className="mr-2 font-bold cursor-pointer"
-            >
-              {props.name}
-            </p>
+            <p onClick={() => {navigate(`/profile/${props.id}`)}} className="mr-2 font-bold cursor-pointer">{props.name}</p>
             <p
               className={
                 isFollowing
@@ -48,7 +39,6 @@ export default function PostHeader(props: ProfileDetailsProps) {
           </div>
         </div>
         <p className="truncate font-light text-mutedSilver">{props.headline}</p>
-        <p className="text-sm font-medium text-gray-500">{timeDifference(props.time)}</p>
       </div>
     </>
   );

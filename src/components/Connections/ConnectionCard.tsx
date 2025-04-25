@@ -9,7 +9,7 @@ function ConnectionCard(props: ConnectionInterface & { onRemove: (id: string) =>
   const divRef = useRef<HTMLDivElement>(null);
   const [modalOpen, setModalOpen] = useState(false);
 
-  
+
   function getRelativeTime(connectedDate: Date): string {
     const now = new Date();
     const diffInMs = now.getTime() - connectedDate.getTime();

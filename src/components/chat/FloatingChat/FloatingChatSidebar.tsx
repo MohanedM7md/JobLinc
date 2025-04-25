@@ -4,12 +4,10 @@ import NetWorksChatList from "@chatComponent/NetWorksChatList";
 import SearchBar from "@chatComponent/UI/SearchBar";
 import { EllipsisVertical } from "lucide-react";
 import connectToChat, { disconnectChatSocket } from "@services/api/ChatSocket";
-import { useAppSelector } from "@store/hooks";
 import useChats from "@hooks/useChats";
 import ConnectionsDropdown from "@chatComponent/FloatingChat/ConnectionsDropdown";
 
 function FloatingChatSidebar() {
-  const userProfilePic = useAppSelector((state) => state.user.profilePicture);
   const [isActive, setActive] = useState<boolean>(() => {
     return localStorage.getItem("chatSidebarActive") === "true" || false;
   });
@@ -60,7 +58,7 @@ function FloatingChatSidebar() {
 
   return (
     <div
-      className={`w-72 shadow-lg rounded-t-lg md:block hidden mr-8 transition-transform duration-300 relative h-full
+      className={`w-72 shadow-lg rounded-t-lg md:block hidden mr-8 transition-transform duration-300 relative 
           dark:bg-darkGray bg-white cursor-pointer ${isActive ? "translate-y-0" : "translate-y-[calc(100%-56px)]"}`}
     >
       <header
@@ -68,7 +66,7 @@ function FloatingChatSidebar() {
         onClick={activeToggler}
       >
         <img
-          src={userProfilePic ? userProfilePic : ""}
+          src=""
           alt="User Avatar"
           className="rounded-full w-10 h-10 border border-gray-300"
         />
