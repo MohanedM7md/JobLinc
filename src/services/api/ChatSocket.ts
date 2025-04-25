@@ -1,6 +1,7 @@
 import { connectSocket } from "./socket";
 import { RecievedMessage } from "@chatComponent/interfaces/Message.interfaces";
 import { ChatCardInterface } from "@chatComponent/interfaces/Chat.interfaces";
+import toast from "react-hot-toast";
 
 let ChatSocket: SocketIOClient.Socket | null = null;
 
@@ -49,8 +50,9 @@ export const sendMessage = (
   callback?: () => void,
 ) => {
   if (!ChatSocket) return;
-  console.log("message sent ", message);
+
   ChatSocket.emit("sendMessage", { ...message, chatId }, callback);
+  console.log("📩 Sent Message:", message);
 };
 export const typing = (chatId: string) => {
   if (!ChatSocket) return;
@@ -85,5 +87,12 @@ export const subscribeToChats = (
     onNewChat(chatCard);
   });
 };
+export const listenToOpenChatErrors = () => {
+  if (!ChatSocket) return;
 
+  ChatSocket.on("error", (error: { event: string; message: string }) => {
+    console.log(error.message);
+    toast.error(error.message);
+  });
+};
 export default connectToChat;

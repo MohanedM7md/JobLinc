@@ -1,9 +1,9 @@
 import { User } from "./User.interfaces";
 
 export enum MessageStatus {
-  Sent,
-  Delivered,
-  Read,
+  Sent = "sent",
+  Delivered = "delivered",
+  Failed = "failed",
 }
 
 export interface MessageBase {

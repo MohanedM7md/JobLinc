@@ -7,15 +7,18 @@ import {
   sendMessage,
   typing,
   stopTyping,
+  listenToOpenChatErrors,
 } from "@services/api/ChatSocket";
-import { RecievedMessage } from "./interfaces/Message.interfaces";
+import {
+  RecievedMessage,
+  MessageStatus,
+} from "./interfaces/Message.interfaces";
 import { User } from "./interfaces/User.interfaces";
 import useChats from "@hooks/useChats";
 import { fetchChatData, createChat } from "@services/api/chatServices";
 import useChatid from "@context/ChatIdProvider";
 import useNetworkUserId from "@context/NetworkUserIdProvider";
 import UserTypingIndicator from "./UserTyping";
-import store from "@store/store";
 
 function ChatContent({ className }: { className?: string }) {
   const [users, setUsers] = useState<User[]>([]);
@@ -26,6 +29,20 @@ function ChatContent({ className }: { className?: string }) {
   const userIdRef = useRef<string | null>(localStorage.getItem("userId"));
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const [typingUsers, setTypingUsers] = useState<string[]>([]);
+  let messageDelivered = useRef<boolean>(false);
+  const handleMessageStatus = () => {
+    setTimeout(() => {
+      if (!messageDelivered.current) {
+        messageDelivered.current = true;
+        setMessages((prevMsgs) =>
+          prevMsgs.map((msg) =>
+            msg.messageId === messageId ? { ...msg, status: "failed" } : msg,
+          ),
+        );
+      }
+    }, 1000);
+  };
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -47,7 +64,6 @@ function ChatContent({ className }: { className?: string }) {
     };
 
     fetchData();
-
     subscribeToMessages(
       chatId,
       (message) => setMessages((prev) => [...prev, message]),
@@ -65,7 +81,7 @@ function ChatContent({ className }: { className?: string }) {
       (userId) =>
         setTypingUsers((prev) => prev.filter((preUser) => preUser != userId)),
     );
-
+    listenToOpenChatErrors();
     return () => {
       unsubscribeFromMessages(chatId);
     };
@@ -106,7 +122,9 @@ function ChatContent({ className }: { className?: string }) {
     setMessages((prevMsgs) => [...prevMsgs, newMessage]);
 
     if (chatId) {
+      handleMessageStatus();
       sendMessage(chatId, newMessage, () => {
+        messageDelivered.current = true;
         setMessages((prevMsgs) =>
           prevMsgs.map((msg) =>
             msg.messageId === messageId ? { ...msg, status: "delivered" } : msg,
