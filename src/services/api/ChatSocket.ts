@@ -53,7 +53,6 @@ export const sendMessage = (
 
   ChatSocket.emit("sendMessage", { ...message, chatId }, callback);
   console.log("📩 Sent Message:", message);
-  toast.error("emmmmm");
 };
 export const typing = (chatId: string) => {
   if (!ChatSocket) return;
@@ -91,14 +90,9 @@ export const subscribeToChats = (
 export const listenToOpenChatErrors = () => {
   if (!ChatSocket) return;
 
-  ChatSocket.on("error", (event: string, message: string) => {
-    toast.error(message);
-    toast.error(message);
-    console.error("⚠️ OpenChat Error:", message);
-    if (event === "openChat" && message) {
-      toast.error(message);
-      console.error("⚠️ OpenChat Error:", message);
-    }
+  ChatSocket.on("error", (error: { event: string; message: string }) => {
+    console.log(error.message);
+    toast.error(error.message);
   });
 };
 export default connectToChat;
