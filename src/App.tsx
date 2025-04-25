@@ -164,7 +164,6 @@ function App() {
 
             <Route path="*" element={<Error404 />} />
           </Routes>
-          <Toaster position="bottom-center" toastOptions={{}} />
         </Elements>
       </QueryClientProvider>
       {/*</ThemeProvider>*/}

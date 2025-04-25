@@ -50,9 +50,10 @@ export const sendMessage = (
   callback?: () => void,
 ) => {
   if (!ChatSocket) return;
-  console.log("message sent ", message);
+
   ChatSocket.emit("sendMessage", { ...message, chatId }, callback);
-  console.log("📩 Sended Message:", message);
+  console.log("📩 Sent Message:", message);
+  toast.error("emmmmm");
 };
 export const typing = (chatId: string) => {
   if (!ChatSocket) return;
@@ -90,7 +91,10 @@ export const subscribeToChats = (
 export const listenToOpenChatErrors = () => {
   if (!ChatSocket) return;
 
-  ChatSocket.on("openChat", (event: string, message: string) => {
+  ChatSocket.on("error", (event: string, message: string) => {
+    toast.error(message);
+    toast.error(message);
+    console.error("⚠️ OpenChat Error:", message);
     if (event === "openChat" && message) {
       toast.error(message);
       console.error("⚠️ OpenChat Error:", message);
