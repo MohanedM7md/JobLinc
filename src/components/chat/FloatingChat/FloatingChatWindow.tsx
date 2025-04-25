@@ -55,7 +55,7 @@ function FloatingChatWindow({
       className={`shadow-xl border border-gray-200 rounded-t-lg 
       
         sm:w-[400px] w-[80vw] mr-10
-        relative bottom-0  ${className} ${!isActive ? "translate-y-[calc(100%-60px)]" : ""}`}
+        relative bottom-0  ${className} ${!isActive ? "translate-y-[calc(100%-60px)] h-0" : ""}`}
       data-testid="test-floatingWindow"
     >
       <FloatingChatHeader
