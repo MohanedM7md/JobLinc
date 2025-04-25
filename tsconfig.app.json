@@ -2,13 +2,15 @@
   "compilerOptions": {
       "baseUrl": "src", 
       "paths": {
-        "@chatComponent/*": ["components/chat/*"] ,
-        "@context/*": ["context/*"] ,
-        "@hooks/*": ["hooks/*"] ,
-        "@pages/*": ["pages/*"] ,
-        "@services/*": ["services/*"] ,
-        "@utils/*": ["utils/*"] ,
-        "@store/*": ["store/*"] ,
+        "@chatComponent/*": ["components/chat/*"],
+        "@context/*": ["context/*"],
+        "@component": ["components/*"],
+        "@hooks/*": ["hooks/*"],
+        "@pages/*": ["pages/*"],
+        "@services/*": ["services/*"],
+        "@utils/*": ["utils/*"],
+        "@store/*": ["store/*"],
+        "@interfaces/*": ["interfaces/*"]
       },
 
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",

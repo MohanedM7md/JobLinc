@@ -1,37 +1,79 @@
 import React from "react";
+import { motion } from "framer-motion";
+import { XCircle, Clock, CheckCircle } from "lucide-react";
+import store from "@store/store";
 import { User } from "./interfaces/User.interfaces";
-import { RecievedMessage } from "./interfaces/Message.interfaces";
 
-interface MessageSeenByProps {
-  message: RecievedMessage;
+interface SeenByProps {
+  seenBy: string[];
   users: User[];
-  currentUserId: string;
+  messageStatus: "sent" | "delivered" | "seen" | "failed";
+  senderId: string;
 }
 
-function SeenBy({ message, users, currentUserId }: MessageSeenByProps) {
-  // Determine users who have seen this message
-  const seenByUsers = React.useMemo(() => {
-    return users.filter((user) => {
-      // Exclude current user and message sender
-      if (user.userId === currentUserId || user.userId === message.senderId) {
-        return false;
-      }
+const SeenBy = React.memo(
+  ({ seenBy, users, messageStatus, senderId }: SeenByProps) => {
+    const currentUserId = store.getState().user.userId;
+    if (senderId !== currentUserId) return null;
 
-      // Check if user has seen this specific message
-      return message.seenBy.includes(user.userId);
-    });
-  }, [message, users, currentUserId]);
+    const seenUsers = users.filter((user) => seenBy.includes(user.userId));
 
-  // If no users have seen the message, return null
-  if (seenByUsers.length === 0) {
-    return null;
-  }
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="flex items-center gap-3 mt-1 text-xs ml-2 text-gray-600"
+      >
+        {messageStatus === "failed" ? (
+          <div className="flex items-center gap-1 text-red-600 font-semibold">
+            <XCircle className="w-4 h-4" />
+            Failed to send
+          </div>
+        ) : messageStatus === "sent" ? (
+          <div className="flex items-center gap-1 text-yellow-600">
+            <Clock className="w-4 h-4" />
+            Sent
+          </div>
+        ) : messageStatus === "delivered" && seenUsers.length === 0 ? (
+          <div className="flex items-center gap-1 text-blue-600">
+            <CheckCircle className="w-4 h-4" />
+            Delivered
+          </div>
+        ) : null}
 
-  return (
-    <div className="text-xs text-blue-500 mt-1">
-      👀 Seen by: {seenByUsers.map((user) => user.firstName).join(", ")}
-    </div>
-  );
-}
+        {/* Seen By Avatars */}
+        {seenUsers.length > 0 &&
+          messageStatus !== "failed" &&
+          messageStatus !== "sent" && (
+            <div className="flex items-center gap-1 flex-wrap">
+              <span className="text-gray-400">Seen by</span>
+              {seenUsers.slice(0, 3).map((user) => (
+                <div
+                  key={user.userId}
+                  className="flex items-center gap-1 bg-gray-100 px-2 py-0.5 rounded-full"
+                >
+                  <img
+                    src={user.profilePicture}
+                    alt={user.firstName}
+                    title={`${user.firstName} ${user.lastName}`}
+                    className="w-5 h-5 rounded-full border-2 border-white shadow-sm"
+                  />
+                  <span className="text-xs text-gray-700">
+                    {user.firstName}
+                  </span>
+                </div>
+              ))}
+              {seenUsers.length > 3 && (
+                <span className="ml-1 text-gray-400 font-medium">
+                  +{seenUsers.length - 3}
+                </span>
+              )}
+            </div>
+          )}
+      </motion.div>
+    );
+  },
+);
 
-export default React.memo(SeenBy);
+export default SeenBy;

@@ -105,10 +105,10 @@ function ConnectCard(props: ProfilePictureProps) {
                 <p className="font-semibold">Are you sure you want to withdraw your invitation?</p>
               </div>
               <div className="flex items-center justify-end space-x-4 pt-3">
-                <button className="cursor-pointer border-2 px-5 py-0.5 rounded-full font-semibold hover:bg-lightGray hover:outline-1 text-crimsonRed border-crimsonRed" onClick={handleWithdrawModal}>
+                <button data-testid="withdraw-modal-button" className="cursor-pointer border-2 px-5 py-0.5 rounded-full font-semibold hover:bg-lightGray hover:outline-1 text-crimsonRed border-crimsonRed" onClick={handleWithdrawModal}>
                   withdraw
                 </button>
-                <button className="cursor-pointer border-2 px-5 py-0.5 rounded-full font-semibold hover:bg-lightGray hover:outline-1 text-darkGray border-darkGray" onClick={handleCloseModal}>
+                <button data-testid="cancel-modal-button" className="cursor-pointer border-2 px-5 py-0.5 rounded-full font-semibold hover:bg-lightGray hover:outline-1 text-darkGray border-darkGray" onClick={handleCloseModal}>
                   cancel
                 </button>
               </div>
