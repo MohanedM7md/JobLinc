@@ -7,37 +7,55 @@ import {
   sendMessage,
   typing,
   stopTyping,
+  listenToOpenChatErrors,
 } from "@services/api/ChatSocket";
 import {
   RecievedMessage,
   MessageStatus,
 } from "./interfaces/Message.interfaces";
 import { User } from "./interfaces/User.interfaces";
-
+import useChats from "@hooks/useChats";
 import { fetchChatData, createChat } from "@services/api/chatServices";
 import useChatid from "@context/ChatIdProvider";
 import useNetworkUserId from "@context/NetworkUserIdProvider";
 import UserTypingIndicator from "./UserTyping";
-import store from "@store/store";
 
 function ChatContent({ className }: { className?: string }) {
   const [users, setUsers] = useState<User[]>([]);
   const [messages, setMessages] = useState<RecievedMessage[]>([]);
   const { chatId, setChatId } = useChatid();
+  const { setOpnedChats } = useChats();
   const { usersId } = useNetworkUserId();
-
+  const userIdRef = useRef<string | null>(localStorage.getItem("userId"));
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const [typingUsers, setTypingUsers] = useState<string[]>([]);
+  let messageDelivered = useRef<boolean>(false);
+  const handleMessageStatus = () => {
+    setTimeout(() => {
+      if (!messageDelivered.current) {
+        messageDelivered.current = true;
+        setMessages((prevMsgs) =>
+          prevMsgs.map((msg) =>
+            msg.messageId === messageId ? { ...msg, status: "failed" } : msg,
+          ),
+        );
+      }
+    }, 1000);
+  };
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
   useEffect(() => {
     const fetchData = async () => {
       if (usersId.length && !chatId) {
+        console.log("Create new chat with: ", usersId);
         const data = await createChat(usersId);
         setUsers(data.participants);
+        console.log(data.participants);
         setMessages(data.messages);
         setChatId(data.chatId);
+        setOpnedChats((prev) => [...prev]);
       } else {
         const data = await fetchChatData(chatId);
         setUsers(data.participants);
@@ -46,7 +64,6 @@ function ChatContent({ className }: { className?: string }) {
     };
 
     fetchData();
-
     subscribeToMessages(
       chatId,
       (message) => setMessages((prev) => [...prev, message]),
@@ -64,28 +81,59 @@ function ChatContent({ className }: { className?: string }) {
       (userId) =>
         setTypingUsers((prev) => prev.filter((preUser) => preUser != userId)),
     );
-
+    listenToOpenChatErrors();
     return () => {
       unsubscribeFromMessages(chatId);
     };
   }, [chatId]);
-
-  const handleSendMessage = (message: string | File, type: string) => {
+  const messageId = Date.now().toString();
+  const handleSendMessage = async (
+    message: string | File | string,
+    type: string,
+  ) => {
     const newMessage: any = {
-      senderId: store.getState().user.userId,
+      messageId,
+      senderId: userIdRef.current,
       time: new Date(),
-      seenBy: [store.getState().user.userId],
-      content: { text: message },
+      seenBy: [userIdRef.current],
+      status: "sent",
+      content: {},
     };
+
+    switch (type) {
+      case "text":
+        newMessage.content.text = message;
+        break;
+      case "image":
+        newMessage.content.image = message; // This will now be the URL string
+        break;
+      case "video":
+        newMessage.content.video = message; // This will now be the URL string
+        break;
+      case "document":
+        newMessage.content.document = message; // This will now be the URL string
+        break;
+      default:
+        console.warn("Unknown message type:", type);
+        newMessage.content.text = typeof message === "string" ? message : "";
+        break;
+    }
 
     setMessages((prevMsgs) => [...prevMsgs, newMessage]);
 
     if (chatId) {
+      handleMessageStatus();
       sendMessage(chatId, newMessage, () => {
-        console.log("✅ Message delivered");
+        messageDelivered.current = true;
+        setMessages((prevMsgs) =>
+          prevMsgs.map((msg) =>
+            msg.messageId === messageId ? { ...msg, status: "delivered" } : msg,
+          ),
+        );
       });
     }
   };
+
   const handleTypingMessage = (isTyping: boolean) => {
     if (!chatId) return;
     switch (isTyping) {

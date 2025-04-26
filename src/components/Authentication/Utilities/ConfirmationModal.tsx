@@ -45,13 +45,13 @@ function ConfirmationModal({
       {/* Buttons */}
       <div className="flex justify-center sm:justify-end gap-4">
         <button
-          className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition"
+          className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition hover:cursor-pointer"
           onClick={handleCancel}
         >
           {cancelText}
         </button>
         <button
-          className="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
+          className="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition hover:cursor-pointer"
           onClick={onConfirm}
         >
           {confirmText}

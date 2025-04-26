@@ -1,8 +1,9 @@
-import { useEffect, useState, memo } from "react";
+import { useEffect, useState, memo, useRef } from "react";
 import NetworkCard from "./NetworkCard";
 import { fetchNetWorks } from "@services/api/chatServices";
-import { useUser } from "./mockUse";
 import { NetWorkCard } from "./interfaces/Chat.interfaces";
+import { useAppSelector } from "@store/hooks";
+import store from "@store/store";
 
 const NetWorksChatList = ({
   onCardClick,
@@ -12,7 +13,7 @@ const NetWorksChatList = ({
   className?: string;
 }) => {
   const [users, setUsers] = useState<NetWorkCard[]>([]);
-  const { user } = useUser();
+  const user = localStorage.getItem("userId");
   const [isLoading, setIsLoading] = useState(true);
 
   console.log(
@@ -24,6 +25,7 @@ const NetWorksChatList = ({
     const fetchData = async () => {
       try {
         if (!user) return;
+        console.log("Fetching ConnectionList");
         const data = await fetchNetWorks(user);
         setUsers(data);
         setIsLoading(false);
