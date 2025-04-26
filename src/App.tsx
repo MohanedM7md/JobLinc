@@ -20,7 +20,6 @@ import Error404 from "@pages/Eror404";
 import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Jobs_And_Hiring from "./components/Jobs&hiring/Jobs_And_Hiring";
-
 import AuthRoute from "./components/AuthRoute";
 import Connections from "./pages/Connections";
 import ProfileContainer from "./components/User Profile/ProfileContainer";
@@ -45,6 +44,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { Toaster } from "react-hot-toast";
 import SubscriptionManager from "./pages/SubscriptionManager";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import Saved_Jobs from './components/Jobs&hiring/Saved_Jobs';
 import EmailAddress from "@pages/Settings/SignInAndSecurity/AccountAccess/EmailAddress";
 import Metrics from "./components/Company/Metrics";
 import Saved_Jobs from './components/Jobs&hiring/Saved_Jobs';
