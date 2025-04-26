@@ -102,7 +102,7 @@ export default function Post(props: PostProps) {
         <div className="flex flex-grow relative m-auto justify-between">
           <PostReact
             postId={props.post.postId}
-            userReaction={"React"}
+            userReaction={props.post.userReaction}
             successHandler={reactionSuccess}
           />
           <button

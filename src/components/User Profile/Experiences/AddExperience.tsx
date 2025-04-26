@@ -1,5 +1,9 @@
 import { months } from "@utils/months";
-import { NewExperience } from "interfaces/userInterfaces";
+import {
+  NewExperience,
+  ExperienceModes,
+  ExperienceTypes,
+} from "../../../interfaces/userInterfaces";
 import { addExperience } from "@services/api/userProfileServices";
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
@@ -16,19 +20,35 @@ const schema = z
   .object({
     position: z.string().min(1, "Position is required"),
     company: z.string().min(1, "Company is required"),
-    description: z.string().min(1, "Description is required"), //this shouldn't be a required field (god damn backend)
+    description: z.string().min(1, "Description is required"),
     startMonth: z.coerce.number().min(1, "Invalid start month").max(12),
     startYear: z.coerce.number().min(1900, "Invalid start year"),
-    endMonth: z.coerce.number().min(1, "Invalid end month").max(12),
-    endYear: z.coerce.number().min(1900, "Invalid end year"),
+    isPresent: z.boolean(),
+    endMonth: z.coerce.number().max(12).optional(),
+    endYear: z.coerce.number().optional(),
+    mode: z.nativeEnum(ExperienceModes),
+    type: z.nativeEnum(ExperienceTypes),
   })
   .refine(
     (data) =>
-      data.startYear < data.endYear ||
-      (data.startYear === data.endYear && data.startMonth < data.endMonth),
+      data.isPresent ||
+      (data.endMonth !== undefined &&
+        data.endYear !== undefined &&
+        data.endMonth !== 0 &&
+        data.endYear !== 0 &&
+        (data.startYear < data.endYear ||
+          (data.startYear === data.endYear &&
+            data.startMonth < data.endMonth))),
     {
       message: "Start date must be before end date",
       path: ["endYear"],
+    },
+  )
+  .refine(
+    (data) => data.isPresent || (data.endMonth !== 0 && data.endYear !== 0),
+    {
+      message: "End month and year must be specified if 'isPresent' is false",
+      path: ["endMonth"],
     },
   );
 
@@ -39,8 +59,12 @@ export default function AddExperience(props: AddExperienceProps) {
     register,
     handleSubmit,
     formState: { errors },
+    watch,
   } = useForm<ExperienceFields>({
     resolver: zodResolver(schema),
+    defaultValues: {
+      isPresent: false,
+    },
   });
 
   const addExperienceMutation = useMutation({
@@ -57,7 +81,11 @@ export default function AddExperience(props: AddExperienceProps) {
       company: data.company,
       description: data.description,
       startDate: new Date(data.startYear, data.startMonth - 1, 1),
-      endDate: new Date(data.endYear, data.endMonth - 1, 1),
+      endDate: data.isPresent
+        ? "Present"
+        : new Date(data.endYear ?? 0, (data.endMonth ?? 1) - 1, 1),
+      type: data.type,
+      mode: data.mode,
     };
     toast.promise(addExperienceMutation.mutateAsync(newExperience), {
       loading: "Adding experience...",
@@ -76,7 +104,11 @@ export default function AddExperience(props: AddExperienceProps) {
         <input
           type="text"
           {...register("position")}
-          className="w-full px-2 py-1 border rounded-lg"
+          className={`w-full px-2 py-1 border rounded-lg ${
+            addExperienceMutation.status === "pending"
+              ? "opacity-50 cursor-not-allowed"
+              : ""
+          }`}
           disabled={addExperienceMutation.status === "pending"}
         />
         {errors.position && (
@@ -88,7 +120,11 @@ export default function AddExperience(props: AddExperienceProps) {
         <input
           type="text"
           {...register("company")}
-          className="w-full px-2 py-1 border rounded-lg"
+          className={`w-full px-2 py-1 border rounded-lg ${
+            addExperienceMutation.status === "pending"
+              ? "opacity-50 cursor-not-allowed"
+              : ""
+          }`}
           disabled={addExperienceMutation.status === "pending"}
         />
         {errors.company && (
@@ -100,7 +136,11 @@ export default function AddExperience(props: AddExperienceProps) {
         <div className="flex gap-2">
           <select
             {...register("startMonth")}
-            className="w-1/2 px-2 py-1 border rounded-lg"
+            className={`w-1/2 px-2 py-1 border rounded-lg ${
+              addExperienceMutation.status === "pending"
+                ? "opacity-50 cursor-not-allowed"
+                : ""
+            }`}
             disabled={addExperienceMutation.status === "pending"}
           >
             <option value="">Month</option>
@@ -112,7 +152,11 @@ export default function AddExperience(props: AddExperienceProps) {
           </select>
           <select
             {...register("startYear")}
-            className="w-1/2 px-2 py-1 border rounded-lg"
+            className={`w-1/2 px-2 py-1 border rounded-lg ${
+              addExperienceMutation.status === "pending"
+                ? "opacity-50 cursor-not-allowed"
+                : ""
+            }`}
             disabled={addExperienceMutation.status === "pending"}
           >
             <option value="">Year</option>
@@ -138,8 +182,14 @@ export default function AddExperience(props: AddExperienceProps) {
         <div className="flex gap-2">
           <select
             {...register("endMonth")}
-            className="w-1/2 px-2 py-1 border rounded-lg"
-            disabled={addExperienceMutation.status === "pending"}
+            className={`w-1/2 px-2 py-1 border rounded-lg ${
+              watch("isPresent") || addExperienceMutation.status === "pending"
+                ? "opacity-50 cursor-not-allowed"
+                : ""
+            }`}
+            disabled={
+              addExperienceMutation.status === "pending" || watch("isPresent")
+            }
           >
             <option value="">Month</option>
             {months.map((month, index) => (
@@ -150,8 +200,14 @@ export default function AddExperience(props: AddExperienceProps) {
           </select>
           <select
             {...register("endYear")}
-            className="w-1/2 px-2 py-1 border rounded-lg"
-            disabled={addExperienceMutation.status === "pending"}
+            className={`w-1/2 px-2 py-1 border rounded-lg ${
+              watch("isPresent") || addExperienceMutation.status === "pending"
+                ? "opacity-50 cursor-not-allowed"
+                : ""
+            }`}
+            disabled={
+              addExperienceMutation.status === "pending" || watch("isPresent")
+            }
           >
             <option value="">Year</option>
             {Array.from(
@@ -172,10 +228,72 @@ export default function AddExperience(props: AddExperienceProps) {
         )}
       </div>
       <div className="mb-4">
+        <label className="text-sm font-medium flex items-center gap-2">
+          <input
+            type="checkbox"
+            {...register("isPresent")}
+            className="w-4 h-4"
+            disabled={addExperienceMutation.status === "pending"}
+          />
+          Currently Working Here
+        </label>
+        {errors.isPresent && (
+          <p className="text-sm text-red-600">{errors.isPresent.message}</p>
+        )}
+      </div>
+      <div className="mb-4">
+        <label className="text-sm font-medium">Mode</label>
+        <select
+          {...register("mode")}
+          className={`w-full px-2 py-1 border rounded-lg ${
+            addExperienceMutation.status === "pending"
+              ? "opacity-50 cursor-not-allowed"
+              : ""
+          }`}
+          disabled={addExperienceMutation.status === "pending"}
+        >
+          <option value="">Select Mode</option>
+          {Object.values(ExperienceModes).map((mode) => (
+            <option key={mode} value={mode}>
+              {mode}
+            </option>
+          ))}
+        </select>
+        {errors.mode && (
+          <p className="text-sm text-red-600">{errors.mode.message}</p>
+        )}
+      </div>
+      <div className="mb-4">
+        <label className="text-sm font-medium">Type</label>
+        <select
+          {...register("type")}
+          className={`w-full px-2 py-1 border rounded-lg ${
+            addExperienceMutation.status === "pending"
+              ? "opacity-50 cursor-not-allowed"
+              : ""
+          }`}
+          disabled={addExperienceMutation.status === "pending"}
+        >
+          <option value="">Select Type</option>
+          {Object.values(ExperienceTypes).map((type) => (
+            <option key={type} value={type}>
+              {type}
+            </option>
+          ))}
+        </select>
+        {errors.type && (
+          <p className="text-sm text-red-600">{errors.type.message}</p>
+        )}
+      </div>
+      <div className="mb-4">
         <label className="text-sm font-medium">Description</label>
         <textarea
           {...register("description")}
-          className="w-full px-2 py-1 border rounded-lg"
+          className={`w-full px-2 py-1 border rounded-lg ${
+            addExperienceMutation.status === "pending"
+              ? "opacity-50 cursor-not-allowed"
+              : ""
+          }`}
           rows={4}
           disabled={addExperienceMutation.status === "pending"}
         />
@@ -186,7 +304,11 @@ export default function AddExperience(props: AddExperienceProps) {
       <div className="flex space-x-2">
         <button
           type="submit"
-          className="bg-crimsonRed text-warmWhite px-4 py-1.5 rounded-3xl cursor-pointer hover:bg-red-700 transition duration-400 ease-in-out"
+          className={`bg-crimsonRed text-warmWhite px-4 py-1.5 rounded-3xl cursor-pointer hover:bg-red-700 transition duration-400 ease-in-out ${
+            addExperienceMutation.status === "pending"
+              ? "opacity-50 cursor-not-allowed"
+              : ""
+          }`}
           disabled={addExperienceMutation.status === "pending"}
         >
           {addExperienceMutation.status === "pending" ? "Adding..." : "Add"}

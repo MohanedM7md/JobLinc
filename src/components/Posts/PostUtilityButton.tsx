@@ -1,6 +1,6 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { useNavigate } from "react-router-dom";
-import { deletePost } from "@services/api/postServices";
+import { deletePost, savePost } from "@services/api/postServices";
 import store from "@store/store";
 import { motion, AnimatePresence } from "framer-motion";
 import { FlagTriangleRight, Pencil, Save, Trash } from "lucide-react";
@@ -25,12 +25,24 @@ export default function PostUtilityButton(props: UtilityProps) {
     onSuccess: () => navigate("/home"),
   });
 
+  const postSave = useMutation({
+    mutationFn: savePost,
+  })
+
   function handleDelete() {
     toast.promise(postDelete.mutateAsync(props.postId), {
       loading: "Deleting post...",
       success: "Post deleted successfully!",
       error: (error) => error.message,
     });
+  }
+
+  function handleSave() {
+    toast.promise(postSave.mutateAsync(props.postId), {
+      loading: "Saving post...",
+      success: "Post saved successfully!",
+      error: (error) => error.message,
+    })
   }
 
   return (
@@ -103,9 +115,7 @@ export default function PostUtilityButton(props: UtilityProps) {
                         transition={{ duration: 0.2 }}
                       >
                         <button
-                          onClick={() => {
-                            console.log("Save post clicked");
-                          }}
+                          onClick={handleSave}
                           className="w-full flex items-center justify-between px-4 py-2 text-sm hover:bg-gray-100 transition duration-200 ease-in-out"
                         >
                           <Save className="mr-2" />

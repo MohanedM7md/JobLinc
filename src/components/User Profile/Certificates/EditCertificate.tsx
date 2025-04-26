@@ -85,7 +85,7 @@ export default function EditCertificate(props: EditCertificateProps) {
 
   const onSubmit: SubmitHandler<CertificateFields> = (data) => {
     const editedCertificate: CertificateInterface = {
-      _id: props._id,
+      id: props.id,
       name: data.name,
       organization: data.organization,
       issueDate: new Date(data.issueYear, data.issueMonth - 1, 1),
@@ -104,7 +104,7 @@ export default function EditCertificate(props: EditCertificateProps) {
   };
 
   async function handleDelete() {
-    toast.promise(deleteCertificateMutation.mutateAsync(props._id), {
+    toast.promise(deleteCertificateMutation.mutateAsync(props.id), {
       loading: "Deleting certificate...",
       success: "Certificate deleted successfully!",
       error: (error) => error.message,

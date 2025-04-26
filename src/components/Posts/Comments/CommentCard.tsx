@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import ReplyCard from "./ReplyCard";
 import { createReply, getReplies } from "../../../services/api/postServices";
 import store from "@store/store";
+import CommentReact from "./CommentReact";
 
 interface CommentCardProps {
   comment: CommentInterface;
@@ -17,8 +18,6 @@ export default function CommentCard(props: CommentCardProps) {
   const [showReplies, setShowReplies] = useState(false);
   const [replies, setReplies] = useState<RepliesInterface[]>([]);
   const [newReply, setNewReply] = useState<string>("");
-  const [isLike, setIsLike] = useState<boolean>(false);
-  const like = !isLike ? "Like" : "Liked";
 
   useEffect(() => {
     if (showReplies) {
@@ -39,8 +38,17 @@ export default function CommentCard(props: CommentCardProps) {
     );
   }
 
+  function reactionSuccess(newReaction: string, oldReaction: string) {
+    if (oldReaction === "" && newReaction !== "") {
+      props.comment.likes++;
+    } else if (oldReaction !== "" && newReaction === "") {
+      props.comment.likes--;
+    } else if (oldReaction !== newReaction) {
+    }
+  }
+
   return (
-    <div className="flex flex-wrap w-1/1 bg-lightGray rounded-xl relative py-2">
+    <div className="flex flex-wrap w-1/1 rounded-xl relative py-2">
       <div className="flex flex-row w-1/1 px-2">
         <CommenterDetails
           key={`Details of Commenter ${props.comment.userId}`}
@@ -48,6 +56,7 @@ export default function CommentCard(props: CommentCardProps) {
           name={props.comment.firstname + " " + props.comment.lastname}
           headline={props.comment.headline}
           profilePicture={props.comment.profilePicture}
+          time={props.comment.time}
         />
         <div className="flex flex-row w-1/1 justify-end">
           <button className="material-icons-round cursor-pointer mr-1 text-mutedSilver hover:bg-gray-200 rounded-full h-fit">
@@ -57,29 +66,29 @@ export default function CommentCard(props: CommentCardProps) {
       </div>
       <CommentContent
         key={`comment ${props.comment.commentId} details`}
-        commentText={props.comment.commentText}
+        commentText={props.comment.text}
       />
       <div className="ml-14.5">
-        <button
-          onClick={() => setIsLike(!isLike)}
-          className={
-            isLike
-              ? "transition cursor-pointer text-sm font-medium px-2 text-blue-500 hover:bg-blue-100 rounded-lg"
-              : "transition cursor-pointer text-sm font-medium px-2 text-mutedSilver hover:bg-gray-200 rounded-lg"
-          }
-        >
-          {like}
-        </button>
-        <span className="text-mutedSilver font-medium text-sm">|</span>
-        <button
-          onClick={() => setShowReplies(true)}
-          className="cursor-pointer text-sm font-medium px-2 text-mutedSilver hover:bg-gray-200 rounded-xl"
-        >
-          Reply
-        </button>
+        <div className="flex items-center font-medium text-mutedSilver">
+          <div className="flex items-center">
+            <CommentReact
+              commentId={props.comment.commentId}
+              userReaction="NoReaction"
+              successHandler={reactionSuccess}
+            />
+            <span>• {props.comment.likes}</span>
+          </div>
+          <span className="ml-2">|</span>
+          <button
+            onClick={() => setShowReplies(true)}
+            className="cursor-pointer hover:bg-gray-200 px-2 py-1 rounded-lg"
+          >
+            Reply • {props.comment.comments}
+          </button>
+        </div>
       </div>
-      <div className="flex flex-wrap flex-row-reverse w-1/1 bg-lightGray rounded-xl relative pt-2">
-      {/* This code should be refactored, seperate responsibilities */}
+      <div className="flex flex-wrap flex-row-reverse w-1/1 rounded-xl relative pt-2">
+        {/* This code should be refactored, seperate responsibilities */}
         {showReplies ? (
           <>
             <div className="flex flex-row w-11/12 py-3">

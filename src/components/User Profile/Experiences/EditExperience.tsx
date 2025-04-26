@@ -1,7 +1,6 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { months } from "@utils/months";
-import { ExperienceInterface } from "interfaces/userInterfaces";
 import {
   deleteExperience,
   editExperience,
@@ -11,6 +10,11 @@ import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import z from "zod";
 import { useState } from "react";
+import {
+  ExperienceInterface,
+  ExperienceModes,
+  ExperienceTypes,
+} from "../../../interfaces/userInterfaces"; //Import path isn't working for some reason
 
 interface EditExperienceProps extends ExperienceInterface {
   onClose: () => void;
@@ -24,16 +28,32 @@ const schema = z
     description: z.string().min(1, "Description is required"),
     startMonth: z.coerce.number().min(1, "Invalid start month").max(12),
     startYear: z.coerce.number().min(1900, "Invalid start year"),
-    endMonth: z.coerce.number().min(1, "Invalid end month").max(12),
-    endYear: z.coerce.number().min(1900, "Invalid end year"),
+    isPresent: z.boolean(),
+    endMonth: z.coerce.number().max(12).optional(),
+    endYear: z.coerce.number().optional(),
+    mode: z.nativeEnum(ExperienceModes),
+    type: z.nativeEnum(ExperienceTypes),
   })
   .refine(
     (data) =>
-      data.startYear < data.endYear ||
-      (data.startYear === data.endYear && data.startMonth < data.endMonth),
+      data.isPresent ||
+      (data.endMonth !== undefined &&
+        data.endYear !== undefined &&
+        data.endMonth !== 0 &&
+        data.endYear !== 0 &&
+        (data.startYear < data.endYear ||
+          (data.startYear === data.endYear &&
+            data.startMonth < data.endMonth))),
     {
       message: "Start date must be before end date",
       path: ["endYear"],
+    },
+  )
+  .refine(
+    (data) => data.isPresent || (data.endMonth !== 0 && data.endYear !== 0),
+    {
+      message: "End month and year must be specified if 'isPresent' is false",
+      path: ["endMonth"],
     },
   );
 
@@ -45,6 +65,7 @@ export default function EditExperience(props: EditExperienceProps) {
     register,
     handleSubmit,
     formState: { errors },
+    watch,
   } = useForm<ExperienceFields>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -55,6 +76,9 @@ export default function EditExperience(props: EditExperienceProps) {
       startYear: new Date(props.startDate).getFullYear(),
       endMonth: new Date(props.endDate).getMonth() + 1,
       endYear: new Date(props.endDate).getFullYear(),
+      type: props.type,
+      mode: props.mode,
+      isPresent: props.endDate === "Present",
     },
   });
 
@@ -80,12 +104,16 @@ export default function EditExperience(props: EditExperienceProps) {
 
   const onSubmit = (data: ExperienceFields) => {
     const editedExperience: ExperienceInterface = {
-      _id: props._id,
+      id: props.id,
       position: data.position,
       company: data.company,
       description: data.description,
       startDate: new Date(data.startYear, data.startMonth - 1, 1),
-      endDate: new Date(data.endYear, data.endMonth - 1, 1),
+      endDate: data.isPresent
+        ? "Present"
+        : new Date(data.endYear ?? 0, (data.endMonth ?? 1) - 1, 1),
+      type: data.type,
+      mode: data.mode,
     };
     toast.promise(editExperienceMutation.mutateAsync(editedExperience), {
       loading: "Saving experience...",
@@ -95,7 +123,7 @@ export default function EditExperience(props: EditExperienceProps) {
   };
 
   const handleDelete = () => {
-    toast.promise(deleteExperienceMutation.mutateAsync(props._id), {
+    toast.promise(deleteExperienceMutation.mutateAsync(props.id), {
       loading: "Deleting experience...",
       success: "Experience deleted successfully",
       error: (error) => error.message,
@@ -113,7 +141,9 @@ export default function EditExperience(props: EditExperienceProps) {
           <input
             type="text"
             {...register("position")}
-            className="w-full px-2 py-1 border rounded-lg"
+            className={`w-full px-2 py-1 border rounded-lg ${
+              isProcessing ? "opacity-50 cursor-not-allowed" : ""
+            }`}
             disabled={isProcessing}
           />
           {errors.position && (
@@ -125,7 +155,9 @@ export default function EditExperience(props: EditExperienceProps) {
           <input
             type="text"
             {...register("company")}
-            className="w-full px-2 py-1 border rounded-lg"
+            className={`w-full px-2 py-1 border rounded-lg ${
+              isProcessing ? "opacity-50 cursor-not-allowed" : ""
+            }`}
             disabled={isProcessing}
           />
           {errors.company && (
@@ -137,7 +169,9 @@ export default function EditExperience(props: EditExperienceProps) {
           <div className="flex gap-2">
             <select
               {...register("startMonth")}
-              className="w-1/2 px-2 py-1 border rounded-lg"
+              className={`w-1/2 px-2 py-1 border rounded-lg ${
+                isProcessing ? "opacity-50 cursor-not-allowed" : ""
+              }`}
               disabled={isProcessing}
             >
               <option value="">Month</option>
@@ -149,7 +183,9 @@ export default function EditExperience(props: EditExperienceProps) {
             </select>
             <select
               {...register("startYear")}
-              className="w-1/2 px-2 py-1 border rounded-lg"
+              className={`w-1/2 px-2 py-1 border rounded-lg ${
+                isProcessing ? "opacity-50 cursor-not-allowed" : ""
+              }`}
               disabled={isProcessing}
             >
               <option value="">Year</option>
@@ -175,8 +211,12 @@ export default function EditExperience(props: EditExperienceProps) {
           <div className="flex gap-2">
             <select
               {...register("endMonth")}
-              className="w-1/2 px-2 py-1 border rounded-lg"
-              disabled={isProcessing}
+              className={`w-1/2 px-2 py-1 border rounded-lg ${
+                watch("isPresent") || isProcessing
+                  ? "opacity-50 cursor-not-allowed"
+                  : ""
+              }`}
+              disabled={isProcessing || watch("isPresent")}
             >
               <option value="">Month</option>
               {months.map((month, index) => (
@@ -187,8 +227,12 @@ export default function EditExperience(props: EditExperienceProps) {
             </select>
             <select
               {...register("endYear")}
-              className="w-1/2 px-2 py-1 border rounded-lg"
-              disabled={isProcessing}
+              className={`w-1/2 px-2 py-1 border rounded-lg ${
+                watch("isPresent") || isProcessing
+                  ? "opacity-50 cursor-not-allowed"
+                  : ""
+              }`}
+              disabled={isProcessing || watch("isPresent")}
             >
               <option value="">Year</option>
               {Array.from(
@@ -209,6 +253,56 @@ export default function EditExperience(props: EditExperienceProps) {
           )}
         </div>
         <div className="mb-4">
+          <label className="text-sm font-medium flex items-center gap-2">
+            <input
+              type="checkbox"
+              {...register("isPresent")}
+              className="w-4 h-4"
+              disabled={isProcessing}
+            />
+            Currently Working Here
+          </label>
+          {errors.isPresent && (
+            <p className="text-sm text-red-600">{errors.isPresent.message}</p>
+          )}
+        </div>
+        <div className="mb-4">
+          <label className="text-sm font-medium">Mode</label>
+          <select
+            {...register("mode")}
+            className="w-full px-2 py-1 border rounded-lg"
+            disabled={isProcessing}
+          >
+            <option value="">Select Mode</option>
+            {Object.values(ExperienceModes).map((mode) => (
+              <option key={mode} value={mode}>
+                {mode}
+              </option>
+            ))}
+          </select>
+          {errors.mode && (
+            <p className="text-sm text-red-600">{errors.mode.message}</p>
+          )}
+        </div>
+        <div className="mb-4">
+          <label className="text-sm font-medium">Type</label>
+          <select
+            {...register("type")}
+            className="w-full px-2 py-1 border rounded-lg"
+            disabled={isProcessing}
+          >
+            <option value="">Select Type</option>
+            {Object.values(ExperienceTypes).map((type) => (
+              <option key={type} value={type}>
+                {type}
+              </option>
+            ))}
+          </select>
+          {errors.type && (
+            <p className="text-sm text-red-600">{errors.type.message}</p>
+          )}
+        </div>
+        <div className="mb-4">
           <label className="text-sm font-medium">Description</label>
           <textarea
             {...register("description")}
@@ -223,14 +317,18 @@ export default function EditExperience(props: EditExperienceProps) {
         <div className="flex space-x-2">
           <button
             type="submit"
-            className="bg-crimsonRed text-warmWhite px-4 py-1.5 rounded-3xl cursor-pointer hover:bg-red-700 transition duration-400 ease-in-out"
+            className={`bg-crimsonRed text-warmWhite px-4 py-1.5 rounded-3xl cursor-pointer hover:bg-red-700 transition duration-400 ease-in-out ${
+              isProcessing ? "opacity-50 cursor-not-allowed" : ""
+            }`}
             disabled={isProcessing}
           >
             {editExperienceMutation.status === "pending" ? "Saving..." : "Save"}
           </button>
           <button
             type="button"
-            className="bg-gray-500 text-warmWhite px-4 py-1.5 rounded-3xl cursor-pointer hover:bg-gray-700 transition duration-400 ease-in-out"
+            className={`bg-gray-500 text-warmWhite px-4 py-1.5 rounded-3xl cursor-pointer hover:bg-gray-700 transition duration-400 ease-in-out ${
+              isProcessing ? "opacity-50 cursor-not-allowed" : ""
+            }`}
             onClick={() => setShowConfirmDelete(true)}
             disabled={isProcessing}
           >

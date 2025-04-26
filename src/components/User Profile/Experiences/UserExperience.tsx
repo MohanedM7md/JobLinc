@@ -9,11 +9,11 @@ export default function UserExperience(props: ExperienceProps) {
     props.experience.startDate,
   ).toLocaleDateString("en-US", { month: "short", year: "numeric" });
   const formattedEndDate = props.experience.endDate
-    ? new Date(props.experience.endDate).toLocaleDateString("en-US", {
+    == "Present" ? props.experience.endDate :  new Date(props.experience.endDate).toLocaleDateString("en-US", {
         month: "short",
         year: "numeric",
-      })
-    : "Present";
+      });
+    
 
   return (
     <div className="flex flex-row mx-1">
@@ -24,6 +24,9 @@ export default function UserExperience(props: ExperienceProps) {
         </span>
         <span className="text-sm -m-0.5 text-mutedSilver">
           {formattedStartDate} - {formattedEndDate}
+        </span>
+        <span className="text-sm -m-0.5 text-mutedSilver">
+          {props.experience.type} - {props.experience.mode}
         </span>
         <span className="text-sm my-3 -mx-0.5">
           {props.experience.description}

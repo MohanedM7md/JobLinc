@@ -29,7 +29,7 @@ export async function getPost(postId: string) {
 // Fetch comments for a post (NOT in documentation)
 export async function getComments(postId: string) {
   try {
-    const response = await api.get(`post/${postId}/comment`);
+    const response = await api.get(`post/${postId}/comments`);
     return response.data;
   } catch (error) {
     console.error("Error fetching comments:", error);
@@ -51,7 +51,13 @@ export async function getReplies(postId: string, commentId: string) {
 }
 
 // Create a post
-export async function createPost({ repost, text } : { repost?: string,text: string }) {
+export async function createPost({
+  repost,
+  text,
+}: {
+  repost?: string;
+  text: string;
+}) {
   try {
     const response = repost
       ? await api.post(`post/add`, { repost, text })
@@ -143,26 +149,23 @@ export async function deletePost(postId: string) {
   }
 }
 
-// Like a post (NOT in documentation)
+export async function savePost(postId: string) {
+  try {
+    const response = await api.post(`post/${postId}/save`);
+    return response.status;
+  } catch (error) {
+    console.error("Error saving post:", error);
+    throw error;
+  }
+}
+
+// Like a post
 export async function likePost(postId: string) {
   try {
     const response = await api.post(`post/${postId}/react`, { type: "like" });
     return response.status;
   } catch (error) {
     console.error("Error liking post:", error);
-    throw error;
-  }
-}
-
-// Check if a post is liked (NOT in documentation)
-export async function checkPostLike(postId: string, userId: string) {
-  try {
-    const response = await api.get(`post/${postId}/react`, {
-      params: { userId },
-    });
-    return response.data;
-  } catch (error) {
-    console.error("Error checking post like:", error);
     throw error;
   }
 }

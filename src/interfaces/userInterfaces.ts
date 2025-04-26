@@ -12,8 +12,8 @@ export interface ProfileInterface {
   role: number;
   numberofConnections: number;
   mutualConnections: number;
-  profilePicture?: string;
-  coverPicture?: string;
+  profilePicture: string;
+  coverPicture: string;
   skills: SkillInterface[];
   experiences: ExperienceInterface[];
   certificates: CertificateInterface[];
@@ -38,24 +38,28 @@ export interface EducationInterface {
 }
 
 export interface ExperienceInterface {
-  _id: string;
-  position: string;
+  id: string;
   company: string;
+  position: string;
   startDate: Date;
-  endDate: Date;
+  endDate: Date | string;
   description: string;
+  mode: ExperienceModes;
+  type: ExperienceTypes;
 }
 
 export interface NewExperience {
-  position: string;
   company: string;
+  position: string;
   startDate: Date;
-  endDate: Date;
+  endDate: Date | string;
   description: string;
+  mode: ExperienceModes;
+  type: ExperienceTypes;
 }
 
 export interface CertificateInterface {
-  _id: string;
+  id: string;
   name: string;
   organization: string;
   issueDate: Date;
@@ -78,4 +82,17 @@ export interface SkillInterface {
 export interface NewSkill {
   name: string;
   level: number;
+}
+
+export enum ExperienceModes {
+  onsite = "OnSite",
+  remote = "Remote",
+  hybrid = "Hybrid",
+}
+
+export enum ExperienceTypes {
+  fulltime = "FullTime",
+  parttime = "PartTime",
+  internship = "Internship",
+  contract = "Contract",
 }
