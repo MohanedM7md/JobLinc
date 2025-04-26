@@ -20,7 +20,6 @@ import Error404 from "@pages/Eror404";
 import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Jobs_And_Hiring from "./components/Jobs&hiring/Jobs_And_Hiring";
-
 import AuthRoute from "./components/AuthRoute";
 import Connections from "./pages/Connections";
 import ProfileContainer from "./components/User Profile/ProfileContainer";
