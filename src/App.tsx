@@ -44,7 +44,6 @@ import { loadStripe } from "@stripe/stripe-js";
 import { Toaster } from "react-hot-toast";
 import SubscriptionManager from "./pages/SubscriptionManager";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import Saved_Jobs from './components/Jobs&hiring/Saved_Jobs';
 import EmailAddress from "@pages/Settings/SignInAndSecurity/AccountAccess/EmailAddress";
 import Metrics from "./components/Company/Metrics";
 import Saved_Jobs from './components/Jobs&hiring/Saved_Jobs';
@@ -57,8 +56,8 @@ function App() {
   return (
     <>
       {/*<ThemeProvider> */}
-      <Toaster
-        position="top-center"
+       {/* <Toaster
+        position="bottom-left"
         toastOptions={{
           duration: 4000,
           style: {
@@ -66,6 +65,11 @@ function App() {
             color: "#fff",
           },
         }}
+      />  */}
+
+      <Toaster
+        position="bottom-left"
+        reverseOrder={false}
       />
       <QueryClientProvider client={queryClient}>
         <Elements stripe={stripePromise}>
@@ -163,6 +167,12 @@ function App() {
                 ></Route>
                 <Route path="notifications" element={<Notifications />} />
               </Route>
+
+              <Route path="/jobs-and-hiring" element={<Jobs_And_Hiring />} />
+              <Route path="/saved-jobs" element={<Saved_Jobs />} />
+
+
+
             </Route>
 
             <Route path="*" element={<Error404 />} />

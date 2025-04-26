@@ -1,9 +1,8 @@
 import React, { useState, FormEvent, ChangeEvent } from "react";
 import JobApplicationModal from "./JobApplicationModal";
-import toast from './../../../node_modules/react-hot-toast/src/index';
-// import toast from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import { Link } from "react-router-dom";
-import { number } from "prop-types";
+
 
 interface JobHighlight {
     [index: number]: string;
