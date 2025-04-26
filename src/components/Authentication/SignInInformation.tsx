@@ -4,7 +4,8 @@ import { AuthenticationSignInButton } from "./AuthenticationButtons";
 import { useAppDispatch } from "@store/hooks";
 import { AppDispatch } from "@store/store";
 import { loginUser } from "@store/user/userThunks"; // New login thunk
-import Modal from "./Modal";
+import Modal from "../utils/Modal";
+import store from "@store/store";
 // import store from "@store/store";
 import Checkbox from "./Utilities/Checkbox";
 import Navigate_Component from "./Utilities/Navigate_Component";
@@ -102,7 +103,7 @@ function SignInInformation() {
         const resultAction = await dispatch(loginUser(userData));
         console.log("data fetched ", resultAction);
         //retrieveUser(userData.email, userData.password);
-        if (loginUser.fulfilled.match(resultAction)) {
+        if (store.getState().user.loggedIn) {
           // Setting the access token in the local storage
           navigate("/home");
         } else {

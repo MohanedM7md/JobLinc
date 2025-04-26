@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { EllipsisVertical } from "lucide-react";
 import Checkbox from "./UI/CheckBox";
 import { ChatCardProps } from "./interfaces/Chat.interfaces";
 import ChatAvatarGrid from "./ChatAvatarGrid";
 import { ReadToggler } from "@services/api/chatServices";
+
 export default function ChatCard({
   chatId,
   chatPicture,
@@ -11,35 +12,63 @@ export default function ChatCard({
   lastMessage,
   sentDate,
   onClick,
-  unseenCount,
+  unreadCount,
   isRead,
   className = "w-full",
 }: ChatCardProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [markAsRead, setMarkAsRead] = useState(isRead);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    setMarkAsRead(isRead);
+  }, [isRead]);
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(event.target as Node) &&
+        buttonRef.current &&
+        !buttonRef.current.contains(event.target as Node)
+      ) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   const toggleMenu = (e: React.MouseEvent) => {
     e.stopPropagation();
     setIsMenuOpen((prev) => !prev);
   };
 
-  const handleDelete = () => {
+  const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation();
     console.log(`Deleting chat: ${chatId}`);
     setIsMenuOpen(false);
   };
 
-  const handleMarkReadUnread = async () => {
-    const response = await ReadToggler(chatId);
-    if (response) setMarkAsRead((prev) => !prev);
+  const handleMarkReadUnread = async (e: React.MouseEvent) => {
+    e.stopPropagation();
     setIsMenuOpen(false);
+    ReadToggler(chatId);
+    setMarkAsRead((prev) => !prev);
   };
 
   const handleClick = async (e: React.MouseEvent) => {
     setMarkAsRead(true);
-
     if (onClick) {
       onClick();
     }
   };
+
   return (
     <div
       onClick={handleClick}
@@ -67,8 +96,11 @@ export default function ChatCard({
         </div>
 
         <div className="flex items-center gap-2 min-w-[60px] justify-end">
-          <span className="text-xs text-gray-400">{sentDate}</span>
+          <span className="text-xs text-gray-400">
+            {new Date(sentDate).toLocaleDateString()}
+          </span>
           <button
+            ref={buttonRef}
             onClick={toggleMenu}
             className={`p-2 rounded-full z-20 transition
           ${!markAsRead ? "hover:bg-hoverDarkBurgundy" : "hover:bg-gray-300"}`}
@@ -79,7 +111,11 @@ export default function ChatCard({
             />
           </button>
           {isMenuOpen && (
-            <div className="absolute top-12 right-3 w-36 bg-white shadow-md rounded-md p-2 z-50">
+            <div
+              ref={menuRef}
+              className="absolute top-12 right-3 w-36 bg-white shadow-md rounded-md p-2 z-50"
+              onClick={(e) => e.stopPropagation()}
+            >
               <button
                 className="w-full text-left px-3 py-1 text-sm hover:bg-gray-200"
                 onClick={handleDelete}
@@ -101,7 +137,7 @@ export default function ChatCard({
               className="absolute top-2 right-3 text-xs text-white bg-red-400 rounded-full w-4
                         opacity-100 group-hover:opacity-0 text-center"
             >
-              {unseenCount ? unseenCount : null}
+              {unreadCount ? unreadCount : null}
             </div>
           )}
         </div>

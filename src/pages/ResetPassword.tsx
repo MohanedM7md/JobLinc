@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store/store";
 import { resetPassword } from "../store/user/userThunks";
-import Modal from "../components/Authentication/Modal";
+import Modal from "../components/utils/Modal";
 import PasswordFieldNormal from "../components/Authentication/Utilities/PasswordFieldNormal";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";

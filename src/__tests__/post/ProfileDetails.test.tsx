@@ -1,7 +1,7 @@
 import { render, screen, cleanup } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import ProfileDetails from "../../components/Posts/ProfileDetails";
+import PostHeader from "../../components/Posts/PostHeader";
 import "@testing-library/jest-dom/vitest";
 
 describe("ProfileDetails", () => {
@@ -14,7 +14,7 @@ describe("ProfileDetails", () => {
   };
 
   beforeEach(() => {
-    render(<ProfileDetails {...props} />);
+    render(<PostHeader {...props} />);
   });
 
   afterEach(() => {
