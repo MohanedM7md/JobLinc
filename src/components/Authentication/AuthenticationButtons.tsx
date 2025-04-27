@@ -11,7 +11,7 @@ function AuthenticationGoogleButton()
     const dispatch = useAppDispatch();
     const clientId = "1026201483663-9g1k1avpkm7jjajm200uvgt8h8tob6tp.apps.googleusercontent.com";
     return (
-        <div className="border-1 w-full h-10 rounded-[3.125rem] p-2.5 mb-5 text-[15px] flex justify-center items-center hover:bg-blue-50 hover:bg-opacity-5 hover:cursor-pointer transition-all duration-200">
+        <div className="w-full h-10 rounded-[3.125rem] p-2.5 mb-5 text-[15px] flex justify-center items-center hover:bg-blue-50 hover:bg-opacity-5 hover:cursor-pointer transition-all duration-200">
             <GoogleOAuthProvider clientId={clientId}>
             <GoogleLogin
                 onSuccess={credentialResponse => {

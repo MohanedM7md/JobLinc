@@ -12,7 +12,6 @@ function SignInPage()
                 <h1 className="font-bold text-[30px] text-warmBlack">Sign in</h1>
                 <div className="flex flex-col justify-center">
                     <AuthenticationGoogleButton />
-                    <AuthenticationAppleButton />
                     <div className="relative flex items-center justify-center w-full border-b-1 my-2">
                         <span className="absolute px-2 bg-lightGray">or</span>
                     </div>
