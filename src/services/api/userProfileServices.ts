@@ -106,7 +106,7 @@ export async function addExperience(experience: NewExperience) {
 export async function editExperience(experience: ExperienceInterface) {
   try {
     const response = await api.put(
-      `user/experience/${experience._id}`,
+      `user/experience/${experience.id}`,
       experience,
     );
     return response.status;
@@ -149,7 +149,7 @@ export async function addCertificate(certificate: NewCertificate) {
 export async function editCertificate(certificate: CertificateInterface) {
   try {
     const response = await api.put(
-      `user/certificate/${certificate._id}`,
+      `user/certificate/${certificate.id}`,
       certificate,
     );
     return response.status;

@@ -3,7 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { deletePost, savePost } from "@services/api/postServices";
 import store from "@store/store";
 import { motion, AnimatePresence } from "framer-motion";
-import { FlagTriangleRight, Pencil, Save, Trash } from "lucide-react";
+import {
+  ClipboardPen,
+  FlagTriangleRight,
+  Pencil,
+  Save,
+  Trash,
+} from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import ConfirmAction from "../utils/ConfirmAction";
@@ -27,7 +33,7 @@ export default function PostUtilityButton(props: UtilityProps) {
 
   const postSave = useMutation({
     mutationFn: savePost,
-  })
+  });
 
   function handleDelete() {
     toast.promise(postDelete.mutateAsync(props.postId), {
@@ -42,7 +48,19 @@ export default function PostUtilityButton(props: UtilityProps) {
       loading: "Saving post...",
       success: "Post saved successfully!",
       error: (error) => error.message,
-    })
+    });
+  }
+
+  function handleCopy() {
+    const postLink = `${window.location.origin}/post/${props.postId}`;
+    navigator.clipboard
+      .writeText(postLink)
+      .then(() => {
+        toast.success("Link copied to clipboard!");
+      })
+      .catch(() => {
+        toast.error("Failed to copy link.");
+      });
   }
 
   return (
@@ -107,6 +125,21 @@ export default function PostUtilityButton(props: UtilityProps) {
                     </>
                   ) : (
                     <>
+                      <MenuItem
+                        as={motion.div}
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <button
+                          onClick={handleCopy}
+                          className="w-full flex items-center justify-between px-4 py-2 text-sm hover:bg-gray-100 transition duration-200 ease-in-out"
+                        >
+                          <ClipboardPen className="mr-2" />
+                          <span>Copy</span>
+                        </button>
+                      </MenuItem>
                       <MenuItem
                         as={motion.div}
                         initial={{ opacity: 0, y: -10 }}

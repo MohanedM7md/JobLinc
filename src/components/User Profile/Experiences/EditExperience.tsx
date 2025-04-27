@@ -14,7 +14,7 @@ import {
   ExperienceInterface,
   ExperienceModes,
   ExperienceTypes,
-} from "../../../interfaces/userInterfaces"; //Import path isn't working for some reason
+} from "../../../interfaces/userInterfaces";
 
 interface EditExperienceProps extends ExperienceInterface {
   onClose: () => void;
@@ -64,21 +64,21 @@ export default function EditExperience(props: EditExperienceProps) {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+   formState: { errors },
     watch,
   } = useForm<ExperienceFields>({
     resolver: zodResolver(schema),
     defaultValues: {
       position: props.position,
       company: props.company,
-      description: props.description,
+     description: props.description,
+      isPresent: props.endDate === "Present",
       startMonth: new Date(props.startDate).getMonth() + 1,
       startYear: new Date(props.startDate).getFullYear(),
-      endMonth: new Date(props.endDate).getMonth() + 1,
-      endYear: new Date(props.endDate).getFullYear(),
+      endMonth: props.endDate === "Present" ? 0 : new Date(props.endDate).getMonth() + 1,
+      endYear: props.endDate === "Present" ? 0 : new Date(props.endDate).getFullYear(),
       type: props.type,
       mode: props.mode,
-      isPresent: props.endDate === "Present",
     },
   });
 

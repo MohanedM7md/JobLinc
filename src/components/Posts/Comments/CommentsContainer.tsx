@@ -25,6 +25,7 @@ export default function CommentsContainer({
     queryKey: ["getComments", postId],
     queryFn: () => getComments(postId),
     enabled: true,
+    refetchOnWindowFocus: false,
   });
 
   useEffect(() => {

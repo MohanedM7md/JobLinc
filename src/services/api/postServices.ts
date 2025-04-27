@@ -1,10 +1,10 @@
 import { api } from "./api";
 
 // Fetch a a number of posts to populate a user's feed
-export async function getFeed(count: number, signal: AbortSignal) {
+export async function getFeed(start: number, end: number, signal: AbortSignal) {
   try {
     const response = await api.get(`post/feed/`, {
-      params: { count },
+      params: { start: start, end: end },
       signal,
     });
     console.log(response.data);
@@ -26,7 +26,7 @@ export async function getPost(postId: string) {
   }
 }
 
-// Fetch comments for a post (NOT in documentation)
+// Fetch comments for a post
 export async function getComments(postId: string) {
   try {
     const response = await api.get(`post/${postId}/comments`);

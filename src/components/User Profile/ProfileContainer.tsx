@@ -118,7 +118,33 @@ function ProfileContainer() {
     isSkillsFetching ||
     isUserFetching
   ) {
-    return <div>Loading...</div>;
+    return (
+      <div className="bg-warmWhite">
+        <div className="profile-container pb-4 w-12/12 lg:w-8/12 m-auto bg-lightGray text-charcoalBlack">
+          <div className="p-4 rounded-lg shadow-md relative animate-pulse">
+            <div className="relative mb-16">
+              <div className="w-full h-80 bg-gray-300 rounded-lg"></div>
+              <div className="absolute -bottom-16 left-4 w-32 h-32 bg-gray-300 rounded-full border-4 border-warmWhite shadow-lg"></div>
+            </div>
+            <div className="mb-4">
+              <div className="h-6 bg-gray-300 rounded w-1/3 mb-2"></div>
+              <div className="h-4 bg-gray-300 rounded w-1/4 mb-2"></div>
+              <div className="h-4 bg-gray-300 rounded w-1/2"></div>
+            </div>
+          </div>
+          {[...Array(3)].map((_, index) => (
+            <div
+              key={index}
+              className="my-2 p-4 rounded-lg shadow-md relative animate-pulse"
+            >
+              <div className="h-6 bg-gray-300 rounded w-1/4 mb-4"></div>
+              <div className="h-4 bg-gray-300 rounded w-3/4 mb-2"></div>
+              <div className="h-4 bg-gray-300 rounded w-2/3"></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
   }
 
   if (
@@ -128,7 +154,31 @@ function ProfileContainer() {
     isSkillsError ||
     isUserError
   ) {
-    return <div>Error loading user data.</div>;
+    const errorType = isUserError && userId ? 404 : 500;
+    return (
+      <div className="bg-warmWhite">
+        <div className="profile-container pb-4 w-12/12 lg:w-8/12 m-auto bg-lightGray text-charcoalBlack">
+          {errorType === 404 ? (
+            <div className="text-center p-4">
+              <h1 className="text-2xl font-bold text-crimsonRed">
+                User Not Found
+              </h1>
+              <p className="text-mutedSilver">
+                The user you are looking for does not exist or has been removed.
+              </p>
+            </div>
+          ) : (
+            <div className="text-center p-4">
+              <h1 className="text-2xl font-bold text-crimsonRed">Error</h1>
+              <p className="text-mutedSilver">
+                An unexpected error occurred while loading the user data. Please
+                try again later.
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+    );
   }
 
   return (

@@ -45,6 +45,7 @@ import SubscriptionManager from "./pages/SubscriptionManager";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import EmailAddress from "@pages/Settings/SignInAndSecurity/AccountAccess/EmailAddress";
 import Metrics from "./components/Company/Metrics";
+import Post from "@pages/Post";
 
 const queryClient = new QueryClient()
 
@@ -114,6 +115,7 @@ function App() {
               <Route path="/post">
                 <Route path="create" element={<PostCreate />} />
                 <Route path=":postId/edit" element={<PostEdit />} />
+                <Route path=":postId" element={<Post />} />
               </Route>
             </Route>
             <Route path="/settings" element={<Settings />}>

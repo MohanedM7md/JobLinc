@@ -21,7 +21,7 @@ interface PostProps {
   isRepost: boolean;
 }
 
-export default function Post(props: PostProps) {
+export default function PostCard(props: PostProps) {
   const [hide, setHide] = useState<boolean>(false);
   const [showComment, setShowComment] = useState<boolean>(false);
   const [showRepostModal, setShowRepostModal] = useState<boolean>(false);
@@ -84,7 +84,7 @@ export default function Post(props: PostProps) {
       />
       {props.post.repost ? (
         <div className="w-12/12 m-auto my-2 border-1 rounded-lg border-mutedSilver transform scale-90">
-          <Post post={props.post.repost} isRepost={true} />
+          <PostCard post={props.post.repost} isRepost={true} />
         </div>
       ) : null}
       <div className="flex flex-row text-mutedSilver m-auto py-2 w-11/12 border-b-1 border-gray-300">

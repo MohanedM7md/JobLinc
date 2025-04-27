@@ -5,11 +5,14 @@ import {
   ExperienceTypes,
 } from "../../../interfaces/userInterfaces";
 import { addExperience } from "@services/api/userProfileServices";
-import { useMutation } from "@tanstack/react-query";
+import { searchCompanies } from "@services/api/companyServices";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { useState } from "react";
 import z from "zod";
+import { CompanyInterface } from "@interfaces/companyInterfaces";
 
 interface AddExperienceProps {
   onUpdate: () => void;
@@ -55,9 +58,12 @@ const schema = z
 type ExperienceFields = z.infer<typeof schema>;
 
 export default function AddExperience(props: AddExperienceProps) {
+  const [companySearch, setCompanySearch] = useState("");
+  const [companyOptions, setCompanyOptions] = useState<CompanyInterface[]>([]);
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
     watch,
   } = useForm<ExperienceFields>({
@@ -72,6 +78,20 @@ export default function AddExperience(props: AddExperienceProps) {
     onSuccess: () => {
       props.onUpdate();
       props.onClose();
+    },
+  });
+
+  const { isError: isCompaniesError } = useQuery({
+    queryKey: ["Search companies by name", companySearch],
+    enabled: companySearch.trim() !== "",
+    queryFn: async () => {
+      try {
+        const data = await searchCompanies(companySearch);
+        setCompanyOptions(data);
+        return data;
+      } catch {
+        setCompanyOptions([]);
+      }
     },
   });
 
@@ -119,7 +139,9 @@ export default function AddExperience(props: AddExperienceProps) {
         <label className="text-sm font-medium">Company</label>
         <input
           type="text"
-          {...register("company")}
+          value={companySearch}
+          onChange={(e) => setCompanySearch(e.target.value)}
+          placeholder="Search for a company"
           className={`w-full px-2 py-1 border rounded-lg ${
             addExperienceMutation.status === "pending"
               ? "opacity-50 cursor-not-allowed"
@@ -127,6 +149,25 @@ export default function AddExperience(props: AddExperienceProps) {
           }`}
           disabled={addExperienceMutation.status === "pending"}
         />
+        {companyOptions.length > 0 && (
+          <ul className="border rounded-lg mt-2 max-h-40 overflow-y-auto">
+            {companyOptions.map((company) => (
+              <li
+                key={company.id}
+                onClick={() => {
+                  setCompanySearch(company.name);
+                  setValue("company", company.id);
+                }}
+                className="px-2 py-1 cursor-pointer hover:bg-gray-200"
+              >
+                {company.name}
+              </li>
+            ))}
+          </ul>
+        )}
+        {isCompaniesError && (
+          <p className="text-sm text-red-600">Error fetching companies</p>
+        )}
         {errors.company && (
           <p className="text-sm text-red-600">{errors.company.message}</p>
         )}
