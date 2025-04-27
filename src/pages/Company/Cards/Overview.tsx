@@ -24,12 +24,12 @@ function Overview(props: OverviewProps)
                     <strong>Company size</strong>
                     <p>{props.company.employees}</p>
                 </div>
-                {props.company.locations[0] && <div>
+                {/* {props.company.locations[0] && <div>
                     <strong>Headquarters</strong>
                     {props.company.locations.map((location) => (
                         <p>{location.address}</p>
                     ))}
-                </div>}
+                </div>} */}
                 <div>
                     <strong>Founded</strong>
                     <p>{props.company.createdAt}</p>

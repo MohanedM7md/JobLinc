@@ -13,6 +13,7 @@ export const useCompanyStore = create<CompanyStoreState>()((set) => ({
       const response = await getCompanyBySlug(slug);
       if (!(response.status == 200)) throw new Error("Failed to fetch company");
       const data = response.data;
+      console.log("data after fetch by slug: ", data);
       set({ company: data, loading: false });
     } catch (error) {
       set({

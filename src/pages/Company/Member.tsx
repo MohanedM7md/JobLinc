@@ -12,8 +12,7 @@ import { MessageCircle } from "lucide-react";
 import { EllipsisVertical } from "lucide-react";
 
 function Member() {
-  const { company, loading, error, fetchCompany, resetCompany } =
-    useCompanyStore();
+  const { company, loading, error, fetchCompany, resetCompany } = useCompanyStore();
   const { slug } = useParams<string>();
   const navigate = useNavigate();
 
@@ -23,7 +22,7 @@ function Member() {
       (async () => {
         try {
           // await getCompanyBySlug(slug);
-          fetchCompany(slug);
+          await fetchCompany(slug);
         } catch (err: any) {
           if (err.response?.status === 401) {
             setErrPage("Unauthorized");
@@ -38,6 +37,11 @@ function Member() {
       };
     }
   }, []);
+
+
+  useEffect(() => {
+
+  }, [])
   const [navItemSelected, setNavItemSelected] = useState<string>("Home");
 
   const navItems = [
@@ -51,9 +55,16 @@ function Member() {
     (item) => item.text === navItemSelected,
   );
 
+  const [isFollowed, setIsFollowed] = useState(false);
+
   if (error) return <div>Error: {err}</div>;
   if (loading) return <LoadingScreen />;
   if (!company) return <div>No company data found</div>;
+
+  function handleFollow()
+  {
+
+  }
 
   return (
     <div className="bg-warmWhite min-h-screen w-full flex flex-col items-center">
@@ -67,9 +78,9 @@ function Member() {
         <div>
           <button
             className="text-white rounded-xl outline-1 px-4 py-1 hover:outline-2"
-            /*  onClick={() => {
-              navigate(`/company/admin/${companyId}`);
-            }} */
+              onClick={() => {
+              navigate(`/company/admin/${company.id}`);
+            }}
           >
             View as admin
           </button>
@@ -88,18 +99,18 @@ function Member() {
               {company.employees} employees
             </p>
             <div className="flex gap-8">
-              <button className="bg-crimsonRed text-white px-5 py-2 rounded-2xl hover:cursor-pointer hover:bg-darkBurgundy flex gap-2 font-semibold">
+              <button className="bg-crimsonRed text-white px-5 py-2 rounded-2xl hover:cursor-pointer hover:bg-darkBurgundy flex gap-2 font-semibold" onClick={handleFollow}>
                 {" "}
                 <Plus /> Follow
               </button>
-              <button className="px-5 py-2 rounded-2xl hover:cursor-pointer outline-1 outline-crimsonRed hover:outline-2 flex gap-2 font-semibold">
+              {/* <button className="px-5 py-2 rounded-2xl hover:cursor-pointer outline-1 outline-crimsonRed hover:outline-2 flex gap-2 font-semibold">
                 {" "}
                 <MessageCircle /> Message
-              </button>
-              <button className="outline-1 w-[40px] font-bold px-2 py-2 rounded-4xl hover:outline-2 hover:cursor-pointer flex justify-center items-center">
+              </button> */}
+              {/* <button className="outline-1 w-[40px] font-bold px-2 py-2 rounded-4xl hover:outline-2 hover:cursor-pointer flex justify-center items-center">
                 {" "}
                 <EllipsisVertical />{" "}
-              </button>
+              </button> */}
             </div>
           </div>
         </div>
@@ -126,3 +137,4 @@ function Member() {
 }
 
 export default Member;
+
