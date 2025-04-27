@@ -16,10 +16,15 @@ function AuthenticationGoogleButton()
             <GoogleLogin
                 onSuccess={credentialResponse => {
                     console.log(credentialResponse);
-                    dispatch(loginWithGoogle({ credential: credentialResponse.credential || "" }));
-                    if (store.getState().user.loggedIn) {
-                        navigate("/home");
-                    }
+                    dispatch(loginWithGoogle({ credential: credentialResponse.credential || "" })).then(() => {
+                        if (store.getState().user.loggedIn)
+                        {
+                            navigate("/home");
+                        }
+                    })
+                    .catch((error: any) => {
+                        console.error("Error while logging in with google: ", error);
+                    })
                 }}
                 onError={() => {
                     console.log('Login Failed');
