@@ -46,6 +46,7 @@ import SubscriptionManager from "./pages/SubscriptionManager";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import EmailAddress from "@pages/Settings/SignInAndSecurity/AccountAccess/EmailAddress";
 import Metrics from "./components/Company/Metrics";
+import UserConnectionListCard from "./components/Connections/UserConnectionListCard";
 
 const queryClient = new QueryClient()
 
@@ -87,6 +88,7 @@ function App() {
               <Route path="/update-username" element={<UpdateUsername />} />
               <Route path="/profile/:userId">
                 <Route index element={<ProfileContainer />} />
+                <Route path="connections" element={<UserConnectionListCard />} />
                 <Route
                   path="details/experiences"
                   element={<FullExperiences />}

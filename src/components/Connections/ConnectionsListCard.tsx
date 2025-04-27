@@ -14,30 +14,28 @@ function ConnectionsListCard() {
     const fetchData = async () => {
       try {
         const response = await getConnections();
-        console.log("hena");
-        console.log(response);
-          
+        // console.log("Connections of logged in user",response);
+        //   const parsedConnections = Array.isArray(response)
+        //   ? response.map((connection) => ({
+        //     userId: connection.userId,
+        //     profilePicture: connection.profilePicture,
+        //     firstName: connection.firstname,
+        //     lastName: connection.lastname,
+        //     headline: connection.headline || "",
+        //     connectedDate: new Date(connection.time),
+        //   }))
+        //   : [];
+        //   setUserConnections(parsedConnections);
           const parsedConnections = Array.isArray(response)
           ? response.map((connection) => ({
-            userId: connection.userId,
-            profileImage: connection.profilePicture,
-            firstName: connection.firstname,
-            lastName: connection.lastname,
-            headline: connection.headline || "",
-            connectedDate: new Date(connection.time),
-          }))
+              ...connection,
+              connectedDate: connection.connectedDate 
+                ? new Date(connection.connectedDate)
+                : null, 
+            }))
           : [];
           setUserConnections(parsedConnections);
-          // const parsedConnections = Array.isArray(response)
-          // ? response.map((connection) => ({
-          //     ...connection,
-          //     connectedDate: connection.connectedDate 
-          //       ? new Date(connection.connectedDate)
-          //       : null, 
-          //   }))
-          // : [];
-          // setUserConnections(parsedConnections);
-          console.log(userConnections);
+          console.log("parsed connections of logged in user",userConnections);
         } catch (error) {
           console.error("Error fetching network feed:", error);
       }
@@ -49,10 +47,6 @@ function ConnectionsListCard() {
       controller.abort();
     };
   }, []);
-
-  // useEffect(() => {
-  //   console.log("Updated userConnections:", userConnections);
-  // }, [userConnections]);
 
   const removeConnection = (connectionId: string) => {
     setUserConnections((prevConnections) =>
@@ -74,7 +68,7 @@ const filteredConnections = userConnections.filter((connection) => {
     } else if (sortBy === "lastname") {
       return b.lastName.localeCompare(a.lastName);
     } else if (sortBy === "recentlyadded") {
-      return b.connectedDate.getTime() - a.connectedDate.getTime();
+      return (b.connectedDate?.getTime() || 0) - (a.connectedDate?.getTime() || 0);
     }
     return 0;
   });

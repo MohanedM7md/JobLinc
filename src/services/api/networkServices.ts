@@ -55,20 +55,37 @@ export const getConnections = async (
   }
 };
 
-export const sendConnectionRequest = async (targetId: string, userId: string) => {
+export const getBlockedUsers = async (
+) => {
   try {
-    const payload = {
-      targetId,
-      userId,
-      requestedAt: new Date().toISOString(),
-      status: "pending",
-    };
-    const response = await api.post(`connections/add`, payload);
+    const response = await api.get('connection/blocked');
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching blocked users:', error);
+    return [];
+  }
+};
+
+
+export const sendConnectionRequest = async (userId: string) => {
+  try {
+    const response = await api.post(`connections/${userId}`);
     return response;
   } catch (error) {
     console.error("Error sending connection request:", error);
   }
 };
+export const changeConnectionStatus = async (
+  userId: string,
+  status: string,
+) => {
+  try {
+    const response = await api.post(`connection/${userId}/change-status`,status);
+    return response;
+  } catch (error) {
+    console.error("Error changing connection status:", error);
+  }
+}
 
 export const AcceptConnectionRequest = async (
   userId: string,

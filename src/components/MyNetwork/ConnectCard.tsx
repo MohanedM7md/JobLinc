@@ -12,7 +12,7 @@ function ConnectCard(props: connectsInterface) {
 
   const handlelincClick = async () => {
     if (!isClicked) {
-      const connectionPromise = sendConnectionRequest("targetuserid", "currentUserId");
+      const connectionPromise = sendConnectionRequest("currentUserId");
 
       toast.promise(connectionPromise, {
         loading: "Sending connection request...",
@@ -51,26 +51,28 @@ function ConnectCard(props: connectsInterface) {
       data-testid="connect-card"
       className="border-2 border-gray-200 rounded-xl flex-col w-57 h-80 justify-center items-center cursor-pointer"
     >
-      <div className="relative flex flex-col w-full h-7/20 justify-center items-center" onClick={()=>handleNavigate()}>
+      <div className="relative flex flex-col w-full h-7/20 justify-center items-center">
         <img
           src={props.profilePicture}
           alt={`User Profile Photo`}
           className="absolute w-29 h-29 rounded-full top-7/20 object-cover shadow-sm"
+          onClick={()=>handleNavigate()}
         />
         <img
           src="src/assets/Cinema.jpg"
           alt="Cover Image"
           className="w-full h-full border-b-1 border-gray-300 rounded-t-lg"
+          onClick={()=>handleNavigate()}
         />
       </div>
-      <div className="relative flex flex-col w-full h-13/20 justify-around items-center" onClick={()=>handleNavigate()}>
+      <div className="relative flex flex-col w-full h-13/20 justify-around items-center">
         <div className="flex flex-col w-full justify-center items-center mt-12">
-          <p className="font-semibold text-md text-center">
+          <p className="font-semibold text-md text-center" onClick={()=>handleNavigate()}>
             {props.firstName} {props.lastName}
           </p>
-          <p className="line clamp-2 text-gray-500 text-md text-center">{props.headline}</p>
+          <p className="line clamp-2 text-gray-500 text-md text-center" onClick={()=>handleNavigate()}>{props.headline}</p>
         </div>
-        <div className="flex w-full justify-center items-center" onClick={()=>handleNavigate()} >
+        <div className="flex w-full justify-center items-center">
           <p className="flex items-center space-x-2">
             <img
               src={props.profilePicture}

@@ -17,12 +17,25 @@ export interface invitationInterface {
   }
   export interface ConnectionInterface {
     userId: string;
-    profileImage: string;
+    profilePicture: string;
     firstName: string;
     lastName: string;
     headline: string;
-    connectedDate: Date;
+    city?: string | null;
+    country?: string | null;
+    mutualConnections?: number | null;
+    connectionStatus?: "pending" | "accepted" | "rejected" | null;
+    connectedDate?: Date | null;
   }
+  export interface BlockedUserInterface {
+    userId: string;
+    profilePicture: string;
+    firstName: string;
+    lastName: string;
+    connectionStatus: "blocked" | "unblocked";
+    mutualConnections: number;
+  }
+
   export interface ConnectionRequestInterface {
     requestId: string;
     targetId: string;

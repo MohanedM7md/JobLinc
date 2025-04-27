@@ -73,7 +73,7 @@ function  ConnectionCard(props: ConnectionInterface & { onRemove: (id: string) =
     };
   }, []);
 
-  const { profileImage, firstName, lastName, headline: userBio, connectedDate} = props;
+  const { profilePicture: profileImage, firstName: firstName, lastName, headline: userBio, connectedDate} = props;
 
   return (
     <div 
@@ -90,7 +90,7 @@ function  ConnectionCard(props: ConnectionInterface & { onRemove: (id: string) =
           {firstName} {lastName}
         </h3>
         <p className="text-gray-500 cursor-pointer text-base line-clamp-2" onClick={handleUserClick}>{userBio}</p>
-        <p className="text-xs text-gray-500">{getRelativeTime(connectedDate)}</p>
+        <p className="text-xs text-gray-500">{connectedDate ? getRelativeTime(connectedDate) : "connected date unavailable"}</p>
       </div>
       <div className="w-1/3 flex justify-end items-center">
         <Link data-testid="message-button-route" to="/messaging">

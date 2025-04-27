@@ -1,5 +1,8 @@
+import { changeConnectionStatus } from "@services/api/networkServices";
 import NetworkModal from "../../components/MyNetwork/NetworkModal";
 import { useState } from "react";
+import { useParams } from "react-router-dom";
+import toast from "react-hot-toast";
 interface BlockCardProps {
     firstName: string;
     lastName: string;
@@ -7,12 +10,35 @@ interface BlockCardProps {
 
 function BlockCard(props: BlockCardProps) {
     const [modalOpen, setModalOpen] = useState(true);
+    const { userId } = useParams()
     const handleCloseModal = () => {
         setModalOpen(false);
     }
     const handleOpenModal = () => {
         setModalOpen(true);
     }
+    const handleBlockClick = () => {
+        if (userId) {
+            const blockPromise = changeConnectionStatus(userId, "Block");
+            toast.promise(blockPromise, {
+                loading: "Blocking user...",
+                success: `${props.firstName} ${props.lastName} has been blocked!`,
+                error: "Failed to block user. Please try again.",
+            });
+            blockPromise.then((response) => {
+                console.log("Block Response:", response);
+                if (response?.status === 200) {
+                    handleCloseModal();
+                } else {
+                    console.error("Failed to block user:", response);
+                }
+            }).catch((error) => {
+                console.error("Error blocking user:", error);
+            });
+        } else {
+            console.error("User ID is undefined. Cannot block the user.");
+        }
+    };
     return(
         <NetworkModal isOpen={modalOpen} onClose={handleCloseModal}>
             <div className="grid grid-rows-10 bg-white border-gray-200 rounded-md">
@@ -32,7 +58,8 @@ function BlockCard(props: BlockCardProps) {
                     </button>
                     <button className="cursor-pointer border-2 px-5 py-0.5 rounded-full 
                     font-semibold hover:bg-lightGray hover:outline-1
-                    text-crimsonRed border-crimsonRed mt-2">
+                    text-crimsonRed border-crimsonRed mt-2"
+                    onClick={handleBlockClick}>
                         Block
                     </button>
                 </div>
