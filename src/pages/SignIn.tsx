@@ -8,7 +8,7 @@ function SignInPage()
     return (
         <div className="flex flex-col gap-7 w-full h-screen items-center justify-center bg-charcoalWhite m-0">
             <SignHeader />
-            <div className="flex flex-col gap-6 bg-lightGray p-5 rounded-xl">
+            <div className="flex flex-col gap-6 bg-lightGray p-5 rounded-xl md:mt-[200px]">
                 <h1 className="font-bold text-[30px] text-warmBlack">Sign in</h1>
                 <div className="flex flex-col justify-center">
                     <AuthenticationGoogleButton />

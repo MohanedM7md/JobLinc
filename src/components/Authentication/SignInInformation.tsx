@@ -3,9 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { AuthenticationSignInButton } from "./AuthenticationButtons";
 import { useAppDispatch } from "@store/hooks";
 import { AppDispatch } from "@store/store";
-import { loginUser } from "@store/user/userThunks"; // New login thunk
 import Modal from "./Modal";
 import store from "@store/store";
+import { loginUser } from "@store/user/userThunks"; // New login thunk
+
 // import store from "@store/store";
 import Checkbox from "./Utilities/Checkbox";
 import Navigate_Component from "./Utilities/Navigate_Component";

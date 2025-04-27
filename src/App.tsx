@@ -26,7 +26,9 @@ import ProfileContainer from "./components/User Profile/ProfileContainer";
 import FullExperiences from "./components/User Profile/Experiences/FullExperiences";
 import FullCertificates from "./components/User Profile/Certificates/FullCertificates";
 import FullSkills from "./components/User Profile/Skills/FullSkills";
-import Settings from "@pages/Settings/Settings";
+
+const Settings = lazy(() => import("@pages/Settings/Settings"));
+
 import AccountPreferences from "@pages/Settings/AccountPreferences";
 import Notifications from "@pages/Settings/Notifications";
 import SignInAndSecurity from "@pages/Settings/SignInAndSecurity";
