@@ -9,10 +9,7 @@ import {
   stopTyping,
   listenToOpenChatErrors,
 } from "@services/api/ChatSocket";
-import {
-  RecievedMessage,
-  MessageStatus,
-} from "./interfaces/Message.interfaces";
+import { RecievedMessage } from "./interfaces/Message.interfaces";
 import { User } from "./interfaces/User.interfaces";
 import useChats from "@hooks/useChats";
 import { fetchChatData, createChat } from "@services/api/chatServices";
@@ -23,6 +20,7 @@ import UserTypingIndicator from "./UserTyping";
 function ChatContent({ className }: { className?: string }) {
   const [users, setUsers] = useState<User[]>([]);
   const [messages, setMessages] = useState<RecievedMessage[]>([]);
+  const [loading, setLoading] = useState(true);
   const { chatId, setChatId } = useChatid();
   const { setOpnedChats } = useChats();
   const { usersId } = useNetworkUserId();
@@ -48,6 +46,7 @@ function ChatContent({ className }: { className?: string }) {
   }, [messages]);
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       if (usersId.length && !chatId) {
         console.log("Create new chat with: ", usersId);
         const data = await createChat(usersId);
@@ -61,6 +60,7 @@ function ChatContent({ className }: { className?: string }) {
         setUsers(data.participants);
         setMessages(data.messages);
       }
+      setLoading(false);
     };
 
     fetchData();
@@ -95,7 +95,6 @@ function ChatContent({ className }: { className?: string }) {
       messageId,
       senderId: userIdRef.current,
       time: new Date(),
-      seenBy: [userIdRef.current],
       status: "sent",
       content: {},
     };
@@ -148,7 +147,7 @@ function ChatContent({ className }: { className?: string }) {
   return (
     <div className={`${className} flex flex-col flex-1 overflow-y-hidden`}>
       <div className="h-full overflow-y-auto bg-gray-100">
-        <ChatMessages users={users} messages={messages} />
+        <ChatMessages users={users} messages={messages} loading={loading} />
         {typingUsers.map((typingUserId) => (
           <UserTypingIndicator
             key={typingUserId}

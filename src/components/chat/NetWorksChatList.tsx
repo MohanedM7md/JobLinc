@@ -2,15 +2,15 @@ import { useEffect, useState, memo, useRef } from "react";
 import NetworkCard from "./NetworkCard";
 import { fetchNetWorks } from "@services/api/chatServices";
 import { NetWorkCard } from "./interfaces/Chat.interfaces";
-import { useAppSelector } from "@store/hooks";
-import store from "@store/store";
 
 const NetWorksChatList = ({
   onCardClick,
   className,
+  filter,
 }: {
   onCardClick: (id: string, chatName: string, chatPicture: string) => void;
   className?: string;
+  filter: string;
 }) => {
   const [users, setUsers] = useState<NetWorkCard[]>([]);
   const user = localStorage.getItem("userId");
@@ -20,7 +20,11 @@ const NetWorksChatList = ({
     "----------------NetWorksChatList---------------- for userID: ",
     user,
   );
-
+  useEffect(() => {
+    setUsers((prev) =>
+      prev.filter((user) => user.chatName.toLowerCase().includes(filter)),
+    );
+  }, [filter]);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -53,7 +57,9 @@ const NetWorksChatList = ({
           />
         ))
       ) : (
-        <div className="text-gray-500 text-center mt-4">No chats found</div>
+        <div className="text-gray-500 text-center mt-4">
+          No Connections found
+        </div>
       )}
     </div>
   );

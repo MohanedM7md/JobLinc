@@ -106,83 +106,86 @@ function ChatInput({
 
   return (
     <div
-      className={`flex flex-col items-center p-3 ${className} bg-charcoalWhite dark:bg-warmBlack border-t border-gray-200 relative`}
+      className={`flex flex-col items-center p-3 ${className} bg-white dark:bg-warmBlack border-t border-gray-200 dark:border-gray-700`}
     >
-      {/* Selected file preview */}
       {selectedFile && (
         <div className="w-full mb-2">
-          <div className="flex items-center justify-between p-2 bg-gray-200 dark:bg-gray-700 rounded">
-            <span className="text-sm truncate max-w-xs">
-              {selectedFile.name} ({Math.round(selectedFile.size / 1024)} KB)
-            </span>
+          <div className="flex items-center justify-between p-2 rounded bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600">
+            <div className="flex items-center gap-2 text-sm truncate max-w-[80%]">
+              <Paperclip size={16} />
+              <span className="truncate">
+                {selectedFile.name} ({Math.round(selectedFile.size / 1024)} KB)
+              </span>
+            </div>
             <button
               onClick={handleRemoveFile}
-              className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+              className="text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
             >
-              <X size={16} />
+              <X size={18} />
             </button>
           </div>
         </div>
       )}
 
-      <div className="flex w-full items-center">
-        <textarea
-          name="msg"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
-          className={`flex-1 w-full bg-warmWhite dark:bg-darkGray text-charcoalBlack dark:text-charcoalWhite p-2 rounded-lg resize-none h-20 focus:outline-none shadow-inner transition-all ${
-            isFocused ? "ring-2 ring-crimsonRed" : "ring-1 ring-gray-400"
-          }`}
-          placeholder="Write a message..."
-        />
-
-        <button
-          id="send-msg-btn"
-          onClick={handleSendMessage}
-          disabled={(!message.trim() && !selectedFile) || uploading}
-          className={`ml-2 p-1 font-bold rounded-md h-2/4 align-bottom transition-colors flex items-center justify-center min-w-20 ${
-            (message.trim() || selectedFile) && !uploading
-              ? "bg-crimsonRed hover:bg-darkBurgundy text-warmWhite"
-              : "bg-mutedSilver text-charcoalBlack cursor-not-allowed"
-          }`}
-        >
-          {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Send"}
-        </button>
-      </div>
-
-      <div className="flex justify-between w-full pt-4">
-        <div>
-          <input
-            type="file"
-            ref={fileInputRef}
-            onChange={handleFileChange}
-            className="hidden"
-            data-testid="file-input"
-            // Removed 'multiple' attribute to allow only single file selection
+      <div className="flex flex-col  w-full gap-2">
+        <div className="flex space-x-2 items-center">
+          <textarea
+            name="msg"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+            rows={3}
+            placeholder="Write a message..."
+            className={`flex-1 resize-none rounded-lg px-4 py-2 bg-gray-100 overflow-visible dark:bg-gray-800 text-gray-800 dark:text-gray-200 shadow-sm focus:outline-none transition-all text-sm ${
+              isFocused ? "ring-2 ring-crimsonRed" : "ring-1 ring-gray-300"
+            }`}
           />
+
+          <button
+            onClick={handleSendMessage}
+            disabled={(!message.trim() && !selectedFile) || uploading}
+            className={`rounded-full p-3 h-10 w-10 flex items-center justify-center transition-colors text-center ${
+              (message.trim() || selectedFile) && !uploading
+                ? "bg-crimsonRed hover:bg-darkBurgundy text-white"
+                : "bg-gray-300 dark:bg-gray-700 text-gray-500 cursor-not-allowed"
+            }`}
+          >
+            {uploading ? (
+              <Loader2 className="w-5 h-5 animate-spin" />
+            ) : (
+              <span className="text-lg font-bold">➤</span>
+            )}
+          </button>
+        </div>
+        <div className="flex items-center gap-1">
           <button
             onClick={handleFileButtonClick}
-            className="text-mutedSilver dark:text-charcoalWhite hover:text-charcoalBlack dark:hover:text-warmWhite p-2"
-            data-testid="attach-button"
+            className="text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white p-1"
             disabled={uploading}
           >
             <Paperclip size={20} />
           </button>
           <button
-            className="text-mutedSilver dark:text-charcoalWhite hover:text-charcoalBlack dark:hover:text-warmWhite p-2"
+            className="text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white p-1"
             disabled={uploading}
           >
             <Image size={20} />
           </button>
           <button
-            className="text-mutedSilver dark:text-charcoalWhite hover:text-charcoalBlack dark:hover:text-warmWhite p-2"
+            className="text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white p-1"
             disabled={uploading}
           >
             <Smile size={20} />
           </button>
         </div>
+
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleFileChange}
+          className="hidden"
+        />
       </div>
     </div>
   );

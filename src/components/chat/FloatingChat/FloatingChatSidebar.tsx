@@ -1,9 +1,10 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import ChatCardsList from "../ChatCardsList";
 import NetWorksChatList from "@chatComponent/NetWorksChatList";
 import SearchBar from "@chatComponent/UI/SearchBar";
 import { EllipsisVertical } from "lucide-react";
-import connectToChat, { disconnectChatSocket } from "@services/api/ChatSocket";
+
+import { AnimatePresence, motion } from "framer-motion";
 import { useAppSelector } from "@store/hooks";
 import useChats from "@hooks/useChats";
 import ConnectionsDropdown from "@chatComponent/FloatingChat/ConnectionsDropdown";
@@ -15,14 +16,16 @@ function FloatingChatSidebar() {
   });
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const { setOpnedChats } = useChats();
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
   const onFocusedToggler = () => {
     setTimeout(() => setIsFocused(!isFocused), 200);
   };
 
-  const handleSearchChange = useCallback((value: string) => {
-    console.log(value);
-  }, []);
+  const handleSearchChange = useCallback(
+    (value: string) => setSearchTerm(value),
+    [],
+  );
 
   const handleConversationClick = (
     chatId: string,
@@ -89,17 +92,34 @@ function FloatingChatSidebar() {
         />
       </div>
 
-      {isFocused ? (
-        <NetWorksChatList
-          onCardClick={handleNetWorkUserClick}
-          className="max-h-[60vh]"
-        />
-      ) : (
-        <ChatCardsList
-          onCardClick={handleConversationClick}
-          className="max-h-[60vh]"
-        />
-      )}
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.div
+          animate={
+            isFocused ? { opacity: 0, scale: 0.95 } : { opacity: 1, scale: 1 }
+          }
+          style={{ display: isFocused ? "none" : "block" }}
+          transition={{ duration: 0.3 }}
+        >
+          <ChatCardsList
+            onCardClick={handleConversationClick}
+            className="max-h-[60vh]"
+          />
+        </motion.div>
+
+        <motion.div
+          animate={
+            isFocused ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.95 }
+          }
+          style={{ display: isFocused ? "block" : "none" }}
+          transition={{ duration: 0.3 }}
+        >
+          <NetWorksChatList
+            onCardClick={handleNetWorkUserClick}
+            className="max-h-[60vh]"
+            filter={searchTerm}
+          />
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 }

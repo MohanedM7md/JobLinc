@@ -14,6 +14,7 @@ export default function ChatCard({
   onClick,
   unreadCount,
   isRead,
+  senderName,
   className = "w-full",
 }: ChatCardProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -25,7 +26,6 @@ export default function ChatCard({
     setMarkAsRead(isRead);
   }, [isRead]);
 
-  // Close menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -73,9 +73,9 @@ export default function ChatCard({
     <div
       onClick={handleClick}
       data-testid={chatId}
-      className={`${className} flex items-center p-3 cursor-pointer
+      className={`flex items-center p-3 cursor-pointer
                   relative rounded-lg shadow-sm group
-                ${!markAsRead ? "bg-SoftRed hover:bg-hoverSoftRed" : "bg-charcoalWhite hover:bg-gray-200"} `}
+                ${className} ${!markAsRead ? "bg-SoftRed hover:bg-hoverSoftRed" : "bg-charcoalWhite hover:bg-gray-200"}  `}
     >
       <div className="relative w-12 h-12 shrink-0 group">
         <ChatAvatarGrid chatName={chatName} chatPicture={chatPicture} />
@@ -83,7 +83,7 @@ export default function ChatCard({
           className="absolute inset-0 flex items-center justify-center 
             bg-darkGray bg-opacity-50 rounded-full opacity-0 hover:opacity-100 transition-all"
         >
-          <Checkbox />
+          {/* <Checkbox /> */}
         </div>
       </div>
 
@@ -91,7 +91,7 @@ export default function ChatCard({
         <div className="flex flex-col overflow-hidden">
           <div className="font-medium">{chatName}</div>
           <div className="text-sm text-gray-500 truncate max-w-[250px]">
-            {lastMessage}
+            {(senderName ? senderName : "me") + ": " + lastMessage}
           </div>
         </div>
 

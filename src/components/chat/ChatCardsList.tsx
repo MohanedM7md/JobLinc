@@ -1,10 +1,10 @@
 import { useEffect, useState, memo } from "react";
 import ChatCard from "./ChatCard";
 import LoadingChatCard from "./LoadingChatCard";
-import { fetchChats } from "../../services/api/chatServices";
+import { fetchChats, fetchRequestChatData } from "@services/api/chatServices";
 import { ChatCardInterface } from "./interfaces/Chat.interfaces";
 import { subscribeToChats } from "@services/api/ChatSocket";
-
+import ReqChatCard from "./ReqChatCard";
 const ChatCardsList = ({
   onCardClick,
   className = "",
@@ -13,13 +13,18 @@ const ChatCardsList = ({
   className?: string;
 }) => {
   const [chats, setChats] = useState<ChatCardInterface[]>([]);
+  const [reqChats, setReqChats] = useState<ChatCardInterface[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<"chats" | "requests">("chats");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const data = await fetchChats();
         setChats(data.chats);
+        const ReqChats = await fetchRequestChatData();
+
+        setReqChats(ReqChats.chats);
       } catch (error) {
         console.error("Error fetching chat data:", error);
       } finally {
@@ -27,7 +32,6 @@ const ChatCardsList = ({
       }
     };
     fetchData();
-
     subscribeToChats(
       (UpdatedChatCard) =>
         setChats((prev) => {
@@ -39,28 +43,96 @@ const ChatCardsList = ({
     );
   }, []);
 
+  const handleTabChange = (tab: "chats" | "requests") => {
+    setActiveTab(tab);
+  };
+
+  const handleAcceptRequest = async (requestId: string) => {
+    console.log("Accepting request:", requestId);
+  };
+
+  const handleRejectRequest = async (requestId: string) => {
+    console.log("Rejecting request:", requestId);
+  };
+
   return (
-    <div className={`${className} overflow-y-auto`}>
-      {isLoading ? (
-        // 👇 Render 5 loading skeletons
-        [...Array(5)].map((_, i) => <LoadingChatCard key={i} />)
-      ) : chats.length > 0 ? (
-        chats.map((chatCard) => (
-          <ChatCard
-            key={chatCard.chatId}
-            {...chatCard}
-            onClick={() =>
-              onCardClick(
-                chatCard.chatId,
-                chatCard.chatName,
-                chatCard.chatPicture,
+    <div className={`${className}`}>
+      <div className="flex mb-4 border-b">
+        <button
+          className={`py-2 px-4 font-medium ${
+            activeTab === "chats"
+              ? "text-crimsonRed border-b-2 border-crimsonRed"
+              : "text-gray-500 hover:text-crimsonRed/90"
+          }`}
+          onClick={() => handleTabChange("chats")}
+        >
+          Chats
+        </button>
+        <button
+          className={`py-2 px-4 font-medium ${
+            activeTab === "requests"
+              ? "text-crimsonRed border-b-2 border-crimsonRed"
+              : "text-gray-500 hover:text-crimsonRed/90"
+          }`}
+          onClick={() => handleTabChange("requests")}
+        >
+          Requests
+          {reqChats.length > 0 && (
+            <span className="ml-2 bg-crimsonRed/90 text-white text-xs px-2 py-1 rounded-full">
+              {reqChats.length}
+            </span>
+          )}
+        </button>
+      </div>
+      <div className="overflow-y-auto">
+        {isLoading ? (
+          [...Array(5)].map((_, i) => <LoadingChatCard key={i} />)
+        ) : (
+          <>
+            {activeTab === "chats" ? (
+              chats.length > 0 ? (
+                chats.map((chatCard) => (
+                  <ChatCard
+                    key={chatCard.chatId}
+                    {...chatCard}
+                    onClick={() =>
+                      onCardClick(
+                        chatCard.chatId,
+                        chatCard.chatName,
+                        chatCard.chatPicture,
+                      )
+                    }
+                  />
+                ))
+              ) : (
+                <div className="text-gray-500 text-center mt-4">
+                  No chats found
+                </div>
               )
-            }
-          />
-        ))
-      ) : (
-        <div className="text-gray-500 text-center mt-4">No chats found</div>
-      )}
+            ) : reqChats.length > 0 ? (
+              reqChats.map((reqChatCard) => (
+                <ReqChatCard
+                  key={reqChatCard.chatId}
+                  {...reqChatCard}
+                  onClick={() =>
+                    onCardClick(
+                      reqChatCard.chatId,
+                      reqChatCard.chatName,
+                      reqChatCard.chatPicture,
+                    )
+                  }
+                  handleAcceptRequest={handleAcceptRequest}
+                  handleRejectRequest={handleRejectRequest}
+                />
+              ))
+            ) : (
+              <div className="text-gray-500 text-center mt-4">
+                No requests found
+              </div>
+            )}
+          </>
+        )}
+      </div>
     </div>
   );
 };

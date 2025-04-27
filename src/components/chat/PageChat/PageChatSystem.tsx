@@ -6,6 +6,7 @@ import connectToChat, {
   disconnectChatSocket,
   onConnect,
 } from "@services/api/ChatSocket";
+import { AnimatePresence, motion } from "framer-motion";
 import { EllipsisVertical } from "lucide-react";
 import SearchBar from "@chatComponent/UI/SearchBar";
 import NetWorksChatList from "@chatComponent/NetWorksChatList";
@@ -20,6 +21,8 @@ function PageChatSystem() {
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
   const [isChatSidebarOpen, setIsChatSidebarOpen] = useState<boolean>(false);
+  const [searchTerm, setSearchTerm] = useState<string>("");
+
   const [opnedChatName, setOpnedChatName] = useState<string>("");
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const onFocusedToggler = () => {
@@ -27,9 +30,10 @@ function PageChatSystem() {
       setIsFocused(!isFocused);
     }, 100);
   };
-  const handleSearchChange = useCallback((value: string) => {
-    console.log(value);
-  }, []);
+  const handleSearchChange = useCallback(
+    (value: string) => setSearchTerm(value),
+    [],
+  );
   const handleConversationClick = useCallback(
     (chatId: string, chatName: string) => {
       setUsersId([]);
@@ -88,17 +92,36 @@ function PageChatSystem() {
       </header>
       {isConnected && (
         <div className="flex h-screen w-full">
-          {isFocused ? (
-            <NetWorksChatList
-              className="w-2/5  pb-20 md:w-1/3 border-r  bg-charcoalWhite border-gray-300 p-4"
-              onCardClick={handleNetWorkUserClick}
-            />
-          ) : (
-            <ChatCardsList
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              animate={
+                isFocused
+                  ? { opacity: 0, scale: 0.95 }
+                  : { opacity: 1, scale: 1 }
+              }
+              style={{ display: isFocused ? "none" : "block" }}
+              transition={{ duration: 0.3 }}
               className="w-2/5  pb-20 md:w-1/3 border-r bg-charcoalWhite border-gray-300 p-4"
-              onCardClick={handleConversationClick}
-            />
-          )}
+            >
+              <ChatCardsList onCardClick={handleConversationClick} />
+            </motion.div>
+
+            <motion.div
+              animate={
+                isFocused
+                  ? { opacity: 1, scale: 1 }
+                  : { opacity: 0, scale: 0.95 }
+              }
+              style={{ display: isFocused ? "block" : "none" }}
+              transition={{ duration: 0.3 }}
+              className="w-2/5  pb-20 md:w-1/3 border-r bg-charcoalWhite border-gray-300 p-4"
+            >
+              <NetWorksChatList
+                onCardClick={handleNetWorkUserClick}
+                filter={searchTerm}
+              />
+            </motion.div>
+          </AnimatePresence>
 
           <PageMessageWindow chatName={opnedChatName} />
         </div>

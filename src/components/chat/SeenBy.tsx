@@ -42,7 +42,6 @@ const SeenBy = React.memo(
           </div>
         ) : null}
 
-        {/* Seen By Avatars */}
         {seenUsers.length > 0 &&
           messageStatus !== "failed" &&
           messageStatus !== "sent" && (

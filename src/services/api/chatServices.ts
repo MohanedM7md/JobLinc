@@ -1,19 +1,12 @@
 import { api } from "./api";
 import store from "@store/store";
 export const fetchChats = async () => {
-  const response = await api.get(
-    `/chat/all
-`,
-    {
-      params: { userId: store.getState().user.userId },
-    },
-  );
+  const response = await api.get("/chat/all");
   return response.data;
 };
 
 export const fetchNetWorks = async (Id: string) => {
-  console.log("getting connection");
-  const response = await api.get(`/connection/${Id}/mutual`);
+  const response = await api.get(`/connection/connected`);
   const users = response.data.map(
     ({
       userId,
@@ -52,5 +45,12 @@ export const uploadingMedia = async (file: File): Promise<string> => {
     },
   });
 
+  return response.data;
+};
+
+export const fetchRequestChatData = async () => {
+  const response = await api.get("/chat/message-requests");
+  if (response.status != 200)
+    throw new Error("Failed to fetch message request chat data");
   return response.data;
 };
