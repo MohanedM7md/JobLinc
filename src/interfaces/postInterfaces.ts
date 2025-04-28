@@ -24,7 +24,8 @@ export interface RepliesInterface {
   lastname: string;
   headline: string;
   profilePicture: string;
-  replyText: string;
+  text: string;
+  time: Date;
 }
 
 export interface PostInterface {

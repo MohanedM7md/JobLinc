@@ -1,5 +1,5 @@
 import CommentContent from "./CommentContent";
-import CommenterDetails from "./CommenterDetails";
+import CommentHeader from "./CommentHeader";
 import {
   CommentInterface,
   RepliesInterface,
@@ -50,7 +50,7 @@ export default function CommentCard(props: CommentCardProps) {
   return (
     <div className="flex flex-wrap w-1/1 rounded-xl relative py-2">
       <div className="flex flex-row w-1/1 px-2">
-        <CommenterDetails
+        <CommentHeader
           key={`Details of Commenter ${props.comment.userId}`}
           userId={props.comment.userId}
           name={props.comment.firstname + " " + props.comment.lastname}

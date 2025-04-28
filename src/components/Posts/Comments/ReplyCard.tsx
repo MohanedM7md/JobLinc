@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { RepliesInterface } from "../../../interfaces/postInterfaces";
 import CommentContent from "./CommentContent";
-import CommenterDetails from "./CommenterDetails";
+import CommentHeader from "./CommentHeader";
 
 interface ReplyCardProps {
   reply: RepliesInterface;
@@ -10,16 +10,17 @@ interface ReplyCardProps {
 export default function ReplyCard(props: ReplyCardProps) {
   const [isLike, setIsLike] = useState<boolean>(false);
   const like = !isLike ? "Like" : "Liked";
-  
+
   return (
     <div className="flex flex-wrap w-11/12 relative">
       <div className="flex flex-row w-1/1 pr-2">
-        <CommenterDetails
+        <CommentHeader
           key={`Details of Commenter ${props.reply.userId}`}
           userId={props.reply.userId}
           name={props.reply.firstname + " " + props.reply.lastname}
           headline={props.reply.headline}
           profilePicture={props.reply.profilePicture}
+          time={props.reply.time}
         />
         <div className="flex flex-row w-1/1 justify-end">
           <button className="material-icons-round cursor-pointer mr-1 text-mutedSilver hover:bg-gray-200 rounded-full h-fit">
@@ -29,7 +30,7 @@ export default function ReplyCard(props: ReplyCardProps) {
       </div>
       <CommentContent
         key={`Comment ${props.reply.replyId} details`}
-        commentText={props.reply.replyText}
+        commentText={props.reply.text}
       />
       <div className="ml-14.5">
         <button

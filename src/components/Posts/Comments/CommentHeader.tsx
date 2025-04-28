@@ -1,4 +1,5 @@
 import timeDifference from "@utils/timeDifferenceCalculator";
+import { useNavigate } from "react-router-dom";
 
 interface CommenterProps {
   userId: string;
@@ -8,7 +9,8 @@ interface CommenterProps {
   time: Date;
 }
 
-export default function CommenterDetails(props: CommenterProps) {
+export default function CommentHeader(props: CommenterProps) {
+  const navigate = useNavigate()
   return (
     <>
       <img
@@ -16,7 +18,12 @@ export default function CommenterDetails(props: CommenterProps) {
         src={props.profilePicture}
         alt={props.name}
       />
-      <div className="mt-2 w-1/1 min-w-0">
+      <div
+        onClick={() => {
+          navigate(`/profile/${props.userId}`);
+        }}
+        className="mt-2 w-1/1 min-w-0 cursor-pointer"
+      >
         <div className="flex flex-row justify-between w-1/1">
           <div className="flex flex-row">
             <p className="mr-2 font-bold text-sm">{props.name}</p>
