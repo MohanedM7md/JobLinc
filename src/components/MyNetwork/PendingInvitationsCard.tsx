@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 import { invitationInterface } from "interfaces/networkInterfaces";
-import { AcceptConnectionRequest, getPendingInvitations } from "../../services/api/networkServices";
+import { AcceptConnectionRequest, getPendingInvitations, RejectConnectionRequest } from "../../services/api/networkServices";
 import NetworkModal from "./NetworkModal";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 function PendingInvitationsCard() {
   const [invitations, setInvitations] = useState<invitationInterface[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const controller = new AbortController();
@@ -66,7 +68,7 @@ function PendingInvitationsCard() {
   };
 
   const handleReject = async (index: number) => {
-    const RejectPromise = AcceptConnectionRequest(invitations[index].userId);
+    const RejectPromise = RejectConnectionRequest(invitations[index].userId);
     try {
       const response = await RejectPromise;
       toast.promise(RejectPromise, {
@@ -75,7 +77,7 @@ function PendingInvitationsCard() {
         error: "Failed to Reject Invitation. Please try again.",
       });
       if(response?.status == 200){
-      console.log("Connection Request Accepted:", response);
+      console.log("Connection Request Rejected:", response);
     setInvitations((prevInvitations) =>
       prevInvitations.filter((_, i) => i !== index)
     );
@@ -98,6 +100,9 @@ function PendingInvitationsCard() {
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
+  const handleInvitationClick = (index: number) => {
+    navigate(`/profile/${invitations[index].userId}`);
+  }
 
   return (
     <div className="bg-white rounded-md border-2 border-gray-200">
@@ -121,10 +126,12 @@ function PendingInvitationsCard() {
                 <img
                   src={invitation.profilePicture}
                   alt="Profile Picture"
-                  className="w-10 h-10 rounded-full object-cover"
+                  className="w-10 h-10 rounded-full object-cover cursor-pointer"
+                  data-testid="profile-picture"
+                  onClick={()=>handleInvitationClick(index)}
                 />
                 <div className="ml-4 flex-grow">
-                  <p className="font-semibold">
+                  <p className="font-semibold cursor-pointer hover:underline" onClick={()=>handleInvitationClick(index)}>
                     {invitation.firstName} {invitation.lastName} is now a connection!
                   </p>
                 </div>
@@ -142,11 +149,12 @@ function PendingInvitationsCard() {
                 <img
                   src={invitation.profilePicture}
                   alt="Profile Picture"
-                  className="w-15 h-15 rounded-full object-cover"
+                  className="w-15 h-15 rounded-full object-cover cursor-pointer"
+                  onClick={()=>handleInvitationClick(index)}
                 />
                 <div className="ml-4 flex-grow">
-                  <h3 className="font-semibold">{invitation.firstName} {invitation.lastName}</h3>
-                  <p className="text-gray-500 line-clamp-2">{invitation.headline}</p>
+                  <h3 className="font-semibold cursor-pointer hover:underline" onClick={()=>handleInvitationClick(index)}>{invitation.firstName} {invitation.lastName}</h3>
+                  <p className="text-gray-500 line-clamp-2 cursor-pointer" onClick={()=>handleInvitationClick(index)}>{invitation.headline}</p>
                   <p className="text-xs text-gray-500">{`${invitation.Mutuals} Mutual Connections.`}</p>
                 </div>
                 <div>
@@ -183,7 +191,8 @@ function PendingInvitationsCard() {
                 <img
                   src={invitation.profilePicture}
                   alt="Profile Picture"
-                  className="w-10 h-10 rounded-full object-cover"
+                  className="w-10 h-10 rounded-full object-cover cursor-pointer"
+                  onClick={()=>handleInvitationClick(index)}
                 />
                 <div className="ml-4 flex-grow">
                   <p className="font-semibold">
@@ -204,11 +213,11 @@ function PendingInvitationsCard() {
                   <img
                     src={invitation.profilePicture}
                     alt="Profile Picture"
-                    className="w-10 h-10 rounded-full object-cover"
+                    className="w-10 h-10 rounded-full object-cover cursor-pointer"
                   />
                   <div className="ml-4 flex-grow">
-                    <h3 className="font-semibold">{invitation.firstName} {invitation.lastName}</h3>
-                    <p className="text-gray-500 line-clamp-2">{invitation.headline}</p>
+                    <h3 className="font-semibold cursor-pointer hover:underline" onClick={()=>handleInvitationClick(index)}>{invitation.firstName} {invitation.lastName}</h3>
+                    <p className="text-gray-500 line-clamp-2 cursor-pointer" onClick={()=>handleInvitationClick(index)}>{invitation.headline}</p>
                     <p className="text-xs text-gray-500">{invitation.Mutuals.toString()} Mutual connections.</p>
                   </div>
                   <div>

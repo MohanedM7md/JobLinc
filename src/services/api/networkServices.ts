@@ -43,6 +43,17 @@ export const getUserConnections = async (
     return [];
   }
 };
+export const getMutualConnections = async (
+  userId: string,
+) => {
+  try {
+    const response = await api.get(`connection/${userId}/mutual`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching mutual connections:', error);
+    return [];
+  }
+};
 
 export const getConnections = async (
 ) => {
@@ -73,6 +84,7 @@ export const sendConnectionRequest = async (userId: string) => {
     return response;
   } catch (error) {
     console.error("Error sending connection request:", error);
+    throw error; // Rethrow the error to be handled by the caller
   }
 };
 export const changeConnectionStatus = async (
@@ -80,10 +92,11 @@ export const changeConnectionStatus = async (
   status: string,
 ) => {
   try {
-    const response = await api.post(`connection/${userId}/change-status`,status);
+    const response = await api.post(`connection/${userId}/change`,{status});
     return response;
   } catch (error) {
     console.error("Error changing connection status:", error);
+    throw error; // Rethrow the error to be handled by the caller
   }
 }
 
@@ -98,6 +111,7 @@ export const AcceptConnectionRequest = async (
     return response;
   } catch (error) {
     console.error("Error Accepting connection request:", error);
+    throw error; // Rethrow the error to be handled by the caller 
   }
 };
 
@@ -112,5 +126,6 @@ export const RejectConnectionRequest = async (
     return response;
   } catch (error) {
     console.error("Error Rejecting connection request:", error);
+    throw error; // Rethrow the error to be handled by the caller
   }
 };

@@ -94,6 +94,7 @@ function ProfileHeader(props: ProfileProps & { isUser: boolean }) {
           <p className="text-crimsonRed font-medium cursor-pointer hover:underline" onClick={handleConnectionsClick}>
             Connections: {props.numberofConnections}
           </p>
+          
         </div>
         {props.isUser && (
           <button

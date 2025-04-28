@@ -9,8 +9,8 @@ function UserConnectionsHeader(props: ConnectionsHeaderProps) {
 
   return (
     <div className="flex flex-col p-4 w-full border-b border-gray-300 ">
-      <p>Connections</p>
-      <div className="flex flex-row justify-end items-center overflow-hidden">
+      <div className="flex flex-row justify-between items-center overflow-hidden">
+          <p>Connections</p>
           <SearchConnections searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
           {/* <span className="text-gray-500 text-sm cursor-pointer mx-3">
             Search with filters

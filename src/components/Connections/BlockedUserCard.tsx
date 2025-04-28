@@ -1,13 +1,23 @@
 import { BlockedUserInterface } from "@interfaces/networkInterfaces";
 import { changeConnectionStatus } from "@services/api/networkServices";
+import toast from "react-hot-toast";
 
-function BlockedUserCard(props : BlockedUserInterface) {
+function BlockedUserCard(props : BlockedUserInterface & { onRemove: (id: string) => void }) {
   const { firstName, lastName, profilePicture, userId } = props;
   const handleUnblockClick = () => {
     const unblockPromise = changeConnectionStatus(userId, "Unblock");
+    toast.promise(
+      unblockPromise,
+      {
+        loading: "Unblocking user...",
+        success: "User unblocked successfully!",
+        error: "Failed to unblock user. Please try again.",
+      }
+    );
     unblockPromise.then((response) => {
-      console.log("Unblock Response:", response);
       if (response?.status === 200) {
+        props.onRemove(props.userId)
+        console.log("Unblock Response:", response);
       } else {
         console.error("Failed to unblock user:", response);
       }

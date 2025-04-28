@@ -21,7 +21,7 @@ import Error404 from "@pages/Eror404";
 import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AuthRoute from "./components/AuthRoute";
-import Connections from "./pages/Connections";
+import MyConnections from "./pages/Connections";
 import ProfileContainer from "./components/User Profile/ProfileContainer";
 import FullExperiences from "./components/User Profile/Experiences/FullExperiences";
 import FullCertificates from "./components/User Profile/Certificates/FullCertificates";
@@ -47,6 +47,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import EmailAddress from "@pages/Settings/SignInAndSecurity/AccountAccess/EmailAddress";
 import Metrics from "./components/Company/Metrics";
 import UserConnectionListCard from "./components/Connections/UserConnectionListCard";
+import BlockList from "./components/Connections/BlockList";
+import BlockedUsers from "@pages/BlockedUsers";
+import UserConnections from "@pages/UserConnections";
 
 const queryClient = new QueryClient()
 
@@ -79,7 +82,7 @@ function App() {
               <Route element={<Layout />}>
                 <Route path="/home" element={<Home />} />
                 <Route path="/my-network" element={<MyNetwork />} />
-                <Route path="/connections" element={<Connections />} />
+                <Route path="/my-connections" element={<MyConnections />} />
                 <Route path="/messaging" element={<Messaging />} />
                 <Route path="/change-password" element={<ChangePassword />} />
 
@@ -88,7 +91,8 @@ function App() {
               <Route path="/update-username" element={<UpdateUsername />} />
               <Route path="/profile/:userId">
                 <Route index element={<ProfileContainer />} />
-                <Route path="connections" element={<UserConnectionListCard />} />
+                <Route path="connections" element={<UserConnections />} />
+                {/* <Route path = "mutual-connections"/> */}
                 <Route
                   path="details/experiences"
                   element={<FullExperiences />}
@@ -146,10 +150,11 @@ function App() {
                   path="sign-in-security/account-access/email-address" 
                   element={<EmailAddress />} />
 
-                  <Route path="visibility" element={<Visibility />} />
+                  <Route path="visibility" element={<Visibility />}/>
+                  <Route path="visibility/profile-network/blocking" element={<BlockedUsers/>} />
                   <Route path="data-privacy" element={<DataAndPrivacy />} />
                   <Route
-                    path="advertising-data"
+                    path="advertising-data" 
                     element={<AdvertisingData />}
                   ></Route>
                   <Route path="notifications" element={<Notifications />} />

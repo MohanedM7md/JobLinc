@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { ConnectionInterface } from "../../interfaces/networkInterfaces";
 import { Link, useNavigate } from "react-router-dom";
 import NetworkModal from "../../components/MyNetwork/NetworkModal";
+import { changeConnectionStatus } from "@services/api/networkServices";
+import toast from "react-hot-toast";
 
 function  ConnectionCard(props: ConnectionInterface & { onRemove: (id: string) => void }) {
   const [showPopup, setShowPopup] = useState(false);
@@ -43,10 +45,6 @@ function  ConnectionCard(props: ConnectionInterface & { onRemove: (id: string) =
   const handleellipsisClick = () => {
     setShowPopup(!showPopup);
   };
-  const handleRemoveConnection= () => {
-    props.onRemove(props.userId);
-    handleCloseModal();
-  }
   const handleOpenModal = () => {
     setShowPopup(false);
     setModalOpen(true);
@@ -54,11 +52,33 @@ function  ConnectionCard(props: ConnectionInterface & { onRemove: (id: string) =
   const handleCloseModal = () => {
     setModalOpen(false);
   }
+  const handleRemoveConnection= async ()  => {
+    const removeconnectionpromise =  changeConnectionStatus(props.userId, "Canceled");
+    toast.promise (
+      removeconnectionpromise,
+      {
+        loading: "Removing Connection...",
+        success: "User removed successfully!",
+        error: "Failed to remove user. Please try again.",
+      }
+    )
+      removeconnectionpromise.then((response) => {
+        if (response?.status === 200) {
+          props.onRemove(props.userId)
+          console.log("Remove Connection Response:", response);
+        } else {
+          console.error("Failed to Remove user:", response);
+        }
+      }).catch((error) => {
+        console.error("Error Removing user:", error);
+      });
+      
+    props.onRemove(props.userId);
+    handleCloseModal();
+  };
   const handleUserClick= () => {  
     navigate(`/profile/${props.userId}`);
   }
-  
-
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
       if (popupRef.current && (!popupRef.current.contains(event.target as Node)) && iconRef.current && !iconRef.current.contains(event.target as Node)) {

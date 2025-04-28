@@ -74,12 +74,7 @@ function ConnectCard(props: connectsInterface) {
         </div>
         <div className="flex w-full justify-center items-center">
           <p className="flex items-center space-x-2">
-            <img
-              src={props.profilePicture}
-              alt="Mutual Friend Photo"
-              className="w-8 h-8 rounded-full top-1/5 object-cover shadow-sm"
-            />
-            <span className="line-clamp-3 text-xs text-gray-500 ">{`${props.Mutuals} Mutual connections.`}</span>
+            <span className="line-clamp-3 text-sm text-gray-500">{`${props.Mutuals} Mutual connections.`}</span>
           </p>
         </div>
         <div className="flex flex-col w-full justify-center items-center">

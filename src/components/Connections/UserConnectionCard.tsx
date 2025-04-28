@@ -1,6 +1,6 @@
 import NetworkModal from "../../components/MyNetwork/NetworkModal";
 import { ConnectionInterface } from "@interfaces/networkInterfaces";
-import { sendConnectionRequest } from "@services/api/networkServices";
+import { changeConnectionStatus, sendConnectionRequest } from "@services/api/networkServices";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
@@ -17,8 +17,6 @@ function UserConnectionCard(props: ConnectionInterface ){
       const handlelincClick = async () => {
           if (!isClicked) {
             const connectionPromise = sendConnectionRequest(props.userId);
-      
-            
             try {
               const response = await connectionPromise;
               console.log("Connection Request Response:", response);
@@ -42,7 +40,20 @@ function UserConnectionCard(props: ConnectionInterface ){
         const handleCloseModal = () => {
           setModalOpen(false);
         };
-        const handleWithdrawModal = () => {
+        const handleWithdrawModal = async () => {
+          const withdrawrequestpromise =  changeConnectionStatus(props.userId, "Canceled")
+          try {
+            const response = await withdrawrequestpromise;
+            console.log("Withdraw Request response", response)
+              
+            toast.promise(withdrawrequestpromise, {
+              loading: "Withdrawing connection request...",
+              success: "Request Withdrawn successfully!",
+              error: "Failed to withdraw connection request. Please try again.",
+          });
+          } catch (error) {
+            console.log("Failed to withdraw connection request:",error)
+          }
           setModalOpen(false);
           setIsClicked(false);
         };

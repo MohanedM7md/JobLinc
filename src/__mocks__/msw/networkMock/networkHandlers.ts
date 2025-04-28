@@ -15,6 +15,18 @@ interface ConnectionRequestResponse {
 interface ConnectionRequestBody {
   userId: string;   
 }
+interface changeConnectionStatusRequestBody {
+  userId: string;
+  status: "Blocked" | "Unblocked" | "Canceled";
+}
+interface changeConnectionStatusResponse {
+  status: "Blocked" | "Unblocked" | "Canceled";
+
+}
+interface changeConnectionStatusParams{
+  userId: string;
+  status: "Blocked" | "Unblocked" | "Canceled";
+}
 interface AcceptConnectionRequestResponse {
   status: "pending" | "accepted" | "rejected";
 }
@@ -71,6 +83,12 @@ export const connectsHandler = [
       statusText: 'OK',
     });
   }),
+  http.get(`${API_URL}connection/:userId/mutual`, async () => {
+    return HttpResponse.json<ConnectionInterface[]>(userconnectionresponse, {
+      status: 200,
+      statusText: 'OK',
+    });
+  }),
   
   
   http.post<{}, ConnectionRequestBody>(
@@ -110,20 +128,16 @@ export const connectsHandler = [
     `${API_URL}connection/:userId/respond`,
     async ({ request, params }) => {
       try {
-        // Extract userId from the URL parameters
         const { userId } = params as acceptParams;
   
-        // Extract status from the request body
         const { status } = await request.json();
   
-        // Create the accept connection response object
         const acceptConnectionResponse: AcceptConnectionRequestResponse = {
           status,
         };
   
         console.log("Processed Connection Request:", { userId, status });
   
-        // Return a successful response
         return HttpResponse.json({
           status: 200,
           statusText: `Connection request for user ${userId} ${status} successfully.`,
@@ -132,7 +146,6 @@ export const connectsHandler = [
       } catch (error) {
         console.error("Error processing connection request:", error);
   
-        // Handle any internal errors
         return HttpResponse.json({
           status: 500,
           statusText: "Internal server error while processing the request.",
@@ -158,6 +171,35 @@ export const connectsHandler = [
           status: 200,
           statusText: `Connection request for user ${userId} ${status} successfully.`,
           data: rejectConnectionResponse,
+        });
+      } catch (error) {
+        console.error("Error processing connection request:", error);
+  
+        return HttpResponse.json({
+          status: 500,
+          statusText: "Internal server error while processing the request.",
+        });
+      }
+    }
+  ),
+  http.post<{}, changeConnectionStatusRequestBody>(
+    `${API_URL}connection/:userId/change`,
+    async ({ request, params }) => {
+      try {
+        const { userId } = params as changeConnectionStatusParams;
+  
+        const { status } = (await request.json()) as changeConnectionStatusRequestBody;
+  
+        const changeConnectionStatusResponse: changeConnectionStatusResponse = {
+          status,
+        };
+  
+        console.log("Processed Connection Request:", { userId, status });
+  
+        return HttpResponse.json({
+          status: 200,
+          statusText: `Connection request for user ${userId} ${status} successfully.`,
+          data: changeConnectionStatusResponse,
         });
       } catch (error) {
         console.error("Error processing connection request:", error);

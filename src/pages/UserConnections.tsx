@@ -1,5 +1,5 @@
 import UserConnectionListCard from "../components/Connections/UserConnectionListCard";
-function Connections() {
+function UserConnections() {
   return (
     <>
       <div className="bg-lightGray h-screen w-full flex flex-col">
@@ -8,4 +8,4 @@ function Connections() {
     </>
   );
 }
-export default Connections;
+export default UserConnections;
