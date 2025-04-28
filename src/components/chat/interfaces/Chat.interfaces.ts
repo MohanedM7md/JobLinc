@@ -24,8 +24,8 @@ export interface ChatCardProps extends ChatCardInterface {
   className?: string;
 }
 export interface ReqChatCardProps extends ChatCardProps {
-  handleAcceptRequest: (chatId: string) => void;
-  handleRejectRequest: (chatId: string) => void;
+  handleAcceptRequest: (chatId: string, status: string) => void;
+  handleRejectRequest: (chatId: string, status: string) => void;
 }
 export interface ChatInputProps {
   chatId: string;

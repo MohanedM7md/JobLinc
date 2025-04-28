@@ -60,7 +60,7 @@ function ReqChatCard({
           <button
             onClick={(e) => {
               e.stopPropagation();
-              handleAcceptRequest(chatId);
+              handleAcceptRequest(chatId, "Accepted");
             }}
             className="
               p-1.5 rounded-full
@@ -76,7 +76,7 @@ function ReqChatCard({
           <button
             onClick={(e) => {
               e.stopPropagation();
-              handleRejectRequest(chatId);
+              handleRejectRequest(chatId, "Rejected");
             }}
             className="
               p-1.5 rounded-full

@@ -54,3 +54,21 @@ export const fetchRequestChatData = async () => {
     throw new Error("Failed to fetch message request chat data");
   return response.data;
 };
+
+export const chatRequestStatus = async (chatId: string, status: string) => {
+  const response = await api.patch("/chat/message-requests", {
+    chatId,
+    status,
+  });
+  if (response.status != 200)
+    throw new Error("Failed to change message status");
+  return response.data;
+};
+
+export const BlockMessaging = async (chatId: string) => {
+  const response = await api.post("/chat/block", {
+    chatId,
+  });
+  if (response.status != 200)
+    throw new Error(`Response error:${response.status} failed to block use`);
+};

@@ -1,10 +1,15 @@
 import { useEffect, useState, memo } from "react";
 import ChatCard from "./ChatCard";
 import LoadingChatCard from "./LoadingChatCard";
-import { fetchChats, fetchRequestChatData } from "@services/api/chatServices";
+import {
+  fetchChats,
+  fetchRequestChatData,
+  chatRequestStatus,
+} from "@services/api/chatServices";
 import { ChatCardInterface } from "./interfaces/Chat.interfaces";
 import { subscribeToChats } from "@services/api/ChatSocket";
 import ReqChatCard from "./ReqChatCard";
+
 const ChatCardsList = ({
   onCardClick,
   className = "",
@@ -47,12 +52,25 @@ const ChatCardsList = ({
     setActiveTab(tab);
   };
 
-  const handleAcceptRequest = async (requestId: string) => {
-    console.log("Accepting request:", requestId);
+  const handleAcceptRequest = async (chatId: string, status: string) => {
+    try {
+      const data: ChatCardInterface = await chatRequestStatus(chatId, status);
+      setChats((prev) => [...prev, data]);
+      setReqChats((prev) => prev.filter((chat) => chat.chatId !== chatId));
+      onCardClick(data.chatId, data.chatName, data.chatPicture);
+      setActiveTab("chats");
+    } catch (error) {
+      console.error("error happend while changing status", error);
+    }
   };
 
-  const handleRejectRequest = async (requestId: string) => {
-    console.log("Rejecting request:", requestId);
+  const handleRejectRequest = async (chatId: string, status: string) => {
+    try {
+      chatRequestStatus(chatId, status);
+      setReqChats((prev) => prev.filter((chat) => chat.chatId !== chatId));
+    } catch (error) {
+      console.error("error happend while changing status", error);
+    }
   };
 
   return (

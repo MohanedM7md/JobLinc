@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { EllipsisVertical } from "lucide-react";
 import Checkbox from "./UI/CheckBox";
+import { getRelativeTimeString } from "@utils/DateFormatter";
 import { ChatCardProps } from "./interfaces/Chat.interfaces";
 import ChatAvatarGrid from "./ChatAvatarGrid";
 import { ReadToggler } from "@services/api/chatServices";
@@ -97,7 +98,7 @@ export default function ChatCard({
 
         <div className="flex items-center gap-2 min-w-[60px] justify-end">
           <span className="text-xs text-gray-400">
-            {new Date(sentDate).toLocaleDateString()}
+            {getRelativeTimeString(sentDate)}
           </span>
           <button
             ref={buttonRef}

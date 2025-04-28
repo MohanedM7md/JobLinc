@@ -7,8 +7,7 @@ import { PageChatWindowProps } from "@chatComponent/interfaces/Chat.interfaces";
 function PageChatWindow({ className, chatName }: PageChatWindowProps) {
   const { chatId } = useChatId();
   const { usersId } = useNetworkUserId();
-  console.log("--------------PageChatWindow rendered--------------id:", chatId);
-  console.log("User Id", usersId);
+
   return (
     <div
       className={`${className} w-full flex flex-col`}
