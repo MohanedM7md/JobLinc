@@ -1,7 +1,6 @@
 import { MemoryRouter, Routes, Route, useNavigate } from "react-router-dom";
 import { render, screen, waitFor } from "@testing-library/react";
 import {describe, it, expect, vi, beforeAll, afterEach} from "vitest";
-import SignInInformation from "../../../components/Authentication/SignInInformation";
 import userEvent from "@testing-library/user-event";
 import { Provider } from "react-redux";
 import store from "@store/store";
@@ -10,6 +9,9 @@ import { cleanup } from "@testing-library/react";
 
 import Home from "@pages/Home";
 import "@testing-library/jest-dom/vitest";
+
+import SignInInformation from "../../../components/Authentication/SignInInformation";
+
 
 
 // const mockNavigate = vi.fn();

@@ -12,7 +12,6 @@ import {
   updateEmail,
   loginWithGoogle,
 } from "./userThunks";
-import store from "@store/store";
 import { loadState, saveState } from "./userUtils";
 import { UserState } from "./user.interface";
 

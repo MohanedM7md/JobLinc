@@ -1,10 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthenticationSignInButton } from "./AuthenticationButtons";
-import { useAppDispatch } from "@store/hooks";
-import { AppDispatch } from "@store/store";
 import Modal from "./Modal";
 import store from "@store/store";
+import { useAppDispatch } from "@store/hooks";
+import { AppDispatch } from "@store/store";
 import { loginUser } from "@store/user/userThunks"; // New login thunk
 
 // import store from "@store/store";
