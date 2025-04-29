@@ -13,6 +13,7 @@ interface ConnectionsListProps {
   onCreate?: (usersId: string[]) => void;
   containerClass?: string;
   buttonClass?: string;
+  buttonContent: string;
 }
 
 function ConnectionsList({
@@ -20,6 +21,7 @@ function ConnectionsList({
   onCreate,
   containerClass,
   buttonClass,
+  buttonContent,
 }: ConnectionsListProps) {
   const [users, setUsers] = useState<NetWorkCard[]>([]);
   const [selectedUsers, setSelectedUsers] = useState<NetWorkCard[]>([]);
@@ -120,7 +122,7 @@ function ConnectionsList({
           }}
           disabled={selectedUsers.length === 0}
         >
-          Create
+          {buttonContent}
         </button>
       </div>
     </div>

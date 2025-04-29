@@ -1,5 +1,4 @@
 // PageChatHeader.tsx
-import { useState } from "react";
 import { EllipsisVertical } from "lucide-react";
 import type { PageChatHeader as PageChatHeaderProps } from "../interfaces/Chat.interfaces";
 

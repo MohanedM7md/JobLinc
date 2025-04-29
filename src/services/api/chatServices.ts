@@ -56,7 +56,7 @@ export const fetchRequestChatData = async () => {
 };
 
 export const chatRequestStatus = async (chatId: string, status: string) => {
-  const response = await api.patch("/chat/message-requests", {
+  const response = await api.put("/chat/change-request-status", {
     chatId,
     status,
   });
