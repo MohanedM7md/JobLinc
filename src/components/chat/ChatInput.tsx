@@ -2,7 +2,6 @@ import { useState, useEffect, useRef, ChangeEvent } from "react";
 import { Paperclip, Image, Smile, X, Loader2 } from "lucide-react";
 import { ChatInputProps } from "./interfaces/Chat.interfaces";
 import { uploadingMedia } from "@services/api/chatServices";
-import { memo } from "react";
 
 function ChatInput({
   chatId,
@@ -225,6 +224,7 @@ function ChatInput({
         </div>
 
         <input
+          data-testid="input-file"
           type="file"
           ref={fileInputRef}
           onChange={handleFileChange}
