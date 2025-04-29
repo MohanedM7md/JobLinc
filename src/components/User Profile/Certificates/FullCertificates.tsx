@@ -2,15 +2,13 @@ import { CertificateInterface } from "interfaces/userInterfaces";
 import { useState, useEffect } from "react";
 import "material-icons";
 import { useParams } from "react-router-dom";
-import Modal from "./../../Authentication/Modal";
-import {
-  getCertificate,
-  deleteCertificate,
-} from "@services/api/userProfileServices";
-import ConfirmAction from "../../utils/ConfirmAction";
+import Modal from "../../utils/Modal";
+import { getCertificate } from "@services/api/userProfileServices";
 import UserCertificate from "./UserCertificate";
 import AddCertificate from "./AddCertificate";
 import EditCertificate from "./EditCertificate";
+import { useQuery } from "@tanstack/react-query";
+import store from "@store/store";
 
 export default function FullCertificates() {
   const { userId } = useParams();
@@ -20,30 +18,39 @@ export default function FullCertificates() {
     useState<boolean>(false);
   const [editCertificateData, setEditCertificateData] =
     useState<CertificateInterface | null>(null);
-  const [confirmDeleteData, setConfirmDeleteData] = useState<string | null>(
-    null,
-  );
+
+  const {
+    isFetching: isCertificatesFetching,
+    isError: isCertificatesError,
+    refetch: refetchCertificates,
+  } = useQuery({
+    queryKey: ["getCertificates"],
+    queryFn: getCertificate,
+    enabled: false,
+  });
 
   useEffect(() => {
-    if (userId === JSON.parse(localStorage.getItem("userState") || "").userId) {
+    if (userId === store.getState().user.userId) {
       setIsUser(true);
       updateCertificates();
-    }
-    else {
+    } else {
       setIsUser(false);
     }
   }, [userId]);
 
   async function updateCertificates() {
     if (userId) {
-      const updatedCertificates = await getCertificate();
-      setCertificates(updatedCertificates);
+      const { data } = await refetchCertificates();
+      setCertificates(data);
     }
   }
 
-  async function handleDeleteCertificate(certificateId: string) {
-    await deleteCertificate(certificateId);
-    updateCertificates();
+  if (isCertificatesFetching) {
+    return <div>Loading...</div>;
+  }
+
+  if (isCertificatesError) {
+    return <div>Error loading certificates</div>;
   }
 
   return (
@@ -53,7 +60,7 @@ export default function FullCertificates() {
         {isUser && (
           <button
             onClick={() => setAddCertificateModal(true)}
-            className="material-icons font-medium text-2xl p-2 rounded-full hover:bg-gray-600 -mt-5"
+            className="material-icons font-medium text-2xl p-2 rounded-full hover:bg-gray-600 -mt-5 transition duration-400 ease-in-out"
           >
             add
           </button>
@@ -65,7 +72,7 @@ export default function FullCertificates() {
             <UserCertificate certificate={cert} />
             {isUser && (
               <button
-                className="material-icons absolute top-0 right-0 text-xl p-1 rounded-full hover:bg-gray-600 mr-1"
+                className="material-icons absolute top-0 right-0 text-xl p-1 rounded-full hover:bg-gray-600 mr-1 transition duration-400 ease-in-out"
                 onClick={() => setEditCertificateData(cert)}
               >
                 edit
@@ -80,15 +87,6 @@ export default function FullCertificates() {
         <div className="text-mutedSilver font-medium flex justify-center">
           No certificates are registered for this user
         </div>
-      )}
-      {confirmDeleteData !== null && (
-        <ConfirmAction
-          action={() => {
-            handleDeleteCertificate(confirmDeleteData);
-            setConfirmDeleteData(null);
-          }}
-          onClose={() => setConfirmDeleteData(null)}
-        />
       )}
       <Modal
         isOpen={!!editCertificateData}

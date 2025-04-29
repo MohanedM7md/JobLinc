@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { AuthenticationSignInButton } from "./AuthenticationButtons";
 import SignHeader from "./Headers/SignHeader";
-import Modal from "./Modal";
+import Modal from "../utils/Modal";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { registerUser } from "../../store/user/userThunks";

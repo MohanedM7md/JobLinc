@@ -2,7 +2,10 @@ import { useCallback, useEffect, useState } from "react";
 import ChatCardsList from "../ChatCardsList";
 import PageMessageWindow from "./PageChatWindow";
 import useChatId from "@context/ChatIdProvider";
-import connectToChat, { disconnectChatSocket } from "@services/api/ChatSocket";
+import connectToChat, {
+  disconnectChatSocket,
+  onConnect,
+} from "@services/api/ChatSocket";
 import { EllipsisVertical } from "lucide-react";
 import SearchBar from "@chatComponent/UI/SearchBar";
 import NetWorksChatList from "@chatComponent/NetWorksChatList";
@@ -46,8 +49,8 @@ function PageChatSystem() {
 
   useEffect(() => {
     const initializeChat = async () => {
-      await connectToChat();
-      setIsConnected(true);
+      connectToChat();
+      onConnect(setIsConnected);
     };
 
     initializeChat();
