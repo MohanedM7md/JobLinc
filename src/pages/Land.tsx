@@ -90,7 +90,7 @@ function LandPage() {
 
         <div className="mt-8 md:mt-0 max-w-xl md:max-w-2xl mx-auto md:mx-0">
           <img 
-            src="https://static.licdn.com/aero-v1/sc/h/dxf91zhqd2z6b0bwg85ktm5s4" 
+            src="src/assets/dxf91zhqd2z6b0bwg85ktm5s4.svg" 
             className="w-full h-auto object-contain"
             alt="Professional community"
           />
