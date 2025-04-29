@@ -115,10 +115,10 @@ export default function EditCertificate(props: EditCertificateProps) {
     <>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="p-4 bg-lightGray rounded-lg text-charcoalBlack"
+        className="p-4 bg-lightGray rounded-lg"
       >
         <div className="mb-4">
-          <label className="text-sm font-medium text-charcoalBlack">Name</label>
+          <label className="text-sm font-medium">Name</label>
           <input
             type="text"
             {...register("name")}
@@ -131,7 +131,7 @@ export default function EditCertificate(props: EditCertificateProps) {
           )}
         </div>
         <div className="mb-4">
-          <label className="text-sm font-medium text-charcoalBlack">
+          <label className="text-sm font-medium">
             Organization
           </label>
           <input
@@ -146,7 +146,7 @@ export default function EditCertificate(props: EditCertificateProps) {
           )}
         </div>
         <div className="mb-4">
-          <label className="text-sm font-medium text-charcoalBlack">
+          <label className="text-sm font-medium">
             Issue Date
           </label>
           <div className="flex gap-2">
@@ -183,7 +183,7 @@ export default function EditCertificate(props: EditCertificateProps) {
           )}
         </div>
         <div className="mb-4">
-          <label className="text-sm font-medium text-charcoalBlack">
+          <label className="text-sm font-medium">
             Expiration Date
           </label>
           <div className="flex gap-2">

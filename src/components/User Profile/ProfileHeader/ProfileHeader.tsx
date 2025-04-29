@@ -44,7 +44,7 @@ function ProfileHeader(props: ProfileProps & { isUser: boolean }) {
   }
 
   return (
-    <div className="profile-header p-4 rounded-lg shadow-md relative">
+    <div className="profile-header bg-lightGray p-4 rounded-lg shadow-md relative">
       <div className="relative mb-16">
         <img
           src={props.coverPicture}

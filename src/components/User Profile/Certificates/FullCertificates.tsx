@@ -79,21 +79,19 @@ export default function FullCertificates() {
   }
 
   return (
-    <>
+    <div className="w-full bg-darkGray text-warmWhite">
       {userData && (
         <AnimatePresence>
-          <div className="w-full bg-darkGray text-white">
-            <MiniProfileHeader
-              userId={userData.userId}
-              firstname={userData.firstname}
-              lastname={userData.lastname}
-              headline={userData.headline}
-              profilePicture={userData.profilePicture}
-            />
-          </div>
+          <MiniProfileHeader
+            userId={userData.userId}
+            firstname={userData.firstname}
+            lastname={userData.lastname}
+            headline={userData.headline}
+            profilePicture={userData.profilePicture}
+          />
         </AnimatePresence>
       )}
-      <div className="bg-darkGray my-2 p-4 rounded-lg shadow-md relative text-white w-12/12 lg:w-6/12 m-auto">
+      <div className="my-2 p-4 rounded-lg shadow-md relative w-12/12 lg:w-6/12 m-auto">
         <div className="flex flex-row justify-between items-center">
           <h1 className="font-medium text-xl mb-4">Certificates</h1>
           {isUser && (
@@ -149,6 +147,6 @@ export default function FullCertificates() {
           />
         </Modal>
       </div>
-    </>
+    </div>
   );
 }

@@ -1,12 +1,13 @@
 import { useState, useEffect, useRef } from "react";
 import PostMedia from "./PostMedia";
+import { Media } from "@interfaces/postInterfaces";
 
 interface PostDetailsProps {
   text: string;
-  mediaURL: string[];
+  media: Media[];
 }
 
-export default function PostDetails(props: PostDetailsProps) {
+export default function PostContent(props: PostDetailsProps) {
   const [showMore, setShowMore] = useState<boolean>(false);
   const [isOverflowing, setIsOverflowing] = useState<boolean>(false);
   const textRef = useRef<HTMLParagraphElement>(null);
@@ -37,8 +38,8 @@ export default function PostDetails(props: PostDetailsProps) {
           </button>
         )}
       </div>
-      {props.mediaURL?.length > 0 ? (
-        <PostMedia key="mediaRendering" pics={props.mediaURL} />
+      {props.media?.length > 0 ? (
+        <PostMedia key="mediaRendering" media={props.media} />
       ) : null}
     </div>
   );

@@ -1,6 +1,6 @@
 import {
   CertificateInterface,
-  ExperienceInterface,
+  EditExperienceInterface,
   NewCertificate,
   NewExperience,
   NewSkill,
@@ -103,10 +103,10 @@ export async function addExperience(experience: NewExperience) {
   }
 }
 
-export async function editExperience(experience: ExperienceInterface) {
+export async function editExperience({experienceId, experience}:{experienceId: string, experience: EditExperienceInterface}) {
   try {
     const response = await api.put(
-      `user/experience/${experience.id}`,
+      `user/experience/${experienceId}`,
       experience,
     );
     return response.status;
@@ -220,3 +220,22 @@ export async function getUserById(userId: string) {
   }
 }
 
+export async function getMyPosts() {
+  try {
+    const response = await api.get(`post/my-posts`)
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching posts:", error);
+    throw error;
+  }
+}
+
+export async function getUserPosts(userId: string) {
+  try {
+    const response = await api.get(`post/${userId}/posts`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching posts:", error);
+    throw error;
+  }
+}

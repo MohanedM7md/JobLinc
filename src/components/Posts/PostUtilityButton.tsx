@@ -1,6 +1,6 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { useNavigate } from "react-router-dom";
-import { deletePost, savePost } from "@services/api/postServices";
+import { deletePost, reportPost, savePost } from "@services/api/postServices";
 import store from "@store/store";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -35,6 +35,10 @@ export default function PostUtilityButton(props: UtilityProps) {
     mutationFn: savePost,
   });
 
+  const postReport = useMutation({
+    mutationFn: reportPost,
+  })
+
   function handleDelete() {
     toast.promise(postDelete.mutateAsync(props.postId), {
       loading: "Deleting post...",
@@ -61,6 +65,14 @@ export default function PostUtilityButton(props: UtilityProps) {
       .catch(() => {
         toast.error("Failed to copy link.");
       });
+  }
+
+  function handleReport() {
+    toast.promise(postReport.mutateAsync(props.postId), {
+      loading: "Reporting post...",
+      success: "Report submitted for review, Thank you!",
+      error: (error) => error.message,
+    })
   }
 
   return (
@@ -163,9 +175,7 @@ export default function PostUtilityButton(props: UtilityProps) {
                         transition={{ duration: 0.2 }}
                       >
                         <button
-                          onClick={() => {
-                            console.log("Report post clicked");
-                          }}
+                          onClick={handleReport}
                           className="w-full flex items-center justify-between px-4 py-2 text-sm text-crimsonRed hover:bg-red-100 rounded-b-md transition duration-200 ease-in-out"
                         >
                           <FlagTriangleRight className="mr-2" />

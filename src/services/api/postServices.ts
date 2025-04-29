@@ -1,3 +1,4 @@
+import { Media } from "@interfaces/postInterfaces";
 import { api } from "./api";
 
 // Fetch a a number of posts to populate a user's feed
@@ -51,17 +52,13 @@ export async function getReplies(postId: string, commentId: string) {
 }
 
 // Create a post
-export async function createPost({
-  repost,
-  text,
-}: {
+export async function createPost(postContent : {
   repost?: string;
   text: string;
+  media?: Media[]
 }) {
   try {
-    const response = repost
-      ? await api.post(`post/add`, { repost, text })
-      : await api.post(`post/add`, { text });
+    const response = await api.post(`post/add`, postContent)
     return response.status;
   } catch (error) {
     console.error("Error creating post:", error);
@@ -236,3 +233,28 @@ export async function retrieveUser(email: string, password: string) {
     throw error;
   }
 }
+
+export async function reportPost(reportedId: string) {
+  try {
+    const response = await api.post(`reports/reportPost`, {reportedId});
+    return response.status
+  } catch (error) {
+    console.error("Error reporting post:", error);
+    throw error;
+  }
+}
+
+export async function uploadMedia(formData: FormData) {
+  try {
+    const response = await api.post(`post/upload-media`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error uploading media:", error);
+    throw error;
+  }
+}
+

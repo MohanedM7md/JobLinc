@@ -24,7 +24,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
       />
 
       {/* Modal content */}
-      <div className="relative bg-lightGray p-6 rounded-lg shadow-lg z-50 max-w-md w-full flex flex-col">
+      <div className="relative bg-lightGray text-charcoalBlack p-6 rounded-lg shadow-lg z-50 max-w-md w-full flex flex-col">
         <div className="">
           <button
             data-testid="close-button"

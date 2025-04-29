@@ -6,15 +6,19 @@ import {
   editExperience,
 } from "@services/api/userProfileServices";
 import ConfirmAction from "../../utils/ConfirmAction";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import z from "zod";
 import { useState } from "react";
 import {
+  EditExperienceInterface,
   ExperienceInterface,
   ExperienceModes,
   ExperienceTypes,
 } from "../../../interfaces/userInterfaces";
+import { Check } from "lucide-react";
+import { CompanyInterface } from "@interfaces/companyInterfaces";
+import { searchCompanies } from "@services/api/companyServices";
 
 interface EditExperienceProps extends ExperienceInterface {
   onClose: () => void;
@@ -25,6 +29,7 @@ const schema = z
   .object({
     position: z.string().min(1, "Position is required"),
     company: z.string().min(1, "Company is required"),
+    companyId: z.string().optional(),
     description: z.string().min(1, "Description is required"),
     startMonth: z.coerce.number().min(1, "Invalid start month").max(12),
     startYear: z.coerce.number().min(1900, "Invalid start year"),
@@ -64,24 +69,48 @@ export default function EditExperience(props: EditExperienceProps) {
   const {
     register,
     handleSubmit,
-   formState: { errors },
+    setValue,
+    formState: { errors },
     watch,
   } = useForm<ExperienceFields>({
     resolver: zodResolver(schema),
     defaultValues: {
       position: props.position,
-      company: props.company,
-     description: props.description,
+      company: props.company.name,
+      companyId: props.company.id || undefined,
+      description: props.description,
       isPresent: props.endDate === "Present",
       startMonth: new Date(props.startDate).getMonth() + 1,
       startYear: new Date(props.startDate).getFullYear(),
-      endMonth: props.endDate === "Present" ? 0 : new Date(props.endDate).getMonth() + 1,
-      endYear: props.endDate === "Present" ? 0 : new Date(props.endDate).getFullYear(),
+      endMonth:
+        props.endDate === "Present"
+          ? 0
+          : new Date(props.endDate).getMonth() + 1,
+      endYear:
+        props.endDate === "Present" ? 0 : new Date(props.endDate).getFullYear(),
       type: props.type,
       mode: props.mode,
     },
   });
 
+  const companyValue = watch("company");
+  const [companyOptions, setCompanyOptions] = useState<CompanyInterface[]>([]);
+  const [isInputFocused, setIsInputFocused] = useState(false);
+
+  const { isError: isCompaniesError } = useQuery({
+    queryKey: ["Search companies by name", companyValue],
+    enabled: typeof companyValue === "string" && companyValue.trim() !== "",
+    queryFn: async () => {
+      try {
+        const data = await searchCompanies(companyValue);
+        setCompanyOptions(data);
+        return data;
+      } catch {
+        setCompanyOptions([]);
+      }
+    },
+  });
+  
   const editExperienceMutation = useMutation({
     mutationFn: editExperience,
     onSuccess: () => {
@@ -103,10 +132,11 @@ export default function EditExperience(props: EditExperienceProps) {
     deleteExperienceMutation.status === "pending";
 
   const onSubmit = (data: ExperienceFields) => {
-    const editedExperience: ExperienceInterface = {
-      id: props.id,
+    const editedExperience: EditExperienceInterface = {
       position: data.position,
-      company: data.company,
+      ...(data.companyId
+        ? { companyId: data.companyId, company: data.company }
+        : { company: data.company }),
       description: data.description,
       startDate: new Date(data.startYear, data.startMonth - 1, 1),
       endDate: data.isPresent
@@ -115,7 +145,8 @@ export default function EditExperience(props: EditExperienceProps) {
       type: data.type,
       mode: data.mode,
     };
-    toast.promise(editExperienceMutation.mutateAsync(editedExperience), {
+    console.log(editedExperience);
+    toast.promise(editExperienceMutation.mutateAsync({experienceId: props.id, experience: editedExperience}), {
       loading: "Saving experience...",
       success: "Experience edited successfully",
       error: (error) => error.message,
@@ -152,14 +183,48 @@ export default function EditExperience(props: EditExperienceProps) {
         </div>
         <div className="mb-4">
           <label className="text-sm font-medium">Company</label>
-          <input
-            type="text"
-            {...register("company")}
-            className={`w-full px-2 py-1 border rounded-lg ${
-              isProcessing ? "opacity-50 cursor-not-allowed" : ""
-            }`}
-            disabled={isProcessing}
-          />
+          <div className="relative">
+            <input
+              type="text"
+              autoComplete="off"
+              {...register("company")}
+              onFocus={() => {
+                setValue("companyId", undefined);
+                setIsInputFocused(true);
+              }}
+              onBlur={() => setIsInputFocused(false)}
+              placeholder="Search for a company"
+              className={`w-full px-2 py-1 border rounded-lg ${
+                isProcessing ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+              disabled={isProcessing}
+            />
+            {watch("companyId") && (
+              <Check className="absolute right-2 top-1/2 transform -translate-y-1/2 text-green-500" />
+            )}
+          </div>
+          {errors.company && (
+            <p className="text-sm text-red-600">{errors.company.message}</p>
+          )}
+          {isInputFocused && companyOptions.length > 0 && (
+            <ul className="w-10/12 px-2 py-1 absolute border rounded-lg mt-2 max-h-40 overflow-y-auto bg-white z-10">
+              {companyOptions.map((company) => (
+                <li
+                  key={company.id}
+                  onMouseDown={() => {
+                    setValue("company", company.name);
+                    setValue("companyId", company.id);
+                  }}
+                  className="px-2 py-1 cursor-pointer hover:bg-gray-200"
+                >
+                  {company.name}
+                </li>
+              ))}
+            </ul>
+          )}
+          {isCompaniesError && (
+            <p className="text-sm text-red-600">Error fetching companies</p>
+          )}
           {errors.company && (
             <p className="text-sm text-red-600">{errors.company.message}</p>
           )}

@@ -13,7 +13,7 @@ export default function MiniProfileHeader(props: ProfileProps) {
   const navigate = useNavigate();
   return (
     <motion.div
-      className="cursor-pointer sticky top-0 z-10 bg-darkGray overflow-hidden"
+      className="cursor-pointer sticky top-0 z-10 overflow-hidden"
       onClick={() => navigate(`/profile/${props.userId}`)}
       initial={{ height: 0, opacity: 0 }}
       animate={{ height: "auto", opacity: 1 }}

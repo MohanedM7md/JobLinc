@@ -13,6 +13,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { useState } from "react";
 import z from "zod";
 import { CompanyInterface } from "@interfaces/companyInterfaces";
+import { Check } from "lucide-react";
 
 interface AddExperienceProps {
   onUpdate: () => void;
@@ -23,6 +24,7 @@ const schema = z
   .object({
     position: z.string().min(1, "Position is required"),
     company: z.string().min(1, "Company is required"),
+    companyId: z.string().optional(),
     description: z.string().min(1, "Description is required"),
     startMonth: z.coerce.number().min(1, "Invalid start month").max(12),
     startYear: z.coerce.number().min(1900, "Invalid start year"),
@@ -58,8 +60,6 @@ const schema = z
 type ExperienceFields = z.infer<typeof schema>;
 
 export default function AddExperience(props: AddExperienceProps) {
-  const [companySearch, setCompanySearch] = useState("");
-  const [companyOptions, setCompanyOptions] = useState<CompanyInterface[]>([]);
   const {
     register,
     handleSubmit,
@@ -73,6 +73,10 @@ export default function AddExperience(props: AddExperienceProps) {
     },
   });
 
+  const companyValue = watch("company");
+  const [companyOptions, setCompanyOptions] = useState<CompanyInterface[]>([]);
+  const [isInputFocused, setIsInputFocused] = useState(false);
+
   const addExperienceMutation = useMutation({
     mutationFn: addExperience,
     onSuccess: () => {
@@ -82,11 +86,11 @@ export default function AddExperience(props: AddExperienceProps) {
   });
 
   const { isError: isCompaniesError } = useQuery({
-    queryKey: ["Search companies by name", companySearch],
-    enabled: companySearch.trim() !== "",
+    queryKey: ["Search companies by name", companyValue],
+    enabled: typeof companyValue === "string" && companyValue.trim() !== "",
     queryFn: async () => {
       try {
-        const data = await searchCompanies(companySearch);
+        const data = await searchCompanies(companyValue);
         setCompanyOptions(data);
         return data;
       } catch {
@@ -98,7 +102,9 @@ export default function AddExperience(props: AddExperienceProps) {
   const onSubmit: SubmitHandler<ExperienceFields> = (data) => {
     const newExperience: NewExperience = {
       position: data.position,
-      company: data.company,
+      ...(data.companyId
+        ? { companyId: data.companyId, company: data.company }
+        : { company: data.company }),
       description: data.description,
       startDate: new Date(data.startYear, data.startMonth - 1, 1),
       endDate: data.isPresent
@@ -107,6 +113,7 @@ export default function AddExperience(props: AddExperienceProps) {
       type: data.type,
       mode: data.mode,
     };
+    console.log(newExperience);
     toast.promise(addExperienceMutation.mutateAsync(newExperience), {
       loading: "Adding experience...",
       success: "Experience added successfully",
@@ -115,10 +122,7 @@ export default function AddExperience(props: AddExperienceProps) {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="p-4 bg-lightGray rounded-lg text-charcoalBlack"
-    >
+    <form onSubmit={handleSubmit(onSubmit)} className="p-4 rounded-lg">
       <div className="mb-4">
         <label className="text-sm font-medium">Title</label>
         <input
@@ -137,26 +141,36 @@ export default function AddExperience(props: AddExperienceProps) {
       </div>
       <div className="mb-4">
         <label className="text-sm font-medium">Company</label>
-        <input
-          type="text"
-          value={companySearch}
-          onChange={(e) => setCompanySearch(e.target.value)}
-          placeholder="Search for a company"
-          className={`w-full px-2 py-1 border rounded-lg ${
-            addExperienceMutation.status === "pending"
-              ? "opacity-50 cursor-not-allowed"
-              : ""
-          }`}
-          disabled={addExperienceMutation.status === "pending"}
-        />
-        {companyOptions.length > 0 && (
-          <ul className="border rounded-lg mt-2 max-h-40 overflow-y-auto">
+        <div className="relative">
+          <input
+            type="text"
+            autoComplete="off"
+            {...register("company")}
+            onFocus={() => {
+              setValue("companyId", undefined);
+              setIsInputFocused(true);
+            }}
+            onBlur={() => setIsInputFocused(false)}
+            placeholder="Search for a company"
+            className={`w-full px-2 py-1 border rounded-lg ${
+              addExperienceMutation.status === "pending"
+                ? "opacity-50 cursor-not-allowed"
+                : ""
+            }`}
+            disabled={addExperienceMutation.status === "pending"}
+          />
+          {watch("companyId") && (
+            <Check className="absolute right-2 top-1/2 transform -translate-y-1/2 text-green-500" />
+          )}
+        </div>
+        {isInputFocused && companyOptions.length > 0 && (
+          <ul className="w-10/12 px-2 py-1 absolute border rounded-lg mt-2 max-h-40 overflow-y-auto bg-white z-10">
             {companyOptions.map((company) => (
               <li
                 key={company.id}
-                onClick={() => {
-                  setCompanySearch(company.name);
-                  setValue("company", company.id);
+                onMouseDown={() => {
+                  setValue("company", company.name);
+                  setValue("companyId", company.id);
                 }}
                 className="px-2 py-1 cursor-pointer hover:bg-gray-200"
               >

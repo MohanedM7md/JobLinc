@@ -32,8 +32,8 @@ export default function PostContainer() {
   useEffect(() => {
     function handleScroll() {
       if (
-        window.innerHeight + document.documentElement.scrollTop >=
-        document.documentElement.offsetHeight
+        window.innerHeight + window.scrollY + 10 >=
+        document.documentElement.scrollHeight
       ) {
         if (!hasReachedBottom && postsData && postsData.length > 0) {
           setHasReachedBottom(true);

@@ -39,7 +39,7 @@ export interface EducationInterface {
 
 export interface ExperienceInterface {
   id: string;
-  company: string;
+  company: ExperienceCompany;
   position: string;
   startDate: Date;
   endDate: Date | string;
@@ -48,8 +48,26 @@ export interface ExperienceInterface {
   type: ExperienceTypes;
 }
 
+export interface ExperienceCompany {
+  id?: string;
+  name: string;
+  logo: string;
+}
+
 export interface NewExperience {
-  company: string;
+  companyId?: string;
+  company?: string;
+  position: string;
+  startDate: Date;
+  endDate: Date | string;
+  description: string;
+  mode: ExperienceModes;
+  type: ExperienceTypes;
+}
+
+export interface EditExperienceInterface {
+  companyId?: string;
+  company?: string;
   position: string;
   startDate: Date;
   endDate: Date | string;
@@ -91,8 +109,10 @@ export enum ExperienceModes {
 }
 
 export enum ExperienceTypes {
-  fulltime = "FullTime",
-  parttime = "PartTime",
+  fulltime = "Full-time",
+  parttime = "Part-time",
   internship = "Internship",
   contract = "Contract",
+  temporary = "Temporary",
+  volunteer = "Volunteer"
 }

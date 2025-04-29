@@ -17,10 +17,11 @@ export default function UserExperience(props: ExperienceProps) {
 
   return (
     <div className="flex flex-row mx-1">
+      <img className="rounded-full h-10 w-10 mr-3" src={props.experience.company.logo} />
       <div className="flex flex-col">
         <span className="font-medium -m-0.5">{props.experience.position}</span>
         <span className="text-sm -m-0.5 mt-0.5">
-          {props.experience.company}
+          {props.experience.company.name}
         </span>
         <span className="text-sm -m-0.5 text-mutedSilver">
           {formattedStartDate} - {formattedEndDate}

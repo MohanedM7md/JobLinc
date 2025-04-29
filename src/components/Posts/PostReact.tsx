@@ -18,14 +18,18 @@ interface PostReactProps {
   postId: string;
   successHandler: (newReaction: string, oldReaction: string) => void;
   userReaction: string;
+  compact?: boolean;
 }
 
 export default function PostReact({
   postId,
   successHandler,
   userReaction,
+  compact,
 }: PostReactProps) {
-  const [reaction, setReaction] = useState<string>(userReaction || "NoReaction");
+  const [reaction, setReaction] = useState<string>(
+    userReaction || "NoReaction",
+  );
   const [showReact, setShowReact] = useState<boolean>(false);
   const hoverTimeout = useRef<NodeJS.Timeout | null>(null);
 
@@ -138,9 +142,11 @@ export default function PostReact({
         }}
       >
         {getReactionIcon(reaction)}
-        <span className="hidden md:inline-block">
-          {reaction == "NoReaction" ? "React" : reaction}
-        </span>
+        {!compact && (
+          <span className="hidden md:inline-block">
+            {reaction == "NoReaction" ? "React" : reaction}
+          </span>
+        )}
       </button>
       <AnimatePresence>
         {showReact && (

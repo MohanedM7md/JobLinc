@@ -19,6 +19,10 @@ export default function CommentCard(props: CommentCardProps) {
   const [replies, setReplies] = useState<RepliesInterface[]>([]);
   const [newReply, setNewReply] = useState<string>("");
 
+  const posterId = props.comment.companyId ? props.comment.companyId : props.comment.userId;
+  const posterName = props.comment.companyName ? props.comment.companyName : props.comment.firstname + " " + props.comment.lastname;
+  const posterPicture = props.comment.companyLogo ? props.comment.companyLogo : props.comment.profilePicture; 
+
   useEffect(() => {
     if (showReplies) {
       const response = getReplies(
@@ -51,11 +55,11 @@ export default function CommentCard(props: CommentCardProps) {
     <div className="flex flex-wrap w-1/1 rounded-xl relative py-2">
       <div className="flex flex-row w-1/1 px-2">
         <CommentHeader
-          key={`Details of Commenter ${props.comment.userId}`}
-          userId={props.comment.userId}
-          name={props.comment.firstname + " " + props.comment.lastname}
+          key={`Details of Commenter ${posterId}`}
+          userId={posterId}
+          name={posterName}
           headline={props.comment.headline}
-          profilePicture={props.comment.profilePicture}
+          profilePicture={posterPicture}
           time={props.comment.time}
         />
         <div className="flex flex-row w-1/1 justify-end">

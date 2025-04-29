@@ -5,11 +5,14 @@ export interface CommentInterface {
   firstname: string;
   lastname: string;
   profilePicture: string;
+  companyId: string | null;
+  companyName: string | null;
+  companyLogo: string | null;
   headline: string;
   text: string;
   time: Date;
   likes: number;
-  comments: number
+  comments: number;
 }
 
 export interface RepliesInterface {
@@ -30,7 +33,7 @@ export interface RepliesInterface {
 
 export interface PostInterface {
   postId: string;
-  userId: string | null;
+  userId: string;
   firstname: string;
   lastname: string;
   companyId: string | null;
@@ -40,12 +43,29 @@ export interface PostInterface {
   headline: string;
   userReaction: PostReactions;
   text: string;
-  mediaURL: string[];
+  media: Media[];
   time: Date;
   likes: number;
   comments: number;
   reposts: number;
   repost: PostInterface | null;
+}
+
+export interface Media {
+  type: MediaTypes;
+  url: string
+}
+
+export interface MediaUpload {
+  type: string;
+  file: File;
+}
+
+export enum MediaTypes {
+  Image = "Image",
+  Video = "Video",
+  Audio = "Audio",
+  Document = "Document",
 }
 
 enum PostReactions {

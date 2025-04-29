@@ -1,4 +1,4 @@
-import PostDetails from "./PostDetails";
+import PostContent from "./PostContent";
 import PostUtilityButton from "./PostUtilityButton";
 import { useState } from "react";
 import "material-icons/iconfont/material-icons.css";
@@ -19,6 +19,7 @@ import Modal from "../utils/Modal";
 interface PostProps {
   post: PostInterface;
   isRepost: boolean;
+  compact?: boolean;
 }
 
 export default function PostCard(props: PostProps) {
@@ -26,11 +27,12 @@ export default function PostCard(props: PostProps) {
   const [showComment, setShowComment] = useState<boolean>(false);
   const [showRepostModal, setShowRepostModal] = useState<boolean>(false);
 
-  const posterId: string = props.post.userId ?? props.post.companyId ?? "0";
-  const name: string =
-    props.post.firstname !== ""
-      ? props.post.firstname + " " + props.post.lastname
-      : (props.post.companyName ?? "Not Found");
+  const posterId: string = props.post.companyId
+    ? props.post.companyId
+    : props.post.userId;
+  const name: string = props.post.companyName
+    ? props.post.companyName
+    : props.post.firstname + " " + props.post.lastname;
   const posterPic: string =
     props.post.profilePicture ?? props.post.companyLogo ?? "NotFound";
 
@@ -48,7 +50,7 @@ export default function PostCard(props: PostProps) {
   }
 
   return !hide ? (
-    <div className="flex flex-wrap relative">
+    <div className="flex flex-col relative h-full">
       <div className="flex flex-row w-1/1">
         <PostHeader
           key={`Details of poster ${posterId}`}
@@ -68,7 +70,7 @@ export default function PostCard(props: PostProps) {
             />
           </AnimatePresence>
         </div>
-        {!props.isRepost ? (
+        {!props.isRepost && !props.compact ? (
           <button
             onClick={() => setHide(true)}
             className="material-icons-round cursor-pointer ml-1 text-mutedSilver hover:bg-gray-200 h-fit transition duration-400 ease-in-out"
@@ -77,16 +79,22 @@ export default function PostCard(props: PostProps) {
           </button>
         ) : null}
       </div>
-      <PostDetails
-        key={`Details of post ${props.post.postId}`}
-        text={props.post.text}
-        mediaURL={props.post.mediaURL}
-      />
-      {props.post.repost ? (
-        <div className="w-12/12 m-auto my-2 border-1 rounded-lg border-mutedSilver transform scale-90">
-          <PostCard post={props.post.repost} isRepost={true} />
-        </div>
-      ) : null}
+      <div className="flex-grow">
+        <PostContent
+          key={`Details of post ${props.post.postId}`}
+          text={props.post.text}
+          media={props.post.media}
+        />
+        {props.post.repost ? (
+          <div className="w-12/12 m-auto my-2 border-1 rounded-lg border-gray-300 transform scale-90">
+            <PostCard
+              post={props.post.repost}
+              isRepost={true}
+              compact={props.compact}
+            />
+          </div>
+        ) : null}
+      </div>
       <div className="flex flex-row text-mutedSilver m-auto py-2 w-11/12 border-b-1 border-gray-300">
         <ThumbsUp className="text-blue-500" />
         <span className="ml-2">{props.post.likes}</span>
@@ -99,11 +107,12 @@ export default function PostCard(props: PostProps) {
         </div>
       </div>
       {!props.isRepost ? (
-        <div className="flex flex-grow relative m-auto justify-between">
+        <div className="flex flex-grow-0 relative justify-between">
           <PostReact
             postId={props.post.postId}
             userReaction={props.post.userReaction}
             successHandler={reactionSuccess}
+            compact={props.compact}
           />
           <button
             onClick={() => {
@@ -112,18 +121,24 @@ export default function PostCard(props: PostProps) {
             className="transition duration-400 ease-in-out w-3/12 h-10 cursor-pointer font-medium text-gray-500 hover:bg-gray-200 flex items-center justify-center"
           >
             <MessageSquareText className="mr-2" />
-            <span className="hidden md:inline-block">Comment</span>
+            {!props.compact && (
+              <span className="hidden md:inline-block">Comment</span>
+            )}
           </button>
           <button
             onClick={() => setShowRepostModal(true)}
             className="transition duration-400 ease-in-out w-3/12 h-10 cursor-pointer font-medium text-gray-500 hover:bg-gray-200 flex items-center justify-center"
           >
             <Repeat className="mr-2" />
-            <span className="hidden md:inline-block">Repost</span>
+            {!props.compact && (
+              <span className="hidden md:inline-block">Repost</span>
+            )}
           </button>
           <button className="transition duration-400 ease-in-out w-3/12 h-10 cursor-pointer font-medium text-gray-500 hover:bg-gray-200 flex items-center justify-center">
             <SendHorizontal className="mr-2" />
-            <span className="hidden md:inline-block">Send</span>
+            {!props.compact && (
+              <span className="hidden md:inline-block">Send</span>
+            )}
           </button>
         </div>
       ) : null}
@@ -133,7 +148,11 @@ export default function PostCard(props: PostProps) {
           onClose={() => setShowRepostModal(false)}
         >
           <Repost
-            repost={props.isRepost ? props.post.repost?.postId ?? "" : props.post.postId}
+            repost={
+              props.isRepost
+                ? (props.post.repost?.postId ?? "")
+                : props.post.postId
+            }
             onSuccess={() => setShowRepostModal(false)}
           />
         </Modal>
