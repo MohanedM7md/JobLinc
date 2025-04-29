@@ -21,6 +21,25 @@ export const getNetworkFeed = async (count: number, signal: AbortSignal) => {
   //     console.error("Error fetching feed:", error);
   //   }
   // };
+
+export const getMyFollowing = async () => {
+  try {
+    const response = await api.get('follow/following');
+    return response.data;
+  } catch (error) {
+    console.log('Error fetching followed users:', error);
+    return[];
+  }
+}
+export const getMyFollowers = async () => {
+  try{
+    const response = await api.get('follow/followers');
+    return response.data;
+  } catch(error){
+    console.log('error fetching my followers', error)
+    return[];
+  }
+}
 export const getPendingInvitations = async (
 ) => {
   try {
@@ -76,15 +95,40 @@ export const getBlockedUsers = async (
     return [];
   }
 };
-
-
+export const sendFollowRequest = async (followedId : string)=>{
+  try {
+    const repsonse = await api.post(`follow/${followedId}`);
+    return repsonse;
+  } catch (error) {
+    console.log("error sending follow request",error);
+    throw error;
+  }
+};
+export const sendUnfollowRequest = async (followedId : string) => {
+  try {
+    const response = await api.post(`follow/${followedId}/unfollow`);
+    return response;
+  } catch (error) {
+    console.log("error sending unfollow request", error);
+    throw error;
+  }
+};
+export const removeFollowerRequest = async (userId:string) => {
+    try {
+      const response = await api.post(`follow/${userId}/remove`);
+      return response
+    } catch (error) {
+      console.log("error sending remove a follower request", error)
+      throw error;
+    }
+}
 export const sendConnectionRequest = async (userId: string) => {
   try {
     const response = await api.post(`connections/${userId}`);
     return response;
   } catch (error) {
     console.error("Error sending connection request:", error);
-    throw error; // Rethrow the error to be handled by the caller
+    throw error;
   }
 };
 export const changeConnectionStatus = async (
@@ -96,7 +140,7 @@ export const changeConnectionStatus = async (
     return response;
   } catch (error) {
     console.error("Error changing connection status:", error);
-    throw error; // Rethrow the error to be handled by the caller
+    throw error;
   }
 }
 
@@ -111,7 +155,7 @@ export const AcceptConnectionRequest = async (
     return response;
   } catch (error) {
     console.error("Error Accepting connection request:", error);
-    throw error; // Rethrow the error to be handled by the caller 
+    throw error;
   }
 };
 
@@ -126,6 +170,6 @@ export const RejectConnectionRequest = async (
     return response;
   } catch (error) {
     console.error("Error Rejecting connection request:", error);
-    throw error; // Rethrow the error to be handled by the caller
+    throw error;
   }
 };

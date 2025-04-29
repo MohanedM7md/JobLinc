@@ -27,6 +27,17 @@ export interface invitationInterface {
     connectionStatus?: "pending" | "accepted" | "rejected" | null;
     connectedDate?: Date | null;
   }
+  export interface FollowInterface {
+    companyId: string | null;
+    companyName: string | null;
+    companyLogo: string | null;
+    userId: string | null;
+    profilePicture: string | null;
+    firstName: string | null;
+    lastName: string | null;
+    headline: string | null;
+    time: Date | null;
+  }
   export interface BlockedUserInterface {
     userId: string;
     profilePicture: string;

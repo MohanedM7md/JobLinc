@@ -38,7 +38,7 @@ function UserConnectionListCard() {
           setUserConnections(parsedConnections);
           console.log("User Connections:",response,"we are seeing the connections of:", userId);
         } catch (error) {
-          console.error("Error fetching network feed:", error);
+          console.error("Error fetching User Connections", error);
       }
     };
   
@@ -61,7 +61,7 @@ function UserConnectionListCard() {
             <div className="w-full">
             <UserConnectionsHeader searchTerm={searchTerm} setSearchTerm={setSearchTerm} ></UserConnectionsHeader>
             </div>
-          <div className="w-full">
+            <div className="w-full">
             {filteredConnections.map((connection, index) => (
               <UserConnectionCard key={index} {...connection} />
             ))}

@@ -1,4 +1,4 @@
-import { BlockedUserInterface, connectsInterface } from "interfaces/networkInterfaces";
+import { BlockedUserInterface, connectsInterface, FollowInterface } from "interfaces/networkInterfaces";
 import { invitationInterface } from "interfaces/networkInterfaces";
 import { http, HttpResponse } from "msw";
 import { connectsResponse } from "./connectsDB";
@@ -8,7 +8,18 @@ import { connectionresponse } from "./connectionsDB";
 import { userconnectionresponse } from "./userConnectionsDB";
 import { blockedUsersResponse } from "./blockedDB";
 import { API_URL } from "@services/api/config";
+import { FollowerResponse } from "./followersDB";
+import { FollowingResponse } from "./followingDB";
 
+interface FollowRequestResponse{
+  followedId:string;
+}
+interface FollowRequestBody{
+  followedId:string;
+}
+interface FollowRequestParams{
+  followedId:string;
+}
 interface ConnectionRequestResponse {
   userId: string;
 }
@@ -56,7 +67,6 @@ export const connectsHandler = [
         statusText: "OK",
       });
     }),
-
   http.get(`${API_URL}connection/received`, async () => {
     return HttpResponse.json<invitationInterface[]>(invitationsResponse, {
       status: 200,
@@ -69,7 +79,18 @@ export const connectsHandler = [
       statusText: 'OK',
     });
   }),
-  
+  http.get(`${API_URL}follow/followers`, async () => {
+    return HttpResponse.json<FollowInterface[]>(FollowerResponse, {
+      status: 200,
+      statusText: 'OK',
+    });
+  }),
+  http.get(`${API_URL}follow/following`, async () => {
+    return HttpResponse.json<FollowInterface[]>(FollowingResponse, {
+      status: 200,
+      statusText: 'OK',
+    });
+  }),
   http.get(`${API_URL}connection/connected`, async () => {
     return HttpResponse.json<ConnectionInterface[]>(connectionresponse, {
       status: 200,
@@ -116,6 +137,62 @@ export const connectsHandler = [
         });
       } catch (error) {
         console.error("Error handling connection request:", error);
+  
+        return HttpResponse.json({
+          status: 500,
+          statusText: "Internal server error while processing the request.",
+        });
+      }
+    }
+  ),
+  http.post<{}, FollowRequestBody>(
+    `${API_URL}follow/:followedId`,
+    async ({ params }) => {
+      try {
+        const { followedId } = params as FollowRequestParams;
+  
+  
+        const FollowResponse: FollowRequestResponse = {
+          followedId
+        };
+  
+        console.log("Processed Follow Request:", {followedId});
+  
+        return HttpResponse.json({
+          status: 200,
+          statusText: `Follow request for user ${followedId} sent successfully.`,
+          data: FollowResponse,
+        });
+      } catch (error) {
+        console.error("Error processing Follow request:", error);
+  
+        return HttpResponse.json({
+          status: 500,
+          statusText: "Internal server error while processing the request.",
+        });
+      }
+    }
+  ),
+  http.post<{}, FollowRequestBody>(
+    `${API_URL}follow/:followedId/unfollow`,
+    async ({ params }) => {
+      try {
+        const { followedId } = params as FollowRequestParams;
+  
+  
+        const FollowResponse: FollowRequestResponse = {
+          followedId
+        };
+  
+        console.log("Processed UnFollow Request:", {followedId});
+  
+        return HttpResponse.json({
+          status: 200,
+          statusText: `UnFollow request for user ${followedId} sent successfully.`,
+          data: FollowResponse,
+        });
+      } catch (error) {
+        console.error("Error processing UnFollow request:", error);
   
         return HttpResponse.json({
           status: 500,

@@ -46,10 +46,9 @@ import SubscriptionManager from "./pages/SubscriptionManager";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import EmailAddress from "@pages/Settings/SignInAndSecurity/AccountAccess/EmailAddress";
 import Metrics from "./components/Company/Metrics";
-import UserConnectionListCard from "./components/Connections/UserConnectionListCard";
-import BlockList from "./components/Connections/BlockList";
 import BlockedUsers from "@pages/BlockedUsers";
 import UserConnections from "@pages/UserConnections";
+import FollowersFollowing from "@pages/FollowersFollowing";
 
 const queryClient = new QueryClient()
 
@@ -59,7 +58,6 @@ const stripePromise = loadStripe("pk_test_...");
 function App() {
   return (
     <>
-      {/*<ThemeProvider> */}
         <QueryClientProvider client={queryClient}>
           <Elements stripe={stripePromise}>
             <Routes>
@@ -82,7 +80,8 @@ function App() {
               <Route element={<Layout />}>
                 <Route path="/home" element={<Home />} />
                 <Route path="/my-network" element={<MyNetwork />} />
-                <Route path="/my-connections" element={<MyConnections />} />
+                <Route path="/my-connections" element={<MyConnections />}/>
+                <Route path="/followers-following" element={<FollowersFollowing/>}/>
                 <Route path="/messaging" element={<Messaging />} />
                 <Route path="/change-password" element={<ChangePassword />} />
 
