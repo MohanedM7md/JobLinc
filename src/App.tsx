@@ -91,17 +91,6 @@ function App() {
               <Route path="/reset-password" element={<ResetPassword />} />
             </Route>
 
-<<<<<<< HEAD
-          <Route element={<ProtectedRoute />}>
-            <Route element={<Layout />}>
-              <Route path="/home" element={<Home />} />
-              <Route path="/my-network" element={<MyNetwork />} />
-              <Route path="/connections" element={<Connections />} />
-              <Route path="/messaging" element={<Messaging />} />
-              <Route path="/change-password" element={<ChangePassword />} />
-              <Route path="/confirm-email" element={<ConfirmEmail />} />
-
-=======
             <Route element={<ProtectedRoute />}>
               <Route element={<Layout />}>
                 <Route path="/home" element={<Home />} />
@@ -144,7 +133,6 @@ function App() {
                   <Route path="create" element={<PostCreate />} />
                   <Route path=":postId/edit" element={<PostEdit />} />
                 </Route>
->>>>>>> deafd0cda95852672d70f77b44d2c185811b4542
               <Route path="/settings" element={<Settings />}>
                 <Route index element={<AccountPreferences />} />
                 <Route
@@ -168,10 +156,6 @@ function App() {
                   path="sign-in-security/account-access/change-password"
                   element={<ChangePassword />}
                 />
-<<<<<<< HEAD
-
-=======
->>>>>>> deafd0cda95852672d70f77b44d2c185811b4542
                 <Route path="visibility" element={<Visibility />} />
                 <Route path="data-privacy" element={<DataAndPrivacy />} />
                 <Route
@@ -180,10 +164,6 @@ function App() {
                 ></Route>
                 <Route path="notifications" element={<Notifications />} />
               </Route>
-<<<<<<< HEAD
-
-=======
->>>>>>> deafd0cda95852672d70f77b44d2c185811b4542
               <Route path="/update-email" element={<UpdateEmail />} />
               <Route path="/update-username" element={<UpdateUsername />} />
               <Route path="/profile/:userId">
