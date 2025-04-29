@@ -95,7 +95,6 @@ function App() {
                 <Route path="/connections" element={<Connections />} />
                 <Route path="/messaging" element={<Messaging />} />
                 <Route path="/change-password" element={<ChangePassword />} />
-                <Route path="/confirm-email" element={<ConfirmEmail />} />
 
                 <Route path="/metrics" element={<Metrics />} />
                 <Route path="/update-username" element={<UpdateUsername />} />
@@ -153,6 +152,10 @@ function App() {
                   path="sign-in-security/account-access/change-password"
                   element={<ChangePassword />}
                 />
+                <Route
+                  path="sign-in-security/account-access/email-address"
+                  element={<EmailAddress />}
+                />
                 <Route path="visibility" element={<Visibility />} />
                 <Route path="data-privacy" element={<DataAndPrivacy />} />
                 <Route
@@ -161,7 +164,6 @@ function App() {
                 ></Route>
                 <Route path="notifications" element={<Notifications />} />
               </Route>
-              <Route path="/update-email" element={<UpdateEmail />} />
               <Route path="/update-username" element={<UpdateUsername />} />
               <Route path="/profile/:userId">
                 <Route index element={<ProfileContainer />} />
@@ -194,6 +196,14 @@ function App() {
                 <Route path="create" element={<PostCreate />} />
                 <Route path=":postId/edit" element={<PostEdit />} />
               </Route>
+              
+            </Route>
+            
+            <Route path="/company">
+              <Route path="setup/new" element={<CreateForm />} />
+              <Route path="my-companies" element={<MyCompanies />} />
+              <Route path={`admin/:companyId`} element={<Admin />} />
+              <Route path={`member/:slug`} element={<Member />} />
             </Route>
           </Route>
 
