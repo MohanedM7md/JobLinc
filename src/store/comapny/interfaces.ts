@@ -1,3 +1,5 @@
+import { FollowerData } from "interfaces/userInterfaces";
+
 export interface Location {
   _id: string;
   address: string;
@@ -34,6 +36,7 @@ export interface Company {
   website: string;
   locations: Location[];
   followers: number;
+  myFollowers: FollowerData[];
   employees: number;
   createdAt: string;
 }
@@ -44,6 +47,7 @@ export interface CompanyStoreState {
   error: string | null;
   fetchCompany: (slug: string) => Promise<void>;
   fetchAdminCompany: () => Promise<void>;
+  fetchCompanyFollowers: () => Promise<void>;
   resetCompany: () => void;
   updateBasicInfo: (updates: Partial<Company>) => void;
   updateLogo: (logoUrl: string) => void;

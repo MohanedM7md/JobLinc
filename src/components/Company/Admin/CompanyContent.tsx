@@ -1,5 +1,7 @@
 import { CompanyEditModal } from "./Edit modal/CompanyEditModal";
 import SettingsContent from "./Settings/SettingsContent";
+import ManageFollowers from "./Settings/CompanyContentPages/ManageFollowers";
+
 type CompanyContentProps = {
   activeContent: string;
   setActiveContent: (activeContent: string) => void;
@@ -23,8 +25,8 @@ export function CompanyContent({
         );
       case "Page posts":
         return <div>Posts Content</div>;
-      case "Analytics":
-        return <div>Analytics Content</div>;
+      case "Manage Followers":
+        return <ManageFollowers />;
       case "Feed":
         return <div>Feed Content</div>;
       case "Activity":

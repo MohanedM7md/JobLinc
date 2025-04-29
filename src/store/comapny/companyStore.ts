@@ -1,11 +1,14 @@
 import { create } from "zustand";
-import { CompanyStoreState } from "./interfaces";
-import { getCompanyBySlug, getMyCompany } from "@services/api/companyServices";
+import { devtools } from 'zustand/middleware'
 
-export const useCompanyStore = create<CompanyStoreState>()((set) => ({
+import { CompanyStoreState } from "./interfaces";
+import { getCompanyBySlug, getMyCompany, getMyCompanyFollowers } from "@services/api/companyServices";
+
+export const useCompanyStore = create<CompanyStoreState>()(devtools((set) => ({
   company: null,
   loading: true,
   error: null,
+  // myFollowers: [],
 
   fetchCompany: async (slug) => {
     set({ loading: true, error: null });
@@ -36,6 +39,20 @@ export const useCompanyStore = create<CompanyStoreState>()((set) => ({
       });
     }
   },
+
+  fetchCompanyFollowers: async () => {
+    const response = await getMyCompanyFollowers();
+    if (!(response.status == 200)) throw new Error("Failed to fetch company followers");
+    set((state) => ({
+      company: state.company
+        ? {
+            ...state.company,
+            myFollowers: response.data,
+          }
+        : null,
+    }))
+  },
+
 
   resetCompany: () => set({ company: null, loading: true, error: null }),
 
@@ -104,4 +121,4 @@ export const useCompanyStore = create<CompanyStoreState>()((set) => ({
           }
         : null,
     })),
-}));
+})));

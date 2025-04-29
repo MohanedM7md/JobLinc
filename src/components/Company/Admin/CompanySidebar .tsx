@@ -26,10 +26,13 @@ export function CompanySidebar({
   const [coverPhoto, setCoverPhoto] = useState<string | undefined>(
     company?.coverPhoto,
   );
+
+  const date = new Date();
+
   const mainMenuItems = [
     { icon: LayoutDashboard, title: "Dashboard" },
     { icon: FileText, title: "Page posts" },
-    { icon: BarChart2, title: "Analytics" },
+    { icon: BarChart2, title: "Manage Followers" },
     { icon: Rss, title: "Feed" },
     { icon: Bell, title: "Activity" },
     { icon: Inbox, title: "Inbox" },
@@ -63,8 +66,7 @@ export function CompanySidebar({
                 accept="image/*"
                 onChange={(file: string | null) => {
                   setCoverPhoto(file || undefined);
-                  console.log("ant shaif elfaile 3aml ezay a7a ", file);
-                  updateInfo({ coverPhoto: file });
+                  updateInfo({ coverPhoto: file || "" }); // THERE WAS A SMALL ERROR HERE SO I ADDED || ""
                 }}
               />
             </button>
@@ -94,7 +96,8 @@ export function CompanySidebar({
           </a>
 
           <div className="flex gap-2 mt-3">
-            <button className="flex items-center text-xs gap-1 px-3 py-1.5 bg-transparent border border-mutedSilver rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-charcoalBlack dark:text-charcoalWhite">
+            <button className="flex items-center text-xs gap-1 px-3 py-1.5 bg-transparent border border-mutedSilver rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-charcoalBlack dark:text-charcoalWhite"
+                    onClick={() => {navigate("/company/setup/new")}}>
               <span className="text-lg">+</span> Create
             </button>
             <button
@@ -182,7 +185,7 @@ export function CompanySidebar({
       </div>
 
       <div className="px-4 py-2 text-xs text-mutedSilver border-t border-gray-200 dark:border-gray-700">
-        © 2025 JobLinc. All rights reserved.
+        © {date.getFullYear()} JobLinc. All rights reserved.
       </div>
     </div>
   );

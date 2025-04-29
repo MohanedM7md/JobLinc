@@ -10,6 +10,7 @@ import Jobs from "./Cards/Jobs";
 import { Plus } from "lucide-react";
 import { MessageCircle } from "lucide-react";
 import { EllipsisVertical } from "lucide-react";
+import CompanyFooter from "./Cards/CompanyFooter";
 
 function Member() {
   const { company, loading, error, fetchCompany, resetCompany } = useCompanyStore();
@@ -67,71 +68,82 @@ function Member() {
   }
 
   return (
-    <div className="bg-warmWhite min-h-screen w-full flex flex-col items-center">
+    <div className="min-h-screen w-full bg-warmWhite flex flex-col items-center">
       <NavBar />
 
-      {/* Top bar (fixed)*/}
-      <div className="bg-crimsonRed flex flex-row justify-evenly items-center h-[100px] w-full top-0 mb-10">
-        <div>
-          <p className="text-white">You are viewing this page as a member</p>
-        </div>
-        <div>
-          <button
-            className="text-white rounded-xl outline-1 px-4 py-1 hover:outline-2"
-              onClick={() => {
-              navigate(`/company/admin/${company.id}`);
-            }}
-          >
-            View as admin
-          </button>
-        </div>
+      {/* Top Bar - Responsive Layout */}
+      <div className="w-full bg-crimsonRed flex flex-col md:flex-row justify-between items-center px-4 py-3 md:px-8 md:py-4 mb-4 md:mb-8">
+        <p className="text-white text-sm sm:text-base md:text-lg text-center md:text-left mb-2 md:mb-0">
+          You are viewing this page as a member
+        </p>
+        <button
+          className="text-white text-sm sm:text-base bg-transparent border border-white/30 rounded-lg px-3 py-1 md:px-4 md:py-2 hover:bg-white/10 transition-colors"
+          onClick={() => navigate(`/company/admin/${company.id}`)}
+        >
+          View as admin
+        </button>
       </div>
 
-      <div className="rounded-xl bg-white flex flex-col top-[150px] w-[800px]">
-        <div className="border-b-1 border-b-gray-600 p-5">
-          <div className="img-container flex items-center justify-center">
-            <img className="h-[300px] " src={company.coverPhoto} />
+      {/* Main Content Container */}
+      <div className="w-full max-w-7xl mx-4 md:mx-8 lg:mx-auto bg-white rounded-xl shadow-sm">
+        {/* Cover Section */}
+        <div className="border-b border-gray-200 p-4 md:p-6 lg:p-8">
+          <div className="relative aspect-video w-full overflow-hidden rounded-lg">
+            <img
+              className="w-full h-full object-cover"
+              src={company.coverPhoto}
+              alt="Company cover"
+            />
           </div>
-          <div className="info-container flex flex-col gap-5">
-            <h2 className="font-bold text-[32px]">{company.name}</h2>
-            <p className="text-[18px] text-gray-500">
-              {company.industry} . {company.followers} followers .{" "}
-              {company.employees} employees
+
+          <div className="mt-4 md:mt-6 space-y-2 md:space-y-3">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">
+              {company.name}
+            </h2>
+            <p className="text-gray-600 text-sm sm:text-base">
+              {company.industry} • {company.followers} followers • {company.employees} employees
             </p>
-            <div className="flex gap-8">
-              <button className="bg-crimsonRed text-white px-5 py-2 rounded-2xl hover:cursor-pointer hover:bg-darkBurgundy flex gap-2 font-semibold" onClick={handleFollow}>
-                {" "}
-                <Plus /> Follow
+
+            {/* Action Buttons */}
+            <div className="flex flex-wrap gap-3">
+              <button
+                className="flex items-center gap-2 bg-crimsonRed hover:bg-darkBurgundy text-white text-sm sm:text-base px-4 py-2 rounded-lg md:rounded-xl transition-colors"
+                onClick={handleFollow}
+              >
+                <Plus className="w-4 h-4 md:w-5 md:h-5" />
+                Follow
               </button>
-              {/* <button className="px-5 py-2 rounded-2xl hover:cursor-pointer outline-1 outline-crimsonRed hover:outline-2 flex gap-2 font-semibold">
-                {" "}
-                <MessageCircle /> Message
-              </button> */}
-              {/* <button className="outline-1 w-[40px] font-bold px-2 py-2 rounded-4xl hover:outline-2 hover:cursor-pointer flex justify-center items-center">
-                {" "}
-                <EllipsisVertical />{" "}
-              </button> */}
             </div>
           </div>
         </div>
-        <div className="nav-container flex items-center gap-7">
-          {navItems.map((item, index) => (
-            <div
-              key={index}
-              className={`${navItemSelected === item.text && "border-b-3 border-b-crimsonRed"} hover:cursor-pointer p-5`}
-              onClick={() => {
-                setNavItemSelected(item.text);
-              }}
-            >
-              {item.text}
-            </div>
-          ))}
-        </div>
-      </div>
 
-      <div className="item-content mt-5 w-[800px] mb-5">
+        {/* Navigation Tabs */}
+        <div className="overflow-x-auto border-b border-gray-200">
+          <div className="flex min-w-max px-4 md:px-6">
+            {navItems.map((item, index) => (
+              <button
+                key={index}
+                className={`px-4 py-3 text-sm sm:text-base ${
+                  navItemSelected === item.text
+                    ? "border-b-2 border-crimsonRed font-semibold text-gray-900"
+                    : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                }`}
+                onClick={() => setNavItemSelected(item.text)}
+              >
+                {item.text}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        
+      </div>
+      {/* Content Section */}
+      <div className="w-full max-w-7xl mx-4 md:mx-8 lg:mx-auto rounded-xl p-4 md:p-6 lg:p-8">
         {selectedNavItem?.content}
       </div>
+
+      <CompanyFooter />
     </div>
   );
 }

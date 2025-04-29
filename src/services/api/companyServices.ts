@@ -48,6 +48,11 @@ export const getMyCompanies = async () => {
   return response;
 };
 
+export const getMyCompanyFollowers = async () => {
+  const response = await api.get(`/follow/followers`);
+  return response;
+}
+
 export const getCompanyBySlug = async (slug: string) => {
   const response = await api.get(`/companies/${slug}`);
   return response;

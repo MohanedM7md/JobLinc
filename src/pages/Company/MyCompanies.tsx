@@ -10,7 +10,7 @@ function MyCompanies() {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const { company } = useCompanyStore();
-  console.log("company id from store: ", company?._id);
+  console.log("company id from store: ", company?.id);
   useEffect(() => {
     const fetchCompanies = async () => {
       try {
