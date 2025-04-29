@@ -53,6 +53,7 @@ import Member from "@pages/Company/Member";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import EmailAddress from "@pages/Settings/SignInAndSecurity/AccountAccess/EmailAddress";
 import Metrics from "./components/Company/Metrics";
+import DemographicInfo from "@pages/Settings/AccountPreferences/ProfileInformation/DemographicInfo";
 
 const queryClient = new QueryClient();
 
@@ -138,6 +139,10 @@ function App() {
                   element={<AccountPreferences />}
                 />
                 <Route
+                  path="account-preferences/profile-information/demographic-info"
+                  element={<DemographicInfo />}
+                />
+                <Route
                   path="account-preferences/display/dark-mode"
                   element={<DarkMode />}
                 />
@@ -200,7 +205,7 @@ function App() {
               </Route>
               
             </Route>
-            
+
             <Route path="/company">
               <Route path="setup/new" element={<CreateForm />} />
               <Route path="my-companies" element={<MyCompanies />} />
