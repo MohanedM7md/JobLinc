@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthenticationSignInButton } from "../components/Authentication/AuthenticationButtons";
 import SignHeader from "../components/Authentication/Headers/SignHeader";
-import Modal from "../components/Authentication/Modal";
+import Modal from "../components/utils/Modal";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@store/store";
 import { forgotPassword, confirmOTP } from "@store/user/userThunks";

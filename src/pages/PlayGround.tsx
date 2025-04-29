@@ -1,12 +1,6 @@
-import { TheNothingButton } from "../components/TheNothingButton";
+import Metrics from "../components/Company/Metrics";
 import useTheme from "../hooks/useTheme";
 
-
-import ChatProvider from "../context/ChatsIdProvider";
-import { useState } from "react";
-import FloatingChatSystem from "../components/chat/FloatingChat/FloatingChatSystem";
-import { UserProvider } from "../components/chat/mockUse";
-import DemographicInfo from "./Settings/AccountPreferences/ProfileInformation/DemographicInfo";
 
 function PlayGround() {
   /*   const dispatch = useAppDispatch();
@@ -20,7 +14,6 @@ function PlayGround() {
   return (
     <div className="h-full dark:bg-charcoalBlack">
       <h1>Welcome Home</h1>
-      <TheNothingButton />
       <button
         className="bg-darkBurgundy cursor-pointer"
         onClick={() => {
@@ -39,8 +32,8 @@ function PlayGround() {
           <FloatingChatSystem />
         </ChatProvider>
       </UserProvider> */}
+      <Metrics />
 
-      <DemographicInfo />
     </div>
   );
 }

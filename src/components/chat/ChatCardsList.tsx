@@ -1,5 +1,6 @@
 import { useEffect, useState, memo } from "react";
 import ChatCard from "./ChatCard";
+import LoadingChatCard from "./LoadingChatCard";
 import { fetchChats } from "../../services/api/chatServices";
 import { ChatCardInterface } from "./interfaces/Chat.interfaces";
 import { subscribeToChats } from "@services/api/ChatSocket";
@@ -14,13 +15,11 @@ const ChatCardsList = ({
   const [chats, setChats] = useState<ChatCardInterface[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  console.log("----------------ChatCardsList---------------- for userID: ");
-
   useEffect(() => {
     const fetchData = async () => {
       try {
         const data = await fetchChats();
-        setChats(data);
+        setChats(data.chats);
       } catch (error) {
         console.error("Error fetching chat data:", error);
       } finally {
@@ -28,20 +27,24 @@ const ChatCardsList = ({
       }
     };
     fetchData();
+
     subscribeToChats(
       (UpdatedChatCard) =>
         setChats((prev) => {
-          prev = prev.filter((chat) => chat.chatId != UpdatedChatCard.chatId);
+          prev = prev.filter((chat) => chat.chatId !== UpdatedChatCard.chatId);
           prev.unshift(UpdatedChatCard);
-          return prev;
+          return [...prev];
         }),
       (newChatCard) => setChats((prev) => [...prev, newChatCard]),
     );
   }, []);
-  if (isLoading) return null;
+
   return (
-    <div className={`${className}  overflow-y-auto`}>
-      {chats.length > 0 ? (
+    <div className={`${className} overflow-y-auto`}>
+      {isLoading ? (
+        // 👇 Render 5 loading skeletons
+        [...Array(5)].map((_, i) => <LoadingChatCard key={i} />)
+      ) : chats.length > 0 ? (
         chats.map((chatCard) => (
           <ChatCard
             key={chatCard.chatId}

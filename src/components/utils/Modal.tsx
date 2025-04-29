@@ -30,7 +30,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
             data-testid="close-button"
             aria-label="Close modal" // Improves accessibility
             onClick={onClose}
-            className="material-icons absolute top-2 right-2 text-gray-600 hover:cursor-pointer hover:bg-gray-200 px-1 py-1 rounded-full text-2xl"
+            className="material-icons absolute top-2 right-2 text-gray-600 hover:cursor-pointer hover:bg-gray-200 px-1 py-1 rounded-full text-2xl transition duration-400 ease-in-out"
           >
             close
           </button>
