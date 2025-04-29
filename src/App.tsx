@@ -15,6 +15,10 @@ const UserProfile = lazy(() => import("./pages/UserProfile"));
 import Home from "./pages/Home";
 import MyNetwork from "./pages/MyNetwork";
 import PostContainer from "./components/Posts/PostContainer";
+<<<<<<< HEAD
+=======
+import { CreateForm } from "@pages/Company/CreateForm";
+>>>>>>> deafd0cda95852672d70f77b44d2c185811b4542
 import PostCreate from "./components/Posts/PostCreate";
 import PostEdit from "./components/Posts/PostEdit";
 import ChangePassword from "./pages/ChangePassword";
@@ -46,6 +50,10 @@ import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { Toaster } from "react-hot-toast";
 import SubscriptionManager from "./pages/SubscriptionManager";
+<<<<<<< HEAD
+=======
+import Member from "@pages/Company/Member";
+>>>>>>> deafd0cda95852672d70f77b44d2c185811b4542
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import EmailAddress from "@pages/Settings/SignInAndSecurity/AccountAccess/EmailAddress";
 import Metrics from "./components/Company/Metrics";
@@ -86,6 +94,7 @@ function App() {
               <Route path="/reset-password" element={<ResetPassword />} />
             </Route>
 
+<<<<<<< HEAD
           <Route element={<ProtectedRoute />}>
             <Route element={<Layout />}>
               <Route path="/home" element={<Home />} />
@@ -95,6 +104,50 @@ function App() {
               <Route path="/change-password" element={<ChangePassword />} />
               <Route path="/confirm-email" element={<ConfirmEmail />} />
 
+=======
+            <Route element={<ProtectedRoute />}>
+              <Route element={<Layout />}>
+                <Route path="/home" element={<Home />} />
+                <Route path="/my-network" element={<MyNetwork />} />
+                <Route path="/connections" element={<Connections />} />
+                <Route path="/messaging" element={<Messaging />} />
+                <Route path="/change-password" element={<ChangePassword />} />
+                <Route path="/confirm-email" element={<ConfirmEmail />} />
+
+                <Route path="/metrics" element={<Metrics />} />
+                <Route path="/update-username" element={<UpdateUsername />} />
+                <Route path="/profile/:userId">
+                  <Route index element={<ProfileContainer />} />
+                  <Route
+                    path="details/experiences"
+                    element={<FullExperiences />}
+                  />
+                  <Route
+                    path="details/certificates"
+                    element={<FullCertificates />}
+                  />
+                  <Route path="details/skills" element={<FullSkills />} />
+                </Route>
+                <Route path="/thank-you" element={<ThankYouPage />} />
+                <Route path="/premium" element={<SubscriptionLandingPage />} />
+                <Route
+                  path="/manage-subscription"
+                  element={<SubscriptionManager />}
+                />
+
+                <Route
+                  path="/subscription-manage"
+                  element={<SubscriptionManagePage />}
+                />
+                <Route
+                  path="/recurring-payment"
+                  element={<RecurringPaymentPage />}
+                />
+                <Route path="/post">
+                  <Route path="create" element={<PostCreate />} />
+                  <Route path=":postId/edit" element={<PostEdit />} />
+                </Route>
+>>>>>>> deafd0cda95852672d70f77b44d2c185811b4542
               <Route path="/settings" element={<Settings />}>
                 <Route index element={<AccountPreferences />} />
                 <Route
@@ -118,7 +171,10 @@ function App() {
                   path="sign-in-security/account-access/change-password"
                   element={<ChangePassword />}
                 />
+<<<<<<< HEAD
 
+=======
+>>>>>>> deafd0cda95852672d70f77b44d2c185811b4542
                 <Route path="visibility" element={<Visibility />} />
                 <Route path="data-privacy" element={<DataAndPrivacy />} />
                 <Route
@@ -127,7 +183,10 @@ function App() {
                 ></Route>
                 <Route path="notifications" element={<Notifications />} />
               </Route>
+<<<<<<< HEAD
 
+=======
+>>>>>>> deafd0cda95852672d70f77b44d2c185811b4542
               <Route path="/update-email" element={<UpdateEmail />} />
               <Route path="/update-username" element={<UpdateUsername />} />
               <Route path="/profile/:userId">
