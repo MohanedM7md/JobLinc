@@ -22,7 +22,7 @@ function FloatingChatSystem() {
     };
   }, []);
   return (
-    <div className="flex flex-row-reverse items-end fixed bottom-0 right-0 z-10">
+    <div className="flex flex-row-reverse items-end fixed bottom-0 left-0 z-10">
       {isConnected && <FloatingChatSidebar />}
       {opnedChats.map((opnedChat, index) => {
         const { chatId, usersId, chatName, chatImage } = opnedChat;

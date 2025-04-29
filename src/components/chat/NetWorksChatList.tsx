@@ -34,13 +34,10 @@ const NetWorksChatList = ({
     fetchData();
   }, [user]);
 
-  // Apply filter whenever filter string changes or when allUsers changes
   useEffect(() => {
     if (filter.trim() === "") {
-      // If filter is empty, show all users
       setFilteredUsers(allUsers);
     } else {
-      // Filter users based on the search term (case-insensitive)
       const lowerCaseFilter = filter.toLowerCase();
       const filtered = allUsers.filter((user) =>
         user.chatName.toLowerCase().includes(lowerCaseFilter),

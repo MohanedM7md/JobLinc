@@ -57,15 +57,18 @@ export const sendMessage = (
 export const typing = (chatId: string) => {
   if (!ChatSocket) return;
   ChatSocket.emit("messageTyping", chatId);
+  console.log("📖 I am Typing in chat:", chatId);
 };
 export const stopTyping = (chatId: string) => {
   if (!ChatSocket) return;
   ChatSocket.emit("stopTyping", chatId);
+  console.log("📖 I stopped Typing ");
 };
 export const unsubscribeFromMessages = (chatId: string) => {
   if (!ChatSocket) return;
   ChatSocket.off("receiveMessage");
   ChatSocket.off("messageRead");
+  ChatSocket.off("error");
   ChatSocket.emit("leaveChat", chatId);
 };
 

@@ -29,7 +29,7 @@ function ChatMessages({
           return (
             <MessageBubble
               users={users}
-              key={index % 7}
+              key={index}
               message={{ sender, ...message }}
             />
           );

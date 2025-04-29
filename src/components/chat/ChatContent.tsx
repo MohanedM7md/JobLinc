@@ -17,6 +17,7 @@ import useChatid from "@context/ChatIdProvider";
 import useNetworkUserId from "@context/NetworkUserIdProvider";
 import UserTypingIndicator from "./UserTyping";
 import GroupChatSetting from "./GroupSetting/GroupChatSetting";
+import SeenBy from "./SeenBy";
 function ChatContent({ className }: { className?: string }) {
   const [users, setUsers] = useState<User[]>([]);
   const [messages, setMessages] = useState<RecievedMessage[]>([]);
@@ -103,6 +104,7 @@ function ChatContent({ className }: { className?: string }) {
       messageId,
       senderId: userIdRef.current,
       time: new Date(),
+      seenBy: [],
       status: "sent",
       content: {},
     };
@@ -112,13 +114,13 @@ function ChatContent({ className }: { className?: string }) {
         newMessage.content.text = message;
         break;
       case "image":
-        newMessage.content.image = message; // This will now be the URL string
+        newMessage.content.image = message;
         break;
       case "video":
-        newMessage.content.video = message; // This will now be the URL string
+        newMessage.content.video = message;
         break;
       case "document":
-        newMessage.content.document = message; // This will now be the URL string
+        newMessage.content.document = message;
         break;
       default:
         console.warn("Unknown message type:", type);

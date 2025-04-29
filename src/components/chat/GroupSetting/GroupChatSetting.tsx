@@ -5,11 +5,13 @@ import {
   IoTrash,
   IoPersonAdd,
   IoPeople,
-  IoEllipsisHorizontal,
+  IoClose,
+  IoInformationCircle,
 } from "react-icons/io5";
 import { useState, useEffect, useRef, Dispatch, SetStateAction } from "react";
 import { User } from "../interfaces/User.interfaces";
 import { fetchNetWorks } from "@services/api/chatServices";
+import { motion, AnimatePresence } from "framer-motion";
 import GroupSettingsDropdown from "./GroupSettingsDropdown";
 import AddParticipantsModal from "./modals/AddParticipantsModal";
 import RemoveParticipantsModal from "./modals/RemoveParticipantsModal";
@@ -25,23 +27,26 @@ function GroupChatSetting({
   chatId: string;
 }) {
   const [showGroupOptions, setShowGroupOptions] = useState(false);
+  const [showPanel, setShowPanel] = useState(false);
   const [showAddParticipants, setShowAddParticipants] = useState(false);
   const [showRemoveParticipants, setShowRemoveParticipants] = useState(false);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
-  const [availableContacts, setAvailableContacts] = useState<User[]>([]);
   const modalRef = useRef<HTMLDivElement>(null);
-  const [showAllParticipants, setShowAllParticipants] = useState(false);
+  const gearRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
         modalRef.current &&
-        !modalRef.current.contains(event.target as Node)
+        !modalRef.current.contains(event.target as Node) &&
+        gearRef.current &&
+        !gearRef.current.contains(event.target as Node)
       ) {
         setShowAddParticipants(false);
         setShowRemoveParticipants(false);
         setShowDeleteConfirmation(false);
         setShowGroupOptions(false);
+        setShowPanel(false);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
@@ -53,12 +58,6 @@ function GroupChatSetting({
   // Fetch available contacts for adding participants
   const handleAddParticipant = async () => {
     try {
-      const contacts = await fetchNetWorks("");
-      const filteredContacts = contacts.filter(
-        (contact: User) =>
-          !users.some((user) => user.userId === contact.userId),
-      );
-      setAvailableContacts(filteredContacts);
       setShowAddParticipants(true);
       setShowGroupOptions(false);
     } catch (error) {
@@ -80,18 +79,12 @@ function GroupChatSetting({
     setShowGroupOptions(!showGroupOptions);
   };
 
-  const toggleShowAllParticipants = () => {
-    setShowAllParticipants(!showAllParticipants);
+  const togglePanel = () => {
+    setShowPanel(!showPanel);
+    if (showGroupOptions) setShowGroupOptions(false);
   };
 
-  const handleAddParticipantsConfirm = (selectedUserIds: string[]) => {
-    // Implement API call to add participants
-    const newParticipants = availableContacts.filter((contact) =>
-      selectedUserIds.includes(contact.userId),
-    );
-    setUsers((prevUsers) => [...prevUsers, ...newParticipants]);
-    setShowAddParticipants(false);
-  };
+  const handleAddParticipantsConfirm = (selectedUserIds: string[]) => {};
 
   const handleRemoveParticipantsConfirm = (selectedUserIds: string[]) => {
     const updatedUsers = users.filter(
@@ -106,126 +99,114 @@ function GroupChatSetting({
     setShowDeleteConfirmation(false);
   };
 
-  // Display avatar stack for participants
-  const renderAvatarStack = () => {
-    return (
-      <div className="flex -space-x-2 overflow-hidden ml-2">
-        {users.slice(0, 3).map((user) => (
-          <div
-            key={user.userId}
-            className="inline-block h-8 w-8 rounded-full border-2 border-white"
-          >
-            {user.profilePicture ? (
-              <img
-                className="h-full w-full rounded-full object-cover"
-                src={user.profilePicture}
-                alt={user.firstName || "User"}
-              />
-            ) : (
-              <div className="h-full w-full rounded-full bg-[var(--color-SoftRed)] flex items-center justify-center">
-                <span className="text-sm font-medium text-[var(--color-crimsonRed)]">
-                  {(user.firstName || "?").charAt(0).toUpperCase()}
-                </span>
-              </div>
-            )}
-          </div>
-        ))}
-        {users.length > 3 && (
-          <div
-            className="inline-flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-gray-100 text-xs font-medium cursor-pointer hover:bg-[var(--color-SoftRed)]"
-            onClick={toggleShowAllParticipants}
-          >
-            +{users.length - 3}
-          </div>
-        )}
-      </div>
-    );
-  };
-
   return (
     <>
-      <div className="bg-white border-b border-[var(--color-softRosewood)] p-2 shadow-sm">
-        <div className="container mx-auto flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <div className="flex items-center">
-              <div className="hidden md:block">
-                <p className="text-xs text-[var(--color-mutedSilver)]">
-                  <div className="bg-[var(--color-SoftRed)] rounded-full p-2 w-1/2">
-                    <IoPeople className="h-5 w-5 text-[var(--color-crimsonRed)]" />
-                  </div>
-                  {users.length} participants
-                </p>
-              </div>
-              {renderAvatarStack()}
-            </div>
-          </div>
+      {/* Gear Icon in Corner */}
+      <div className="relative">
+        <motion.button
+          ref={gearRef}
+          onClick={togglePanel}
+          className={`absolute right-3 top-3 p-2 rounded-full ${
+            showPanel
+              ? "bg-[var(--color-crimsonRed)] text-white"
+              : "bg-[var(--color-SoftRed)] text-[var(--color-softRosewood)]"
+          } hover:bg-[var(--color-crimsonRed)] hover:text-white transition-colors shadow-md z-10`}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+          aria-label="Group settings"
+        >
+          <IoSettingsSharp className="h-5 w-5" />
+        </motion.button>
 
-          <div className="relative" ref={modalRef}>
-            <button
-              onClick={toggleGroupOptions}
-              className="p-2 rounded-full hover:bg-[var(--color-SoftRed)] transition-colors"
-              aria-label="Group settings"
+        {/* Expandable Panel */}
+        <AnimatePresence>
+          {showPanel && (
+            <motion.div
+              ref={modalRef}
+              className="absolute right-16 top-3 bg-white rounded-lg shadow-lg w-72 z-10 overflow-hidden"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
             >
-              <IoSettingsSharp className="h-5 w-5 text-[var(--color-softRosewood)]" />
-            </button>
-
-            {showGroupOptions && (
-              <GroupSettingsDropdown
-                onAddParticipant={handleAddParticipant}
-                onRemoveParticipant={handleRemoveParticipant}
-                onDeleteChat={handleDeleteChat}
-              />
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Expandable participants list */}
-      {showAllParticipants && (
-        <div className="bg-white border-b border-[var(--color-SoftRed)] overflow-hidden transition-all duration-300 ease-in-out">
-          <div className="p-3">
-            <div className="flex justify-between items-center mb-2">
-              <h4 className="font-medium text-sm text-[var(--color-charcoalBlack)]">
-                All Participants
-              </h4>
-              <button
-                onClick={toggleShowAllParticipants}
-                className="text-[var(--color-mutedSilver)] hover:text-[var(--color-crimsonRed)] text-sm"
-              >
-                Close
-              </button>
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-              {users.map((user) => (
-                <div
-                  key={user.userId}
-                  className="flex items-center p-2 rounded-md hover:bg-[var(--color-SoftRed)]"
-                >
-                  {user.profilePicture ? (
-                    <img
-                      src={user.profilePicture}
-                      alt={user.firstName || "User"}
-                      className="h-8 w-8 rounded-full object-cover mr-2"
-                    />
-                  ) : (
-                    <div className="h-8 w-8 rounded-full bg-[var(--color-SoftRed)] flex items-center justify-center mr-2">
-                      <span className="text-sm text-[var(--color-crimsonRed)]">
-                        {(user.firstName || "?").charAt(0).toUpperCase()}
-                      </span>
-                    </div>
-                  )}
-                  <span className="text-sm truncate">{user.firstName}</span>
+              <div className="p-3 border-b border-gray-100 flex justify-between items-center">
+                <div className="flex items-center">
+                  <IoPeople className="text-[var(--color-crimsonRed)] mr-2" />
+                  <h3 className="font-medium text-sm">Group Information</h3>
                 </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
+                <button
+                  onClick={togglePanel}
+                  className="text-gray-400 hover:text-[var(--color-crimsonRed)]"
+                >
+                  <IoClose className="h-5 w-5" />
+                </button>
+              </div>
+
+              <div className="p-3">
+                <div className="mb-3">
+                  <p className="text-xs text-[var(--color-mutedSilver)] mb-1">
+                    Participants ({users.length})
+                  </p>
+                  <div className="flex flex-wrap gap-1.5 max-h-28 overflow-y-auto pr-1">
+                    {users.map((user) => (
+                      <div
+                        key={user.userId}
+                        className="flex items-center bg-[var(--color-SoftRed)] bg-opacity-10 rounded-full pl-1 pr-2 py-0.5"
+                      >
+                        {user.profilePicture ? (
+                          <img
+                            src={user.profilePicture}
+                            alt={user.firstName || "User"}
+                            className="h-5 w-5 rounded-full object-cover mr-1"
+                          />
+                        ) : (
+                          <div className="h-5 w-5 rounded-full bg-[var(--color-crimsonRed)] bg-opacity-15 flex items-center justify-center mr-1">
+                            <span className="text-xs text-[var(--color-crimsonRed)]">
+                              {(user.firstName || "?").charAt(0).toUpperCase()}
+                            </span>
+                          </div>
+                        )}
+                        <span className="text-xs font-medium text-[var(--color-charcoalBlack)]">
+                          {user.firstName}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="space-y-1.5">
+                  <button
+                    onClick={handleAddParticipant}
+                    className="w-full text-left px-3 py-2 text-sm rounded-md flex items-center hover:bg-[var(--color-SoftRed)] hover:bg-opacity-15 transition-colors"
+                  >
+                    <IoPersonAdd className="mr-2 text-[var(--color-softRosewood)]" />
+                    Add Participants
+                  </button>
+                  <button
+                    onClick={handleRemoveParticipant}
+                    className="w-full text-left px-3 py-2 text-sm rounded-md flex items-center hover:bg-[var(--color-SoftRed)] hover:bg-opacity-15 transition-colors"
+                  >
+                    <IoPersonRemove className="mr-2 text-[var(--color-softRosewood)]" />
+                    Remove Participants
+                  </button>
+                  <div className="border-t border-gray-100 my-1.5"></div>
+                  <button
+                    onClick={handleDeleteChat}
+                    className="w-full text-left px-3 py-2 text-sm rounded-md flex items-center text-[var(--color-crimsonRed)] hover:bg-[var(--color-SoftRed)] hover:bg-opacity-15 transition-colors"
+                  >
+                    <IoTrash className="mr-2" />
+                    Delete Group Chat
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
 
       {/* Modals */}
       {showAddParticipants && (
         <AddParticipantsModal
-          contacts={availableContacts}
           onCancel={() => setShowAddParticipants(false)}
           onConfirm={handleAddParticipantsConfirm}
           modalRef={modalRef}

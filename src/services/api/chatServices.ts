@@ -72,3 +72,34 @@ export const BlockMessaging = async (chatId: string) => {
   if (response.status != 200)
     throw new Error(`Response error:${response.status} failed to block use`);
 };
+
+export const getConnections = async () => {
+  const response = await api.get(`/connection/connected`);
+  if (!(response.status == 200))
+    throw new Error(
+      `error status:${response.status} Error while fetching connections`,
+    );
+  return response.data;
+};
+
+export const addParticipants = async (participants: string[]) => {
+  const response = await api.patch("/chat/addParticipants", {
+    participants: participants,
+  });
+  if (response.status != 200)
+    throw new Error(
+      `Response error: ${response.status} - Failed to remove participants`,
+    );
+  return response.data;
+};
+
+export const removeParticipants = async (participants: string[]) => {
+  const response = await api.patch("/chat/removeParticipants", {
+    participants: participants,
+  });
+  if (response.status != 200)
+    throw new Error(
+      `Response error: ${response.status} - Failed to remove participants`,
+    );
+  return response.data;
+};

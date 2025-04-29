@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, ChangeEvent } from "react";
 import { Paperclip, Image, Smile, X, Loader2 } from "lucide-react";
 import { ChatInputProps } from "./interfaces/Chat.interfaces";
 import { uploadingMedia } from "@services/api/chatServices";
+import { memo } from "react";
 
 function ChatInput({
   chatId,
@@ -11,12 +12,44 @@ function ChatInput({
 }: ChatInputProps) {
   const [message, setMessage] = useState<string>("");
   const [isFocused, setIsFocused] = useState<boolean>(false);
-  const [isTyping, setIsTyping] = useState<boolean>(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState<boolean>(false);
+  const [isTyping, setIsTyping] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // ... keep existing useEffect hooks ...
+  useEffect(() => {
+    return () => {
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
+      onTypingMessage(false);
+    };
+  }, []);
+
+  const handleMessageChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    const newMessage = e.target.value;
+    setMessage(newMessage);
+
+    // Handle typing indicator
+    if (newMessage.trim() && !isTyping) {
+      setIsTyping(true);
+      onTypingMessage(true);
+    }
+
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
+    if (!newMessage.trim()) {
+      setIsTyping(false);
+      onTypingMessage(false);
+    } else {
+      typingTimeoutRef.current = setTimeout(() => {
+        setIsTyping(false);
+        onTypingMessage(false);
+      }, 2000);
+    }
+  };
 
   const uploadMedia = async (file: File) => {
     try {
@@ -35,25 +68,28 @@ function ChatInput({
 
     try {
       let mediaUrl = null;
-      // Upload file if exists
+
       if (selectedFile) {
         mediaUrl = await uploadMedia(selectedFile);
       }
 
-      // Send text message if exists
       if (message.trim()) {
         onSendMessage(message, "text");
       }
 
-      // Send media message if exists
       if (mediaUrl) {
         const fileType = getFileType(selectedFile!);
         onSendMessage(mediaUrl, fileType);
       }
+      setIsTyping(false);
+      onTypingMessage(false);
+
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
 
       setMessage("");
       setSelectedFile(null);
-      onTypingMessage(false);
     } catch (error) {
       console.error("Error sending message:", error);
     } finally {
@@ -99,8 +135,15 @@ function ChatInput({
 
   const handleFileButtonClick = () => {
     if (fileInputRef.current) {
-      fileInputRef.current.value = ""; // Reset input to allow selecting same file again
+      fileInputRef.current.value = "";
       fileInputRef.current.click();
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
     }
   };
 
@@ -127,14 +170,15 @@ function ChatInput({
         </div>
       )}
 
-      <div className="flex flex-col  w-full gap-2">
+      <div className="flex flex-col w-full gap-2">
         <div className="flex space-x-2 items-center">
           <textarea
             name="msg"
             value={message}
-            onChange={(e) => setMessage(e.target.value)}
+            onChange={handleMessageChange}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
+            onKeyDown={handleKeyPress}
             rows={3}
             placeholder="Write a message..."
             className={`flex-1 resize-none rounded-lg px-4 py-2 bg-gray-100 overflow-visible dark:bg-gray-800 text-gray-800 dark:text-gray-200 shadow-sm focus:outline-none transition-all text-sm ${
