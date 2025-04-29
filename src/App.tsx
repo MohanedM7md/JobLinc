@@ -50,10 +50,7 @@ import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { Toaster } from "react-hot-toast";
 import SubscriptionManager from "./pages/SubscriptionManager";
-<<<<<<< HEAD
-=======
 import Member from "@pages/Company/Member";
->>>>>>> deafd0cda95852672d70f77b44d2c185811b4542
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import EmailAddress from "@pages/Settings/SignInAndSecurity/AccountAccess/EmailAddress";
 import Metrics from "./components/Company/Metrics";
