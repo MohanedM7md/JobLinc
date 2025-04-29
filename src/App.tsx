@@ -15,10 +15,7 @@ const UserProfile = lazy(() => import("./pages/UserProfile"));
 import Home from "./pages/Home";
 import MyNetwork from "./pages/MyNetwork";
 import PostContainer from "./components/Posts/PostContainer";
-<<<<<<< HEAD
-=======
 import { CreateForm } from "@pages/Company/CreateForm";
->>>>>>> deafd0cda95852672d70f77b44d2c185811b4542
 import PostCreate from "./components/Posts/PostCreate";
 import PostEdit from "./components/Posts/PostEdit";
 import ChangePassword from "./pages/ChangePassword";
