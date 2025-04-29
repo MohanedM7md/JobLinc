@@ -60,8 +60,33 @@ const jobs: Job[] = [
   },
 ];
 
-// const JobTabs = ['Saved', 'In Progress', 'Applied', 'Archived'];
-const JobTabs = ['Saved'];
+const appliedJobs: Job[] = [
+  {
+    id: 2,
+    title: "Product Manager",
+    company: "InnovateSoft",
+    location: "New York, NY",
+    posted: "4 days ago",
+    remote: '',
+    activelyRecruiting: true,
+    easyApply: true,
+    logo: '/logos/micro1.png',
+  },
+  {
+    id: 3,
+    title: "UX Designer",
+    company: "CreativeDesigns",
+    location: "Austin, TX",
+    posted: "1 week ago",
+    remote: 'remote',
+    activelyRecruiting: false,
+    easyApply: true,
+    logo: '/logos/envision.png',
+  }
+];
+
+const JobTabs = ['Saved', 'Applied'];
+
 
 
 
@@ -83,12 +108,26 @@ const SavedJobs: React.FC = () => {
             </svg>
             My items
           </h2>
+          
           <Link
             to="/saved-jobs"
-            className="flex items-center justify-between text-crimsonRed font-medium border-l-4 border-crimsonRed pl-2 py-2"
+            onClick={() => setSelectedTab('Saved')}
+            className={`flex items-center justify-between font-medium border-l-4 pl-2 py-2 mb-2 ${selectedTab === 'Saved' ? 'text-crimsonRed border-crimsonRed' : 'text-gray-600 border-transparent'
+              }`}
           >
-            My jobs <span>{jobs.length}</span>
+            My Saved jobs <span className='ml-6'>{jobs.length}</span>
           </Link>
+
+          <Link
+            to="/saved-jobs"
+            onClick={() => setSelectedTab('Applied')}
+            className={`flex items-center justify-between font-medium border-l-4 pl-2 py-2 ${selectedTab === 'Applied' ? 'text-crimsonRed border-crimsonRed' : 'text-gray-600 border-transparent'
+              }`}
+          >
+            My Applied jobs <span className='ml-6'>{appliedJobs.length}</span>
+          </Link>
+
+
         </aside>
 
 
@@ -109,7 +148,7 @@ const SavedJobs: React.FC = () => {
             </div>
 
             <ul className="space-y-7">
-              {jobs.map(job => (
+              {(selectedTab === 'Saved' ? jobs : appliedJobs).map(job => (
                 <li key={job.id} className="flex items-start justify-between">
                   <div className="flex gap-4">
                     <img src={job.logo} alt={job.company} className="h-12 w-12 rounded" />
@@ -120,8 +159,8 @@ const SavedJobs: React.FC = () => {
                       <div className="flex flex-wrap text-sm text-mutedSilver gap-2 mt-1">
                         {job.activelyRecruiting && (
                           <>
-                          <span className="text-softRosewood flex items-center"> <i className="fa-solid fa-check"></i> </span> 
-                          <span className='text-softRosewood flex items-center'>Actively recruiting</span>
+                            <span className="text-softRosewood flex items-center"> <i className="fa-solid fa-check"></i> </span>
+                            <span className='text-softRosewood flex items-center'>Actively recruiting</span>
                           </>
                         )}
                         <span>{job.posted}</span>

@@ -56,7 +56,7 @@ function App() {
   return (
     <>
       {/*<ThemeProvider> */}
-       {/* <Toaster
+      {/* <Toaster
         position="bottom-left"
         toastOptions={{
           duration: 4000,
@@ -130,6 +130,9 @@ function App() {
                   <Route path="create" element={<PostCreate />} />
                   <Route path=":postId/edit" element={<PostEdit />} />
                 </Route>
+
+                <Route path="/jobs-and-hiring" element={<Jobs_And_Hiring />} />
+                <Route path="/saved-jobs" element={<Saved_Jobs />} />
               </Route>
               <Route path="/settings" element={<Settings />}>
                 <Route index element={<AccountPreferences />} />
@@ -167,11 +170,6 @@ function App() {
                 ></Route>
                 <Route path="notifications" element={<Notifications />} />
               </Route>
-
-              <Route path="/jobs-and-hiring" element={<Jobs_And_Hiring />} />
-              <Route path="/saved-jobs" element={<Saved_Jobs />} />
-
-
 
             </Route>
 
