@@ -88,7 +88,7 @@ export default function PostUtilityButton(props: UtilityProps) {
                 <MenuItems
                   static
                   modal={false}
-                  className="absolute left-0 w-30 origin-top-left bg-white border border-gray-200 font-medium rounded-lg focus:outline-none"
+                  className="absolute left-0 w-30 origin-top-left bg-white border border-gray-200 font-medium rounded-lg focus:outline-none z-50"
                   as={motion.div}
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
