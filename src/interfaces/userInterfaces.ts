@@ -81,9 +81,13 @@ export interface NewSkill {
 }
 
 export interface FollowerData {
-  userId: string;
-  firstname: string;
-  lastname: string;
+  companyId: string;
+  companyLogo: string;
+  companyName: string;
+  firstName: string;
+  headline: string;
+  lastName: string;
   profilePicture: string;
   time: string;
+  userId: string;
 }
