@@ -42,7 +42,6 @@ const ChatCardsList = ({
   return (
     <div className={`${className} overflow-y-auto`}>
       {isLoading ? (
-        // 👇 Render 5 loading skeletons
         [...Array(5)].map((_, i) => <LoadingChatCard key={i} />)
       ) : chats && chats.length > 0 ? (
         chats.map((chatCard) => (
