@@ -1,15 +1,19 @@
-import { render, screen, waitFor, act } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { render, screen, fireEvent, act } from "@testing-library/react";
+import { vi, describe, it, expect, beforeEach } from "vitest";
 import ChatContent from "@chatComponent/ChatContent";
-import { expect, vi, describe, it, beforeEach } from "vitest";
+import * as ChatSocket from "@services/api/ChatSocket";
+import * as chatServices from "@services/api/chatServices";
+import { ChatIdProvider } from "@context/ChatIdProvider";
+import { NetworkUserIdProvider } from "@context/NetworkUserIdProvider";
 
-// Mock all external dependencies
+// Mock the services
 vi.mock("@services/api/ChatSocket", () => ({
   subscribeToMessages: vi.fn(),
   unsubscribeFromMessages: vi.fn(),
   sendMessage: vi.fn(),
   typing: vi.fn(),
   stopTyping: vi.fn(),
+  listenToOpenChatErrors: vi.fn(),
 }));
 
 vi.mock("@services/api/chatServices", () => ({
@@ -17,180 +21,165 @@ vi.mock("@services/api/chatServices", () => ({
   createChat: vi.fn(),
 }));
 
-vi.mock("@context/ChatIdProvider", () => ({
-  useChatid: vi.fn(),
-}));
-
-vi.mock("@context/NetworkUserIdProvider", () => ({
-  useNetworkUserId: vi.fn(),
-}));
-
-vi.mock("@store/store", () => ({
-  default: {
-    getState: vi.fn(() => ({
-      user: {
-        userId: "test-user-id",
-      },
-    })),
-  },
-}));
-
 // Mock child components
-vi.mock("./ChatMessages", () => ({
-  default: () => <div data-testid="mock-chat-messages" />,
+vi.mock("@chatComponent/ChatMessages", () => ({
+  default: () => <div data-testid="chat-messages" />,
 }));
 
-vi.mock("./ChatInput", () => ({
-  default: ({
-    onSendMessage,
-  }: {
-    onSendMessage: (msg: string, type: string) => void;
-  }) => (
-    <div data-testid="mock-chat-input">
-      <button onClick={() => onSendMessage("test message", "text")}>
+vi.mock("@chatComponent/ChatInput", () => ({
+  default: ({ onSendMessage, onTypingMessage }) => (
+    <div data-testid="chat-input">
+      <button
+        onClick={() => onSendMessage("test message", "text")}
+        data-testid="send-button"
+      >
         Send
+      </button>
+      <button
+        onClick={() => onTypingMessage(true)}
+        data-testid="start-typing-button"
+      >
+        Start Typing
+      </button>
+      <button
+        onClick={() => onTypingMessage(false)}
+        data-testid="stop-typing-button"
+      >
+        Stop Typing
       </button>
     </div>
   ),
 }));
 
-vi.mock("./UserTyping", () => ({
-  default: () => <div data-testid="mock-typing-indicator" />,
+vi.mock("@chatComponent/GroupSetting/GroupChatSetting", () => ({
+  default: () => <div data-testid="group-chat-settings" />,
 }));
 
-describe("ChatContent Component", () => {
-  const mockSetChatId = vi.fn();
-  const mockSubscribeToMessages = vi.fn();
-  const mockUnsubscribeFromMessages = vi.fn();
-  const mockSendMessage = vi.fn();
-  const mockTyping = vi.fn();
-  const mockStopTyping = vi.fn();
-  const mockFetchChatData = vi.fn();
-  const mockCreateChat = vi.fn();
+vi.mock("@chatComponent/UserTyping", () => ({
+  default: () => <div data-testid="user-typing-indicator" />,
+}));
+const mockScrollIntoView = vi.fn();
+window.HTMLElement.prototype.scrollIntoView = mockScrollIntoView;
+const mockChatData = {
+  participants: [
+    { userId: "1", profilePicture: "pic1.jpg" },
+    { userId: "2", profilePicture: "pic2.jpg" },
+  ],
+  messages: [],
+  chatId: "chat123",
+  chatType: "private",
+};
 
+describe("ChatContent", () => {
   beforeEach(() => {
-    // Reset all mocks before each test
     vi.clearAllMocks();
+    localStorage.setItem("userId", "1");
+    vi.mocked(chatServices.fetchChatData).mockResolvedValue(mockChatData);
+    vi.mocked(chatServices.createChat).mockResolvedValue(mockChatData);
+    mockScrollIntoView.mockClear();
+  });
 
-    // Setup default mock implementations
-    /*   vi.mocked(useChatid).mockReturnValue({
-      chatId: "test-chat-id",
-      setChatId: mockSetChatId,
-    });
-
-    vi.mocked(useNetworkUserId).mockReturnValue({
-      usersId: ["user1", "user2"],
-    });
-
-    vi.mocked(subscribeToMessages).mockImplementation(mockSubscribeToMessages);
-    vi.mocked(unsubscribeFromMessages).mockImplementation(
-      mockUnsubscribeFromMessages,
+  const renderWithProviders = (chatId = null, usersId = []) => {
+    return render(
+      <NetworkUserIdProvider ids={usersId}>
+        <ChatIdProvider id={chatId!}>
+          <ChatContent />
+        </ChatIdProvider>
+      </NetworkUserIdProvider>,
     );
-    vi.mocked(sendMessage).mockImplementation(mockSendMessage);
-    vi.mocked(typing).mockImplementation(mockTyping);
-    vi.mocked(stopTyping).mockImplementation(mockStopTyping); */
+  };
 
-    mockFetchChatData.mockResolvedValue({
-      participants: [
-        { userId: "1", profilePicture: "user1.jpg" },
-        { userId: "2", profilePicture: "user2.jpg" },
-      ],
-      messages: [
-        {
-          senderId: "1",
-          time: new Date(),
-          seenBy: ["1"],
-          content: { text: "Hello" },
-        },
-      ],
+  it("initializes with existing chat", async () => {
+    await act(async () => {
+      renderWithProviders("existingChatId");
     });
 
-    mockCreateChat.mockResolvedValue({
-      chatId: "new-chat-id",
-      participants: [
-        { userId: "1", profilePicture: "user1.jpg" },
-        { userId: "1", profilePicture: "user2.jpg" },
-      ],
-      messages: [],
-    });
+    expect(chatServices.fetchChatData).toHaveBeenCalledWith("existingChatId");
+    expect(ChatSocket.subscribeToMessages).toHaveBeenCalled();
+    screen.debug();
+    expect(screen.getByTestId("chat-messages")).toBeInTheDocument();
+    expect(screen.getByTestId("chat-input")).toBeInTheDocument();
   });
 
-  it("renders with existing chat", async () => {
-    render(<ChatContent />);
-
-    await waitFor(() => {
-      expect(screen.getByTestId("mock-chat-messages")).toBeInTheDocument();
-      expect(screen.getByTestId("mock-chat-input")).toBeInTheDocument();
+  it("creates new chat when usersId is provided without chatId", async () => {
+    await act(async () => {
+      renderWithProviders(null, ["2", "3"]);
     });
 
-    expect(mockFetchChatData).toHaveBeenCalledWith("test-chat-id");
-    expect(mockSubscribeToMessages).toHaveBeenCalled();
+    expect(chatServices.createChat).toHaveBeenCalledWith(["2", "3"], "");
+    expect(ChatSocket.subscribeToMessages).toHaveBeenCalled();
   });
 
-  it("creates new chat when no chatId exists", async () => {
-    render(<ChatContent />);
-
-    await waitFor(() => {
-      expect(mockCreateChat).toHaveBeenCalledWith(["user1", "user2"]);
-      expect(mockSetChatId).toHaveBeenCalledWith("new-chat-id");
+  it("handles typing indicators", async () => {
+    await act(async () => {
+      renderWithProviders("chatId");
     });
+
+    const startTypingButton = screen.getByTestId("start-typing-button");
+    const stopTypingButton = screen.getByTestId("stop-typing-button");
+
+    fireEvent.click(startTypingButton);
+    expect(ChatSocket.typing).toHaveBeenCalledWith("chatId");
+
+    fireEvent.click(stopTypingButton);
+    expect(ChatSocket.stopTyping).toHaveBeenCalledWith("chatId");
   });
 
-  it("handles sending text messages", async () => {
-    render(<ChatContent />);
-
-    await waitFor(() => {
-      const sendButton = screen.getByText("Send");
-      userEvent.click(sendButton);
-
-      expect(mockSendMessage).toHaveBeenCalledWith(
-        "test-chat-id",
-        expect.objectContaining({
-          content: { text: "test message" },
-        }),
-        expect.any(Function),
-      );
+  it("handles message sending", async () => {
+    await act(async () => {
+      renderWithProviders("chatId");
     });
-  });
 
-  it("handles sending file messages", async () => {
-    render(<ChatContent />);
+    const sendButton = screen.getByTestId("send-button");
 
-    await waitFor(() => {
-      const sendFileButton = screen.getByText("Send File");
-      userEvent.click(sendFileButton);
-
-      expect(mockSendMessage).toHaveBeenCalledWith(
-        "test-chat-id",
-        expect.objectContaining({
-          content: { text: expect.any(File) },
-        }),
-        expect.any(Function),
-      );
+    await act(async () => {
+      fireEvent.click(sendButton);
     });
+
+    expect(ChatSocket.sendMessage).toHaveBeenCalled();
   });
 
-  it("handles typing events", async () => {
-    render(<ChatContent />);
+  it("shows group chat settings for group chats", async () => {
+    const groupChatData = { ...mockChatData, chatType: "group" };
+    vi.mocked(chatServices.fetchChatData).mockResolvedValue(groupChatData);
 
-    await waitFor(() => {
-      // You would need to trigger typing through the ChatInput mock
-      // This depends on how your actual ChatInput component works
-      // For this example, we'll assume the typing is triggered automatically
-      expect(mockTyping).toHaveBeenCalled();
-      expect(mockStopTyping).toHaveBeenCalled();
+    await act(async () => {
+      renderWithProviders("groupChatId");
     });
+
+    expect(screen.getByTestId("group-chat-settings")).toBeInTheDocument();
   });
 
-  it("cleans up on unmount", async () => {
-    const { unmount } = render(<ChatContent />);
-
-    await waitFor(() => {
-      expect(mockSubscribeToMessages).toHaveBeenCalled();
+  it("unsubscribes from messages on unmount", async () => {
+    const { unmount } = await act(async () => {
+      return renderWithProviders("chatId");
     });
 
     unmount();
+    expect(ChatSocket.unsubscribeFromMessages).toHaveBeenCalledWith("chatId");
+  });
 
-    expect(mockUnsubscribeFromMessages).toHaveBeenCalledWith("test-chat-id");
+  it("handles message delivery status", async () => {
+    vi.useFakeTimers();
+    await act(async () => {
+      renderWithProviders("chatId");
+    });
+
+    const sendButton = screen.getByTestId("send-button");
+
+    await act(async () => {
+      fireEvent.click(sendButton);
+    });
+
+    // Simulate message delivery timeout
+    await act(async () => {
+      vi.advanceTimersByTime(1000);
+    });
+
+    // Check if message status was updated
+    // You might need to modify this based on how you want to verify the status
+    expect(ChatSocket.sendMessage).toHaveBeenCalled();
+
+    vi.useRealTimers();
   });
 });

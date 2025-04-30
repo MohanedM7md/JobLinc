@@ -10,6 +10,7 @@ import {
   sendConfirmationEmailAPI,
   confirmEmailAPI,
   updateEmailAPI,
+  loginWithGoogleAPI,
 } from "@services/api/authService";
 
 export const loginUser = createAsyncThunk(
@@ -27,6 +28,26 @@ export const loginUser = createAsyncThunk(
     }
   },
 );
+
+export const loginWithGoogle = createAsyncThunk(
+
+  "user/login-google",
+  async(
+    userCredentials: {credential: string},
+    { rejectWithValue },
+  ) => {
+    try {
+      const data = await loginWithGoogleAPI(userCredentials); 
+      return data;
+    }
+    catch (err:any)
+    {
+      console.error(err);
+      return rejectWithValue(err.response?.data || "Login with google failed");
+    }
+
+  }
+)
 
 export const registerUser = createAsyncThunk(
   "user/register",
@@ -124,7 +145,7 @@ export const updateEmail = createAsyncThunk(
   },
 );
 
-export const getUserDetails = createAsyncThunk(
+export const setUserDetails = createAsyncThunk(
   "user/getUserDetails",
   async (_, { rejectWithValue }) => {
     try {

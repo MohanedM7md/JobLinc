@@ -1,15 +1,19 @@
 import { useEffect, useRef, useState } from "react";
 import { ConnectionInterface } from "../../interfaces/networkInterfaces";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import NetworkModal from "../../components/MyNetwork/NetworkModal";
+import { changeConnectionStatus } from "@services/api/networkServices";
+import toast from "react-hot-toast";
 
-function ConnectionCard(props: ConnectionInterface & { onRemove: (id: string) => void }) {
+function  ConnectionCard(props: ConnectionInterface & { onRemove: (id: string) => void }) {
   const [showPopup, setShowPopup] = useState(false);
   const popupRef = useRef<HTMLButtonElement>(null);
+  const iconRef = useRef<HTMLButtonElement>(null);
   const divRef = useRef<HTMLDivElement>(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const navigate = useNavigate();
 
-
+  
   function getRelativeTime(connectedDate: Date): string {
     const now = new Date();
     const diffInMs = now.getTime() - connectedDate.getTime();
@@ -41,10 +45,6 @@ function ConnectionCard(props: ConnectionInterface & { onRemove: (id: string) =>
   const handleellipsisClick = () => {
     setShowPopup(!showPopup);
   };
-  const handleRemoveConnection= () => {
-    props.onRemove(props.id);
-    handleCloseModal();
-  }
   const handleOpenModal = () => {
     setShowPopup(false);
     setModalOpen(true);
@@ -52,12 +52,36 @@ function ConnectionCard(props: ConnectionInterface & { onRemove: (id: string) =>
   const handleCloseModal = () => {
     setModalOpen(false);
   }
-
-  
-
+  const handleRemoveConnection= async ()  => {
+    const removeconnectionpromise =  changeConnectionStatus(props.userId, "Canceled");
+    toast.promise (
+      removeconnectionpromise,
+      {
+        loading: "Removing Connection...",
+        success: "User removed successfully!",
+        error: "Failed to remove user. Please try again.",
+      }
+    )
+      removeconnectionpromise.then((response) => {
+        if (response?.status === 200) {
+          props.onRemove(props.userId)
+          console.log("Remove Connection Response:", response);
+        } else {
+          console.error("Failed to Remove user:", response);
+        }
+      }).catch((error) => {
+        console.error("Error Removing user:", error);
+      });
+      
+    props.onRemove(props.userId);
+    handleCloseModal();
+  };
+  const handleUserClick= () => {  
+    navigate(`/profile/${props.userId}`);
+  }
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
-      if (popupRef.current && (!popupRef.current.contains(event.target as Node))) {
+      if (popupRef.current && (!popupRef.current.contains(event.target as Node)) && iconRef.current && !iconRef.current.contains(event.target as Node)) {
         setShowPopup(false);
       }
     };
@@ -69,36 +93,40 @@ function ConnectionCard(props: ConnectionInterface & { onRemove: (id: string) =>
     };
   }, []);
 
-  const { profileImage, firstName, lastName, userBio, connectedDate} = props;
+  const { profilePicture: profileImage, firstName: firstName, lastName, headline: userBio, connectedDate} = props;
 
   return (
-    <div className="flex items-center border-b border-gray-300 w-full p-3">
+    <div 
+    data-testid="connection-card"
+    className="flex items-center border-b border-gray-300 w-full p-3">
       <img
         src={profileImage}
         alt="Profile Picture"
         className="w-15 h-15 rounded-full object-cover cursor-pointer"
+        onClick={handleUserClick}
       />
-      <div className="ml-4 flex-grow">
-        <h3 className="font-semibold cursor-pointer hover:underline">
+      <div className="ml-4 flex-grow mr-7">
+        <h3 role="heading" className="font-semibold cursor-pointer hover:underline" onClick={handleUserClick}>
           {firstName} {lastName}
         </h3>
-        <p className="text-gray-500 cursor-pointer">{userBio}</p>
-        <p className="text-xs text-gray-500">{getRelativeTime(connectedDate)}</p>
+        <p className="text-gray-500 cursor-pointer text-base line-clamp-2" onClick={handleUserClick}>{userBio}</p>
+        <p className="text-xs text-gray-500">{connectedDate ? getRelativeTime(connectedDate) : "connected date unavailable"}</p>
       </div>
       <div className="w-1/3 flex justify-end items-center">
-        <Link to="/messaging">
+        <Link data-testid="message-button-route" to="/messaging">
           <button
-            id="msgbuttonid"
-            className="border-2 px-5 py-0.5 text-crimsonRed border-crimsonRed rounded-full font-semibold hover:bg-lightGray hover:outline-1 cursor-pointer"
+            data-testid="message-button"
+            className="border-2 px-5 py-0.5 text-crimsonRed border-crimsonRed rounded-full font-semibold hover:bg-lightGray hover:outline-1 cursor-pointer "
           >
             Message
           </button>
         </Link>
         <div>
           <i
-            data-testid="ellipsisbuttonid"
+            data-testid="ellipsis-button"
             className="fa-solid fa-ellipsis mx-3 rounded-full hover:bg-gray-200 p-2 cursor-pointer relative"
             onClick={handleellipsisClick}
+            ref={iconRef}
           ></i>
           {showPopup ? (
             <div
@@ -106,6 +134,7 @@ function ConnectionCard(props: ConnectionInterface & { onRemove: (id: string) =>
               ref = {divRef}
             >
               <button
+                data-testid="remove-connection-button"
                 className="cursor-pointer flex items-center text-darkGray font-semibold hover:bg-lightGray p-1 rounded-md m-1 mx-2"
                 onClick={handleOpenModal} ref={popupRef}
               >
@@ -124,11 +153,15 @@ function ConnectionCard(props: ConnectionInterface & { onRemove: (id: string) =>
                 <p className="font-normal">Are you sure you want to remove your connection with <span className="font-bold">{firstName} {lastName}</span>?</p>
               </div>
               <div className="flex items-center justify-end space-x-4 pt-3">
-                <button className="cursor-pointer border-2 px-5 py-0.5 rounded-full font-semibold hover:bg-lightGray hover:outline-1 text-crimsonRed border-crimsonRed"
+                <button 
+                data-testid="confirm-remove-connection-button"
+                className="cursor-pointer border-2 px-5 py-0.5 rounded-full font-semibold hover:bg-lightGray hover:outline-1 text-crimsonRed border-crimsonRed"
                  onClick={handleRemoveConnection}>
                   Remove
                 </button>
-                <button className="cursor-pointer border-2 px-5 py-0.5 rounded-full font-semibold hover:bg-lightGray hover:outline-1 text-darkGray border-darkGray" onClick={handleCloseModal}>
+                <button 
+                data-testid="cancel-remove-connection-button"
+                className="cursor-pointer border-2 px-5 py-0.5 rounded-full font-semibold hover:bg-lightGray hover:outline-1 text-darkGray border-darkGray" onClick={handleCloseModal}>
                   cancel
                 </button>
               </div>

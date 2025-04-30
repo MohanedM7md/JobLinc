@@ -6,10 +6,11 @@ import {
   resetPassword,
   confirmOTP,
   changePassword,
-  getUserDetails,
+  setUserDetails,
   sendConfirmationEmail,
   confirmEmail,
   updateEmail,
+  loginWithGoogle,
 } from "./userThunks";
 import { loadState, saveState } from "./userUtils";
 import { UserState } from "./user.interface";
@@ -24,12 +25,16 @@ const userSlice = createSlice({
     },
     logOut: (state) => {
       state.userId = null;
+      state.firstname = null;
+      state.lastname = null;
+      state.email = null;
+      state.profilePicture = null;
       state.role = null;
       state.confirmed = null;
       state.status = "IDLE";
       state.loggedIn = false;
       state.accessToken = null;
-      localStorage.removeItem("userState");
+      localStorage.removeItem("userId");
       localStorage.removeItem("refreshToken");
     },
   },
@@ -44,19 +49,45 @@ const userSlice = createSlice({
 
         if (userData) {
           console.log("Login Response Payload:", userData);
-          state.userId = userData.userID || null;
+          state.userId = userData.userId || null;
           state.role = userData.role || null;
           state.accessToken = userData.accessToken || null;
           state.confirmed = userData.confirmed || null;
+          state.email = userData.email || null;
           state.status = "SUCCESS";
           state.loggedIn = true;
           localStorage.setItem("refreshToken", userData.refreshToken);
-          saveState(userData);
+          localStorage.setItem("userId", userData.userId);
         } else {
           console.error("User data missing in API response:", action.payload);
         }
       })
       .addCase(loginUser.rejected, (state) => {
+        state.status = "FAILED";
+      })
+      // login with google
+      .addCase(loginWithGoogle.pending, (state) => {
+        state.status = "LOADING";
+      })
+      .addCase(loginWithGoogle.fulfilled, (state, action: PayloadAction<any>) => {
+        const userData = action.payload; // Extract user object from response
+
+        if (userData) {
+          console.log("Login Response Payload:", userData);
+          state.userId = userData.userId || null;
+          state.role = userData.role || null;
+          state.accessToken = userData.accessToken || null;
+          state.confirmed = userData.confirmed || null;
+          state.email = userData.email || null;
+          state.status = "SUCCESS";
+          state.loggedIn = true;
+          localStorage.setItem("refreshToken", userData.refreshToken);
+          localStorage.setItem("userId", userData.userId);
+        } else {
+          console.error("User data missing in API response:", action.payload);
+        }
+      })
+      .addCase(loginWithGoogle.rejected, (state) => {
         state.status = "FAILED";
       })
       // register user
@@ -71,10 +102,11 @@ const userSlice = createSlice({
           state.role = userData.role || null;
           state.accessToken = userData.accessToken || null;
           state.confirmed = userData.confirmed || false;
+          state.email = userData.email || null;
           state.status = "SUCCESS";
           state.loggedIn = true;
           localStorage.setItem("refreshToken", userData.refreshToken);
-          saveState(userData);
+          localStorage.setItem("userId", userData.userId);
         }
       })
       .addCase(registerUser.rejected, (state) => {
@@ -125,7 +157,7 @@ const userSlice = createSlice({
           state.accessToken = userData.accessToken || null;
           state.status = "SUCCESS";
           localStorage.setItem("refreshToken", userData.refreshToken);
-          saveState(userData);
+          localStorage.setItem("userId", userData.userId);
         }
       })
       .addCase(resetPassword.rejected, (state) => {
@@ -164,30 +196,33 @@ const userSlice = createSlice({
         state.status = "FAILED";
       })
       // Get User Details
-      .addCase(getUserDetails.pending, (state) => {
+      .addCase(setUserDetails.pending, (state) => {
         state.status = "LOADING";
       })
       .addCase(
-        getUserDetails.fulfilled,
+        setUserDetails.fulfilled,
         (state, action: PayloadAction<any>) => {
           const userData = action.payload;
           console.log("set in storage");
 
           if (userData) {
-            console.log("get user details Payload:", userData);
-
-            state.userId = userData.userId || null;
+            state.userId = userData.userId;
+            state.email = userData.email;
             state.loggedIn = true;
-            localStorage.setItem("profilePicture", userData.profilePicture);
-            localStorage.setItem("coverPicture", userData.coverPicture);
-
+            state.email = userData.email;
+            state.userId = userData.userId || null;
+            state.firstname = userData.firstname || null;
+            state.lastname = userData.lastname || null;
+            state.profilePicture = userData.profilePicture || null;
+            state.role = userData.role || null;
+            state.confirmed = userData.confirmed || null;
             state.status = "SUCCESS";
           } else {
             console.error("User data missing in API response:", action.payload);
           }
         },
       )
-      .addCase(getUserDetails.rejected, (state) => {
+      .addCase(setUserDetails.rejected, (state) => {
         state.status = "FAILED";
       })
       // Send Confirmation Email
@@ -201,6 +236,7 @@ const userSlice = createSlice({
 
           if (userData) {
             state.status = "SUCCESS";
+            // localStorage.setItem("tokenForOTP", userData.token);
           } else {
             console.error("User data missing in API response:", action.payload);
           }
@@ -218,12 +254,12 @@ const userSlice = createSlice({
         console.log("Redux Payload: " + JSON.stringify(action.payload));
         if (userData) {
           state.status = "SUCCESS";
-          state.userId = userData.userID;
+          state.userId = userData.userId;
           state.role = userData.role;
           state.accessToken = userData.accessToken;
           state.confirmed = userData.confirmed;
           localStorage.setItem("refreshToken", userData.refreshToken);
-          saveState(userData);
+          localStorage.setItem("userId", userData.userId);
         } else {
           console.error("User data missing in API response:", action.payload);
         }

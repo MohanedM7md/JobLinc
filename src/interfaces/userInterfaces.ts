@@ -25,9 +25,7 @@ export interface ProfileUpdateInterface {
   headline: string;
   country: string;
   city: string;
-  phoneNumber:string;
-  profilePicture: string;
-  biography: string;
+  phoneNumber?:string;
 }
 
 export interface EducationInterface {
@@ -80,4 +78,12 @@ export interface SkillInterface {
 export interface NewSkill {
   name: string;
   level: number;
+}
+
+export interface FollowerData {
+  userId: string;
+  firstname: string;
+  lastname: string;
+  profilePicture: string;
+  time: string;
 }

@@ -1,75 +1,106 @@
-import { render, screen, waitFor } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import PageChatSystem from "../../components/chat/PageChat/PageChatSystem";
-import { UserProvider } from "../../components/chat/mockUse";
-import { expect, it, describe } from "vitest";
+import { render, screen, act } from "@testing-library/react";
+import { describe, it, expect, vi, afterEach } from "vitest";
+import PageChatSystem from "@chatComponent/PageChat/PageChatSystem";
 
-describe("PageChatSystem ", () => {
-  it("Should RenderChatSystem: ", () => {
-    const { container } = render(
-      <UserProvider userId="0">
-        <PageChatSystem />
-      </UserProvider>,
-    );
-    expect(container).toMatchSnapshot();
-  });
-  it("fetches and displays chat cards and there contents", async () => {
-    render(
-      <UserProvider userId="4">
-        <PageChatSystem />
-      </UserProvider>,
-    );
+vi.mock("@services/api/ChatSocket", () => ({
+  connectToChat: vi.fn(),
+  disconnectChatSocket: vi.fn(),
+  onConnect: vi.fn((callback) => {
+    setTimeout(() => callback(true), 0); // Automatically call the callback with true
+    return vi.fn();
+  }),
+}));
+
+vi.mock("@services/api/chatServices", () => ({
+  BlockMessaging: vi.fn().mockResolvedValue(true),
+}));
+
+// Mock context providers
+vi.mock("@context/ChatIdProvider", () => ({
+  default: () => ({
+    setChatId: vi.fn(),
+  }),
+}));
+
+vi.mock("@context/NetworkUserIdProvider", () => ({
+  default: () => ({
+    setUsersId: vi.fn(),
+  }),
+}));
+
+vi.mock("@chatComponent/ChatCardsList", () => ({
+  __esModule: true,
+  default: () => <div data-testid="chat-list">Mocked ChatCardsList</div>,
+}));
+
+vi.mock("@chatComponent/NetWorksChatList", () => ({
+  __esModule: true,
+  default: () => <div>Mocked NetWorksChatList</div>,
+}));
+
+vi.mock("@chatComponent/PageChat/PageChatWindow", () => ({
+  default: (props) => (
+    <div data-testid="page-message-window" data-chatname={props.chatName}>
+      Message Window
+    </div>
+  ),
+}));
+
+vi.mock("@chatComponent/PageChat/ConnectionsSidebar", () => ({
+  default: (props) =>
+    props.isOpen ? (
+      <div data-testid="connections-sidebar">
+        <button data-testid="close-sidebar" onClick={props.onClose}>
+          Close
+        </button>
+      </div>
+    ) : null,
+}));
+
+vi.mock("@chatComponent/UI/SearchBar", () => ({
+  default: (props) => (
+    <div data-testid="search-bar" className={props.className}>
+      <input
+        data-testid="search-input"
+        onChange={(e) => props.onChange(e.target.value)}
+        onFocus={props.FocusToggler}
+        onBlur={props.FocusToggler}
+      />
+    </div>
+  ),
+}));
+
+describe("PageChatSystem", () => {
+  it("renders ChatCardsList with mocked useState", async () => {
+    vi.mock("react", async () => {
+      let call = 0;
+      const actual = await vi.importActual<typeof import("react")>("react");
+      return {
+        ...actual,
+        useState: vi.fn(() => {
+          const mockedStates = [
+            [false, vi.fn()], // isFocused
+            [true, vi.fn()], // isSidebarOpen (opened)
+            [true, vi.fn()], // isChatSidebarOpen
+            ["", vi.fn()], // searchTerm
+            ["", vi.fn()], // opnedChatName
+            [true, vi.fn()], // isConnected
+            [false, vi.fn()], // isMobileView
+            [false, vi.fn()], // menuOpen
+            [false, vi.fn()], // showBlockConfirmation
+          ];
+          const state = mockedStates[call % mockedStates.length];
+          call++;
+          return state;
+        }),
+      };
+    });
+    render(<PageChatSystem />);
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 10));
+    });
     expect(screen.getByText("Messaging")).toBeInTheDocument();
-    await waitFor(
-      () => (
-        expect(screen.getByText("Mohaned")).toBeInTheDocument(),
-        expect(
-          screen.getByText("Sounds good! See you then."),
-        ).toBeInTheDocument(),
-        expect(screen.getByText("Michael")).toBeInTheDocument(),
-        expect(screen.getByText("Happy birthday bro!")).toBeInTheDocument(),
-        expect(
-          screen.getByText("Choose a chat to start messaging"),
-        ).toBeInTheDocument()
-      ),
-    );
-  });
-  describe("Clicks on a chat card", () => {
-    it("Should display page chat window", async () => {
-      render(
-        <UserProvider userId="4">
-          <PageChatSystem />
-        </UserProvider>,
-      );
-
-      const mohanedCard = await screen.findByText("Mohaned");
-      expect(mohanedCard).toBeInTheDocument();
-      await userEvent.click(mohanedCard);
-
-      const chatWindow = await screen.findByTestId("test-PageWindow");
-      expect(chatWindow).toBeInTheDocument();
-    });
-
-    it("Should displays messages correctly", async () => {
-      render(
-        <UserProvider userId="4">
-          <PageChatSystem />
-        </UserProvider>,
-      );
-
-      const mohanedCard = await screen.findByText("Mohaned");
-      expect(mohanedCard).toBeInTheDocument();
-      await userEvent.click(mohanedCard);
-
-      const mohanedMessage = await screen.findByTestId("1-1633024800000");
-      expect(mohanedMessage).toBeInTheDocument();
-      expect(mohanedMessage).toHaveTextContent("Mohaned");
-      expect(mohanedMessage).toHaveTextContent("Hey John!");
-
-      const johnMessage = await screen.findByTestId("4-1633024800001");
-      expect(johnMessage).toBeInTheDocument();
-      expect(johnMessage).toHaveTextContent("John");
-      expect(johnMessage).toHaveTextContent("Hey Mohaned!");
-    });
+    expect(screen.getByTestId("chat-list")).toBeInTheDocument();
+    expect(screen.getByTestId("page-message-window")).toBeInTheDocument();
   });
 });

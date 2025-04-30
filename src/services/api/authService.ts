@@ -12,6 +12,17 @@ export const loginUserAPI = async (userData: {
   }
 };
 
+export const loginWithGoogleAPI = async(userCredentials: {credential: string}) => {
+  try {
+    const response = await api.post("auth/google-login", userCredentials);
+    return response.data;
+  }
+  catch(err)
+  {
+    console.error(err);
+  }
+}
+
 export const registerUserAPI = async (userData: {
   firstname: string;
   lastname: string;
@@ -75,6 +86,7 @@ export const updateUsernameAPI = async (userData: {
 
 export const getUserDetailsAPI = async () => {
   const response = await api.get("user/me");
+  console.log("response of user Details yarb: ", response.data);
   return response.data;
 };
 

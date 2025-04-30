@@ -1,4 +1,4 @@
-import Modal from "../Authentication/Modal";
+import Modal from "./Modal";
 
 interface Action {
   action: () => void;
@@ -11,9 +11,9 @@ export default function ConfirmAction(props: Action) {
       <div className="bg-lightGray p-4 rounded-lg text-charcoalBlack">
         <h1 className="font-medium text-2xl">Are you sure?</h1>
         <span className="text-mutedSilver">This action can't be reversed</span>
-        <div className="flex justify-between mt-4"> 
+        <div className="flex justify-between mt-4">
           <button
-            className="bg-crimsonRed text-white px-4 py-2 rounded-lg hover:bg-red-600"
+            className="bg-crimsonRed text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-400 ease-in-out"
             onClick={() => {
               props.action();
               props.onClose();

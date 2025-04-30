@@ -1,7 +1,5 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen} from '@testing-library/react';
 import '@testing-library/jest-dom';
-import userEvent from '@testing-library/user-event';
-import { vi } from 'vitest';
 import Logo from '../../components/NavigationBar/Logo';
 
 describe('Logo Component', () => {

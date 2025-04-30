@@ -36,9 +36,6 @@ function FloatingChatHeader({
       </div>
 
       <div className="flex items-center space-x-2">
-        <button className="text-mutedSilver hover:text-darkBurgundy dark:hover:text-charcoalWhite">
-          <MoreHorizontal size={20} />
-        </button>
         <button
           data-testid="close-button"
           onClick={onClose}
