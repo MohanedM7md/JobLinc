@@ -79,3 +79,15 @@ export interface NewSkill {
   name: string;
   level: number;
 }
+
+export interface FollowerData {
+  companyId: string;
+  companyLogo: string;
+  companyName: string;
+  firstName: string;
+  headline: string;
+  lastName: string;
+  profilePicture: string;
+  time: string;
+  userId: string;
+}

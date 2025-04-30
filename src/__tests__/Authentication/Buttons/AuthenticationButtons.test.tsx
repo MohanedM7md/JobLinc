@@ -2,11 +2,20 @@ import { AuthenticationAppleButton, AuthenticationGoogleButton, AuthenticationMi
 import { render, screen } from "@testing-library/react";
 import {describe, it, expect} from "vitest";
 import "@testing-library/jest-dom/vitest";
+import { MemoryRouter } from "react-router-dom";
+import { Provider } from "react-redux";
+import store from "@store/store";
 
 describe("Authentication Buttons", () => {
     it("renders AuthenticationGoogleButton", () => {
-        render(<AuthenticationGoogleButton />);
-        expect(screen.getByText("Continue with Google")).toBeInTheDocument();
+        render(
+            <MemoryRouter>
+                <Provider store={store}>
+                    <AuthenticationGoogleButton />
+                </Provider>
+            </MemoryRouter>
+        );
+        expect(screen.getByTestId("auth-with-google")).toBeInTheDocument();
     });
     
     it("renders AuthenticationAppleButton", () => {

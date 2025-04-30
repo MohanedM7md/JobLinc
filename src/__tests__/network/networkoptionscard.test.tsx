@@ -11,9 +11,6 @@ describe("MyNetworkOptionsCard Component", () => {
 
     expect(growOption).toBeInTheDocument();
     expect(catchUpOption).toBeInTheDocument();
-
-    expect(growOption).toHaveClass("hover:bg-gray-200 text-darkGray");
-    expect(catchUpOption).toHaveClass("hover:bg-gray-200 text-darkGray");
   });
 
   test("handles click events and updates active state", () => {

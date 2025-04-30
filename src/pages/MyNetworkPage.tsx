@@ -10,7 +10,7 @@ function MyNetwork() {
       <ConnectCard
         profilePicture="src\assets\Tyrone.jpg"
         userName="Tyrone"
-        userBio="Barber"
+        headline="Barber"
       ></ConnectCard>
       <ManageNetworkCard></ManageNetworkCard>
     </>
