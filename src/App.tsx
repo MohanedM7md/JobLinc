@@ -135,7 +135,6 @@ function App() {
                   element={<RecurringPaymentPage />}
                 />
                 <Route path="/post">
-                  <Route path="create" element={<PostCreate />} />
                   <Route path=":postId/edit" element={<PostEdit />} />
                 </Route>
               </Route>
