@@ -54,6 +54,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import EmailAddress from "@pages/Settings/SignInAndSecurity/AccountAccess/EmailAddress";
 import Metrics from "./components/Company/Metrics";
 import DemographicInfo from "@pages/Settings/AccountPreferences/ProfileInformation/DemographicInfo";
+import AllCompanies from "@pages/Company/AllCompanies";
 
 const queryClient = new QueryClient();
 
@@ -211,6 +212,7 @@ function App() {
               <Route path="my-companies" element={<MyCompanies />} />
               <Route path={`admin/:companyId`} element={<Admin />} />
               <Route path={`member/:slug`} element={<Member />} />
+              <Route path="all" element={<AllCompanies />} />
             </Route>
           </Route>
 

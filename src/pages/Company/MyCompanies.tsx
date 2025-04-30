@@ -1,9 +1,8 @@
-import { getMyCompanies, getMyCompany } from "@services/api/companyServices";
+import { getMyCompany } from "@services/api/companyServices";
 import { useEffect, useState } from "react";
 import { Company } from "@store/comapny/interfaces";
 import { useNavigate } from "react-router-dom";
 import { useCompanyStore } from "@store/comapny/companyStore";
-import { FaCommentsDollar } from "react-icons/fa";
 
 function MyCompanies() {
   const [companies, setCompanies] = useState<Company[]>([]);
@@ -14,7 +13,7 @@ function MyCompanies() {
   useEffect(() => {
     const fetchCompanies = async () => {
       try {
-        const response = await getMyCompanies();
+        const response = await getMyCompany();
         
         setCompanies(response.data);
       } catch (error) {
