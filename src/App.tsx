@@ -45,8 +45,8 @@ import ThankYouPage from "./pages/ThankYouPage";
 import SubscriptionLandingPage from "./pages/SubscriptionLandingPage";
 import SubscriptionManagePage from "./pages/SubscriptionManagePage";
 import RecurringPaymentPage from "./pages/RecurringPaymentPage";
-import { Elements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
+// import { Elements } from "@stripe/react-stripe-js";
+// import { loadStripe } from "@stripe/stripe-js";
 import { Toaster } from "react-hot-toast";
 import SubscriptionManager from "./pages/SubscriptionManager";
 import Member from "@pages/Company/Member";
@@ -58,7 +58,7 @@ import AllCompanies from "@pages/Company/AllCompanies";
 
 const queryClient = new QueryClient();
 
-const stripePromise = loadStripe("pk_test_...");
+// const stripePromise = loadStripe("pk_test_...");
 
 function App() {
   return (
@@ -75,7 +75,7 @@ function App() {
         }}
       />
       <QueryClientProvider client={queryClient}>
-        <Elements stripe={stripePromise}>
+        {/* <Elements stripe={stripePromise}> */}
           <Routes>
             <Route element={<AuthRoute />}>
               <Route path="/" element={<LandPage />} />
@@ -211,14 +211,15 @@ function App() {
               <Route path="setup/new" element={<CreateForm />} />
               <Route path="my-companies" element={<MyCompanies />} />
               <Route path={`admin/:companyId`} element={<Admin />} />
-              <Route path={`member/:slug`} element={<Member />} />
+              <Route path={`member-view/:slug`} element={<Member isAdmin={true}/>} />
+              <Route path={`member/:slug`} element={<Member isAdmin={false}/>} />
               <Route path="all" element={<AllCompanies />} />
             </Route>
           </Route>
 
             <Route path="*" element={<Error404 />} />
           </Routes>
-        </Elements>
+        {/* </Elements> */}
       </QueryClientProvider>
       {/*</ThemeProvider>*/}
     </>

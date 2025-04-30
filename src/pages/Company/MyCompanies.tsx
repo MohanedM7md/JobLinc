@@ -1,4 +1,4 @@
-import { getMyCompany } from "@services/api/companyServices";
+import { getMyCompanies, getMyCompany } from "@services/api/companyServices";
 import { useEffect, useState } from "react";
 import { Company } from "@store/comapny/interfaces";
 import { useNavigate } from "react-router-dom";
@@ -13,7 +13,7 @@ function MyCompanies() {
   useEffect(() => {
     const fetchCompanies = async () => {
       try {
-        const response = await getMyCompany();
+        const response = await getMyCompanies();
         
         setCompanies(response.data);
       } catch (error) {

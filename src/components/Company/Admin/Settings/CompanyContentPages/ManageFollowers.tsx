@@ -18,6 +18,7 @@ function ManageFollowers()
             try {
                 // Get Company Followers on Component's mount
                 await fetchCompanyFollowers();
+                
             } catch (err: any) {
                 if (err.response?.status === 401) {
                 setErrPage("Unauthorized");

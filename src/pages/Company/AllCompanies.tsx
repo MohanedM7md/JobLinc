@@ -4,10 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { getMyCompanies } from "@services/api/companyServices";
 
 
-
-
-
-
 function AllCompanies()
 {
     const [loading, setLoading] = useState(true);
@@ -18,7 +14,6 @@ function AllCompanies()
             try {
             const response = await getMyCompanies();
             setCompanies(response.data);
-            console.log("companies received: ", response.data)
             } catch (error) {
             console.error("Failed to fetch companies:", error);
             } finally {

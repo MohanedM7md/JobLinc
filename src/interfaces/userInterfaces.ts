@@ -85,5 +85,6 @@ export interface FollowerData {
   firstname: string;
   lastname: string;
   profilePicture: string;
+  headline: string;
   time: string;
 }

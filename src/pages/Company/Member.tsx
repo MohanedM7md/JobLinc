@@ -1,23 +1,20 @@
 import { useEffect, useState } from "react";
 import { useCompanyStore } from "@store/comapny/companyStore";
 import { useNavigate, useParams } from "react-router-dom";
-import { getCompanyBySlug, getMyCompany } from "@services/api/companyServices";
 import LoadingScreen from "@pages/LoadingScreen";
 import NavBar from "../../components/NavigationBar/NavBar";
 import Overview from "./Cards/Overview";
 import Posts from "./Cards/Posts";
 import Jobs from "./Cards/Jobs";
 import { Plus } from "lucide-react";
-import { MessageCircle } from "lucide-react";
-import { EllipsisVertical } from "lucide-react";
 import CompanyFooter from "./Cards/CompanyFooter";
-import { Company } from "@store/comapny/interfaces";
 
+interface MemberProps {
+  isAdmin: boolean;
+}
 
-function Member() {
+function Member(props: MemberProps) {
   const { company, loading, error, fetchCompany, resetCompany } = useCompanyStore();
-  const [userCompanies, setUserCompanies] = useState<Company[]>([]);
-  const [isTheUserAdmin, setIsTheUserAdmin] = useState(false);
   const { slug } = useParams<string>();
   const navigate = useNavigate();
 
@@ -26,16 +23,7 @@ function Member() {
     if (slug) {
       (async () => {
         try {
-          const response = await getMyCompany();
-          setUserCompanies(response.data);
           await fetchCompany(slug);
-          for (let i =0; i < userCompanies.length; i++)
-          {
-            if (company?.id  === userCompanies.at(i)?.id)
-            {
-              setIsTheUserAdmin(true);
-            }
-          }
         } catch (err: any) {
           if (err.response?.status === 401) {
             setErrPage("Unauthorized");
@@ -51,10 +39,6 @@ function Member() {
     }
   }, []);
 
-
-  useEffect(() => {
-
-  }, [])
   const [navItemSelected, setNavItemSelected] = useState<string>("Home");
 
   const navItems = [
@@ -84,7 +68,7 @@ function Member() {
       <NavBar />
 
       {/* Top Bar - Responsive Layout */}
-      {isTheUserAdmin && 
+      {props.isAdmin && 
       <div className="w-full bg-crimsonRed flex flex-col md:flex-row justify-between items-center px-4 py-3 md:px-8 md:py-4 mb-4 md:mb-8">
         <p className="text-white text-sm sm:text-base md:text-lg text-center md:text-left mb-2 md:mb-0">
           You are viewing this page as a member

@@ -62,6 +62,19 @@ export async function updateCoverPicture(file: File) {
   }
 }
 
+export async function getMyCompanies()
+{
+  try {
+    const respone = await api.get("user/companies");
+    return respone.data;
+  }
+  catch(error)
+  {
+    console.error("Error fetching user companies", error);
+    throw error;
+  }
+}
+
 export async function getExperience() {
   try {
     const response = await api.get("user/experience");
