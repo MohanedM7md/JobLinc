@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import store from "@store/store";
 import { logOut } from "@store/user/userSlice";
+import { useRef } from "react";
 
 interface User {
   id: number;
@@ -16,6 +17,7 @@ function MeCard() {
   const userId = store.getState().user.userId;
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  
 
   // const handleUserButton = async (id?: number): Promise<void> => {
   //   try {
@@ -38,7 +40,6 @@ function MeCard() {
     navigate("/");
   };
 
-  useEffect(() => {}, []);
   return (
     <div
       className={`card bg-white p-3 shadow-2xl rounded-2xl w-[270px] duration-500 transition-all ease-in-out`}

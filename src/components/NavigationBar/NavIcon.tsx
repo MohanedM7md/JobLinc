@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import MeCard from "./MeCard";
-import Nav from "./Nav";
+import { BusinessOptionsCard } from "./BusinessOptionsCard";
+
 interface NavIconProps {
   rightBorder?: string;
   Icon: string;
@@ -9,13 +10,6 @@ interface NavIconProps {
   Dropdown?: string;
   pagePath?: string;
 }
-
-// const navigate = useNavigate();
-
-// const handleNavigate = (path: string) => {
-//   console.log(`Navigating to ${path}`);
-//   navigate(path);
-// };
 
 function NavIcon({
   rightBorder,
@@ -25,26 +19,24 @@ function NavIcon({
   pagePath,
 }: NavIconProps) {
   const [showPopup, setShowPopup] = useState(false);
+  const showCard = () => (Name === "Me" ? <MeCard /> : <BusinessOptionsCard />);
   return (
     <Link
-      to={pagePath}
+      to={pagePath!}
       className={`group flex flex-col items-center justify-center w-[calc(100%/7)] sm:w-1/2 cursor-pointer ${rightBorder}`}
       onClick={() => {
-        if (Name === "Me") {
+        if (Name === "Me" || Name === "Businesses") {
           setShowPopup(!showPopup);
         }
       }}
+      ref={iconRef}
     >
       <i className={`${Icon} group-hover:text-black text-gray-600 text-lg`}></i>
       <span className="items-center text-xs group-hover:text-black text-gray-600 ml-1 hidden sm:flex">
         {Name}
         {Dropdown && <i className={`ml-1 ${Dropdown}`}></i>}
       </span>
-      {showPopup ? (
-        <div className="absolute top-13">
-          <MeCard />
-        </div>
-      ) : null}
+      {showPopup ? <div className="absolute top-13">{showCard()}</div> : null}
     </Link>
   );
 }

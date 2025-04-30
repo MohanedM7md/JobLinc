@@ -1,13 +1,36 @@
 
+import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
 
+import { useNavigate } from 'react-router-dom';
+import store from '@store/store';
+import { loginWithGoogle } from '@store/user/userThunks';
+import { useAppDispatch } from '@store/hooks';
 function AuthenticationGoogleButton()
 {
+    const navigate = useNavigate();
+    const dispatch = useAppDispatch();
+    const clientId = "1026201483663-9g1k1avpkm7jjajm200uvgt8h8tob6tp.apps.googleusercontent.com";
     return (
-        <div className="border-1 w-full h-10 rounded-[3.125rem] p-2.5 mb-5 text-[15px] flex justify-center items-center hover:bg-blue-50 hover:bg-opacity-5 hover:cursor-pointer transition-all duration-200">
-            <div className="flex-shrink-0 w-4 mr-2">
-                <img src="src\assets\google-logo.png"/>
-            </div>
-            <p>Continue with Google</p>
+        <div data-testid="auth-with-google" className="w-full h-10 rounded-[3.125rem] p-2.5 mb-5 text-[15px] flex justify-center items-center hover:bg-blue-50 hover:bg-opacity-5 hover:cursor-pointer transition-all duration-200">
+            <GoogleOAuthProvider clientId={clientId}>
+            <GoogleLogin
+                onSuccess={credentialResponse => {
+                    console.log(credentialResponse);
+                    dispatch(loginWithGoogle({ credential: credentialResponse.credential || "" })).then(() => {
+                        if (store.getState().user.loggedIn)
+                        {
+                            navigate("/home");
+                        }
+                    })
+                    .catch((error: any) => {
+                        console.error("Error while logging in with google: ", error);
+                    })
+                }}
+                onError={() => {
+                    console.log('Login Failed');
+                }}
+            />
+        </GoogleOAuthProvider>
         </div>
     );
 }

@@ -12,6 +12,7 @@ function NavBar() {
   );
   const [showNotifications, setShowNotifications] = useState(false);
   const [loggedInUserId, setLoggedInUserId] = useState<string | null>("");
+
   useEffect(() => {
     setLoggedInUserId(store.getState().user.userId);
     const handleResize = () => {
@@ -47,7 +48,7 @@ function NavBar() {
             Name={isLargeScreen ? "My Network" : "Network"}
             pagePath="/my-network"
           />
-          <NavIcon Icon="fa-solid fa-briefcase" Name="Jobs" pagePath="/" />
+          <NavIcon Icon="fa-solid fa-briefcase" Name="Jobs" pagePath="/jobs" />
           <NavIcon
             Icon="fa-solid fa-message"
             Name="Messaging"
@@ -59,13 +60,11 @@ function NavBar() {
             Name="Me"
             Dropdown="fa-solid fa-caret-down"
             rightBorder="border-r border-gray-200"
-            
           />
           <NavIcon
             Icon="fa-solid fa-building"
             Name="Businesses"
             Dropdown="fa-solid fa-caret-down"
-            pagePath="/"
           />
         </div>
       </nav>
@@ -76,4 +75,5 @@ function NavBar() {
     </>
   );
 }
+
 export default NavBar;

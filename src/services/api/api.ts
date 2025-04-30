@@ -37,7 +37,6 @@ api.interceptors.response.use(
       try {
         console.log("refreshing refresh token");
         const refreshToken = localStorage.getItem("refreshToken");
-        // const userId = store.getState().user.userId;
         const userId = localStorage.getItem("userId");
         if (!refreshToken && !userId) {
           console.log("No refresh token found, logging out...");
@@ -47,10 +46,19 @@ api.interceptors.response.use(
 
           return Promise.reject(error);
         }
-        const { data } = await api.post("auth/refresh-token", {
-          userId: userId,
-          refreshToken: refreshToken,
-        });
+        let data;
+        try {
+          const response = await api.post("auth/refresh-token", {
+            userId,
+            refreshToken,
+          });
+          data = response.data;
+        } catch (refreshError) {
+          console.log("Failed to refresh token, logging out...");
+          dispatch(logOut());
+          window.location.href = "/signin";
+          return Promise.reject(refreshError);
+        }
         dispatch(updateAccessToken(data.accessToken));
         localStorage.setItem("refreshToken", data.refreshToken);
         originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;

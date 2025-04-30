@@ -1,72 +1,136 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { describe, test, expect, vi } from 'vitest';
-import PendingInvitationsCard from '../../components/MyNetwork/PendingInvitationsCard';
-import { getPendingInvitations } from '../../services/api/networkServices';
-import '@testing-library/jest-dom';
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import PendingInvitationsCard from "../../components/MyNetwork/PendingInvitationsCard";
+import { getPendingInvitations } from "../../services/api/networkServices";
+import { Mock, vi } from "vitest";
+import "@testing-library/jest-dom/vitest";
 
-vi.mock('../../services/api/networkServices', () => ({
-  getPendingInvitations: vi.fn(),
-}));
+vi.mock("../../services/api/networkServices");
 
-describe('PendingInvitationsCard', () => {
+describe("PendingInvitationsCard Component", () => {
   const mockInvitations = [
     {
-      userName: 'John Doe',
-      userBio: 'Software Developer',
-      profilePicture: 'https://example.com/john.jpg',
-      Mutuals: '5 mutuals',
+      userName: "User 1",
+      userBio: "Bio 1",
+      Mutuals: "3 mutual friends",
+      profilePicture: "profile-1.jpg",
       acknowledged: false,
     },
     {
-      userName: 'Jane Smith',
-      userBio: 'Product Manager',
-      profilePicture: 'https://example.com/jane.jpg',
-      Mutuals: '2 mutuals',
+      userName: "User 2",
+      userBio: "Bio 2",
+      Mutuals: "2 mutual friends",
+      profilePicture: "profile-2.jpg",
       acknowledged: true,
+    },
+    {
+      userName: "User 3",
+      userBio: "Bio 3",
+      Mutuals: "1 mutual friend",
+      profilePicture: "profile-3.jpg",
+      acknowledged: false,
     },
   ];
 
   beforeEach(() => {
-    vi.mocked(getPendingInvitations).mockResolvedValue(mockInvitations);
+    vi.clearAllMocks();
   });
 
-  test('renders PendingInvitationsCard and displays the invitations count', async () => {
-    render(<PendingInvitationsCard manageButtonid="manage-button" />);
+  test("renders the correct number of invitations", async () => {
+    (getPendingInvitations as Mock).mockResolvedValue(mockInvitations);
 
-    await waitFor(() => expect(getPendingInvitations).toHaveBeenCalled());
+    render(<PendingInvitationsCard />);
 
-    expect(screen.getByTestId('invitation-count')).toHaveTextContent('Invitations (1)');
+    await waitFor(() => {
+      const invitations = screen.getAllByRole("listitem");
+      expect(invitations.length).toBe(3);
+    });
   });
 
-  test('displays correct invitation data', async () => {
-    render(<PendingInvitationsCard manageButtonid="manage-button" />);
 
-    await waitFor(() => expect(getPendingInvitations).toHaveBeenCalled());
+  test("handles accept behavior correctly", async () => {
+    (getPendingInvitations as Mock).mockResolvedValue(mockInvitations);
 
-    expect(screen.getByTestId('invitation-name-unacknowledged-0')).toHaveTextContent('John Doe');
-    expect(screen.getByTestId('invitation-bio-0')).toHaveTextContent('Software Developer');
-    expect(screen.getByTestId('invitation-name-1')).toHaveTextContent('Jane Smith');
-  });
-
-  test('calls accept handler on accept button click', async () => {
-    render(<PendingInvitationsCard manageButtonid="manage-button" />);
-
-    await waitFor(() => expect(getPendingInvitations).toHaveBeenCalled());
-
-    const acceptButton = screen.getByTestId('accept-button-0');
+    render(<PendingInvitationsCard />);
+    await waitFor(() => {
+    const acceptButton = screen.getAllByTestId("accept-inv-button")[0];
     fireEvent.click(acceptButton);
-
-    expect(screen.getByTestId('invitation-name-0')).toHaveTextContent('John Doe is now a connection!');
+    screen.debug();
+    });
+    await waitFor(() => {
+    const updatedText = screen.getAllByText(/is now a connection!/i)[0];
+    expect(updatedText).toBeInTheDocument();
+    });
   });
 
-  test('opens modal when "Show All" button is clicked', async () => {
-    render(<PendingInvitationsCard manageButtonid="manage-button" />);
+  test("handles reject behavior correctly", async () => {
+    (getPendingInvitations as Mock).mockResolvedValue(mockInvitations);
 
-    await waitFor(() => expect(getPendingInvitations).toHaveBeenCalled());
+    render(<PendingInvitationsCard />);
+    
+    await waitFor(() => {
+      const rejectButton = screen.getAllByTestId("ignore-inv-button")[0];
+      fireEvent.click(rejectButton);
 
-    const manageButton = screen.getByTestId('manage-button');
-    fireEvent.click(manageButton);
+      const userName = screen.queryByText("User 1");
+      expect(userName).not.toBeInTheDocument();
+    });
+  });
 
-    expect(screen.getByTestId('modal-title')).toHaveTextContent('All Invitations');
+  test("removes acknowledged invitations correctly", async () => {
+    (getPendingInvitations as Mock).mockResolvedValue(mockInvitations);
+
+    render(<PendingInvitationsCard />);
+
+    await waitFor(() => {
+      const removeAcknowledgmentButton = screen.getAllByText(/×/i)[0];
+      fireEvent.click(removeAcknowledgmentButton);
+
+      const acknowledgedText = screen.queryByText(/is now a connection!/i);
+      expect(acknowledgedText).not.toBeInTheDocument();
+    });
+  });
+
+  test("opens and closes the modal correctly", async () => {
+    (getPendingInvitations as Mock).mockResolvedValue(mockInvitations);
+
+    render(<PendingInvitationsCard />);
+
+
+    await waitFor(() => {
+      const modalButton = screen.getByTestId("manage-showall-button");
+      fireEvent.click(modalButton);
+
+      
+      const modalHeader = screen.getByText(/all invitations/i);
+      expect(modalHeader).toBeInTheDocument();
+
+      const closeButton = screen.getAllByText(/×/i)[1];
+      fireEvent.click(closeButton);
+
+      expect(modalHeader).not.toBeInTheDocument();
+    });
+  });
+  
+
+  test("handles empty state gracefully", async () => {
+    (getPendingInvitations as Mock).mockResolvedValue([]);
+
+    render(<PendingInvitationsCard />);
+
+    await waitFor(() => {
+      const emptyText = screen.getByText(/no pending invitations/i);
+      expect(emptyText).toBeInTheDocument();
+    });
+  });
+
+  test("handles fetch errors gracefully", async () => {
+    (getPendingInvitations as Mock).mockRejectedValue(new Error("Network error"));
+
+    render(<PendingInvitationsCard />);
+
+    await waitFor(() => {
+      const emptyText = screen.getByText(/no pending invitations/i);
+      expect(emptyText).toBeInTheDocument();
+    });
   });
 });

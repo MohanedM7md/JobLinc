@@ -108,7 +108,7 @@ const ChatCardsList = ({
         ) : (
           <>
             {activeTab === "chats" ? (
-              chats.length > 0 ? (
+              chats && chats.length > 0 ? (
                 chats.map((chatCard) => (
                   <ChatCard
                     key={chatCard.chatId}
@@ -127,7 +127,7 @@ const ChatCardsList = ({
                   No chats found
                 </div>
               )
-            ) : reqChats.length > 0 ? (
+            ) : reqChats && reqChats.length > 0 ? (
               reqChats.map((reqChatCard) => (
                 <ReqChatCard
                   key={reqChatCard.chatId}

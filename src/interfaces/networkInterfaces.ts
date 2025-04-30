@@ -1,27 +1,52 @@
 export interface connectsInterface {
-    lincbuttonid: string,
+    userId: string;
     profilePicture: string,
-    userName: string,
-    userBio: string,
-    mutuals: string,
+    firstName: string,
+    lastName: string,
+    headline: string,
+    Mutuals: Number;
   }
 export interface invitationInterface {
-    profilePicture: string; 
-    userName: string;
-    userBio: string;
-    Mutuals: string;
-    ignoreButtonid: string;
-    acceptButtonid: string;
+    userId: string;
+    profilePicture: string;
+    firstName: string;
+    lastName: string;
+    headline: string;
+    Mutuals: Number;
     acknowledged?: boolean;
   }
   export interface ConnectionInterface {
-    id: string;
-    profileImage: string;
+    userId: string;
+    profilePicture: string;
     firstName: string;
     lastName: string;
-    userBio: string;
-    connectedDate: Date;
+    headline: string;
+    city?: string | null;
+    country?: string | null;
+    mutualConnections?: number | null;
+    connectionStatus?: "pending" | "accepted" | "rejected" | null;
+    connectedDate?: Date | null;
   }
+  export interface FollowInterface {
+    companyId: string | null;
+    companyName: string | null;
+    companyLogo: string | null;
+    userId: string | null;
+    profilePicture: string | null;
+    firstName: string | null;
+    lastName: string | null;
+    headline: string;
+    time: Date;
+  }
+  export interface BlockedUserInterface {
+    userId: string;
+    profilePicture: string;
+    firstName: string;
+    lastName: string;
+    connectionStatus: "blocked" | "unblocked";
+    mutualConnections: number;
+  }
+
   export interface ConnectionRequestInterface {
     requestId: string;
     targetId: string;
@@ -37,4 +62,11 @@ export interface invitationInterface {
 
   export interface SortProps {
     setSortBy: React.Dispatch<React.SetStateAction<string>>;
+  }
+
+  export interface testconnectsInterface {
+    userID: string;
+    firstName: string;
+    lastName: string;
+    mutualconnections:number;
   }
