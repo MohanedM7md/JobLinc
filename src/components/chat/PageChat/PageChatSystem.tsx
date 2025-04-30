@@ -199,7 +199,7 @@ function PageChatSystem() {
                 transition={{ duration: 0.3 }}
                 className={`
                   ${isMobileView ? "absolute z-10 h-[calc(100%-70px)] bg-white" : "relative"} 
-                  w-full md:w-1/3 border-r bg-charcoalWhite border-gray-300 p-4
+                  w-full md:w-1/3 border-r bg-charcoalWhite border-gray-300 p-4 overflow-y-scroll
                 `}
               >
                 {isFocused ? (
@@ -208,7 +208,10 @@ function PageChatSystem() {
                     filter={searchTerm}
                   />
                 ) : (
-                  <ChatCardsList onCardClick={handleConversationClick} />
+                  <ChatCardsList
+                    onCardClick={handleConversationClick}
+                    className="overflow-y-scrolls"
+                  />
                 )}
               </motion.div>
             )}

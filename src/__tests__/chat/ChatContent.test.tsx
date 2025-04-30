@@ -106,7 +106,7 @@ describe("ChatContent", () => {
       renderWithProviders(null, ["2", "3"]);
     });
 
-    expect(chatServices.createChat).toHaveBeenCalledWith(["2", "3", ""]);
+    expect(chatServices.createChat).toHaveBeenCalledWith(["2", "3"], "");
     expect(ChatSocket.subscribeToMessages).toHaveBeenCalled();
   });
 
