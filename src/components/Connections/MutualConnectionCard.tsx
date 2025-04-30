@@ -19,7 +19,7 @@ function MutualConnectionCard(props: ConnectionInterface ){
       />
       <div className="ml-4 flex-grow mr-7">
         <h3 role="heading" className="font-semibold cursor-pointer hover:underline" onClick={handleUserClick}>
-          {props.firstName} {props.lastName}
+          {props.firstname} {props.lastname}
         </h3>
         <p className="text-gray-500 cursor-pointer text-base line-clamp-2" onClick={handleUserClick}>{props.headline}</p>
         <p className="text-xs text-gray-500">{props.city}, {props.country}</p>

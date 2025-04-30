@@ -54,15 +54,15 @@ function  ConnectionCard(props: ConnectionInterface & { onRemove: (id: string) =
   }
   const handleRemoveConnection= async ()  => {
     const removeconnectionpromise =  changeConnectionStatus(props.userId, "Canceled");
-    toast.promise (
-      removeconnectionpromise,
-      {
-        loading: "Removing Connection...",
-        success: "User removed successfully!",
-        error: "Failed to remove user. Please try again.",
-      }
-    )
-      removeconnectionpromise.then((response) => {
+    removeconnectionpromise.then((response) => {
+        toast.promise (
+          removeconnectionpromise,
+          {
+            loading: "Removing Connection...",
+            success: "User removed successfully!",
+            error: "Failed to remove user. Please try again.",
+          }
+        )
         if (response?.status === 200) {
           props.onRemove(props.userId)
           console.log("Remove Connection Response:", response);
@@ -93,7 +93,7 @@ function  ConnectionCard(props: ConnectionInterface & { onRemove: (id: string) =
     };
   }, []);
 
-  const { profilePicture: profileImage, firstName: firstName, lastName, headline: userBio, connectedDate} = props;
+  const { profilePicture: profileImage, firstname: firstName, lastname: lastName, headline: userBio, time: connectedDate} = props;
 
   return (
     <div 

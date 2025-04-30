@@ -20,21 +20,19 @@ function UserConnectionListCard() {
         }
         const response = await getUserConnections(userId);
         console.log("User Connections:",response,"we are seeing the connections of:", userId);
-          // const parsedConnections = Array.isArray(response)
-          // ? response.map((connection) => ({
-          //   userId: connection.userId,
-          //   profilePicture: connection.profilePicture,
-          //   firstName: connection.firstname,
-          //   lastName: connection.lastname,
-          //   headline: connection.headline || "",
-          //   city: connection.city || "",
-          //   country: connection.country || "",
-          //   mutualConnections: connection.mutualConnections,
-          //   connectionStatus: connection.connectionStatus,
-          // }))
-          // : [];
-          // setUserConnections(parsedConnections);
-          const parsedConnections = Array.isArray(response) ? response : [];
+          const parsedConnections = Array.isArray(response)
+          ? response.map((connection) => ({
+            userId: connection.userId,
+            profilePicture: connection.profilePicture,
+            firstname: connection.firstname,
+            lastname: connection.lastname,
+            headline: connection.headline || "",
+            city: connection.city || "",
+            country: connection.country || "",
+            mutualConnections: connection.mutualConnections,
+            connectionStatus: connection.connectionStatus,
+          }))
+          : [];
           setUserConnections(parsedConnections);
           console.log("User Connections:",response,"we are seeing the connections of:", userId);
         } catch (error) {
@@ -50,8 +48,8 @@ function UserConnectionListCard() {
   }, []);
 
     const filteredConnections = userConnections.filter((connection) => {
-    const firstName = connection.firstName || "";
-    const lastName = connection.lastName || "";
+    const firstName = connection.firstname || "";
+    const lastName = connection.lastname || "";
     return `${firstName.toLowerCase()} ${lastName.toLowerCase()}`.includes(
       searchTerm.toLowerCase()
     );

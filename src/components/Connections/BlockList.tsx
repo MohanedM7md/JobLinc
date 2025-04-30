@@ -17,18 +17,16 @@ function BlockList(){
           try {
             const response = await getBlockedUsers();
             console.log("Blocked list of logged in user",response);
-              // const parsedConnections = Array.isArray(response)
-              // ? response.map((connection) => ({
-              //   userId: connection.userId,
-              //   profilePicture: connection.profilePicture || "",
-              //   firstName: connection.firstname,
-              //   lastName: connection.lastname,
-              //   connectionStatus: connection.connectionStatus || "blocked",
-              //   mutualConnections: connection.mutualConnections,
-              // }))
-              // : [];
-              // setBlockedUsers(parsedConnections);
-            const parsedConnections = Array.isArray(response) ? response : [];
+              const parsedConnections = Array.isArray(response)
+              ? response.map((connection) => ({
+                userId: connection.userId,
+                profilePicture: connection.profilePicture || "",
+                firstname: connection.firstname,
+                lastname: connection.lastname,
+                connectionStatus: connection.connectionStatus || "Blocked",
+                mutualConnections: connection.mutualConnections,
+              }))
+              : [];
             setBlockedUsers(parsedConnections);
             console.log("Parsed Blocked list of logged in user",parsedConnections);
             } catch (error) {
@@ -47,9 +45,6 @@ function BlockList(){
         setBlockedUsers((prevBlocked) =>
           prevBlocked.filter((User) => User.userId !== blockedUserId)
         );
-      }
-      const handleBackClick = () => {
-        window.history.back();
       }
     
     return(

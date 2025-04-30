@@ -14,25 +14,16 @@ function ConnectionsListCard() {
     const fetchData = async () => {
       try {
         const response = await getConnections();
-        // console.log("Connections of logged in user",response);
-        //   const parsedConnections = Array.isArray(response)
-        //   ? response.map((connection) => ({
-        //     userId: connection.userId,
-        //     profilePicture: connection.profilePicture,
-        //     firstName: connection.firstname,
-        //     lastName: connection.lastname,
-        //     headline: connection.headline || "",
-        //     connectedDate: new Date(connection.time),
-        //   }))
-        //   : [];
-        //   setUserConnections(parsedConnections);
+        console.log("Connections of logged in user",response);
           const parsedConnections = Array.isArray(response)
           ? response.map((connection) => ({
-              ...connection,
-              connectedDate: connection.connectedDate 
-                ? new Date(connection.connectedDate)
-                : null, 
-            }))
+            userId: connection.userId,
+            profilePicture: connection.profilePicture,
+            firstname: connection.firstname,
+            lastname: connection.lastname,
+            headline: connection.headline || "",
+            time: new Date(connection.time),
+          }))
           : [];
           setUserConnections(parsedConnections);
           console.log("parsed connections of logged in user",userConnections);
@@ -55,8 +46,8 @@ function ConnectionsListCard() {
   };
 
 const filteredConnections = userConnections.filter((connection) => {
-  const firstName = connection.firstName || "";
-  const lastName = connection.lastName || "";
+  const firstName = connection.firstname || "";
+  const lastName = connection.lastname || "";
   return `${firstName.toLowerCase()} ${lastName.toLowerCase()}`.includes(
     searchTerm.toLowerCase()
   );
@@ -64,11 +55,11 @@ const filteredConnections = userConnections.filter((connection) => {
 
   const sortedConnections = [...filteredConnections].sort((a, b) => {
     if (sortBy === "firstname") {
-      return a.firstName.localeCompare(b.firstName);
+      return a.firstname.localeCompare(b.firstname);
     } else if (sortBy === "lastname") {
-      return b.lastName.localeCompare(a.lastName);
+      return b.lastname.localeCompare(a.lastname);
     } else if (sortBy === "recentlyadded") {
-      return (b.connectedDate?.getTime() || 0) - (a.connectedDate?.getTime() || 0);
+      return (b.time?.getTime() || 0) - (a.time?.getTime() || 0);
     }
     return 0;
   });

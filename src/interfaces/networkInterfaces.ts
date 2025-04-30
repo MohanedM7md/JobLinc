@@ -18,14 +18,14 @@ export interface invitationInterface {
   export interface ConnectionInterface {
     userId: string;
     profilePicture: string;
-    firstName: string;
-    lastName: string;
+    firstname: string;
+    lastname: string;
     headline: string;
     city?: string | null;
     country?: string | null;
     mutualConnections?: number | null;
-    connectionStatus?: "pending" | "accepted" | "rejected" | null;
-    connectedDate?: Date | null;
+    connectionStatus?: "Pending" | "Accepted" | "Rejected" | "Canceled" | null;
+    time?: Date | null;
   }
   export interface FollowInterface {
     companyId: string | null;
@@ -41,9 +41,9 @@ export interface invitationInterface {
   export interface BlockedUserInterface {
     userId: string;
     profilePicture: string;
-    firstName: string;
-    lastName: string;
-    connectionStatus: "blocked" | "unblocked";
+    firstname: string;
+    lastname: string;
+    connectionStatus: "Blocked" | "Unblocked";
     mutualConnections: number;
   }
 

@@ -13,21 +13,31 @@ export const getNetworkFeed = async (count: number, signal: AbortSignal) => {
     }
   };
 
-  // export const getNetworkFeedTest = async () => {
-  //   try {
-  //     const response = await api.get(`connection/connected`);
-  //     return response.data;
-  //   } catch (error) {
-  //     console.error("Error fetching feed:", error);
-  //   }
-  // };
-
 export const getMyFollowing = async () => {
   try {
     const response = await api.get('follow/following');
     return response.data;
   } catch (error) {
     console.log('Error fetching followed users:', error);
+    return[];
+  }
+}
+
+export const getUserFollowing = async (userId : string) => {
+  try {
+    const response = await api.get(`follow/${userId}/following`);
+    return response.data;
+  } catch (error) {
+    console.log('Error fetching User following', error);
+    return[];
+  }
+}
+export const getUserFollowers = async (userId : string) => {
+  try {
+    const response = await api.get(`follow/${userId}/followers`);
+    return response.data;
+  } catch (error) {
+    console.log('Error fetching User followers', error);
     return[];
   }
 }
