@@ -62,21 +62,12 @@ const stripePromise = loadStripe("pk_test_...");
 function App() {
   return (
     <>
-      <Toaster
-        position="top-center"
-        toastOptions={{
-          duration: 4000,
-          style: {
-            background: "#363636",
-            color: "#fff",
-          },
-        }}
-      />  */}
 
       <Toaster
         position="bottom-left"
         reverseOrder={false}
       />
+      
       <QueryClientProvider client={queryClient}>
         <Elements stripe={stripePromise}>
           <Routes>
