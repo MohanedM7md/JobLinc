@@ -212,3 +212,14 @@ export async function getUserById(userId: string) {
   }
 }
 
+export async function deleteAccount(password: string) {
+  try {
+    const response = await api.delete("user/me", {
+      data: { password },
+    });
+    return response;
+  } catch (error) {
+    console.error("Error deleting account:", error);
+    throw error;
+  }
+}
