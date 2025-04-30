@@ -2,7 +2,7 @@ import { render, screen, cleanup } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import ReplyCard from "../../components/Posts/Comments/ReplyCard";
+import ReplyCard from "../../components/Posts/Replies/ReplyCard";
 import { RepliesInterface } from "../../interfaces/postInterfaces";
 
 const mockReply: RepliesInterface = {

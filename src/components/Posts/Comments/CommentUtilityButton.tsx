@@ -1,78 +1,51 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
-import { useNavigate } from "react-router-dom";
-import { deletePost, reportPost, savePost } from "@services/api/postServices";
+import { deleteComment, reportPost } from "@services/api/postServices";
 import store from "@store/store";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  ClipboardPen,
-  FlagTriangleRight,
-  Pencil,
-  Save,
-  Trash,
-} from "lucide-react";
+import { FlagTriangleRight, Pencil, Trash } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import ConfirmAction from "../utils/ConfirmAction";
+import ConfirmAction from "../../utils/ConfirmAction";
 import { useState } from "react";
+import Modal from "../../utils/Modal";
+import CommentEdit from "./CommentEdit";
 
 interface UtilityProps {
-  postId: string;
+  commentId: string;
   posterId: string;
-  postText: string;
+  commentText: string;
+  updateText: (newText: string) => void;
+  delete: () => void;
 }
 
-export default function PostUtilityButton(props: UtilityProps) {
-  const navigate = useNavigate();
+export default function CommentUtilityButton(props: UtilityProps) {
   const loggedInUserId = store.getState().user.userId;
-  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [isConfirmOpen, setIsConfirmOpen] = useState<boolean>(false);
+  const [isEditOpen, setIsEditOpen] = useState<boolean>(false);
 
-  const postDelete = useMutation({
-    mutationFn: deletePost,
-    onSuccess: () => navigate("/home"),
+  const commentDelete = useMutation({
+    mutationFn: deleteComment,
+    onSuccess: () => props.delete(),
   });
 
-  const postSave = useMutation({
-    mutationFn: savePost,
-  });
-
-  const postReport = useMutation({
+  const commentReport = useMutation({
     mutationFn: reportPost,
-  })
+  });
 
   function handleDelete() {
-    toast.promise(postDelete.mutateAsync(props.postId), {
-      loading: "Deleting post...",
-      success: "Post deleted successfully!",
+    toast.promise(commentDelete.mutateAsync(props.commentId), {
+      loading: "Deleting comment...",
+      success: "Deleted",
       error: (error) => error.message,
     });
-  }
-
-  function handleSave() {
-    toast.promise(postSave.mutateAsync(props.postId), {
-      loading: "Saving post...",
-      success: "Post saved successfully!",
-      error: (error) => error.message,
-    });
-  }
-
-  function handleCopy() {
-    const postLink = `${window.location.origin}/post/${props.postId}`;
-    navigator.clipboard
-      .writeText(postLink)
-      .then(() => {
-        toast.success("Link copied to clipboard!");
-      })
-      .catch(() => {
-        toast.error("Failed to copy link.");
-      });
   }
 
   function handleReport() {
-    toast.promise(postReport.mutateAsync(props.postId), {
-      loading: "Reporting post...",
+    toast.promise(commentReport.mutateAsync(props.commentId), {
+      loading: "Reporting comment...",
       success: "Report submitted for review, Thank you!",
       error: (error) => error.message,
-    })
+    });
   }
 
   return (
@@ -104,14 +77,7 @@ export default function PostUtilityButton(props: UtilityProps) {
                         transition={{ duration: 0.2 }}
                       >
                         <button
-                          onClick={() => {
-                            navigate(`../post/${props.postId}/edit`, {
-                              state: {
-                                postID: props.postId,
-                                postText: props.postText,
-                              },
-                            });
-                          }}
+                          onClick={() => setIsEditOpen(true)}
                           className="w-full flex items-center justify-between px-4 py-2 text-sm hover:bg-gray-100 transition duration-200 ease-in-out"
                         >
                           <Pencil className="mr-2" />
@@ -126,7 +92,7 @@ export default function PostUtilityButton(props: UtilityProps) {
                         transition={{ duration: 0.2 }}
                       >
                         <button
-                          data-testid={`Delete ${props.postId}`}
+                          data-testid={`Delete ${props.commentId}`}
                           onClick={() => setIsConfirmOpen(true)}
                           className="w-full flex items-center justify-between px-4 py-2 text-sm text-crimsonRed hover:bg-red-100 rounded-b-md transition duration-200 ease-in-out"
                         >
@@ -137,36 +103,6 @@ export default function PostUtilityButton(props: UtilityProps) {
                     </>
                   ) : (
                     <>
-                      <MenuItem
-                        as={motion.div}
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        transition={{ duration: 0.2 }}
-                      >
-                        <button
-                          onClick={handleCopy}
-                          className="w-full flex items-center justify-between px-4 py-2 text-sm hover:bg-gray-100 transition duration-200 ease-in-out"
-                        >
-                          <ClipboardPen className="mr-2" />
-                          <span>Copy</span>
-                        </button>
-                      </MenuItem>
-                      <MenuItem
-                        as={motion.div}
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        transition={{ duration: 0.2 }}
-                      >
-                        <button
-                          onClick={handleSave}
-                          className="w-full flex items-center justify-between px-4 py-2 text-sm hover:bg-gray-100 transition duration-200 ease-in-out"
-                        >
-                          <Save className="mr-2" />
-                          <span>Save</span>
-                        </button>
-                      </MenuItem>
                       <MenuItem
                         as={motion.div}
                         initial={{ opacity: 0, y: -10 }}
@@ -195,6 +131,11 @@ export default function PostUtilityButton(props: UtilityProps) {
           action={handleDelete}
           onClose={() => setIsConfirmOpen(false)}
         />
+      )}
+      {isEditOpen && (
+        <Modal isOpen={isEditOpen} onClose={() => setIsEditOpen(false)}>
+            <CommentEdit commentId={props.commentId} text={props.commentText} onUpdate={props.updateText} onClose={()=> setIsEditOpen(false)}/>
+        </Modal>
       )}
     </>
   );

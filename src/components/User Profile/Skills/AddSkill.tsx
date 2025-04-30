@@ -52,10 +52,10 @@ export default function AddSkill(props: AddSkillProps) {
     <>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="p-4 bg-lightGray rounded-lg text-charcoalBlack"
+        className="p-4 rounded-lg"
       >
         <div className="mb-4">
-          <label className="text-sm font-medium text-charcoalBlack">
+          <label className="text-sm font-medium">
             Skill Name
           </label>
           <input
@@ -69,7 +69,7 @@ export default function AddSkill(props: AddSkillProps) {
           )}
         </div>
         <div className="mb-4">
-          <label className="text-sm font-medium text-charcoalBlack">
+          <label className="text-sm font-medium">
             Skill Level
           </label>
           <select

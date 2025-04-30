@@ -32,6 +32,8 @@ export default function PostEdit() {
     }
   }
 
+  const isEditing = postEdit.isPending;
+
   return (
     <div className="flex flex-col h-screen bg-charcoalWhite m-0 justify-center items-center">
       <div className="flex flex-col bg-lightGray p-5 rounded-xl w-7/12">
@@ -49,15 +51,18 @@ export default function PostEdit() {
         ></textarea>
         <div className="flex flex-row w-11/12 m-auto pt-2">
           <button
-            className="cursor-pointer hover:bg-gray-200 rounded-xl h-fit"
-            onClick={() => submitEdit()}
+            onClick={submitEdit}
+            className="bg-crimsonRed text-warmWhite px-4 py-1.5 rounded-3xl cursor-pointer hover:bg-red-700 transition duration-400 ease-in-out"
+            disabled={isEditing}
           >
-            Submit
+            {isEditing ? "Editing..." : "Edit"}
           </button>
           <div className="flex flex-row w-1/1 justify-end">
             <button
-              className="cursor-pointer hover:bg-gray-200 rounded-xl h-fit"
+              type="button"
               onClick={() => navigate(-1)}
+              className="bg-gray-500 text-warmWhite px-4 py-1.5 rounded-3xl cursor-pointer hover:bg-gray-700 transition duration-400 ease-in-out"
+              disabled={isEditing}
             >
               Cancel
             </button>

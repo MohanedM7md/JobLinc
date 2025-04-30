@@ -12,8 +12,8 @@ export interface ProfileInterface {
   role: number;
   numberofConnections: number;
   mutualConnections: number;
-  profilePicture?: string;
-  coverPicture?: string;
+  profilePicture: string;
+  coverPicture: string;
   skills: SkillInterface[];
   experiences: ExperienceInterface[];
   certificates: CertificateInterface[];
@@ -38,24 +38,46 @@ export interface EducationInterface {
 }
 
 export interface ExperienceInterface {
-  _id: string;
+  id: string;
+  company: ExperienceCompany;
   position: string;
-  company: string;
   startDate: Date;
-  endDate: Date;
+  endDate: Date | string;
   description: string;
+  mode: ExperienceModes;
+  type: ExperienceTypes;
+}
+
+export interface ExperienceCompany {
+  id?: string;
+  name: string;
+  logo: string;
 }
 
 export interface NewExperience {
+  companyId?: string;
+  company?: string;
   position: string;
-  company: string;
   startDate: Date;
-  endDate: Date;
+  endDate: Date | string;
   description: string;
+  mode: ExperienceModes;
+  type: ExperienceTypes;
+}
+
+export interface EditExperienceInterface {
+  companyId?: string;
+  company?: string;
+  position: string;
+  startDate: Date;
+  endDate: Date | string;
+  description: string;
+  mode: ExperienceModes;
+  type: ExperienceTypes;
 }
 
 export interface CertificateInterface {
-  _id: string;
+  id: string;
   name: string;
   organization: string;
   issueDate: Date;
@@ -78,6 +100,21 @@ export interface SkillInterface {
 export interface NewSkill {
   name: string;
   level: number;
+}
+
+export enum ExperienceModes {
+  onsite = "OnSite",
+  remote = "Remote",
+  hybrid = "Hybrid",
+}
+
+export enum ExperienceTypes {
+  fulltime = "Full-time",
+  parttime = "Part-time",
+  internship = "Internship",
+  contract = "Contract",
+  temporary = "Temporary",
+  volunteer = "Volunteer"
 }
 
 export interface FollowerData {
