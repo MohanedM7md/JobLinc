@@ -8,7 +8,8 @@ import { enterAdminPage } from "@services/api/companyServices";
 import { useParams } from "react-router-dom";
 
 export default function Admin() {
-  const { company, loading, error, resetCompany, fetchAdminCompany } = useCompanyStore();
+  const { company, loading, error, resetCompany, fetchAdminCompany } =
+    useCompanyStore();
   const { companyId } = useParams<string>();
   const [activeContent, setActiveContent] = useState("Dashboard");
   const [err, setErrPage] = useState<string | undefined>(undefined);
@@ -41,7 +42,6 @@ export default function Admin() {
 
   return (
     <div className="flex h-screen relative">
-      {/* Mobile Menu Button */}
       <button
         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
         className="lg:hidden fixed top-4 left-4 z-50 p-2 rounded-lg bg-white shadow-md"
@@ -49,8 +49,8 @@ export default function Admin() {
         <FiMenu className="w-6 h-6" />
       </button>
 
-      {/* Sidebar */}
-      <div className={`
+      <div
+        className={`
         fixed lg:relative lg:block
         h-full
         transform transition-transform duration-300 ease-in-out
@@ -62,7 +62,8 @@ export default function Admin() {
       bg-white    
         shadow-lg     
         lg:shadow-none
-      `}>
+      `}
+      >
         <CompanySidebar
           activeContent={activeContent}
           setActiveContent={(content) => {

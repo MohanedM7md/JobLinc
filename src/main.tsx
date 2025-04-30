@@ -7,15 +7,15 @@ import { Provider } from "react-redux";
 import App from "./App.tsx";
 
 async function enableMocking() {
- if (process.env.NODE_ENV !== "development") {
-   return;
- }
+  if (process.env.NODE_ENV !== "development") {
+    return;
+  }
 
- const { worker } = await import("./__mocks__/msw/browser.ts");
+  const { worker } = await import("./__mocks__/msw/browser.ts");
 
- return worker.start();
+  return worker.start();
 }
-enableMocking().then(() => { 
+/* enableMocking().then(() => {  */
 createRoot(document.getElementById("root")!).render(
   <BrowserRouter>
     <Provider store={store}>
@@ -23,4 +23,4 @@ createRoot(document.getElementById("root")!).render(
     </Provider>
   </BrowserRouter>,
 );
-});
+/* }); */
