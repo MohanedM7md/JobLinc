@@ -36,7 +36,7 @@ describe('ManageNetworkIcons Component', () => {
       Number: undefined,
     };
 
-    const { container } = render(
+    render(
       <MemoryRouter>
         <ManageNetworkIcons {...propsWithoutNumber} />
       </MemoryRouter>
@@ -54,8 +54,8 @@ describe('ManageNetworkIcons Component', () => {
       </MemoryRouter>
     );
 
-    const linkElement = screen.getByRole('link');
+    const linkElement = screen.getByTestId('link-id');
     expect(linkElement).toBeInTheDocument();
-    expect(linkElement).toHaveAttribute('href', '/Signup');
+    expect(linkElement).toHaveAttribute('href', '/connections');
   });
 });

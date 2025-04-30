@@ -13,6 +13,7 @@ function SearchConnections(props: SearchProps) {
       }}
     >
       <i
+        data-testid="magnifying-glass-icon"
         className="
         fa-solid
         fa-magnifying-glass

@@ -1,6 +1,6 @@
 import { ConnectionInterface } from "../../../interfaces/networkInterfaces";
 
-export const connectionresponse: ConnectionInterface[] = [
+export const mutualconnectionresponse: ConnectionInterface[] = [
   {
     userId: "1",
     profilePicture: "src/assets/Tyrone.jpg",
