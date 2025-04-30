@@ -118,13 +118,10 @@ export enum ExperienceTypes {
 }
 
 export interface FollowerData {
-  companyId: string;
-  companyLogo: string;
-  companyName: string;
-  firstName: string;
+  firstname: string;
   headline: string;
-  lastName: string;
+  lastname: string;
   profilePicture: string;
   time: string;
-  userId: string;
+  userId: string
 }
