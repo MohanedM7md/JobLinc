@@ -12,7 +12,7 @@ export default function ChatCard({
   lastMessage,
   sentDate,
   onClick,
-  unseenCount,
+  unreadCount,
   isRead,
   className = "w-full",
 }: ChatCardProps) {
@@ -20,6 +20,10 @@ export default function ChatCard({
   const [markAsRead, setMarkAsRead] = useState(isRead);
   const menuRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    setMarkAsRead(isRead);
+  }, [isRead]);
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -133,7 +137,7 @@ export default function ChatCard({
               className="absolute top-2 right-3 text-xs text-white bg-red-400 rounded-full w-4
                         opacity-100 group-hover:opacity-0 text-center"
             >
-              {unseenCount ? unseenCount : null}
+              {unreadCount ? unreadCount : null}
             </div>
           )}
         </div>

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { BellIcon } from "@heroicons/react/24/outline";
+import { Bell } from "lucide-react";
 import { useNotificationStore } from "../../store/Notification/notificationStore";
 
 interface Props {
@@ -25,7 +25,7 @@ const NotificationBell: React.FC<Props> = ({ onClick }) => {
       onClick={onClick}
       className="relative cursor-pointer text-gray-700 hover:text-blue-600 transition"
     >
-      <BellIcon
+      <Bell
         className={`w-6 h-6 transition-transform duration-300 ${
           jiggle ? "animate-bounce" : ""
         }`}
