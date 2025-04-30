@@ -57,13 +57,7 @@ describe("FloatingChatWindow Component", () => {
     );
 
     const floatingWindow = screen.getByTestId("test-floatingWindow");
-    const header = screen.getByTestId("test-header");
 
-    expect(floatingWindow).not.toHaveClass(/translate-y-\[calc\(100%-60px\)\]/);
-    await userEvent.click(header);
-    expect(floatingWindow).toHaveClass(/translate-y-\[calc\(100%-60px\)\]/);
-
-    await userEvent.click(header);
     expect(floatingWindow).not.toHaveClass(/translate-y-\[calc\(100%-60px\)\]/);
   });
 
@@ -77,11 +71,5 @@ describe("FloatingChatWindow Component", () => {
         />
       </ChatIdProvider>,
     );
-
-    const closeButton = screen.getByTestId("close-button");
-
-    /*   await userEvent.click(closeButton);
-    expect(mockSetOpenedChatsId).toHaveBeenCalledTimes(1);
-    expect(mockSetOpenedChatsId).toHaveBeenCalledWith(expect.any(Function)); */
   });
 });

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Img } from "react-image";
 import { isRTL } from "../../utils/IsArabic";
 import { MessageBubbleInterface } from "./interfaces/Message.interfaces";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { User } from "./interfaces/User.interfaces";
 import SeenBy from "./SeenBy";
 
@@ -14,6 +14,7 @@ interface MessageBubbleProps {
 const MessageBubble = React.memo(({ message, users }: MessageBubbleProps) => {
   const rtl = isRTL(message.content.text);
   const [isExpanded, setIsExpanded] = useState(false);
+
   return (
     <div
       data-testid={message.messageId}
