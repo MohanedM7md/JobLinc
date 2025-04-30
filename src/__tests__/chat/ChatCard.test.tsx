@@ -3,17 +3,18 @@ import ChatCard from "@chatComponent/ChatCard";
 import { ChatCardProps } from "@chatComponent/interfaces/Chat.interfaces";
 import { expect, it, describe, vi } from "vitest";
 import userEvent from "@testing-library/user-event";
-
+import { getRelativeTimeString } from "@utils/DateFormatter";
 // Mock Props
 const mockProps: ChatCardProps = {
   chatId: "chat-123",
   chatPicture: ["https://via.placeholder.com/50"],
   chatName: "John Doe",
   lastMessage: "Hello, how are you?",
-  sentDate: new Date("2023-03-15T10:30:00"), // Replace with an appropriate date-time string
+  sentDate: new Date("2023-03-15T10:30:00"),
   onClick: vi.fn(),
   isRead: true,
-  unseenCount: 0,
+  unreadCount: 0,
+  senderName: "John",
 };
 
 describe("ChatCard Component", () => {
@@ -22,7 +23,8 @@ describe("ChatCard Component", () => {
 
     expect(screen.getByText(/John Doe/i)).toBeInTheDocument();
     expect(screen.getByText(/Hello, how are you?/i)).toBeInTheDocument();
-    expect(screen.getByText("3/15/2023")).toBeInTheDocument();
+    const result = getRelativeTimeString(new Date("2023-03-15T10:30:00"));
+    expect(screen.getByText(result)).toBeInTheDocument();
   });
 
   it("does not show unseen count when it is zero", () => {
@@ -35,7 +37,7 @@ describe("ChatCard Component", () => {
     expect(screen.queryByTestId("unseen-count")).not.toBeInTheDocument();
     unmount();
 
-    render(<ChatCard {...mockProps} unseenCount={2} isRead={false} />);
+    render(<ChatCard {...mockProps} unreadCount={2} isRead={false} />);
 
     const unseenDiv = await screen.findByTestId("unseen-count");
 

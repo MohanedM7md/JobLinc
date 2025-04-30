@@ -23,10 +23,16 @@ export interface ChatCardProps extends ChatCardInterface {
   onClick: () => void;
   className?: string;
 }
-
+export interface ReqChatCardProps extends ChatCardProps {
+  handleAcceptRequest: (chatId: string, status: string) => void;
+  handleRejectRequest: (chatId: string, status: string) => void;
+}
 export interface ChatInputProps {
   chatId: string;
-  onSendMessage: (message: string | File, type: "text" | "media") => void;
+  onSendMessage: (
+    message: string | File,
+    type: "text" | "image" | "video" | "document",
+  ) => void;
   onTypingMessage: (isTyping: boolean) => void;
   className?: string;
 }
@@ -55,6 +61,7 @@ export interface ChatCardInterface {
   chatPicture: string[];
   lastMessage: string;
   sentDate: Date;
-  unseenCount: number;
+  unreadCount: number;
   isRead: boolean;
+  senderName: string;
 }

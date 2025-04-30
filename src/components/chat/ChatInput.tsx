@@ -11,19 +11,44 @@ function ChatInput({
 }: ChatInputProps) {
   const [message, setMessage] = useState<string>("");
   const [isFocused, setIsFocused] = useState<boolean>(false);
-  const [isTyping, setIsTyping] = useState<boolean>(false);
-  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState<boolean>(false);
+  const [isTyping, setIsTyping] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    onTypingMessage(isTyping);
-  }, [isTyping]);
+    return () => {
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
+      onTypingMessage(false);
+    };
+  }, []);
 
-  useEffect(() => {
-    if (!message.trim()) setIsTyping(false);
-    else setIsTyping(true);
-  }, [message]);
+  const handleMessageChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    const newMessage = e.target.value;
+    setMessage(newMessage);
+
+    // Handle typing indicator
+    if (newMessage.trim() && !isTyping) {
+      setIsTyping(true);
+      onTypingMessage(true);
+    }
+
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
+    if (!newMessage.trim()) {
+      setIsTyping(false);
+      onTypingMessage(false);
+    } else {
+      typingTimeoutRef.current = setTimeout(() => {
+        setIsTyping(false);
+        onTypingMessage(false);
+      }, 2000);
+    }
+  };
 
   const uploadMedia = async (file: File) => {
     try {
@@ -36,28 +61,34 @@ function ChatInput({
   };
 
   const handleSendMessage = async () => {
-    if ((!message.trim() && selectedFiles.length === 0) || !chatId) return;
+    if ((!message.trim() && !selectedFile) || !chatId) return;
 
     setUploading(true);
 
     try {
-      // Upload files first
-      const uploadPromises = selectedFiles.map((file) => uploadMedia(file));
-      const mediaUrls = await Promise.all(uploadPromises);
+      let mediaUrl = null;
 
-      // Send text message if exists
+      if (selectedFile) {
+        mediaUrl = await uploadMedia(selectedFile);
+      }
+
       if (message.trim()) {
         onSendMessage(message, "text");
       }
 
-      // Send media messages
-      mediaUrls.forEach((url) => {
-        onSendMessage(url, "media");
-      });
+      if (mediaUrl) {
+        const fileType = getFileType(selectedFile!);
+        onSendMessage(mediaUrl, fileType);
+      }
+      setIsTyping(false);
+      onTypingMessage(false);
+
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
 
       setMessage("");
-      setSelectedFiles([]);
-      onTypingMessage(false);
+      setSelectedFile(null);
     } catch (error) {
       console.error("Error sending message:", error);
     } finally {
@@ -65,125 +96,140 @@ function ChatInput({
     }
   };
 
+  const getFileType = (file: File): "image" | "video" | "document" => {
+    if (file.type.startsWith("image/")) return "image";
+    if (file.type.startsWith("video/")) return "video";
+    return "document";
+  };
+
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files && files.length > 0) {
-      // Check file sizes
-      const validFiles = Array.from(files).filter((file) => {
-        const isImage =
-          file.type.startsWith("image/") ||
-          [".png", ".jpg", ".jpeg"].some((ext) => file.name.endsWith(ext));
-        const isVideo =
-          file.type.startsWith("video/") ||
-          [".mp4", ".mov"].some((ext) => file.name.endsWith(ext));
+      const file = files[0]; // Only take the first file
 
-        if (isImage && file.size > 5 * 1024 * 1024) {
-          alert("Image size should be less than 5MB");
-          return false;
-        }
-        if (isVideo && file.size > 50 * 1024 * 1024) {
-          alert("Video size should be less than 50MB");
-          return false;
-        }
-        return true;
-      });
+      // Check file size and type
+      const isImage =
+        file.type.startsWith("image/") ||
+        [".png", ".jpg", ".jpeg"].some((ext) => file.name.endsWith(ext));
+      const isVideo =
+        file.type.startsWith("video/") ||
+        [".mp4", ".mov"].some((ext) => file.name.endsWith(ext));
 
-      setSelectedFiles((prev) => [...prev, ...validFiles]);
+      if (isImage && file.size > 5 * 1024 * 1024) {
+        alert("Image size should be less than 5MB");
+        return;
+      }
+      if (isVideo && file.size > 50 * 1024 * 1024) {
+        alert("Video size should be less than 50MB");
+        return;
+      }
+
+      setSelectedFile(file);
     }
   };
 
-  const handleRemoveFile = (index: number) => {
-    setSelectedFiles((prev) => prev.filter((_, i) => i !== index));
+  const handleRemoveFile = () => {
+    setSelectedFile(null);
   };
 
   const handleFileButtonClick = () => {
-    fileInputRef.current?.click();
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
   };
 
   return (
     <div
-      className={`flex flex-col items-center p-3 ${className} bg-charcoalWhite dark:bg-warmBlack border-t border-gray-200 relative`}
+      className={`flex flex-col items-center p-3 ${className} bg-white dark:bg-warmBlack border-t border-gray-200 dark:border-gray-700`}
     >
-      {/* Selected files preview */}
-      {selectedFiles.length > 0 && (
-        <div className="w-full mb-2 max-h-20 overflow-y-auto">
-          {selectedFiles.map((file, index) => (
-            <div
-              key={index}
-              className="flex items-center justify-between p-2 bg-gray-200 dark:bg-gray-700 rounded mb-1"
-            >
-              <span className="text-sm truncate max-w-xs">
-                {file.name} ({Math.round(file.size / 1024)} KB)
+      {selectedFile && (
+        <div className="w-full mb-2">
+          <div className="flex items-center justify-between p-2 rounded bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600">
+            <div className="flex items-center gap-2 text-sm truncate max-w-[80%]">
+              <Paperclip size={16} />
+              <span className="truncate">
+                {selectedFile.name} ({Math.round(selectedFile.size / 1024)} KB)
               </span>
-              <button
-                onClick={() => handleRemoveFile(index)}
-                className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
-              >
-                <X size={16} />
-              </button>
             </div>
-          ))}
+            <button
+              onClick={handleRemoveFile}
+              className="text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+            >
+              <X size={18} />
+            </button>
+          </div>
         </div>
       )}
 
-      <textarea
-        name="msg"
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
-        className={`flex-1 w-full bg-warmWhite dark:bg-darkGray text-charcoalBlack dark:text-charcoalWhite p-2 rounded-lg resize-none h-10 focus:outline-none shadow-inner transition-all ${
-          isFocused ? "ring-2 ring-crimsonRed" : "ring-1 ring-gray-400"
-        }`}
-        placeholder="Write a message..."
-      />
-
-      <div className="flex justify-between w-full pt-4">
-        <div>
-          <input
-            type="file"
-            multiple
-            ref={fileInputRef}
-            onChange={handleFileChange}
-            className="hidden"
-            data-testid="file-input"
+      <div className="flex flex-col w-full gap-2">
+        <div className="flex space-x-2 items-center">
+          <textarea
+            name="msg"
+            value={message}
+            onChange={handleMessageChange}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+            onKeyDown={handleKeyPress}
+            rows={3}
+            placeholder="Write a message..."
+            className={`flex-1 resize-none rounded-lg px-4 py-2 bg-gray-100 overflow-visible dark:bg-gray-800 text-gray-800 dark:text-gray-200 shadow-sm focus:outline-none transition-all text-sm ${
+              isFocused ? "ring-2 ring-crimsonRed" : "ring-1 ring-gray-300"
+            }`}
           />
+
+          <button
+            onClick={handleSendMessage}
+            disabled={(!message.trim() && !selectedFile) || uploading}
+            className={`rounded-full p-3 h-10 w-10 flex items-center justify-center transition-colors text-center ${
+              (message.trim() || selectedFile) && !uploading
+                ? "bg-crimsonRed hover:bg-darkBurgundy text-white"
+                : "bg-gray-300 dark:bg-gray-700 text-gray-500 cursor-not-allowed"
+            }`}
+          >
+            {uploading ? (
+              <Loader2 className="w-5 h-5 animate-spin" />
+            ) : (
+              <span className="text-lg font-bold">➤</span>
+            )}
+          </button>
+        </div>
+        <div className="flex items-center gap-1">
           <button
             onClick={handleFileButtonClick}
-            className="text-mutedSilver dark:text-charcoalWhite hover:text-charcoalBlack dark:hover:text-warmWhite p-2"
-            data-testid="attach-button"
+            className="text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white p-1"
             disabled={uploading}
           >
             <Paperclip size={20} />
           </button>
           <button
-            className="text-mutedSilver dark:text-charcoalWhite hover:text-charcoalBlack dark:hover:text-warmWhite p-2"
+            className="text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white p-1"
             disabled={uploading}
           >
             <Image size={20} />
           </button>
           <button
-            className="text-mutedSilver dark:text-charcoalWhite hover:text-charcoalBlack dark:hover:text-warmWhite p-2"
+            className="text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white p-1"
             disabled={uploading}
           >
             <Smile size={20} />
           </button>
         </div>
 
-        <button
-          id="send-msg-btn"
-          onClick={handleSendMessage}
-          disabled={
-            (!message.trim() && selectedFiles.length === 0) || uploading
-          }
-          className={`ml-2 p-1 rounded-l-full font-bold rounded-r-full transition-colors flex items-center justify-center min-w-20 ${
-            (message.trim() || selectedFiles.length > 0) && !uploading
-              ? "bg-crimsonRed hover:bg-darkBurgundy text-warmWhite"
-              : "bg-mutedSilver text-charcoalBlack cursor-not-allowed"
-          }`}
-        >
-          {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Send"}
-        </button>
+        <input
+          data-testid="input-file"
+          type="file"
+          ref={fileInputRef}
+          onChange={handleFileChange}
+          className="hidden"
+        />
       </div>
     </div>
   );

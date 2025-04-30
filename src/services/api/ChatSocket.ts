@@ -1,6 +1,7 @@
 import { connectSocket } from "./socket";
 import { RecievedMessage } from "@chatComponent/interfaces/Message.interfaces";
 import { ChatCardInterface } from "@chatComponent/interfaces/Chat.interfaces";
+import toast from "react-hot-toast";
 
 let ChatSocket: SocketIOClient.Socket | null = null;
 
@@ -9,8 +10,13 @@ export const connectToChat = () => {
   return ChatSocket;
 };
 export const onConnect = (setTrue: (boolean: boolean) => void) => {
+  if (!ChatSocket) return;
   ChatSocket?.on("connect", () => {
     setTrue(true);
+    ChatSocket?.on("error", (error: { event: string; message: string }) => {
+      console.log(error.message);
+      toast.error(error.message);
+    });
   });
 };
 export const subscribeToMessages = (
@@ -49,21 +55,25 @@ export const sendMessage = (
   callback?: () => void,
 ) => {
   if (!ChatSocket) return;
-  console.log("message sent ", message);
+
   ChatSocket.emit("sendMessage", { ...message, chatId }, callback);
+  console.log("📩 Sent Message:", message);
 };
 export const typing = (chatId: string) => {
   if (!ChatSocket) return;
   ChatSocket.emit("messageTyping", chatId);
+  console.log("📖 I am Typing in chat:", chatId);
 };
 export const stopTyping = (chatId: string) => {
   if (!ChatSocket) return;
   ChatSocket.emit("stopTyping", chatId);
+  console.log("📖 I stopped Typing ");
 };
 export const unsubscribeFromMessages = (chatId: string) => {
   if (!ChatSocket) return;
   ChatSocket.off("receiveMessage");
   ChatSocket.off("messageRead");
+  ChatSocket.off("error");
   ChatSocket.emit("leaveChat", chatId);
 };
 
@@ -85,5 +95,5 @@ export const subscribeToChats = (
     onNewChat(chatCard);
   });
 };
-
+export const listenToOpenChatErrors = () => {};
 export default connectToChat;

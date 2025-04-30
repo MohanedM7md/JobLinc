@@ -1,8 +1,7 @@
 import { ConnectionInterface } from "interfaces/networkInterfaces";
 import ManageNetworkIcons from "./ManageNetworkIcons";
 import { useEffect, useState } from "react";
-import { getUserConnections } from "@services/api/networkServices";
-
+import { getConnections } from "@services/api/networkServices";
 
 
 const ManageNetworkCard: React.FC = () => {
@@ -12,15 +11,15 @@ const ManageNetworkCard: React.FC = () => {
       const controller = new AbortController();
       const fetchData = async () => {
         try {
-          const response = await getUserConnections(5, controller.signal);
-          console.log(response);
-          const parsedConnections = Array.isArray(response)
-            ? response.map((connection) => ({
-                ...connection,
-                connectedDate: new Date(connection.connectedDate),
-              }))
-            : [];
-          setUserConnections(parsedConnections);
+            const response = await getConnections();
+            console.log(response);
+            const parsedConnections = Array.isArray(response)
+              ? response.map((connection) => ({
+                  ...connection,
+                  connectedDate: new Date(connection.connectedDate),
+                }))
+              : [];
+            setUserConnections(parsedConnections);
         } catch (error) {
           console.error("Error fetching network feed:", error);
         }
@@ -36,8 +35,8 @@ const ManageNetworkCard: React.FC = () => {
       <p className="text-black p-4 w-full border-b-2 border-gray-200 font-semibold">
         Manage my network
       </p>
-      <ManageNetworkIcons id="ConnectionsButton"Icon="fa-solid fa-user-group" IconName="Connections" Number={userConnections.length.toString()} />
-      <ManageNetworkIcons id="FollowingandFollowersButton" Icon="fa-solid fa-user" IconName="Following & Followers" Number="" />
+      <ManageNetworkIcons id="ConnectionsButton"Icon="fa-solid fa-user-group" IconName="Connections" Number={userConnections.length.toString()} link="/my-connections"/>
+      <ManageNetworkIcons id="FollowingandFollowersButton" Icon="fa-solid fa-user" IconName="Following & Followers" Number="" link="/followers-following"/>
       <ManageNetworkIcons id="GroupsButton" Icon="fa-solid fa-people-group" IconName="Groups" Number="" />
       <ManageNetworkIcons id="EventsButton"Icon="fa-solid fa-calendar-days" IconName="Events" Number="" />
       <ManageNetworkIcons id="PagesButton"Icon="fa-solid fa-building" IconName="Pages" Number="" />
