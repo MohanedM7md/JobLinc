@@ -15,8 +15,8 @@ const SeenBy = React.memo(
   ({ seenBy, users, messageStatus, senderId }: SeenByProps) => {
     const currentUserId = store.getState().user.userId;
     if (senderId !== currentUserId) return null;
-
-    const seenUsers = users.filter((user) => seenBy.includes(user.userId));
+    console.log(seenBy);
+    const seenUsers = users.filter((user) => seenBy?.includes(user.userId));
 
     return (
       <motion.div
@@ -42,7 +42,6 @@ const SeenBy = React.memo(
           </div>
         ) : null}
 
-        {/* Seen By Avatars */}
         {seenUsers.length > 0 &&
           messageStatus !== "failed" &&
           messageStatus !== "sent" && (

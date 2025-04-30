@@ -1,52 +1,54 @@
+import { Media } from "@interfaces/postInterfaces";
+
 interface MediaProps {
-    pics: string[];
+    media: Media[];
 }
 
 
 export default function PostMedia(props:MediaProps) {
-    let renderedPics;
-    renderPics();
+    let renderedmedia;
+    rendermedia();
     
     return (
         <div data-testid="media-rendering" className="grid grid-rows-4 grid-cols-2">
-            {renderedPics}
+            {renderedmedia}
         </div>
     )
 
-    function renderPics() {
-        if (props.pics.length == 1) {
-          return (renderedPics = props.pics.map((pic, index) => {
+    function rendermedia() {
+        if (props.media.length == 1) {
+          return (renderedmedia = props.media.map((pic, index) => {
             return (
               <img
                 key={index}
-                src={pic}
+                src={pic.url}
                 alt={`pic-${index}`}
                 className={
-                  props.pics.length == 4
+                  props.media.length == 4
                     ? "row-span-3 col-span-2"
                     : "row-span-4 col-span-2"
                 }
               />
             );
           }));
-        } else if (props.pics.length == 2) {
-          return (renderedPics = props.pics.map((pic, index) => {
+        } else if (props.media.length == 2) {
+          return (renderedmedia = props.media.map((pic, index) => {
             return (
               <img
                 key={index}
-                src={pic}
+                src={pic.url}
                 alt={`pic-${index}`}
                 className="row-span-4"
               />
             );
           }));
-        } else if (props.pics.length == 3) {
-          return (renderedPics = props.pics.map((pic, index) => {
+        } else if (props.media.length == 3) {
+          return (renderedmedia = props.media.map((pic, index) => {
             if (index == 1) {
               return (
                 <img
                   key={index}
-                  src={pic}
+                  src={pic.url}
                   alt={`pic-${index}`}
                   className="row-span-4"
                 />
@@ -55,60 +57,60 @@ export default function PostMedia(props:MediaProps) {
               return (
                 <img
                   key={index}
-                  src={pic}
+                  src={pic.url}
                   alt={`pic-${index}`}
                   className="row-span-2"
                 />
               );
             }
           }));
-        } else if (props.pics.length == 4) {
-          return (renderedPics = props.pics.map((pic, index) => {
+        } else if (props.media.length == 4) {
+          return (renderedmedia = props.media.map((pic, index) => {
             if (index == 1) {
               return (
                 <img
                   key={index}
-                  src={pic}
+                  src={pic.url}
                   alt={`pic-${index}`}
                   className="row-span-3"
                 />
               );
             } else {
-              return <img key={index} src={pic} alt={`pic-${index}`} />;
+              return <img key={index} src={pic.url} alt={`pic-${index}`} />;
             }
           }));
-        } else if (props.pics.length == 5) {
-          return (renderedPics = props.pics.map((pic, index) => {
+        } else if (props.media.length == 5) {
+          return (renderedmedia = props.media.map((pic, index) => {
             if (index == 1) {
               return (
                 <img
                   key={index}
-                  src={pic}
+                  src={pic.url}
                   alt={`pic-${index}`}
                   className="row-span-4"
                 />
               );
             } else {
-              return <img key={index} src={pic} alt={`pic-${index}`} />;
+              return <img key={index} src={pic.url} alt={`pic-${index}`} />;
             }
           }));
         } else {
-          return (renderedPics = props.pics.map((pic, index) => {
+          return (renderedmedia = props.media.map((pic, index) => {
             if (index == 1) {
               return (
                 <img
                   key={index}
-                  src={pic}
+                  src={pic.url}
                   alt={`pic-${index}`}
                   className="row-span-4"
                 />
               );
             }
             else if (index < 5) {
-                return <img key={index} src={pic} alt={`pic-${index}`} />;
+                return <img key={index} src={pic.url} alt={`pic-${index}`} />;
             }
             else if (index == 5) {
-                return <img key={index} src={pic} alt={`pic-${index}`} />;
+                return <img key={index} src={pic.url } alt={`pic-${index}`} />;
             }
             else {
                 return null;

@@ -1,11 +1,12 @@
-import React, { useCallback, useState, useEffect, memo, useRef } from "react";
+import React, { useCallback, useState, useEffect, memo } from "react";
 import FloatingChatHeader from "./FloatingChatHeader";
 import ChatContent from "../ChatContent";
 import useChats from "@hooks/useChats";
 import useChatid from "@context/ChatIdProvider";
 import useNetworkUserId from "@context/NetworkUserIdProvider";
 import { FloatingChatWindowProps } from "@chatComponent/interfaces/Chat.interfaces";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+
 function FloatingChatWindow({
   className,
   chatName,
@@ -48,14 +49,17 @@ function FloatingChatWindow({
 
   return (
     <motion.div
-      initial={{ x: -100 }}
-      animate={{ x: 10 }}
-      exit={{ x: -50 }}
+      initial={{ x: 50, opacity: 0 }}
+      animate={{ x: 10, opacity: 1 }}
+      exit={{ x: -50, opacity: 0 }}
       transition={{ duration: 0.3, ease: "easeInOut" }}
       className={`shadow-xl border border-gray-200 rounded-t-lg 
-      
         sm:w-[400px] w-[80vw] mr-10
-        relative bottom-0  ${className} ${!isActive ? "translate-y-[calc(100%-60px)] h-0" : ""}`}
+        relative bottom-0 ${className} overflow-hidden`}
+      style={{
+        height: isActive ? "calc(60vh + 60px)" : "60px",
+        transition: "height 300ms cubic-bezier(0.2, 0, 0, 1)",
+      }}
       data-testid="test-floatingWindow"
     >
       <FloatingChatHeader
@@ -64,7 +68,16 @@ function FloatingChatWindow({
         chatPicture={chatPicture}
         onClose={() => CloseChat(chatId, usersId)}
       />
-      <ChatContent className="h-[60vh]" />
+
+      <div
+        className="overflow-hidden"
+        style={{
+          height: isActive ? "60vh" : "0px",
+          transition: "height 300ms cubic-bezier(0.2, 0, 0, 1)",
+        }}
+      >
+        <ChatContent className="h-full" />
+      </div>
     </motion.div>
   );
 }

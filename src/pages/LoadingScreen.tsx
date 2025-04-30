@@ -11,7 +11,6 @@ function LoadingScreen() {
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[var(--color-warmWhite)] dark:bg-[var(--color-warmBlack)]">
-      {/* Text-based Logo */}
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -22,7 +21,6 @@ function LoadingScreen() {
         <span className="text-charcoalBlack">Linc</span>
       </motion.div>
 
-      {/* Spinner */}
       <motion.div
         className="mt-8 w-12 h-12 border-4 border-[var(--color-crimsonRed)] border-t-transparent rounded-full animate-spin"
         initial={{ rotate: 0 }}

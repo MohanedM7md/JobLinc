@@ -20,7 +20,6 @@ function SignUpPage()
 
                 <div className="flex flex-col justify-center">
                     <AuthenticationGoogleButton />
-                    <AuthenticationMicrosoftButton />
                 </div>
 
                 <div className="text-charcoalBlack flex justify-center">Already on JobLinc?
