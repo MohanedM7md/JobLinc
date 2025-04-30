@@ -9,6 +9,7 @@ export interface CommentInterface {
   companyName: string | null;
   companyLogo: string | null;
   headline: string;
+  userReaction: PostReactions;
   text: string;
   time: Date;
   likes: number;
@@ -26,9 +27,11 @@ export interface RepliesInterface {
   firstname: string;
   lastname: string;
   headline: string;
+  userReaction: PostReactions;
   profilePicture: string;
   text: string;
   time: Date;
+  likes: number;
 }
 
 export interface PostInterface {
@@ -49,6 +52,20 @@ export interface PostInterface {
   comments: number;
   reposts: number;
   repost: PostInterface | null;
+}
+
+export interface ReactionInterface {
+  reactId: string;
+  userId: string;
+  firstname: string;
+  lastname: string;
+  headline: string;
+  profilePicture: string;
+  companyId: string | null;
+  companyName: string | null;
+  companyLogo: string | null;
+  type: PostReactions;
+  time: Date;
 }
 
 export interface Media {

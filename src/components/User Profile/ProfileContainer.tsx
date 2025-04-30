@@ -144,6 +144,12 @@ function ProfileContainer() {
     setUserData((prev) => (prev ? { ...prev, skills: data } : prev));
   }
 
+  async function updatePosts() {
+    refetchMyPosts().then(({ data }) => {
+      setUserPosts(data);
+    });
+  }
+
   if (
     isMeFetching ||
     isCertificatesFetching ||
@@ -262,16 +268,28 @@ function ProfileContainer() {
                 )}
               </div>
               {userPosts && userPosts.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {userPosts.map((post, i) => (
-                    <div
-                      key={`Post ${i} of user ${userData.userId}`}
-                      className="p-4 rounded-lg shadow-md border border-gray-300"
+                <>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {userPosts.slice(0, 3).map((post, i) => (
+                      <div
+                        key={`Post ${i} of user ${userData.userId}`}
+                        className="p-4 rounded-lg shadow-md border border-gray-300"
+                      >
+                        <PostCard post={post} isRepost={false} compact={true} />
+                      </div>
+                    ))}
+                  </div>
+                  {userPosts.length > 2 && (
+                    <button
+                      onClick={() =>
+                        navigate(`/profile/${userData.userId}/details/activity`)
+                      }
+                      className="mt-2 px-4 py-1.5 border-1 border-crimsonRed rounded-3xl hover:bg-crimsonRed hover:text-white font-medium transition duration-400 ease-in-out"
                     >
-                      <PostCard post={post} isRepost={false} compact={true} />
-                    </div>
-                  ))}
-                </div>
+                      Show all activity
+                    </button>
+                  )}
+                </>
               ) : (
                 <h2 className="text-mutedSilver">
                   {isUser
@@ -507,7 +525,10 @@ function ProfileContainer() {
           />
         </Modal>
         <Modal isOpen={addPostModal} onClose={() => setAddPostModal(false)}>
-          <PostCreate />
+          <PostCreate
+            onUpdate={updatePosts}
+            onClose={() => setAddPostModal(false)}
+          />
         </Modal>
       </div>
     </div>

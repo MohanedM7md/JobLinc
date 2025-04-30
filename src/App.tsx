@@ -11,7 +11,6 @@ const Messaging = lazy(() => import("./pages/Messaging"));
 
 import Home from "./pages/Home";
 import MyNetwork from "./pages/MyNetwork";
-import PostCreate from "./components/Posts/PostCreate";
 import PostEdit from "./components/Posts/PostEdit";
 import ChangePassword from "./pages/ChangePassword";
 import ResetPassword from "./pages/ResetPassword";
@@ -46,6 +45,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import EmailAddress from "@pages/Settings/SignInAndSecurity/AccountAccess/EmailAddress";
 import Metrics from "./components/Company/Metrics";
 import Post from "@pages/Post";
+import FullActivity from "./components/User Profile/Miscellaneous/FullActivity";
 
 const queryClient = new QueryClient();
 
@@ -103,6 +103,10 @@ function App() {
                     path="details/certificates"
                     element={<FullCertificates />}
                   />
+                  <Route
+                    path="details/activity"
+                    element={<FullActivity />}
+                   />
                   <Route path="details/skills" element={<FullSkills />} />
                 </Route>
                 <Route path="/thank-you" element={<ThankYouPage />} />

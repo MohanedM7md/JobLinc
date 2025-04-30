@@ -1,16 +1,20 @@
-import { useState } from "react";
 import { RepliesInterface } from "../../../interfaces/postInterfaces";
-import CommentContent from "./CommentContent";
-import CommentHeader from "./CommentHeader";
+import CommentContent from "../Comments/CommentContent";
+import CommentHeader from "../Comments/CommentHeader";
+import ReplyReact from "./ReplyReact";
 
 interface ReplyCardProps {
   reply: RepliesInterface;
 }
 
 export default function ReplyCard(props: ReplyCardProps) {
-  const [isLike, setIsLike] = useState<boolean>(false);
-  const like = !isLike ? "Like" : "Liked";
-
+  function reactionSuccess(newReaction: string, oldReaction: string) {
+    if (oldReaction === "NoReaction" && newReaction !== "NoReaction") {
+      props.reply.likes++;
+    } else if (oldReaction !== "NoReaction" && newReaction === "NoReaction") {
+      props.reply.likes--;
+    }
+  }
   return (
     <div className="flex flex-wrap w-11/12 relative">
       <div className="flex flex-row w-1/1 pr-2">
@@ -33,16 +37,16 @@ export default function ReplyCard(props: ReplyCardProps) {
         commentText={props.reply.text}
       />
       <div className="ml-14.5">
-        <button
-          onClick={() => setIsLike(!isLike)}
-          className={
-            isLike
-              ? "transition cursor-pointer text-sm font-medium px-2 text-blue-500 hover:bg-blue-100 rounded-lg h-fit"
-              : "transition cursor-pointer text-sm font-medium px-2 text-mutedSilver hover:bg-gray-200 rounded-lg h-fit"
-          }
-        >
-          {like}
-        </button>
+        <div className="flex items-center font-medium text-mutedSilver">
+          <div className="flex items-center">
+            <ReplyReact
+              replyId={props.reply.replyId}
+              userReaction={props.reply.userReaction}
+              successHandler={reactionSuccess}
+            />
+            <span>• {props.reply.likes}</span>
+          </div>
+        </div>
       </div>
     </div>
   );

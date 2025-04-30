@@ -1,21 +1,26 @@
 import { useState } from "react";
 import { createPost, uploadMedia } from "../../services/api/postServices";
-import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { MediaUpload, MediaTypes } from "../../interfaces/postInterfaces";
 import "material-icons";
 
-export default function PostCreate() {
+
+interface AddPostProps {
+  onUpdate: () => void;
+  onClose: () => void;
+}
+
+export default function PostCreate(props: AddPostProps) {
   const [newText, setNewText] = useState<string>("");
   const [newMedia, setNewMedia] = useState<MediaUpload[]>([]);
 
-  const navigate = useNavigate();
 
   const addPost = useMutation({
     mutationFn: createPost,
     onSuccess: () => {
-      navigate("/home");
+      props.onUpdate()
+      props.onClose()
     },
   });
 

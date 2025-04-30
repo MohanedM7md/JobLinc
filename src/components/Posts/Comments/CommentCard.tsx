@@ -1,53 +1,45 @@
 import CommentContent from "./CommentContent";
 import CommentHeader from "./CommentHeader";
-import {
-  CommentInterface,
-  RepliesInterface,
-} from "../../../interfaces/postInterfaces";
-import { useEffect, useState } from "react";
-import ReplyCard from "./ReplyCard";
-import { createReply, getReplies } from "../../../services/api/postServices";
-import store from "@store/store";
+import { CommentInterface } from "../../../interfaces/postInterfaces";
+import { useState } from "react";
 import CommentReact from "./CommentReact";
-
+import ReplyContainer from "../Replies/ReplyContainer";
+import { AnimatePresence } from "framer-motion";
+import CommentUtilityButton from "./CommentUtilityButton";
+import CommentReactions from "./CommentReactions";
+import Modal from "../../utils/Modal";
 interface CommentCardProps {
   comment: CommentInterface;
+  delete: () => void;
 }
 
 export default function CommentCard(props: CommentCardProps) {
   const [showReplies, setShowReplies] = useState(false);
-  const [replies, setReplies] = useState<RepliesInterface[]>([]);
-  const [newReply, setNewReply] = useState<string>("");
+  const [showReactionsModal, setShowReactionsModal] = useState<boolean>(false);
 
-  const posterId = props.comment.companyId ? props.comment.companyId : props.comment.userId;
-  const posterName = props.comment.companyName ? props.comment.companyName : props.comment.firstname + " " + props.comment.lastname;
-  const posterPicture = props.comment.companyLogo ? props.comment.companyLogo : props.comment.profilePicture; 
+  const posterId = props.comment.companyId
+    ? props.comment.companyId
+    : props.comment.userId;
+  const posterName = props.comment.companyName
+    ? props.comment.companyName
+    : props.comment.firstname + " " + props.comment.lastname;
+  const posterPicture = props.comment.companyLogo
+    ? props.comment.companyLogo
+    : props.comment.profilePicture;
 
-  useEffect(() => {
-    if (showReplies) {
-      const response = getReplies(
-        props.comment.postId,
-        props.comment.commentId,
-      );
-      response.then((data) => setReplies(data));
-    }
-  }, [showReplies]);
+  function incrementRepliesCount() {
+    props.comment.comments++;
+  }
 
-  function addReply() {
-    createReply(props.comment.postId, props.comment.commentId, newReply).then(
-      () =>
-        getReplies(props.comment.postId, props.comment.commentId).then((data) =>
-          setReplies(data),
-        ),
-    );
+  function updateText(newText: string) {
+    props.comment.text = newText;
   }
 
   function reactionSuccess(newReaction: string, oldReaction: string) {
-    if (oldReaction === "" && newReaction !== "") {
+    if (oldReaction === "NoReaction" && newReaction !== "NoReaction") {
       props.comment.likes++;
-    } else if (oldReaction !== "" && newReaction === "") {
+    } else if (oldReaction !== "NoReaction" && newReaction === "NoReaction") {
       props.comment.likes--;
-    } else if (oldReaction !== newReaction) {
     }
   }
 
@@ -63,9 +55,17 @@ export default function CommentCard(props: CommentCardProps) {
           time={props.comment.time}
         />
         <div className="flex flex-row w-1/1 justify-end">
-          <button className="material-icons-round cursor-pointer mr-1 text-mutedSilver hover:bg-gray-200 rounded-full h-fit">
-            more_horiz
-          </button>
+          <div className="relative">
+            <AnimatePresence>
+              <CommentUtilityButton
+                commentId={props.comment.commentId}
+                posterId={posterId}
+                commentText={props.comment.text}
+                updateText={updateText}
+                delete={props.delete}
+              />
+            </AnimatePresence>
+          </div>
         </div>
       </div>
       <CommentContent
@@ -74,13 +74,15 @@ export default function CommentCard(props: CommentCardProps) {
       />
       <div className="ml-14.5">
         <div className="flex items-center font-medium text-mutedSilver">
-          <div className="flex items-center">
+          <div className="flex items-center hover:underline cursor-pointer">
             <CommentReact
               commentId={props.comment.commentId}
-              userReaction="NoReaction"
+              userReaction={props.comment.userReaction}
               successHandler={reactionSuccess}
             />
-            <span>• {props.comment.likes}</span>
+            <span onClick={() => setShowReactionsModal(true)}>
+              • {props.comment.likes}
+            </span>
           </div>
           <span className="ml-2">|</span>
           <button
@@ -92,56 +94,21 @@ export default function CommentCard(props: CommentCardProps) {
         </div>
       </div>
       <div className="flex flex-wrap flex-row-reverse w-1/1 rounded-xl relative pt-2">
-        {/* This code should be refactored, seperate responsibilities */}
         {showReplies ? (
-          <>
-            <div className="flex flex-row w-11/12 py-3">
-              <img
-                className="rounded-full h-10 w-10 mx-2"
-                src={store.getState().user.profilePicture!}
-                alt={"User"}
-              />
-              <input
-                type="text"
-                value={newReply}
-                onChange={(e) => setNewReply(e.target.value)}
-                placeholder="Write a reply..."
-                className="outline-[0.7px] outline-gray-300 text-[14px] text-charcoalBlack h-8 w-12/12 px-2 mt-1 rounded-3xl hover:cursor-text hover:outline-[1px] hover:bg-gray-100 focus:outline-black focus:outline-[1.5px]"
-              ></input>
-              <button
-                onClick={() => {
-                  if (newReply != "") {
-                    addReply();
-                    setNewReply("");
-                  }
-                }}
-                className="material-icons-round cursor-pointer rounded-full p-1 mt-1 mx-2 text-gray-500 hover:bg-gray-200 h-fit"
-              >
-                send
-              </button>
-            </div>
-            {replies ? (
-              replies.length > 0 ? (
-                replies.map((reply) => (
-                  <ReplyCard key={reply.replyId} reply={reply} />
-                ))
-              ) : (
-                <div className="m-auto p-2">
-                  <span className="text-mutedSilver font-medium">
-                    No Replies Yet
-                  </span>
-                </div>
-              )
-            ) : (
-              <div className="m-auto p-2">
-                <span className="text-mutedSilver font-medium">
-                  Can't fetch Replies, Please try again later
-                </span>
-              </div>
-            )}
-          </>
+          <ReplyContainer
+            commentId={props.comment.commentId}
+            incrementRepliesCount={incrementRepliesCount}
+          />
         ) : null}
       </div>
+      {showReactionsModal && (
+        <Modal
+          isOpen={showReactionsModal}
+          onClose={() => setShowReactionsModal(false)}
+        >
+          <CommentReactions commentId={props.comment.commentId} />
+        </Modal>
+      )}
     </div>
   );
 }

@@ -15,6 +15,7 @@ import CommentsContainer from "./Comments/CommentsContainer";
 import PostHeader from "./PostHeader";
 import Repost from "./Repost";
 import Modal from "../utils/Modal";
+import PostReactions from "./PostReactions";
 
 interface PostProps {
   post: PostInterface;
@@ -26,6 +27,7 @@ export default function PostCard(props: PostProps) {
   const [hide, setHide] = useState<boolean>(false);
   const [showComment, setShowComment] = useState<boolean>(false);
   const [showRepostModal, setShowRepostModal] = useState<boolean>(false);
+  const [showReactionsModal, setShowReactionsModal] = useState<boolean>(false);
 
   const posterId: string = props.post.companyId
     ? props.post.companyId
@@ -37,16 +39,19 @@ export default function PostCard(props: PostProps) {
     props.post.profilePicture ?? props.post.companyLogo ?? "NotFound";
 
   function reactionSuccess(newReaction: string, oldReaction: string) {
-    if (oldReaction === "" && newReaction !== "") {
+    if (oldReaction === "NoReaction" && newReaction !== "NoReaction") {
       props.post.likes++;
-    } else if (oldReaction !== "" && newReaction === "") {
+    } else if (oldReaction !== "NoReaction" && newReaction === "NoReaction") {
       props.post.likes--;
-    } else if (oldReaction !== newReaction) {
     }
   }
 
   function incrementCommentsCount() {
     props.post.comments += 1;
+  }
+
+  function decrementCommentsCount() {
+    props.post.comments -= 1;
   }
 
   return !hide ? (
@@ -96,8 +101,10 @@ export default function PostCard(props: PostProps) {
         ) : null}
       </div>
       <div className="flex flex-row text-mutedSilver m-auto py-2 w-11/12 border-b-1 border-gray-300">
-        <ThumbsUp className="text-blue-500" />
-        <span className="ml-2">{props.post.likes}</span>
+        <div onClick={() => setShowReactionsModal(true)} className="hover:underline flex flex-row cursor-pointer">
+          <ThumbsUp className="text-blue-500" />
+          <span className="ml-2">{props.post.likes}</span>
+        </div>
         <div className="flex flex-row justify-end w-1/1">
           <span className="ml-2">{props.post.comments}</span>
           <MessageSquareText className="ml-2" />
@@ -157,10 +164,19 @@ export default function PostCard(props: PostProps) {
           />
         </Modal>
       )}
+      {showReactionsModal && (
+        <Modal
+          isOpen={showReactionsModal}
+          onClose={() => setShowReactionsModal(false)}
+        >
+          <PostReactions postId={props.post.postId} />
+        </Modal>
+      )}
       {showComment ? (
         <CommentsContainer
           postId={props.post.postId}
           incrementCommentsCount={incrementCommentsCount}
+          decrementCommentsCount={decrementCommentsCount}
         />
       ) : null}
     </div>

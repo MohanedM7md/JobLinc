@@ -10,7 +10,7 @@ import {
 import { AnimatePresence, motion } from "framer-motion";
 import { useState, useRef } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { reactPost } from "@services/api/postServices";
+import { reactComment } from "@services/api/postServices";
 import toast from "react-hot-toast";
 
 interface PostReactProps {
@@ -24,30 +24,25 @@ export default function CommentReact({
   successHandler,
   userReaction,
 }: PostReactProps) {
-  const [reaction, setReaction] = useState<string>(
-    userReaction || "NoReaction",
-  );
+  const [reaction, setReaction] = useState<string>(userReaction);
   const [showReact, setShowReact] = useState<boolean>(false);
   const hoverTimeout = useRef<NodeJS.Timeout | null>(null);
 
   const addReactionMutation = useMutation({
-    mutationFn: reactPost,
+    mutationFn: reactComment,
   });
 
   function postReaction(type: string) {
     const oldReaction = reaction;
-    toast.promise(
-      addReactionMutation.mutateAsync({ postId: commentId, type }),
-      {
-        loading: "Adding reaction...",
-        success: () => {
-          setReaction(type);
-          successHandler(type, oldReaction);
-          return "Reaction added successfully!";
-        },
-        error: (error) => error.message,
+    toast.promise(addReactionMutation.mutateAsync({ commentId, type }), {
+      loading: "Adding reaction...",
+      success: () => {
+        setReaction(type);
+        successHandler(type, oldReaction);
+        return "Reaction added successfully!";
       },
-    );
+      error: (error) => error.message,
+    });
   }
 
   function handleMouseEnter() {
@@ -124,9 +119,6 @@ export default function CommentReact({
           {reaction === "NoReaction" ? "Like" : reaction}
         </span>
       </button>
-      <span className="text-sm text-mutedSilver">
-        {reaction === "NoReaction" ? "" : reaction}
-      </span>
       <AnimatePresence>
         {showReact && (
           <motion.div
