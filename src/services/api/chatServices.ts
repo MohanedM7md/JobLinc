@@ -25,8 +25,14 @@ export const fetchChatData = async (chatId: string) => {
   return response.data;
 };
 
-export const createChat = async (recievers: string[]) => {
-  const response = await api.post(`/chat/create`, { receiverIds: recievers });
+export const createChat = async (
+  recievers: string[],
+  title: string | undefined,
+) => {
+  const response = await api.post(`/chat/create`, {
+    receiverIds: recievers,
+    title,
+  });
   return response.data;
 };
 

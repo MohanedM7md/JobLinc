@@ -17,15 +17,15 @@ import useChatid from "@context/ChatIdProvider";
 import useNetworkUserId from "@context/NetworkUserIdProvider";
 import UserTypingIndicator from "./UserTyping";
 import GroupChatSetting from "./GroupSetting/GroupChatSetting";
-import SeenBy from "./SeenBy";
 function ChatContent({ className }: { className?: string }) {
   const [users, setUsers] = useState<User[]>([]);
   const [messages, setMessages] = useState<RecievedMessage[]>([]);
   const [loading, setLoading] = useState(true);
-
   const { chatId, setChatId } = useChatid();
   const { setOpnedChats } = useChats();
   const { usersId } = useNetworkUserId();
+  const { title } = useNetworkUserId();
+
   const userIdRef = useRef<string | null>(localStorage.getItem("userId"));
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const [typingUsers, setTypingUsers] = useState<string[]>([]);
@@ -54,7 +54,7 @@ function ChatContent({ className }: { className?: string }) {
       setLoading(true);
       if (usersId.length && !chatId) {
         console.log("Create new chat with: ", usersId);
-        const data = await createChat(usersId);
+        const data = await createChat(usersId, title);
         setUsers(data.participants);
         console.log(data.participants);
         setMessages(data.messages);

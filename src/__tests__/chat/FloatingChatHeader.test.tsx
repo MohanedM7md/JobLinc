@@ -17,7 +17,6 @@ describe("FloatingChatHeader Component", () => {
 
   it("renders correctly with all props", () => {
     render(<FloatingChatHeader {...mockProps} />);
-
     expect(screen.getByTestId("test-header")).toBeInTheDocument();
     expect(screen.getByText("Test Chat")).toBeInTheDocument();
     expect(screen.getByTestId("mock-avatar")).toBeInTheDocument();

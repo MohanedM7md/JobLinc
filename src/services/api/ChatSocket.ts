@@ -10,8 +10,13 @@ export const connectToChat = () => {
   return ChatSocket;
 };
 export const onConnect = (setTrue: (boolean: boolean) => void) => {
+  if (!ChatSocket) return;
   ChatSocket?.on("connect", () => {
     setTrue(true);
+    ChatSocket?.on("error", (error: { event: string; message: string }) => {
+      console.log(error.message);
+      toast.error(error.message);
+    });
   });
 };
 export const subscribeToMessages = (
@@ -90,12 +95,5 @@ export const subscribeToChats = (
     onNewChat(chatCard);
   });
 };
-export const listenToOpenChatErrors = () => {
-  if (!ChatSocket) return;
-
-  ChatSocket.on("error", (error: { event: string; message: string }) => {
-    console.log(error.message);
-    toast.error(error.message);
-  });
-};
+export const listenToOpenChatErrors = () => {};
 export default connectToChat;

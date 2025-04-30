@@ -10,10 +10,11 @@ const mockProps: ChatCardProps = {
   chatPicture: ["https://via.placeholder.com/50"],
   chatName: "John Doe",
   lastMessage: "Hello, how are you?",
-  sentDate: new Date("2023-03-15T10:30:00"), // Replace with an appropriate date-time string
+  sentDate: new Date("2023-03-15T10:30:00"),
   onClick: vi.fn(),
   isRead: true,
   unreadCount: 0,
+  senderName: "John",
 };
 
 describe("ChatCard Component", () => {

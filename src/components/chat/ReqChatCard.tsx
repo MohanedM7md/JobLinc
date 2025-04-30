@@ -26,7 +26,6 @@ function ReqChatCard({
         cursor-pointer
       "
     >
-      {/* Avatar */}
       <div className="relative flex-shrink-0">
         <img
           src={chatPicture[0] || "/default-avatar.png"}
@@ -40,7 +39,6 @@ function ReqChatCard({
         )}
       </div>
 
-      {/* Chat info */}
       <div className="flex-1 min-w-0 ml-4">
         <div className="flex justify-between items-baseline">
           <h3 className="font-medium text-gray-900 truncate">{chatName}</h3>
@@ -48,14 +46,11 @@ function ReqChatCard({
         <p className="text-sm text-gray-500 truncate mt-0.5">{lastMessage}</p>
       </div>
 
-      {/* Action section with date above buttons */}
       <div className="flex flex-col items-end ml-4">
-        {/* Date positioned above buttons */}
         <span className="text-xs text-gray-400 mb-2">
           {getRelativeTimeString(sentDate)}
         </span>
 
-        {/* Action buttons */}
         <div className="flex gap-2">
           <button
             onClick={(e) => {

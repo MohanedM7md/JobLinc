@@ -75,7 +75,7 @@ const ChatCardsList = ({
 
   return (
     <div className={`${className}`}>
-      <div className="flex mb-4 border-b">
+      <div className="flex mb-4 border-b bg-charcoalWhite">
         <button
           className={`py-2 px-4 font-medium ${
             activeTab === "chats"

@@ -55,7 +55,6 @@ function GroupChatSetting({
     };
   }, []);
 
-  // Fetch available contacts for adding participants
   const handleAddParticipant = async () => {
     try {
       setShowAddParticipants(true);
@@ -101,12 +100,11 @@ function GroupChatSetting({
 
   return (
     <>
-      {/* Gear Icon in Corner */}
       <div className="relative">
         <motion.button
           ref={gearRef}
           onClick={togglePanel}
-          className={`absolute right-3 top-3 p-2 rounded-full ${
+          className={`absolute right-6 top-3 p-2 rounded-full ${
             showPanel
               ? "bg-[var(--color-crimsonRed)] text-white"
               : "bg-[var(--color-SoftRed)] text-[var(--color-softRosewood)]"
