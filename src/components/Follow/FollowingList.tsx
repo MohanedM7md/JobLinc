@@ -1,4 +1,4 @@
-import FollowerCard from "./FollowerCard";
+import FollowingCard from "./FollowingCard";
 import { FollowInterface } from "@interfaces/networkInterfaces";
 import { getMyFollowing } from "@services/api/networkServices";
 import { useEffect, useState } from "react";
@@ -39,7 +39,7 @@ function FollowingList(){
     return(
             <div className="w-full">
             {Following.map((follower, index) => (
-              <FollowerCard key={index} {...follower} />
+              <FollowingCard key={index} {...follower} />
             ))}
           </div>
     )

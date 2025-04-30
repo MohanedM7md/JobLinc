@@ -3,10 +3,9 @@ import NetworkModal from "../MyNetwork/NetworkModal";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { sendFollowRequest, sendUnfollowRequest } from "@services/api/networkServices";
+import { removeFollowerRequest } from "@services/api/networkServices";
 
-function FollowerCard(props: FollowInterface) {
-  const [isFollowing, setIsFollowing] = useState(true);
+function FollowerCard(props: FollowInterface & { onRemove: (id: string) => void }) {
   const [modalOpen, setModalOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -25,54 +24,34 @@ function FollowerCard(props: FollowInterface) {
   };
 
   const handleOpenModal = () => {
-    setModalOpen(true); 
+    setModalOpen(true);
   };
 
   const handleCloseModal = () => {
     setModalOpen(false);
   };
 
-  const handleFollowRequest = async () => {
+  const handleRemoveFollower = async () => {
     const id = props.userId ?? props.companyId;
     if (!id) {
-      console.log("ID is Null");
+      console.log("user or company id is null");
       return;
     }
 
-    const followPromise = sendFollowRequest(id);
-    toast.promise(followPromise, {
-      loading: "Sending Follow request...",
-      success: `${props.firstName ?? props.companyName ?? `user`} Followed successfully!`,
-      error: `Failed to Follow ${props.firstName ?? props.companyName ?? `user`}. Please try again.`,
+    const removePromise = removeFollowerRequest(id);
+    toast.promise(removePromise, {
+      loading: "Removing follower...",
+      success: `${props.firstName ?? props.companyName ?? `user`} removed successfully!`,
+      error: `Failed to remove ${props.firstName ?? props.companyName ?? `user`}. Please try again.`,
     });
 
     try {
-      const response = await followPromise;
-      console.log("Follow Request Response:", response);
-      setIsFollowing(true); 
-    } catch (err) {
-      console.error("Failed to send Follow request:", err);
-    }
-  };
-
-  const handleConfirmUnfollow = async () => {
-    const id = props.userId ?? props.companyId;
-    if (!id) return;
-
-    const unfollowPromise = sendUnfollowRequest(id);
-    toast.promise(unfollowPromise, {
-      loading: "Sending UnFollow request...",
-      success: `${props.firstName ?? props.companyName ?? `user`} UnFollowed successfully!`,
-      error: `Failed to UnFollow ${props.firstName ?? props.companyName ?? `user`}. Please try again.`,
-    });
-
-    try {
-      const response = await unfollowPromise;
-      console.log("UnFollow Request Response:", response);
-      setIsFollowing(false);
+      const response = await removePromise;
+      console.log("Remove Follower Request Response:", response);
       setModalOpen(false);
+      props.onRemove(id);
     } catch (err) {
-      console.error("Failed to send UnFollow request:", err);
+      console.error("Failed to remove follower:", err);
     }
   };
 
@@ -100,54 +79,42 @@ function FollowerCard(props: FollowInterface) {
         </p>
       </div>
       <div className="w-1/3 flex justify-end items-center">
-        <div>
-        {isFollowing ? (
         <button
-        data-testid="unfollow-button"
-        className="border-2 px-9 py-0.5 text-darkGray border-darkGray rounded-full font-semibold hover:bg-lightGray hover:outline-1"
-        onClick={handleOpenModal}
+          data-testid="remove-follower-button"
+          className="border-2 px-4 py-0.5 text-darkGray border-darkGray rounded-full font-semibold hover:bg-lightGray hover:outline-1"
+          onClick={handleOpenModal}
         >
-        Following
-      </button>
-      ) : (
-      <button
-        data-testid="follow-button"
-        className="border-2 px-9 py-0.5 text-crimsonRed border-crimsonRed rounded-full font-semibold hover:bg-lightGray hover:outline-1"
-        onClick={handleFollowRequest}
-        >
-        Follow
-      </button>
-      )}
+          Remove Follower
+        </button>
 
-          <NetworkModal isOpen={modalOpen} onClose={handleCloseModal}>
-            <div className="flex flex-col">
-              <div className="border-b border-gray-300 py-2">
-                <h1 className="font-bold">Unfollow</h1>
-              </div>
-              <div className="border-b border-gray-300 flex items-center justify-center py-3">
-                <p className="font-semibold">
-                  You are about to unfollow {props.userId ? `${props.firstName} ${props.lastName}` : props.companyName}
-                </p>
-              </div>
-              <div className="flex items-center justify-end space-x-4 pt-3">
-                <button
-                  data-testid="unfollow-modal-button"
-                  className="cursor-pointer border-2 px-5 py-0.5 rounded-full font-semibold hover:bg-lightGray hover:outline-1 text-crimsonRed border-crimsonRed"
-                  onClick={handleConfirmUnfollow}
-                >
-                  Unfollow
-                </button>
-                <button
-                  data-testid="cancel-modal-button"
-                  className="cursor-pointer border-2 px-5 py-0.5 rounded-full font-semibold hover:bg-lightGray hover:outline-1 text-darkGray border-darkGray"
-                  onClick={handleCloseModal}
-                >
-                  Cancel
-                </button>
-              </div>
+        <NetworkModal isOpen={modalOpen} onClose={handleCloseModal}>
+          <div className="flex flex-col">
+            <div className="border-b border-gray-300 py-2">
+              <h1 className="font-bold">Remove Follower</h1>
             </div>
-          </NetworkModal>
-        </div>
+            <div className="border-b border-gray-300 flex items-center justify-center py-3">
+              <p className="font-semibold">
+                Are you sure you want to remove {props.userId ? `${props.firstName} ${props.lastName}` : props.companyName}?
+              </p>
+            </div>
+            <div className="flex items-center justify-end space-x-4 pt-3">
+              <button
+                data-testid="remove-modal-button"
+                className="cursor-pointer border-2 px-5 py-0.5 rounded-full font-semibold hover:bg-lightGray hover:outline-1 text-crimsonRed border-crimsonRed"
+                onClick={handleRemoveFollower}
+              >
+                Remove
+              </button>
+              <button
+                data-testid="cancel-modal-button"
+                className="cursor-pointer border-2 px-5 py-0.5 rounded-full font-semibold hover:bg-lightGray hover:outline-1 text-darkGray border-darkGray"
+                onClick={handleCloseModal}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </NetworkModal>
       </div>
     </div>
   );

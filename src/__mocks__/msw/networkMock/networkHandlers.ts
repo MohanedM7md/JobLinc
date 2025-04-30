@@ -20,6 +20,15 @@ interface FollowRequestBody{
 interface FollowRequestParams{
   followedId:string;
 }
+interface RemoveRequestBody{
+  userId: string;
+}
+interface RemoveRequestResponse{
+  userId:string;
+}
+interface RemoveRequestParams{
+  userId:string;
+}
 interface ConnectionRequestResponse {
   userId: string;
 }
@@ -201,6 +210,34 @@ export const connectsHandler = [
       }
     }
   ),
+  http.post<{}, RemoveRequestBody>(
+    `${API_URL}follow/:userId/remove`,
+    async ({ params }) => {
+      try {
+        const { userId } = params as RemoveRequestParams;
+  
+  
+        const RemoveResponse: RemoveRequestResponse = {
+          userId
+        };
+  
+        console.log("Processed Remove Request:", {userId});
+  
+        return HttpResponse.json({
+          status: 200,
+          statusText: `Remove request for user ${userId} sent successfully.`,
+          data: RemoveResponse,
+        });
+      } catch (error) {
+        console.error("Error processing Remove request:", error);
+  
+        return HttpResponse.json({
+          status: 500,
+          statusText: "Internal server error while processing the request.",
+        });
+      }
+    }
+  ),
   http.post<{}, AcceptConnectionRequestBody>(
     `${API_URL}connection/:userId/respond`,
     async ({ request, params }) => {
@@ -289,26 +326,3 @@ export const connectsHandler = [
     }
   ),
 ];
-// export const invitationsHandler = [
-//   http.get(`${baseURL}MyNetwork`, async ({ params, signal }) => {
-//     try {
-//       const { count = 10 } = params; 
-//       const invitations = await getPendingInvitations(count, signal);
-
-//       return HttpResponse.json(invitations, {
-//         status: 200,
-//         statusText: 'OK',
-//       });
-//     } catch (error) {
-//       console.error('Error handling invitations request:', error);
-
-//       return HttpResponse.json(
-//         { message: 'Failed to fetch pending invitations' },
-//         {
-//           status: 500,
-//           statusText: 'Internal Server Error',
-//         }
-//       );
-//     }
-//   }),
-// ];

@@ -38,10 +38,13 @@ function FollowerList(){
           controller.abort();
         };
       }, []);
+      const handleRemoveFollower = (id: string) => {
+        setFollowers(Followers.filter(follower => follower.userId !== id && follower.companyId !== id));
+      };    
     return(
           <div className="w-full">
             {Followers.map((follower, index) => (
-              <FollowerCard key={index} {...follower} />
+              <FollowerCard key={index} {...follower} onRemove={handleRemoveFollower}/>
             ))}
           </div>
     )

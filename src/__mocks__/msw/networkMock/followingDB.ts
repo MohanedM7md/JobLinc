@@ -9,7 +9,7 @@ export const FollowingResponse: FollowInterface[] = [
       profilePicture: null,
       firstName: null,
       lastName: null,
-      headline: null,
+      headline: "saye2",
       time: new Date("2025-04-27T14:23:00")
     },
     {
@@ -20,7 +20,7 @@ export const FollowingResponse: FollowInterface[] = [
       profilePicture: null,
       firstName: null,
       lastName: null,
-      headline: null,
+      headline: "saye2",
       time: new Date("2025-04-26T09:45:00")
     },
     {

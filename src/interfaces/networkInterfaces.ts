@@ -35,8 +35,8 @@ export interface invitationInterface {
     profilePicture: string | null;
     firstName: string | null;
     lastName: string | null;
-    headline: string | null;
-    time: Date | null;
+    headline: string;
+    time: Date;
   }
   export interface BlockedUserInterface {
     userId: string;
