@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import "material-icons";
-import { updateCoverPicture } from "@services/api/userProfileServices";
+import { deleteCoverPicture, updateCoverPicture } from "@services/api/userProfileServices";
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { LoaderCircle } from "lucide-react";
+import ConfirmAction from "../../utils/ConfirmAction";
 
 interface EditCoverPictureProps {
   coverPicture: string;
@@ -14,6 +15,7 @@ export default function EditCoverPicture(props: EditCoverPictureProps) {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState(props.coverPicture);
   const [isImage, setIsImage] = useState<boolean>(true);
+  const [confirmDelete, setConfirmDelete] = useState<boolean>(false);
   const imageValidation = isImage
     ? ""
     : "Invalid image format. Please upload a JPG, JPEG, or PNG file.";
@@ -25,7 +27,14 @@ export default function EditCoverPicture(props: EditCoverPictureProps) {
     },
   });
 
-  const isPending = updateCoverPictureMutation.isPending;
+  const deleteCoverPictureMutation = useMutation({
+    mutationFn: deleteCoverPicture,
+    onSuccess: () => {
+      props.onSave();
+    }
+  })
+
+  const isPending = updateCoverPictureMutation.isPending || deleteCoverPictureMutation.isPending;
 
   function fileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const selectedFile = event.target.files?.[0] || null;
@@ -95,11 +104,12 @@ export default function EditCoverPicture(props: EditCoverPictureProps) {
     }
   }
 
-  function removePicture() {
-    setPreview(
-      "https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg",
-    );
-    setFile(null);
+  function deletePicture() {
+    toast.promise(deleteCoverPictureMutation.mutateAsync(), {
+      loading: "Deleting cover picture...",
+      success: "Cover picture deleted successfully!",
+      error: (error) => error.message,
+    })
   }
 
   return (
@@ -158,16 +168,22 @@ export default function EditCoverPicture(props: EditCoverPictureProps) {
           className="bg-crimsonRed text-warmWhite px-4 py-1.5 rounded-3xl cursor-pointer hover:bg-red-700 transition duration-400 ease-in-out"
           disabled={isPending}
         >
-          {isPending ? "Saving" : "Confirm picture"}
+          {updateCoverPictureMutation.isPending ? "Saving" : "Confirm picture"}
         </button>
         <button
-          onClick={removePicture}
+          onClick={() => setConfirmDelete(true)}
           className="bg-gray-500 text-warmWhite px-4 py-1.5 rounded-3xl cursor-pointer hover:bg-gray-700 transition duration-400 ease-in-out"
           disabled={isPending}
         >
-          Remove Picture
+          {deleteCoverPictureMutation.isPending ? "Removing" : "Remove picture"}
         </button>
       </div>
+      {confirmDelete && (
+        <ConfirmAction
+          action={deletePicture}
+          onClose={() => setConfirmDelete(false)}
+        />
+      )}
     </div>
   );
 }

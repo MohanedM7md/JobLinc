@@ -8,13 +8,9 @@ import SignInPage from "./pages/SignIn";
 import ForgotPassword from "./pages/ForgotPassword";
 import UserDetails from "./components/Authentication/UserDetails";
 const Messaging = lazy(() => import("./pages/Messaging"));
-const Admin = lazy(() => import("./pages/Company/Admin"));
-const MyCompanies = lazy(() => import("./pages/Company/MyCompanies"));
-const UserProfile = lazy(() => import("./pages/UserProfile"));
+
 import Home from "./pages/Home";
 import MyNetwork from "./pages/MyNetwork";
-import PostContainer from "./components/Posts/PostContainer";
-import { CreateForm } from "@pages/Company/CreateForm";
 import PostCreate from "./components/Posts/PostCreate";
 import PostEdit from "./components/Posts/PostEdit";
 import ChangePassword from "./pages/ChangePassword";
@@ -50,6 +46,8 @@ import Member from "@pages/Company/Member";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import EmailAddress from "@pages/Settings/SignInAndSecurity/AccountAccess/EmailAddress";
 import Metrics from "./components/Company/Metrics";
+import Post from "@pages/Post";
+import FullActivity from "./components/User Profile/Miscellaneous/FullActivity";
 import BlockedUsers from "@pages/BlockedUsers";
 import UserConnections from "@pages/UserConnections";
 import FollowersFollowing from "@pages/FollowersFollowing";
@@ -115,6 +113,10 @@ function App() {
                     path="details/certificates"
                     element={<FullCertificates />}
                   />
+                  <Route
+                    path="details/activity"
+                    element={<FullActivity />}
+                   />
                   <Route path="details/skills" element={<FullSkills />} />
                 </Route>
                 <Route path="/thank-you" element={<ThankYouPage />} />
@@ -133,92 +135,44 @@ function App() {
                   element={<RecurringPaymentPage />}
                 />
                 <Route path="/post">
-                  <Route path="create" element={<PostCreate />} />
                   <Route path=":postId/edit" element={<PostEdit />} />
                 </Route>
-                <Route path="/settings" element={<Settings />}>
-                  <Route index element={<AccountPreferences />} />
-                  <Route
-                    path="account-preferences"
-                    element={<AccountPreferences />}
-                  />
-                  <Route
-                    path="account-preferences/profile-information/demographic-info"
-                    element={<DemographicInfo />}
-                  />
-                  <Route
-                    path="account-preferences/display/dark-mode"
-                    element={<DarkMode />}
-                  />
-                  <Route
-                    path="account-preferences/account-management/close-account"
-                    element={<CloseAccount />}
-                  />
-
-                  <Route
-                    path="sign-in-security"
-                    element={<SignInAndSecurity />}
-                  />
-                  <Route
-                    path="sign-in-security/account-access/change-password"
-                    element={<ChangePassword />}
-                  />
-                  <Route
-                    path="sign-in-security/account-access/email-address"
-                    element={<EmailAddress />}
-                  />
-                  <Route path="visibility" element={<Visibility />} />
-                  <Route
-                    path="visibility/profile-network/blocking"
-                    element={<BlockedUsers />}
-                  />
-                  <Route path="data-privacy" element={<DataAndPrivacy />} />
-                  <Route
-                    path="advertising-data"
-                    element={<AdvertisingData />}
-                  />
-                  <Route path="notifications" element={<Notifications />} />
-                </Route>
-                <Route path="/update-username" element={<UpdateUsername />} />
-                <Route path="/profile/:userId">
-                  <Route index element={<ProfileContainer />} />
-                  <Route path="connections" element={<UserConnections />} />
-                  <Route
-                    path="details/experiences"
-                    element={<FullExperiences />}
-                  />
-                  <Route
-                    path="details/certificates"
-                    element={<FullCertificates />}
-                  />
-                  <Route path="details/skills" element={<FullSkills />} />
-                </Route>
-                <Route path="/thank-you" element={<ThankYouPage />} />
-                <Route path="/premium" element={<SubscriptionLandingPage />} />
+              </Route>
+              <Route path="/settings" element={<Settings />}>
+                <Route index element={<AccountPreferences />} />
                 <Route
-                  path="/manage-subscription"
-                  element={<SubscriptionManager />}
+                  path="account-preferences"
+                  element={<AccountPreferences />}
+                />
+                <Route
+                  path="account-preferences/display/dark-mode"
+                  element={<DarkMode />}
+                />
+                <Route
+                  path="account-preferences/account-management/close-account"
+                  element={<CloseAccount />}
                 />
 
                 <Route
-                  path="/subscription-manage"
-                  element={<SubscriptionManagePage />}
+                  path="sign-in-security"
+                  element={<SignInAndSecurity />}
                 />
                 <Route
-                  path="/recurring-payment"
-                  element={<RecurringPaymentPage />}
+                  path="sign-in-security/account-access/change-password"
+                  element={<ChangePassword />}
                 />
-                <Route path="/post">
-                  <Route path="create" element={<PostCreate />} />
-                  <Route path=":postId/edit" element={<PostEdit />} />
-                </Route>
+                <Route
+                  path="sign-in-security/account-access/email-address"
+                  element={<EmailAddress />}
+                />
 
-                <Route path="/company">
-                  <Route path="setup/new" element={<CreateForm />} />
-                  <Route path="my-companies" element={<MyCompanies />} />
-                  <Route path={`admin/:companyId`} element={<Admin />} />
-                  <Route path={`member/:slug`} element={<Member />} />
-                </Route>
+                <Route path="visibility" element={<Visibility />} />
+                <Route path="data-privacy" element={<DataAndPrivacy />} />
+                <Route
+                  path="advertising-data"
+                  element={<AdvertisingData />}
+                ></Route>
+                <Route path="notifications" element={<Notifications />} />
               </Route>
             </Route>
 

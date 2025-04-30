@@ -1,25 +1,30 @@
-import { useState } from "react";
 import { RepliesInterface } from "../../../interfaces/postInterfaces";
-import CommentContent from "./CommentContent";
-import CommenterDetails from "./CommenterDetails";
+import CommentContent from "../Comments/CommentContent";
+import CommentHeader from "../Comments/CommentHeader";
+import ReplyReact from "./ReplyReact";
 
 interface ReplyCardProps {
   reply: RepliesInterface;
 }
 
 export default function ReplyCard(props: ReplyCardProps) {
-  const [isLike, setIsLike] = useState<boolean>(false);
-  const like = !isLike ? "Like" : "Liked";
-  
+  function reactionSuccess(newReaction: string, oldReaction: string) {
+    if (oldReaction === "NoReaction" && newReaction !== "NoReaction") {
+      props.reply.likes++;
+    } else if (oldReaction !== "NoReaction" && newReaction === "NoReaction") {
+      props.reply.likes--;
+    }
+  }
   return (
     <div className="flex flex-wrap w-11/12 relative">
       <div className="flex flex-row w-1/1 pr-2">
-        <CommenterDetails
+        <CommentHeader
           key={`Details of Commenter ${props.reply.userId}`}
           userId={props.reply.userId}
           name={props.reply.firstname + " " + props.reply.lastname}
           headline={props.reply.headline}
           profilePicture={props.reply.profilePicture}
+          time={props.reply.time}
         />
         <div className="flex flex-row w-1/1 justify-end">
           <button className="material-icons-round cursor-pointer mr-1 text-mutedSilver hover:bg-gray-200 rounded-full h-fit">
@@ -29,19 +34,19 @@ export default function ReplyCard(props: ReplyCardProps) {
       </div>
       <CommentContent
         key={`Comment ${props.reply.replyId} details`}
-        commentText={props.reply.replyText}
+        commentText={props.reply.text}
       />
       <div className="ml-14.5">
-        <button
-          onClick={() => setIsLike(!isLike)}
-          className={
-            isLike
-              ? "transition cursor-pointer text-sm font-medium px-2 text-blue-500 hover:bg-blue-100 rounded-lg h-fit"
-              : "transition cursor-pointer text-sm font-medium px-2 text-mutedSilver hover:bg-gray-200 rounded-lg h-fit"
-          }
-        >
-          {like}
-        </button>
+        <div className="flex items-center font-medium text-mutedSilver">
+          <div className="flex items-center">
+            <ReplyReact
+              replyId={props.reply.replyId}
+              userReaction={props.reply.userReaction}
+              successHandler={reactionSuccess}
+            />
+            <span>• {props.reply.likes}</span>
+          </div>
+        </div>
       </div>
     </div>
   );

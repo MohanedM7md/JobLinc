@@ -87,3 +87,14 @@ export const getConnections = async () => {
     throw new Error("Failed to fetch connection. Please try again.");
   return response.data;
 };
+
+export async function searchCompanies(name?: string) {
+  try {
+    const params = name ? { search: name } : {};
+    const response = await api.get(`companies`, { params });
+    return response.data;
+  } catch (error) {
+    console.log("Error fetching companies:", error)
+    throw error
+  }
+}
