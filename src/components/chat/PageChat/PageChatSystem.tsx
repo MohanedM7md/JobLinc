@@ -188,7 +188,6 @@ function PageChatSystem() {
 
       {isConnected && (
         <div className="flex flex-1 overflow-hidden">
-          {/* Chat Sidebar */}
           <AnimatePresence mode="wait" initial={false}>
             {isChatSidebarOpen && (
               <motion.div
