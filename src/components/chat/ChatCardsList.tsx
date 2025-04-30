@@ -44,7 +44,7 @@ const ChatCardsList = ({
       {isLoading ? (
         // 👇 Render 5 loading skeletons
         [...Array(5)].map((_, i) => <LoadingChatCard key={i} />)
-      ) : chats.length > 0 ? (
+      ) : chats && chats.length > 0 ? (
         chats.map((chatCard) => (
           <ChatCard
             key={chatCard.chatId}

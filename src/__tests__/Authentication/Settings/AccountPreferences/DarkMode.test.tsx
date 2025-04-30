@@ -63,9 +63,9 @@ describe("DarkMode", () => {
         const labelDark = screen.getByText(/always on/i);
         
         fireEvent.click(labelLight);
-        expect(localStorage.getItem("theme")).toBe("dark");
-        fireEvent.click(labelDark);
         expect(localStorage.getItem("theme")).toBe("light");
+        fireEvent.click(labelDark);
+        expect(localStorage.getItem("theme")).toBe("dark");
 
     });
 
