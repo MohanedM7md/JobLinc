@@ -19,6 +19,7 @@ function NavIcon({
   pagePath,
 }: NavIconProps) {
   const [showPopup, setShowPopup] = useState(false);
+  const iconRef = useRef<HTMLAnchorElement>(null);
   const showCard = () => (Name === "Me" ? <MeCard /> : <BusinessOptionsCard />);
   return (
     <Link
