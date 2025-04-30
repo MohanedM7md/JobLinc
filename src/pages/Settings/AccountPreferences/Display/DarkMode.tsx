@@ -49,6 +49,8 @@ function DarkMode() {
         const value = event.target.value;
         const isDark = value === "dark";
         setSelectedChoice(isDark);
+        const themeVal = isDark ? "dark" : "light";
+        localStorage.setItem("theme", themeVal);
         setDarkMode(isDark);
     };
 

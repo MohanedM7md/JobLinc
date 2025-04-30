@@ -30,6 +30,7 @@ function ConnectionsSidebar({
         onClose={onClose}
         containerClass="h-full"
         buttonClass="w-full"
+        buttonContent="Create"
       />
     </motion.div>
   );

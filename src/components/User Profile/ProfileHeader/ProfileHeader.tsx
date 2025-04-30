@@ -4,6 +4,7 @@ import { useState } from "react";
 import EditProfilePicture from "./EditProfilePicture";
 import EditCoverPicture from "./EditCoverPicture";
 import "material-icons";
+import { useNavigate } from "react-router-dom";
 
 interface ProfileProps {
   userId: string;
@@ -27,6 +28,7 @@ function ProfileHeader(props: ProfileProps & { isUser: boolean }) {
     useState<boolean>(false);
   const [isEditCoverPictureModalOpen, setIsEditCoverPictureModalOpen] =
     useState<boolean>(false);
+  const navigate = useNavigate();
 
   async function handleUpdateUser() {
     await props.updateUser();
@@ -42,7 +44,9 @@ function ProfileHeader(props: ProfileProps & { isUser: boolean }) {
     await props.updateUser();
     setIsEditCoverPictureModalOpen(false);
   }
-
+  const handleConnectionsClick = () => {
+    navigate(`/profile/${props.userId}/connections`);
+  }
   return (
     <div className="profile-header bg-lightGray p-4 rounded-lg shadow-md relative">
       <div className="relative mb-16">
@@ -87,9 +91,10 @@ function ProfileHeader(props: ProfileProps & { isUser: boolean }) {
               Contact Info
             </span>
           </div>
-          <p className="text-crimsonRed font-medium cursor-pointer hover:underline">
+          <p className="text-crimsonRed font-medium cursor-pointer hover:underline" onClick={handleConnectionsClick}>
             Connections: {props.numberofConnections}
           </p>
+          
         </div>
         {props.isUser && (
           <button

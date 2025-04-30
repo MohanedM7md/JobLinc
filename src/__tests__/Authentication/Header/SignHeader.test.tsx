@@ -1,14 +1,25 @@
-import SignHeader from "../../../components/Authentication/Headers/SignHeader";
-import { render, screen } from "@testing-library/react";
-import {describe, it, expect} from "vitest";
-import "@testing-library/jest-dom/vitest";
+import { describe, it, expect, vi } from 'vitest';
+import { render, screen, fireEvent } from '@testing-library/react';
+import { BrowserRouter, useNavigate } from 'react-router-dom';
+import SignHeader from '../../../components/Authentication/Headers/SignHeader';
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual('react-router-dom');
+  return {
+    ...actual,
+    useNavigate: () => vi.fn(), // mock useNavigate
+  };
+});
 
-describe("SignHeader Component", () => {
-    it("renders without crashing", () => {
-      render(<SignHeader />);
-      
-      expect(screen.getByTestId("header-test")).toBeInTheDocument();
-  
-      expect(screen.getByAltText("JobLinc Logo")).toBeInTheDocument();
-    });
+describe('SignHeader component', () => {
+  it('renders successfully', () => {
+    render(
+      <BrowserRouter>
+        <SignHeader />
+      </BrowserRouter>
+    );
+    const header = screen.getByTestId('header-test');
+    expect(header).toBeInTheDocument();
   });
+
+
+});

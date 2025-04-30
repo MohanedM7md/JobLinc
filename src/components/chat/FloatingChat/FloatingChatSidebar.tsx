@@ -1,12 +1,18 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import ChatCardsList from "../ChatCardsList";
 import NetWorksChatList from "@chatComponent/NetWorksChatList";
 import SearchBar from "@chatComponent/UI/SearchBar";
-import { EllipsisVertical } from "lucide-react";
-import connectToChat, { disconnectChatSocket } from "@services/api/ChatSocket";
+import { motion, AnimatePresence } from "framer-motion";
 import { useAppSelector } from "@store/hooks";
 import useChats from "@hooks/useChats";
 import ConnectionsDropdown from "@chatComponent/FloatingChat/ConnectionsDropdown";
+import {
+  MessageSquare,
+  Search,
+  User,
+  ChevronDown,
+  ChevronUp,
+} from "lucide-react";
 
 function FloatingChatSidebar() {
   const userProfilePic = useAppSelector((state) => state.user.profilePicture);
@@ -15,14 +21,24 @@ function FloatingChatSidebar() {
   });
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const { setOpnedChats } = useChats();
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [searchVisible, setSearchVisible] = useState<boolean>(false);
 
-  const onFocusedToggler = () => {
-    setTimeout(() => setIsFocused(!isFocused), 200);
+  // Animation variants
+  const sidebarVariants = {
+    collapsed: { height: "56px", borderRadius: "12px 12px 0 0" },
+    expanded: { height: "calc(60vh)", borderRadius: "12px 12px 8px 8px" },
   };
 
-  const handleSearchChange = useCallback((value: string) => {
-    console.log(value);
-  }, []);
+  const contentVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { duration: 0.2, delay: 0.1 } },
+  };
+
+  const handleSearchChange = useCallback(
+    (value: string) => setSearchTerm(value),
+    [],
+  );
 
   const handleConversationClick = (
     chatId: string,
@@ -50,57 +66,198 @@ function FloatingChatSidebar() {
     });
   };
 
-  const activeToggler = () => {
-    setActive((prevIsActive) => {
-      const newState = !prevIsActive;
+  const toggleActiveState = () => {
+    setActive((prev) => {
+      const newState = !prev;
       localStorage.setItem("chatSidebarActive", newState.toString());
       return newState;
     });
   };
 
+  const toggleSearch = () => {
+    if (!isActive) {
+      setActive(true);
+      setTimeout(() => {
+        setSearchVisible(true);
+        setIsFocused(true); // Always switch to people when search is clicked
+      }, 300);
+    } else {
+      setSearchVisible(!searchVisible);
+      if (!searchVisible) {
+        setIsFocused(true); // Switch to people when enabling search
+      }
+    }
+  };
+
+  // Auto-hide search when sidebar collapses
+  useEffect(() => {
+    if (!isActive) {
+      setSearchVisible(false);
+    }
+  }, [isActive]);
+
   return (
-    <div
-      className={`w-72 shadow-lg rounded-t-lg md:block hidden mr-8 transition-transform duration-300 relative h-full
-          dark:bg-darkGray bg-white cursor-pointer ${isActive ? "translate-y-0" : "translate-y-[calc(100%-56px)]"}`}
+    <motion.div
+      initial={isActive ? "expanded" : "collapsed"}
+      animate={isActive ? "expanded" : "collapsed"}
+      variants={sidebarVariants}
+      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+      className="w-80 shadow-lg md:block hidden mr-8  bg-charcoalWhite dark:bg-warmBlack overflow-hidden z-50 border border-lightGray dark:border-darkGray"
     >
-      <header
-        className="flex w-full h-14 bg-charcoalWhite dark:bg-darkGray items-center px-4 gap-4 border-b border-gray-300 rounded-t-lg"
-        onClick={activeToggler}
-      >
-        <img
-          src={userProfilePic ? userProfilePic : ""}
-          alt="User Avatar"
-          className="rounded-full w-10 h-10 border border-gray-300"
-        />
-        <h2 className="font-semibold text-gray-800 dark:text-white flex-grow">
+      <div className="flex w-full h-14 items-center px-4 gap-2 bg-charcoalWhite dark:bg-darkGray border-b border-lightGray dark:border-darkGray">
+        <div className="relative">
+          <img
+            src={userProfilePic || "/default-avatar.png"}
+            alt="User"
+            className="rounded-full w-8 h-8 object-cover ring-2 ring-softRosewood"
+          />
+          <span className="absolute bottom-0 right-0 w-3 h-3 bg-crimsonRed rounded-full border-2 border-charcoalWhite dark:border-darkGray"></span>
+        </div>
+
+        <h2 className="font-medium text-charcoalBlack dark:text-charcoalWhite flex-1">
           Messaging
         </h2>
 
-        <button className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
-          <EllipsisVertical className="w-6 h-6 text-gray-600 dark:text-gray-300" />
-        </button>
-      </header>
+        <div className="flex gap-1">
+          <button
+            onClick={toggleSearch}
+            className="p-2 rounded-full hover:bg-lightGray dark:hover:bg-warmBlack text-mutedSilver dark:text-charcoalWhite transition-colors"
+            aria-label="Search"
+          >
+            <Search size={18} />
+          </button>
 
-      <div className="flex items-center gap-3 p-3 bg-gray-100 dark:bg-gray-800 border-b border-gray-300">
-        <ConnectionsDropdown className="  right-14 -bottom-10 w-30 md:w-sm" />
-        <SearchBar
-          FocusToggler={onFocusedToggler}
-          onChange={handleSearchChange}
-        />
+          <button
+            onClick={toggleActiveState}
+            className="p-2 rounded-full hover:bg-lightGray dark:hover:bg-warmBlack text-mutedSilver dark:text-charcoalWhite transition-colors ml-1"
+            aria-label={isActive ? "Collapse" : "Expand"}
+          >
+            {isActive ? <ChevronDown size={18} /> : <ChevronUp size={18} />}
+          </button>
+        </div>
       </div>
 
-      {isFocused ? (
-        <NetWorksChatList
-          onCardClick={handleNetWorkUserClick}
-          className="max-h-[60vh]"
-        />
-      ) : (
-        <ChatCardsList
-          onCardClick={handleConversationClick}
-          className="max-h-[60vh]"
-        />
-      )}
-    </div>
+      <AnimatePresence>
+        {isActive && (
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+            variants={contentVariants}
+            className="flex flex-col"
+          >
+            {/* Search bar (conditionally shown) */}
+            <AnimatePresence>
+              {searchVisible && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="overflow-hidden"
+                >
+                  <div className="p-3 bg-lightGray dark:bg-darkGray">
+                    <div className="flex items-center gap-2">
+                      <div className="flex-1">
+                        <SearchBar
+                          FocusToggler={() => {
+                            // Keep in people view when using search
+                            if (!isFocused) setIsFocused(true);
+                          }}
+                          onChange={handleSearchChange}
+                          className="!bg-charcoalWhite dark:!bg-warmBlack !shadow-sm !w-full"
+                        />
+                      </div>
+                      <ConnectionsDropdown className="w-auto" />
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Navigation Tabs */}
+            <div className="flex border-b border-lightGray dark:border-darkGray relative">
+              <button
+                onClick={() => {
+                  setIsFocused(false);
+                  setSearchVisible(false); // Close search when switching to chats
+                }}
+                className={`flex-1 py-2 px-4 text-sm font-medium transition-colors ${
+                  !isFocused
+                    ? "text-crimsonRed dark:text-crimsonRed"
+                    : "text-charcoalBlack dark:text-charcoalWhite hover:text-softRosewood dark:hover:text-softRosewood"
+                }`}
+              >
+                <div className="flex items-center justify-center gap-1.5">
+                  <MessageSquare size={16} />
+                  <span>Chats</span>
+                </div>
+              </button>
+              <button
+                onClick={() => setIsFocused(true)}
+                className={`flex-1 py-2 px-4 text-sm font-medium transition-colors ${
+                  isFocused
+                    ? "text-crimsonRed dark:text-crimsonRed"
+                    : "text-charcoalBlack dark:text-charcoalWhite hover:text-softRosewood dark:hover:text-softRosewood"
+                }`}
+              >
+                <div className="flex items-center justify-center gap-1.5">
+                  <User size={16} />
+                  <span>People</span>
+                </div>
+              </button>
+
+              {/* Active tab indicator - properly animated */}
+              <motion.div
+                className="absolute bottom-0 h-0.5 bg-crimsonRed"
+                initial={false}
+                animate={{
+                  left: isFocused ? "50%" : "0%",
+                  right: isFocused ? "0%" : "50%",
+                }}
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              />
+            </div>
+
+            {/* Chat Lists */}
+            <div className="overflow-y-auto">
+              <AnimatePresence mode="wait" initial={false}>
+                {!isFocused ? (
+                  <motion.div
+                    key="chats"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    transition={{ duration: 0.2 }}
+                    className="flex flex-col flex-1"
+                  >
+                    <ChatCardsList
+                      onCardClick={handleConversationClick}
+                      className="max-h-[calc(60vh-110px)]"
+                    />
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="people"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 20 }}
+                    transition={{ duration: 0.2 }}
+                    className="flex flex-col flex-1"
+                  >
+                    <NetWorksChatList
+                      onCardClick={handleNetWorkUserClick}
+                      className="max-h-[calc(60vh-110px)]"
+                      filter={searchTerm}
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 }
 
