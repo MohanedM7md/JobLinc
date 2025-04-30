@@ -100,9 +100,11 @@ function App() {
                   element={<FollowersFollowing />}
                 />
                 <Route path="/messaging" element={<Messaging />} />
+
                 <Route path="/change-password" element={<ChangePassword />} />
                 <Route path="/metrics" element={<Metrics />} />
                 <Route path="/update-username" element={<UpdateUsername />} />
+
                 <Route path="/profile/:userId">
                   <Route index element={<ProfileContainer />} />
                   <Route
@@ -210,13 +212,13 @@ function App() {
                   <Route path="create" element={<PostCreate />} />
                   <Route path=":postId/edit" element={<PostEdit />} />
                 </Route>
-              </Route>
 
-              <Route path="/company">
-                <Route path="setup/new" element={<CreateForm />} />
-                <Route path="my-companies" element={<MyCompanies />} />
-                <Route path={`admin/:companyId`} element={<Admin />} />
-                <Route path={`member/:slug`} element={<Member />} />
+                <Route path="/company">
+                  <Route path="setup/new" element={<CreateForm />} />
+                  <Route path="my-companies" element={<MyCompanies />} />
+                  <Route path={`admin/:companyId`} element={<Admin />} />
+                  <Route path={`member/:slug`} element={<Member />} />
+                </Route>
               </Route>
             </Route>
 

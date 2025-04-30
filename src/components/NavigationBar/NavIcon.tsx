@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import MeCard from "./MeCard";
 import { BusinessOptionsCard } from "./BusinessOptionsCard";
@@ -30,7 +30,6 @@ function NavIcon({
           setShowPopup(!showPopup);
         }
       }}
-      ref={iconRef}
     >
       <i className={`${Icon} group-hover:text-black text-gray-600 text-lg`}></i>
       <span className="items-center text-xs group-hover:text-black text-gray-600 ml-1 hidden sm:flex">
