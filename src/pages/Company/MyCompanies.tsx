@@ -1,4 +1,5 @@
-import { getMyCompanies, getMyCompany } from "@services/api/companyServices";
+import { getMyCompany } from "@services/api/companyServices";
+import { getMyCompanies } from "@services/api/userProfileServices";
 import { useEffect, useState } from "react";
 import { Company } from "@store/comapny/interfaces";
 import { useNavigate } from "react-router-dom";
@@ -45,7 +46,7 @@ function MyCompanies() {
         </p>
       </div>
 
-      {companies.length === 0 ? (
+      {companies?.length === 0 ? (
         <div className="text-center py-12">
           <div className="mx-auto w-24 h-24 bg-SoftRed rounded-full flex items-center justify-center mb-4">
             <svg
@@ -74,7 +75,7 @@ function MyCompanies() {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {companies.map((company) => (
+          {companies?.map((company) => (
             <div
               key={company.id}
               className="bg-warmWhite dark:bg-darkGray rounded-xl shadow-sm hover:shadow-md transition-all overflow-hidden border border-gray-100 dark:border-gray-700 hover:border-crimsonRed/20 cursor-pointer"

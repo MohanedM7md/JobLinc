@@ -8,13 +8,15 @@ import Posts from "./Cards/Posts";
 import Jobs from "./Cards/Jobs";
 import { Plus } from "lucide-react";
 import CompanyFooter from "./Cards/CompanyFooter";
+import { getMyCompanies } from "@services/api/userProfileServices";
+import { Company } from "@store/comapny/interfaces";
 
-interface MemberProps {
-  isAdmin: boolean;
-}
 
-function Member(props: MemberProps) {
+
+function Member() {
   const { company, loading, error, fetchCompany, resetCompany } = useCompanyStore();
+  const [isTheUserAdmin, setIsTheUserAdmin] = useState(false);
+  const [userCompanies, setUserCompanies] = useState<Company[]>([]);
   const { slug } = useParams<string>();
   const navigate = useNavigate();
 
@@ -23,7 +25,41 @@ function Member(props: MemberProps) {
     if (slug) {
       (async () => {
         try {
+          const response = await getMyCompanies();
+          setUserCompanies(response);
+
+          // setUserCompanies(response.data);
+          // console.log(userCompanies);
+          for (let i = 0; i < response.length; i++)
+          {
+            if (response.at(i)?.id === company?.id)
+            {
+              setIsTheUserAdmin(true);
+              break;
+            }
+          }
+        } catch (err: any) {
+          if (err.response?.status === 401) {
+            setErrPage("Unauthorized");
+          } else {
+            setErrPage("An error occurred");
+          }
+          console.error("Error occurred while fetching company data:", err);
+        }
+      })();
+      // return () => {
+      //   resetCompany();
+      // };
+    }
+  }, [company]);
+
+  useEffect(() => {
+    if (slug) {
+      (async () => {
+        try {
+
           await fetchCompany(slug);
+          
         } catch (err: any) {
           if (err.response?.status === 401) {
             setErrPage("Unauthorized");
@@ -38,6 +74,8 @@ function Member(props: MemberProps) {
       };
     }
   }, []);
+
+  
 
   const [navItemSelected, setNavItemSelected] = useState<string>("Home");
 
@@ -68,7 +106,7 @@ function Member(props: MemberProps) {
       <NavBar />
 
       {/* Top Bar - Responsive Layout */}
-      {props.isAdmin && 
+      {isTheUserAdmin && 
       <div className="w-full bg-crimsonRed flex flex-col md:flex-row justify-between items-center px-4 py-3 md:px-8 md:py-4 mb-4 md:mb-8">
         <p className="text-white text-sm sm:text-base md:text-lg text-center md:text-left mb-2 md:mb-0">
           You are viewing this page as a member

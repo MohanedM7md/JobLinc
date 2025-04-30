@@ -211,8 +211,7 @@ function App() {
               <Route path="setup/new" element={<CreateForm />} />
               <Route path="my-companies" element={<MyCompanies />} />
               <Route path={`admin/:companyId`} element={<Admin />} />
-              <Route path={`member-view/:slug`} element={<Member isAdmin={true}/>} />
-              <Route path={`member/:slug`} element={<Member isAdmin={false}/>} />
+              <Route path={`member/:slug`} element={<Member />} />
               <Route path="all" element={<AllCompanies />} />
             </Route>
           </Route>

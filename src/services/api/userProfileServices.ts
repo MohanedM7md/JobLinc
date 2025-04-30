@@ -65,8 +65,9 @@ export async function updateCoverPicture(file: File) {
 export async function getMyCompanies()
 {
   try {
-    const respone = await api.get("user/companies");
-    return respone.data;
+    const response = await api.get("user/companies");
+    console.log(response);
+    return response.data;
   }
   catch(error)
   {
