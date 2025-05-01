@@ -53,21 +53,28 @@ function PeopleList({ searchQuery }: PeopleListProps) {
 
   if (isLoading) {
     return (
-      <div className="p-4 text-center w-full">
-        <div className="bg-gray-300 rounded animate-pulse w-full h-10 my-2"></div>
-        <div className="bg-gray-300 rounded animate-pulse w-full h-10 my-2"></div>
-        <div className="bg-gray-300 rounded animate-pulse w-full h-10 my-2"></div>
-        <div className="bg-gray-300 rounded animate-pulse w-full h-10 my-2"></div>
-        <div className="bg-gray-300 rounded animate-pulse w-full h-10 my-2"></div>
-        <div className="bg-gray-300 rounded animate-pulse w-full h-10 my-2"></div>
+      <div className="w-full bg-white rounded-lg shadow-sm border border-gray-100">
+        <div className="divide-y divide-gray-200">
+          {Array.from({ length: 5 }).map((_, index) => (
+            <div key={index} className="flex items-center p-4 border-b border-gray-200 animate-pulse">
+              <div className="w-16 h-16 rounded-full bg-gray-200 mr-4"></div>
+              <div className="flex-1 space-y-2">
+                <div className="h-4 bg-gray-200 rounded w-1/3"></div>
+                <div className="h-3 bg-gray-200 rounded w-1/4"></div>
+                <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+              </div>
+              <div className="w-24 h-8 bg-gray-200 rounded-full"></div>
+            </div>
+          ))}
+        </div>
       </div>
     );
   }
 
   if (!results.length) {
     return (
-      <div className="p-6 text-center text-gray-500">
-        {searchQuery ? "No results found" : "Start typing to search"}
+      <div className="w-full bg-white rounded-lg shadow-sm border border-gray-100 p-6 text-center text-gray-500">
+        {searchQuery ? "No people found matching your search" : "Enter a name or keyword to search people"}
       </div>
     );
   }
@@ -76,12 +83,10 @@ function PeopleList({ searchQuery }: PeopleListProps) {
     <div className="w-full bg-white rounded-lg shadow-sm border border-gray-100">
       <div className="divide-y divide-gray-200">
         {results.map((user) => (
-          <div 
+          <PeopleCard
             key={user.userId}
-            className="hover:bg-gray-50 transition-colors duration-150"
-          >
-            <PeopleCard {...user} />
-          </div>
+            {...user}
+          />
         ))}
       </div>
     </div>

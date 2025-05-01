@@ -42,8 +42,8 @@ function FollowingCard(props: FollowInterface) {
     const followPromise = sendFollowRequest(id);
     toast.promise(followPromise, {
       loading: "Sending Follow request...",
-      success: `${props.firstName ?? props.companyName ?? `user`} Followed successfully!`,
-      error: `Failed to Follow ${props.firstName ?? props.companyName ?? `user`}. Please try again.`,
+      success: `${props.firstname ?? props.companyName ?? `user`} Followed successfully!`,
+      error: `Failed to Follow ${props.firstname ?? props.companyName ?? `user`}. Please try again.`,
     });
 
     try {
@@ -65,8 +65,8 @@ function FollowingCard(props: FollowInterface) {
     const unfollowPromise = sendUnfollowRequest(id);
     toast.promise(unfollowPromise, {
       loading: "Sending UnFollow request...",
-      success: `${props.firstName ?? props.companyName ?? `user`} UnFollowed successfully!`,
-      error: `Failed to UnFollow ${props.firstName ?? props.companyName ?? `user`}. Please try again.`,
+      success: `${props.firstname ?? props.companyName ?? `user`} UnFollowed successfully!`,
+      error: `Failed to UnFollow ${props.firstname ?? props.companyName ?? `user`}. Please try again.`,
     });
 
     try {
@@ -90,7 +90,7 @@ function FollowingCard(props: FollowInterface) {
       <div className="ml-4 flex-grow mr-7">
         {props.userId ? (
           <h3 role="heading" className="font-semibold cursor-pointer hover:underline" onClick={handleUserClick}>
-            {props.firstName} {props.lastName}
+            {props.firstname} {props.lastname}
           </h3>
         ) : (
           <h3 role="heading" className="font-semibold cursor-pointer hover:underline" onClick={handleCompanyClick}>
@@ -129,7 +129,7 @@ function FollowingCard(props: FollowInterface) {
               </div>
               <div className="border-b border-gray-300 flex items-center justify-center py-3">
                 <p className="font-semibold">
-                  You are about to unfollow {props.userId ? `${props.firstName} ${props.lastName}` : props.companyName}
+                  You are about to unfollow {props.userId ? `${props.firstname} ${props.lastname}` : props.companyName}
                 </p>
               </div>
               <div className="flex items-center justify-end space-x-4 pt-3">

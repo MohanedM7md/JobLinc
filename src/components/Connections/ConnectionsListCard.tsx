@@ -8,32 +8,34 @@ function ConnectionsListCard() {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("recentlyadded");
   const [userConnections, setUserConnections] = useState<ConnectionInterface[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const controller = new AbortController();
     const fetchData = async () => {
       try {
+        setIsLoading(true);
         const response = await getConnections();
-        console.log("Connections of logged in user",response);
-          const parsedConnections = Array.isArray(response)
+        const parsedConnections = Array.isArray(response)
           ? response.map((connection) => ({
-            userId: connection.userId,
-            profilePicture: connection.profilePicture,
-            firstname: connection.firstname,
-            lastname: connection.lastname,
-            headline: connection.headline || "",
-            time: new Date(connection.time),
-          }))
+              userId: connection.userId,
+              profilePicture: connection.profilePicture,
+              firstname: connection.firstname,
+              lastname: connection.lastname,
+              headline: connection.headline || "",
+              time: new Date(connection.time),
+            }))
           : [];
-          setUserConnections(parsedConnections);
-          console.log("parsed connections of logged in user",userConnections);
-        } catch (error) {
-          console.error("Error fetching network feed:", error);
+        setUserConnections(parsedConnections);
+      } catch (error) {
+        console.error("Error fetching network feed:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
-  
+
     fetchData();
-  
+
     return () => {
       controller.abort();
     };
@@ -45,13 +47,13 @@ function ConnectionsListCard() {
     );
   };
 
-const filteredConnections = userConnections.filter((connection) => {
-  const firstName = connection.firstname || "";
-  const lastName = connection.lastname || "";
-  return `${firstName.toLowerCase()} ${lastName.toLowerCase()}`.includes(
-    searchTerm.toLowerCase()
-  );
-});
+  const filteredConnections = userConnections.filter((connection) => {
+    const firstName = connection.firstname || "";
+    const lastName = connection.lastname || "";
+    return `${firstName.toLowerCase()} ${lastName.toLowerCase()}`.includes(
+      searchTerm.toLowerCase()
+    );
+  });
 
   const sortedConnections = [...filteredConnections].sort((a, b) => {
     if (sortBy === "firstname") {
@@ -65,7 +67,7 @@ const filteredConnections = userConnections.filter((connection) => {
   });
 
   return (
-    <div className=" lg:w-6/10 border border-gray-200 rounded-md m-10 bg-white">
+    <div className="lg:w-6/10 border border-gray-200 rounded-md m-10 bg-white">
       <div className="w-full">
         <ConnectionsHeader
           searchTerm={searchTerm}
@@ -74,9 +76,25 @@ const filteredConnections = userConnections.filter((connection) => {
         />
       </div>
       <div className="w-full">
-        {sortedConnections.map((connection, index) => (
-          <ConnectionCard key={index} {...connection} onRemove={removeConnection} />
-        ))}
+        {isLoading ? (
+          Array.from({ length: 5 }).map((_, index) => (
+            <div key={index} className="flex items-center p-4 border-b border-gray-200">
+              <div className="w-12 h-12 rounded-full bg-gray-200 animate-pulse"></div>
+              <div className="ml-4 flex-grow space-y-2">
+                <div className="h-4 w-32 bg-gray-200 rounded animate-pulse"></div>
+                <div className="h-4 w-48 bg-gray-200 rounded animate-pulse"></div>
+              </div>
+              <div className="flex gap-2">
+                <div className="h-8 w-24 bg-gray-200 rounded-full animate-pulse"></div>
+                <div className="h-8 w-10 bg-gray-200 rounded-full animate-pulse"></div>
+              </div>
+            </div>
+          ))
+        ) : (
+          sortedConnections.map((connection, index) => (
+            <ConnectionCard key={index} {...connection} onRemove={removeConnection} />
+          ))
+        )}
       </div>
     </div>
   );

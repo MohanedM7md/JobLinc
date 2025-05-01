@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import UserConnectionListCard from "../../components/Connections/UserConnectionListCard";
 import { useEffect, useState } from "react";
 import PeopleList from "../../components/Search/PeopleList";
+import CompanyList from "./CompanyList";
 
 function SearchResultOptions() {
     const [activeOption, setActiveOption] = useState<"People" | "Companies" | null>(null);
@@ -47,7 +48,7 @@ function SearchResultOptions() {
             </div>
             <div className="w-full">
                 {activeOption === "People" && <PeopleList searchQuery={searchQuery}/>}
-                {activeOption === "Companies" && <UserConnectionListCard/>} 
+                {activeOption === "Companies" && <CompanyList searchQuery={searchQuery}/>} 
             </div>
         </div>
     );

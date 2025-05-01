@@ -3,6 +3,7 @@ import UserCard from "./UserCard";
 import { searchUserInterface } from "@interfaces/networkInterfaces";
 import { searchUsers } from "@services/api/networkServices";
 import { useNavigate } from "react-router-dom";
+import CompanySearchCard from "./CompanySearchCard";
 
 interface SearchResultsCardProps {
   searchQuery: string;
@@ -96,6 +97,7 @@ function SearchResultsCard({ searchQuery, onClose, Searchref }: SearchResultsCar
                     onClick={() => handleUserClick(user.userId)}
                   >
                     <UserCard user={user} />
+                    
                   </li>
                 ))}
               </ul>
