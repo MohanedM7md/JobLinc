@@ -1,11 +1,13 @@
 /// <reference types="vitest" />
 import { defineConfig } from "vite";
+import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
+  plugins: [tailwindcss()],
   resolve: {
     alias: {
       "@chatComponent": "/src/components/chat",
-      "@component": "/src/components",
+      "@components": "/src/components",
       "@context": "/src/context",
       "@hooks": "/src/hooks",
       "@pages": "/src/pages",
