@@ -1,9 +1,15 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { useNavigate } from "react-router-dom";
-import { deletePost } from "@services/api/postServices";
+import { deletePost, reportPost, savePost } from "@services/api/postServices";
 import store from "@store/store";
 import { motion, AnimatePresence } from "framer-motion";
-import { FlagTriangleRight, Pencil, Save, Trash } from "lucide-react";
+import {
+  ClipboardPen,
+  FlagTriangleRight,
+  Pencil,
+  Save,
+  Trash,
+} from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import ConfirmAction from "../utils/ConfirmAction";
@@ -25,12 +31,48 @@ export default function PostUtilityButton(props: UtilityProps) {
     onSuccess: () => navigate("/home"),
   });
 
+  const postSave = useMutation({
+    mutationFn: savePost,
+  });
+
+  const postReport = useMutation({
+    mutationFn: reportPost,
+  })
+
   function handleDelete() {
     toast.promise(postDelete.mutateAsync(props.postId), {
       loading: "Deleting post...",
       success: "Post deleted successfully!",
       error: (error) => error.message,
     });
+  }
+
+  function handleSave() {
+    toast.promise(postSave.mutateAsync(props.postId), {
+      loading: "Saving post...",
+      success: "Post saved successfully!",
+      error: (error) => error.message,
+    });
+  }
+
+  function handleCopy() {
+    const postLink = `${window.location.origin}/post/${props.postId}`;
+    navigator.clipboard
+      .writeText(postLink)
+      .then(() => {
+        toast.success("Link copied to clipboard!");
+      })
+      .catch(() => {
+        toast.error("Failed to copy link.");
+      });
+  }
+
+  function handleReport() {
+    toast.promise(postReport.mutateAsync(props.postId), {
+      loading: "Reporting post...",
+      success: "Report submitted for review, Thank you!",
+      error: (error) => error.message,
+    })
   }
 
   return (
@@ -46,7 +88,7 @@ export default function PostUtilityButton(props: UtilityProps) {
                 <MenuItems
                   static
                   modal={false}
-                  className="absolute left-0 w-30 origin-top-left bg-white border border-gray-200 font-medium rounded-lg focus:outline-none"
+                  className="absolute left-0 w-30 origin-top-left bg-white border border-gray-200 font-medium rounded-lg focus:outline-none z-50"
                   as={motion.div}
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -103,9 +145,22 @@ export default function PostUtilityButton(props: UtilityProps) {
                         transition={{ duration: 0.2 }}
                       >
                         <button
-                          onClick={() => {
-                            console.log("Save post clicked");
-                          }}
+                          onClick={handleCopy}
+                          className="w-full flex items-center justify-between px-4 py-2 text-sm hover:bg-gray-100 transition duration-200 ease-in-out"
+                        >
+                          <ClipboardPen className="mr-2" />
+                          <span>Copy</span>
+                        </button>
+                      </MenuItem>
+                      <MenuItem
+                        as={motion.div}
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <button
+                          onClick={handleSave}
                           className="w-full flex items-center justify-between px-4 py-2 text-sm hover:bg-gray-100 transition duration-200 ease-in-out"
                         >
                           <Save className="mr-2" />
@@ -120,9 +175,7 @@ export default function PostUtilityButton(props: UtilityProps) {
                         transition={{ duration: 0.2 }}
                       >
                         <button
-                          onClick={() => {
-                            console.log("Report post clicked");
-                          }}
+                          onClick={handleReport}
                           className="w-full flex items-center justify-between px-4 py-2 text-sm text-crimsonRed hover:bg-red-100 rounded-b-md transition duration-200 ease-in-out"
                         >
                           <FlagTriangleRight className="mr-2" />

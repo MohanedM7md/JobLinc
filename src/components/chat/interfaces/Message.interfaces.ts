@@ -35,6 +35,7 @@ export interface ChatMessagesProbs {
   users: User[];
   messages: RecievedMessage[];
   className?: string;
+  loading: boolean;
 }
 
 export interface SentMessage {}

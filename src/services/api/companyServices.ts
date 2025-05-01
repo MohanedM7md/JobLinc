@@ -51,7 +51,7 @@ export const getMyCompanies = async () => {
 export const getMyCompanyFollowers = async () => {
   const response = await api.get(`/follow/followers`);
   return response;
-}
+};
 
 export const getCompanyBySlug = async (slug: string) => {
   const response = await api.get(`/companies/${slug}`);
@@ -87,3 +87,14 @@ export const getConnections = async () => {
     throw new Error("Failed to fetch connection. Please try again.");
   return response.data;
 };
+
+export async function searchCompanies(name?: string) {
+  try {
+    const params = name ? { search: name } : {};
+    const response = await api.get(`companies`, { params });
+    return response.data;
+  } catch (error) {
+    console.log("Error fetching companies:", error)
+    throw error
+  }
+}

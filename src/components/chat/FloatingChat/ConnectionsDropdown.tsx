@@ -23,18 +23,6 @@ function ConnectionsDropdown({ className }: { className?: string }) {
       >
         <Users2 className="w-6 h-6 text-gray-600" />
       </button>
-
-      {isOpen && (
-        <div
-          className={`fixed right-75 bottom-30 bg-white shadow-lg rounded-lg p-3 border border-gray-200 ${className}`}
-        >
-          <ConnectionsList
-            onCreate={handleOnCreat}
-            containerClass="w-80"
-            buttonClass="w-full"
-          />
-        </div>
-      )}
     </>
   );
 }

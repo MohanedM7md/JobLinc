@@ -1,6 +1,6 @@
 import { CompanyForm } from "../../components/Company/CompanyForm";
 
-export function CreateForm() {
+export default function CreateForm() {
   return (
     <>
       <CompanyForm />
