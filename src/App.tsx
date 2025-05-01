@@ -11,7 +11,6 @@ const Messaging = lazy(() => import("./pages/Messaging"));
 
 import Home from "./pages/Home";
 import MyNetwork from "./pages/MyNetwork";
-import PostCreate from "./components/Posts/PostCreate";
 import PostEdit from "./components/Posts/PostEdit";
 import ChangePassword from "./pages/ChangePassword";
 import ResetPassword from "./pages/ResetPassword";
