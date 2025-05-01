@@ -36,7 +36,7 @@ function MyCompanies() {
   }
 
   return (
-    <div className="p-5 max-w-7xl mx-auto">
+    <div className="p-5 max-w-7xl mx-auto h-dvh">
       <div className="text-center mb-12">
         <h2 className="text-3xl font-bold text-charcoalBlack dark:text-charcoalWhite mb-2">
           My Companies

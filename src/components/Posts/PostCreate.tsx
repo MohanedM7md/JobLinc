@@ -7,7 +7,7 @@ import "material-icons";
 
 
 interface AddPostProps {
-  onUpdate: () => void;
+  onUpdate?: () => void;
   onClose: () => void;
 }
 
@@ -19,7 +19,7 @@ export default function PostCreate(props: AddPostProps) {
   const addPost = useMutation({
     mutationFn: createPost,
     onSuccess: () => {
-      props.onUpdate()
+      props.onUpdate && props.onUpdate()
       props.onClose()
     },
   });

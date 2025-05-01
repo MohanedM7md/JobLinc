@@ -103,7 +103,6 @@ function Member() {
 
   return (
     <div className="min-h-screen w-full bg-warmWhite flex flex-col items-center">
-      <NavBar />
 
       {/* Top Bar - Responsive Layout */}
       {isTheUserAdmin && 

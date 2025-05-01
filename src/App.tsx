@@ -6,22 +6,21 @@ import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AuthRoute from "./components/AuthRoute";
 import Error404 from "@pages/Eror404";
-
+import AllCompanies from "@pages/Company/AllCompanies";
 const UserProfile = lazy(() => import("./pages/UserProfile"));
 
 const SubscriptionManager = lazy(() => import("./pages/SubscriptionManager"));
 
 //  auth and frequently used pages
-import LandPage from "./pages/Land";
-import SignUpPage from "./pages/SignUp";
-import SignInPage from "./pages/SignIn";
-import ForgotPassword from "./pages/ForgotPassword";
-import UserDetails from "./components/Authentication/UserDetails";
-import ChangePassword from "./pages/ChangePassword";
-import ResetPassword from "./pages/ResetPassword";
-import UpdateUsername from "./pages/UpdateUsername";
-import Connections from "./pages/Connections";
-
+const LandPage = lazy(() => import("./pages/Land"));
+const SignUpPage = lazy(() => import("./pages/SignUp"));
+const SignInPage = lazy(() => import("./pages/SignIn"));
+const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
+const UserDetails = lazy(() => import("./components/Authentication/UserDetails"));
+const ChangePassword = lazy(() => import("./pages/ChangePassword"));
+const ResetPassword = lazy(() => import("./pages/ResetPassword"));
+const UpdateUsername = lazy(() => import("./pages/UpdateUsername"));
+const Connections = lazy(() => import("./pages/Connections"));
 /* import AllCompanies from "@pages/Company/AllCompanies"; */
 
 //Home & Static pages
@@ -41,23 +40,23 @@ import PostEdit from "./components/Posts/PostEdit";
 
 // Settings components
 const Settings = lazy(() => import("@pages/Settings/Settings"));
-import AccountPreferences from "@pages/Settings/AccountPreferences";
-import Notifications from "@pages/Settings/Notifications";
-import SignInAndSecurity from "@pages/Settings/SignInAndSecurity";
-import Visibility from "@pages/Settings/Visibility";
-import DataAndPrivacy from "@pages/Settings/DataAndPrivacy";
-import AdvertisingData from "@pages/Settings/AdvertisingData";
-import DarkMode from "@pages/Settings/AccountPreferences/Display/DarkMode";
-import CloseAccount from "@pages/Settings/AccountPreferences/AccountManagement/CloseAccount";
-import EmailAddress from "@pages/Settings/SignInAndSecurity/AccountAccess/EmailAddress";
-import DemographicInfo from "@pages/Settings/AccountPreferences/ProfileInformation/DemographicInfo";
-import AllCompanies from "@pages/Company/AllCompanies";
+const AccountPreferences = lazy(() => import("@pages/Settings/AccountPreferences"));
+const Notifications = lazy(() => import("@pages/Settings/Notifications"));
+const SignInAndSecurity = lazy(() => import("@pages/Settings/SignInAndSecurity"));
+const Visibility = lazy(() => import("@pages/Settings/Visibility"));
+const DataAndPrivacy = lazy(() => import("@pages/Settings/DataAndPrivacy"));
+const AdvertisingData = lazy(() => import("@pages/Settings/AdvertisingData"));
+const DarkMode = lazy(() => import("@pages/Settings/AccountPreferences/Display/DarkMode"));
+const CloseAccount = lazy(() => import("@pages/Settings/AccountPreferences/AccountManagement/CloseAccount"));
+const EmailAddress = lazy(() => import("@pages/Settings/SignInAndSecurity/AccountAccess/EmailAddress"));
+const DemographicInfo = lazy(() => import("@pages/Settings/AccountPreferences/ProfileInformation/DemographicInfo"));
 
 // Componay Pages
 const Admin = lazy(() => import("./pages/Company/Admin"));
 const MyCompanies = lazy(() => import("./pages/Company/MyCompanies"));
 const Member = lazy(() => import("@pages/Company/Member"));
 import CreateForm from "@pages/Company/CreateForm";
+import Post from "@pages/Post";
 
 const queryClient = new QueryClient();
 
@@ -120,6 +119,7 @@ function App() {
                 <Route path="/post">
                   {/* <Route path="create" element={<PostCreate />} /> */}
                   <Route path=":postId/edit" element={<PostEdit />} />
+                  <Route path=":postId" element={<Post />} />
                 </Route>
 
                 {/* Settings Routes */}
@@ -167,13 +167,14 @@ function App() {
                   <Route path="my-companies" element={<MyCompanies />} />
                   <Route path="admin/:companyId" element={<Admin />} />
                   <Route path="member/:slug" element={<Member />} />
-                  {/*  <Route path="all" element={<AllCompanies />} /> */}
+                   <Route path="all" element={<AllCompanies />} />
                 </Route>
               </Route>
             </Route>
 
             {/* 404 Route */}
             <Route path="*" element={<Error404 />} />
+            
           </Routes>
         </Suspense>
       </QueryClientProvider>

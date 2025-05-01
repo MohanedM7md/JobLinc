@@ -32,6 +32,8 @@ export default function Admin() {
       })();
       return () => {
         resetCompany();
+        localStorage.removeItem("companyId");
+        
       };
     }
   }, [companyId]);

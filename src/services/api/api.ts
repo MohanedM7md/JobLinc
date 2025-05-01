@@ -38,6 +38,8 @@ api.interceptors.response.use(
         console.log("refreshing refresh token");
         const refreshToken = localStorage.getItem("refreshToken");
         const userId = localStorage.getItem("userId");
+        const companyId = localStorage.getItem("companyId");
+
         if (!refreshToken && !userId) {
           console.log("No refresh token found, logging out...");
           localStorage.removeItem("refreshToken");
@@ -51,6 +53,7 @@ api.interceptors.response.use(
           const response = await api.post("auth/refresh-token", {
             userId,
             refreshToken,
+            companyId,
           });
           data = response.data;
         } catch (refreshError) {
