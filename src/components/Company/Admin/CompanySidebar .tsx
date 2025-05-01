@@ -48,7 +48,7 @@ export function CompanySidebar({
   ];
   const navigate = useNavigate();
   return (
-    <div className="w-64 bg-white dark:bg-darkGray border-r border-gray-200 dark:border-gray-700 flex flex-col">
+    <div className=" bg-white dark:bg-darkGray border-r border-gray-200 dark:border-gray-700 flex flex-col">
       <div className="p-0">
         <div className="relative">
           <div className="h-24 w-full overflow-hidden">
@@ -66,7 +66,7 @@ export function CompanySidebar({
                 accept="image/*"
                 onChange={(file: string | null) => {
                   setCoverPhoto(file || undefined);
-                  updateInfo({ coverPhoto: file || "" }); // THERE WAS A SMALL ERROR HERE SO I ADDED || ""
+                  updateInfo({ coverPhoto: file || "" }); //! THERE WAS A SMALL ERROR HERE SO I ADDED || ""
                 }}
               />
             </button>
@@ -96,8 +96,12 @@ export function CompanySidebar({
           </a>
 
           <div className="flex gap-2 mt-3">
-            <button className="flex items-center text-xs gap-1 px-3 py-1.5 bg-transparent border border-mutedSilver rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-charcoalBlack dark:text-charcoalWhite"
-                    onClick={() => {navigate("/company/setup/new")}}>
+            <button
+              className="flex items-center text-xs gap-1 px-3 py-1.5 bg-transparent border border-mutedSilver rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-charcoalBlack dark:text-charcoalWhite"
+              onClick={() => {
+                navigate("/company/setup/new");
+              }}
+            >
               <span className="text-lg">+</span> Create
             </button>
             <button

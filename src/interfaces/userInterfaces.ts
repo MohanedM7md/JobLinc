@@ -12,12 +12,26 @@ export interface ProfileInterface {
   role: number;
   numberofConnections: number;
   mutualConnections: number;
+  connectionStatus: ConnectionStatus;
+  isFollowing: boolean;
   profilePicture: string;
   coverPicture: string;
   skills: SkillInterface[];
   experiences: ExperienceInterface[];
   certificates: CertificateInterface[];
 }
+
+export enum ConnectionStatus {
+    Pending="Pending",
+    Sent="Sent",
+    Received="Received",
+    Accepted="Accepted",
+    Rejected="Rejected",
+    Blocked="Blocked",
+    Canceled="Canceled",
+    NotConnected="Not Connected",
+    Unblocked="Unblocked"
+};
 
 export interface ProfileUpdateInterface {
   firstname: string;
@@ -118,13 +132,10 @@ export enum ExperienceTypes {
 }
 
 export interface FollowerData {
-  companyId: string;
-  companyLogo: string;
-  companyName: string;
-  firstName: string;
+  firstname: string;
   headline: string;
-  lastName: string;
+  lastname: string;
   profilePicture: string;
   time: string;
-  userId: string;
+  userId: string
 }

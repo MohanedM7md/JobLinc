@@ -44,7 +44,7 @@ export const getMyCompany = async () => {
   return response;
 };
 export const getMyCompanies = async () => {
-  const response = await api.get(`/companies`);
+  const response = await api.get(`/user/companies`);
   return response;
 };
 
@@ -94,7 +94,7 @@ export async function searchCompanies(name?: string) {
     const response = await api.get(`companies`, { params });
     return response.data;
   } catch (error) {
-    console.log("Error fetching companies:", error)
-    throw error
+    console.log("Error fetching companies:", error);
+    throw error;
   }
 }
