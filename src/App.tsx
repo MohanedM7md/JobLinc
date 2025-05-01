@@ -2,7 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import { Toaster } from "react-hot-toast";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import Layout from "./components/Layout";
+const Layout = lazy(() => import("./components/Layout"));
 import ProtectedRoute from "./components/ProtectedRoute";
 import AuthRoute from "./components/AuthRoute";
 import Error404 from "@pages/Eror404";
@@ -25,7 +25,7 @@ import Connections from "./pages/Connections";
 /* import AllCompanies from "@pages/Company/AllCompanies"; */
 
 //Home & Static pages
-import Home from "./pages/Home";
+const Home = lazy(() => import("./pages/Home"));
 const Messaging = lazy(() => import("./pages/Messaging"));
 import MyNetwork from "./pages/MyNetwork";
 
@@ -34,9 +34,12 @@ import ProfileContainer from "./components/User Profile/ProfileContainer";
 import FullExperiences from "./components/User Profile/Experiences/FullExperiences";
 import FullCertificates from "./components/User Profile/Certificates/FullCertificates";
 import FullSkills from "./components/User Profile/Skills/FullSkills";
+import FullActivity from "@components/User Profile/Miscellaneous/FullActivity";
+import SavedPosts from "@components/User Profile/Miscellaneous/SavedPosts";
 
 // Post components
 import PostEdit from "./components/Posts/PostEdit";
+import Post from "@pages/Post";
 
 // Settings components
 const Settings = lazy(() => import("@pages/Settings/Settings"));
@@ -56,7 +59,6 @@ const Admin = lazy(() => import("./pages/Company/Admin"));
 const MyCompanies = lazy(() => import("./pages/Company/MyCompanies"));
 const Member = lazy(() => import("@pages/Company/Member"));
 import CreateForm from "@pages/Company/CreateForm";
-import FullActivity from "@components/User Profile/Miscellaneous/FullActivity";
 
 const queryClient = new QueryClient();
 
@@ -112,13 +114,15 @@ function App() {
                     path="details/certificates"
                     element={<FullCertificates />}
                   />
-                  <Route path="details/skills" element={<FullSkills />} />
                   <Route path="details/activity" element={<FullActivity />} />
+                  <Route path="details/skills" element={<FullSkills />} />
+                  <Route path="details/saved-posts" element= {<SavedPosts />} />
                 </Route>
 
                 {/* Post Routes */}
                 <Route path="/post">
                   <Route path=":postId/edit" element={<PostEdit />} />
+                  <Route path=":postId" element={<Post />} />
                 </Route>
 
                 {/* Settings Routes */}

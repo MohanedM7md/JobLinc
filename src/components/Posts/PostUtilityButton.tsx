@@ -4,6 +4,7 @@ import { deletePost, reportPost, savePost } from "@services/api/postServices";
 import store from "@store/store";
 import { motion, AnimatePresence } from "framer-motion";
 import {
+  CircleOff,
   ClipboardPen,
   FlagTriangleRight,
   Pencil,
@@ -14,11 +15,14 @@ import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import ConfirmAction from "../utils/ConfirmAction";
 import { useState } from "react";
+import { Media } from "@interfaces/postInterfaces";
+import { blockUser } from "@services/api/networkServices";
 
 interface UtilityProps {
   postId: string;
   posterId: string;
   postText: string;
+  postMedia: Media[];
 }
 
 export default function PostUtilityButton(props: UtilityProps) {
@@ -37,6 +41,10 @@ export default function PostUtilityButton(props: UtilityProps) {
 
   const postReport = useMutation({
     mutationFn: reportPost,
+  })
+
+  const userBlock = useMutation({
+    mutationFn: blockUser,
   })
 
   function handleDelete() {
@@ -75,6 +83,14 @@ export default function PostUtilityButton(props: UtilityProps) {
     })
   }
 
+  function handleBlock() {
+    toast.promise(userBlock.mutateAsync(props.posterId), {
+      loading: "Blocing user...",
+      success: "Blocked",
+      error: (error) => error.message,
+    })
+  }
+
   return (
     <>
       <Menu as="div" className="relative inline-block">
@@ -105,10 +121,11 @@ export default function PostUtilityButton(props: UtilityProps) {
                       >
                         <button
                           onClick={() => {
-                            navigate(`../post/${props.postId}/edit`, {
+                            navigate(`/post/${props.postId}/edit`, {
                               state: {
                                 postID: props.postId,
                                 postText: props.postText,
+                                postMedia: props.postMedia,
                               },
                             });
                           }}
@@ -180,6 +197,21 @@ export default function PostUtilityButton(props: UtilityProps) {
                         >
                           <FlagTriangleRight className="mr-2" />
                           <span>Report</span>
+                        </button>
+                      </MenuItem>
+                      <MenuItem
+                        as={motion.div}
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <button
+                          onClick={handleBlock}
+                          className="w-full flex items-center justify-between px-4 py-2 text-sm text-crimsonRed hover:bg-red-100 rounded-b-md transition duration-200 ease-in-out"
+                        >
+                          <CircleOff className="mr-2" />
+                          <span>Block</span>
                         </button>
                       </MenuItem>
                     </>
