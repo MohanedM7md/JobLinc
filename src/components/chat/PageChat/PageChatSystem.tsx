@@ -56,9 +56,9 @@ function PageChatSystem() {
         "send to the back end the wanted status: ",
         pendingBlockState,
       );
+      setShowBlockConfirmation(false);
       await BlockMessaging(pendingBlockState);
       setIsBlocked(!pendingBlockState);
-      setShowBlockConfirmation(false);
       setPendingBlockState(null);
     } catch (error) {
       console.error(
