@@ -4,40 +4,37 @@ import {
   Laugh,
   Lightbulb,
   PartyPopper,
-  SmilePlus,
   ThumbsUp,
   X,
 } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useState, useRef } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { reactPost } from "@services/api/postServices";
+import { reactReply } from "@services/api/postServices";
 import toast from "react-hot-toast";
 
 interface PostReactProps {
-  postId: string;
+  replyId: string;
   successHandler: (newReaction: string, oldReaction: string) => void;
   userReaction: string;
-  compact?: boolean;
 }
 
-export default function PostReact({
-  postId,
+export default function ReplyReact({
+  replyId,
   successHandler,
   userReaction,
-  compact,
 }: PostReactProps) {
   const [reaction, setReaction] = useState<string>(userReaction);
   const [showReact, setShowReact] = useState<boolean>(false);
   const hoverTimeout = useRef<NodeJS.Timeout | null>(null);
 
   const addReactionMutation = useMutation({
-    mutationFn: reactPost,
+    mutationFn: reactReply,
   });
 
   function postReaction(type: string) {
     const oldReaction = reaction;
-    toast.promise(addReactionMutation.mutateAsync({ postId, type }), {
+    toast.promise(addReactionMutation.mutateAsync({ replyId: replyId, type }), {
       loading: "Adding reaction...",
       success: () => {
         setReaction(type);
@@ -81,31 +78,10 @@ export default function PostReact({
     }
   }
 
-  function getReactionIcon(reaction: string) {
-    switch (reaction) {
-      case "NoReaction":
-        return <SmilePlus className="mr-2 md:align-text-bottom" />;
-      case "Like":
-        return <ThumbsUp className="mr-2 md:align-text-bottom" />;
-      case "Celebrate":
-        return <PartyPopper className="mr-2 md:align-text-bottom" />;
-      case "Support":
-        return <HandHelping className="mr-2 md:align-text-bottom" />;
-      case "Funny":
-        return <Laugh className="mr-2 md:align-text-bottom" />;
-      case "Love":
-        return <Heart className="mr-2 md:align-text-bottom" />;
-      case "Insightful":
-        return <Lightbulb className="mr-2 md:align-text-bottom" />;
-      default:
-        return <SmilePlus className="mr-2 md:align-text-bottom" />;
-    }
-  }
-
   function getReactionStyles(reaction: string) {
     switch (reaction) {
       case "NoReaction":
-        return "text-gray-500 hover:bg-gray-200";
+        return "text-mutedSilver hover:bg-gray-200";
       case "Like":
         return "text-blue-500 hover:bg-blue-100";
       case "Celebrate":
@@ -119,15 +95,15 @@ export default function PostReact({
       case "Insightful":
         return "text-yellow-600 hover:bg-yellow-100";
       default:
-        return "text-gray-500 hover:bg-gray-200";
+        return "text-mutedSilver hover:bg-gray-200";
     }
   }
 
   return (
-    <div className="relative w-3/12">
+    <div className="relative flex items-center">
       <button
-        id={`react-button-${postId}`}
-        className={`transition duration-400 ease-in-out w-full h-10 cursor-pointer font-medium flex items-center justify-center ${getReactionStyles(
+        id={`react-button-${replyId}`}
+        className={`transition duration-400 ease-in-out px-2 py-1 cursor-pointer font-medium rounded-lg ${getReactionStyles(
           reaction,
         )}`}
         onMouseEnter={handleMouseEnter}
@@ -139,12 +115,9 @@ export default function PostReact({
           postReaction("Like");
         }}
       >
-        {getReactionIcon(reaction)}
-        {!compact && (
-          <span className="hidden md:inline-block">
-            {reaction == "NoReaction" ? "React" : reaction}
-          </span>
-        )}
+        <span className="inline-block">
+          {reaction === "NoReaction" ? "Like" : reaction}
+        </span>
       </button>
       <AnimatePresence>
         {showReact && (

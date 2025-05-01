@@ -22,7 +22,7 @@ export default function PostContainerHeader(props: HeaderProps) {
     toast.promise(addPost.mutateAsync({ text: postText }), {
       loading: "Creating post...",
       success: "Post created successfully!",
-      error: "Error creating post.",
+      error: (error) => error.message,
     });
   }
 

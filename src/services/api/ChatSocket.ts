@@ -73,12 +73,12 @@ export const unsubscribeFromMessages = (chatId: string) => {
   if (!ChatSocket) return;
   ChatSocket.off("receiveMessage");
   ChatSocket.off("messageRead");
-  ChatSocket.off("error");
   ChatSocket.emit("leaveChat", chatId);
 };
 
 export const disconnectChatSocket = () => {
   if (ChatSocket) {
+    ChatSocket.off("error");
     ChatSocket.disconnect();
   }
 };
