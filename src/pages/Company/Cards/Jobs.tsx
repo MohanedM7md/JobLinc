@@ -1,29 +1,41 @@
-import { Bell } from "lucide-react";
-import { Briefcase } from "lucide-react";
+import { Bell, Briefcase } from "lucide-react";
 
-
-
-function Jobs()
-{
+function Jobs() {
     return (
-
-        <div className="flex flex-col gap-5">
-            
-            {/* If no jobs are made then this component will be rendered otherwise I should remove it*/}
-            <div className="flex justify-between bg-white p-5 rounded-xl">
-                <div className="flex gap-2">
-                    <Bell />    
-                    <p> Create job alert for JobLinc</p>
+        <div className="flex flex-col gap-5 max-w-4xl mx-auto w-full">
+            {/* Job Alert Card */}
+            <div className="bg-white rounded-xl shadow-sm p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="flex items-center gap-3 flex-1">
+                    <Bell className="w-6 h-6 text-crimsonRed" />
+                    <div>
+                        <label className="text-sm font-medium text-gray-600">
+                            Job Alerts
+                        </label>
+                        <p className="text-gray-900 font-medium">
+                            Create personalized job alerts for JobLinc
+                        </p>
+                    </div>
                 </div>
-                <button>Create job alert</button>
+                <button className="px-4 py-2 bg-crimsonRed text-white rounded-lg hover:bg-crimsonRed/90 hover:cursor-pointer transition-colors text-sm font-medium whitespace-nowrap">
+                    Create Job Alert
+                </button>
             </div>
 
-            <div className="flex flex-col bg-white gap-3 items-center p-10 rounded-xl">
-                <Briefcase size={64} />
-                <p className="text-[20px]">There are no jobs right now.</p>
-                <p>Create a job alert and we'll let you know when relevant jobs are posted.</p>
+            {/* Empty State */}
+            <div className="bg-white rounded-xl shadow-sm p-8 flex flex-col items-center text-center">
+                <div className="mb-6 text-crimsonRed">
+                    <Briefcase className="w-16 h-16" />
+                </div>
+                <h3 className="text-2xl font-semibold text-gray-900 mb-2">
+                    No Current Job Listings
+                </h3>
+                <p className="text-gray-600 mb-6 max-w-md mx-auto">
+                    We'll notify you when new positions matching your preferences become available.
+                </p>
+                <button className="px-6 py-2.5 bg-crimsonRed text-white rounded-lg hover:bg-crimsonRed/90 hover:cursor-pointer transition-colors text-sm font-medium">
+                    Set Up Job Alerts
+                </button>
             </div>
-
         </div>
     );
 }
