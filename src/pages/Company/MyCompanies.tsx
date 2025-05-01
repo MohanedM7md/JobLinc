@@ -16,7 +16,7 @@ function MyCompanies() {
       try {
         const response = await getMyCompanies();
         
-        setCompanies(response.data);
+        setCompanies(response);
       } catch (error) {
         console.error("Failed to fetch companies:", error);
       } finally {
