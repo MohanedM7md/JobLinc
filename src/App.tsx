@@ -2,7 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import { Toaster } from "react-hot-toast";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import Layout from "./components/Layout";
+const Layout = lazy(() => import("./components/Layout"));
 import ProtectedRoute from "./components/ProtectedRoute";
 import AuthRoute from "./components/AuthRoute";
 import Error404 from "@pages/Eror404";
@@ -25,7 +25,7 @@ import Connections from "./pages/Connections";
 /* import AllCompanies from "@pages/Company/AllCompanies"; */
 
 //Home & Static pages
-import Home from "./pages/Home";
+const Home = lazy(() => import("./pages/Home"));
 const Messaging = lazy(() => import("./pages/Messaging"));
 import MyNetwork from "./pages/MyNetwork";
 

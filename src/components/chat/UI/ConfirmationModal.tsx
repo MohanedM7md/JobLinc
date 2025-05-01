@@ -64,7 +64,7 @@ function ConfirmationModal({
                 className={`px-4 py-2 rounded-lg ${
                   isDangerous
                     ? "bg-red-600 hover:bg-red-700 text-white"
-                    : "bg-blue-600 hover:bg-blue-700 text-white"
+                    : "bg-red-600 hover:bg-red-700 text-white"
                 } font-medium transition-colors`}
               >
                 {confirmText}

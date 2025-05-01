@@ -1,9 +1,9 @@
 // modals/RemoveParticipantsModal.tsx
 import { IoClose } from "react-icons/io5";
-import { useState, RefObject } from "react";
+import { useState, RefObject, useRef, useMemo } from "react";
 import { User } from "../../interfaces/User.interfaces";
 import ModalWrapper from "./ModalWrapper";
-
+import store from "@store/store";
 interface RemoveParticipantsModalProps {
   participants: User[];
   onCancel: () => void;
@@ -17,8 +17,12 @@ function RemoveParticipantsModal({
   onConfirm,
   modalRef,
 }: RemoveParticipantsModalProps) {
+  const myId = useRef<string | null>(store.getState().user.userId);
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
-
+  const members = useMemo<User[]>(
+    () => participants.filter((user) => user.userId !== myId.current),
+    [participants],
+  );
   const toggleUserSelection = (userId: string) => {
     if (selectedUsers.includes(userId)) {
       setSelectedUsers(selectedUsers.filter((id) => id !== userId));
@@ -26,7 +30,6 @@ function RemoveParticipantsModal({
       setSelectedUsers([...selectedUsers, userId]);
     }
   };
-
   const handleConfirm = () => {
     onConfirm(selectedUsers);
     setSelectedUsers([]);
@@ -49,8 +52,8 @@ function RemoveParticipantsModal({
         </div>
 
         <div className="max-h-60 overflow-y-auto">
-          {participants.length > 0 ? (
-            participants.map((user) => (
+          {members.length > 0 ? (
+            members.map((user) => (
               <div
                 key={user.userId}
                 className={`flex items-center p-3 hover:bg-[var(--color-SoftRed)] cursor-pointer ${

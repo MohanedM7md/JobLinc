@@ -10,9 +10,11 @@ import {
 } from "react-icons/io5";
 import { useState, useEffect, useRef, Dispatch, SetStateAction } from "react";
 import { User } from "../interfaces/User.interfaces";
-import { fetchNetWorks } from "@services/api/chatServices";
+import {
+  addParticipants,
+  removeParticipants,
+} from "@services/api/chatServices";
 import { motion, AnimatePresence } from "framer-motion";
-import GroupSettingsDropdown from "./GroupSettingsDropdown";
 import AddParticipantsModal from "./modals/AddParticipantsModal";
 import RemoveParticipantsModal from "./modals/RemoveParticipantsModal";
 import DeleteChatModal from "./modals/DeleteChatModal";
@@ -83,13 +85,15 @@ function GroupChatSetting({
     if (showGroupOptions) setShowGroupOptions(false);
   };
 
-  const handleAddParticipantsConfirm = (selectedUserIds: string[]) => {};
+  const handleAddParticipantsConfirm = async (selectedUserIds: string[]) => {
+    const response = await addParticipants(selectedUserIds, chatId);
+    setUsers(response);
+    setShowAddParticipants(false);
+  };
 
-  const handleRemoveParticipantsConfirm = (selectedUserIds: string[]) => {
-    const updatedUsers = users.filter(
-      (user) => !selectedUserIds.includes(user.userId),
-    );
-    setUsers(updatedUsers);
+  const handleRemoveParticipantsConfirm = async (selectedUserIds: string[]) => {
+    const response = await removeParticipants(selectedUserIds, chatId);
+    setUsers(response);
     setShowRemoveParticipants(false);
   };
 
@@ -202,9 +206,9 @@ function GroupChatSetting({
         </AnimatePresence>
       </div>
 
-      {/* Modals */}
       {showAddParticipants && (
         <AddParticipantsModal
+          chatId={chatId}
           onCancel={() => setShowAddParticipants(false)}
           onConfirm={handleAddParticipantsConfirm}
           modalRef={modalRef}
