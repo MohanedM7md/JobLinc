@@ -60,6 +60,7 @@ const Member = lazy(() => import("@pages/Company/Member"));
 import CreateForm from "@pages/Company/CreateForm";
 import FollowersFollowing from "@pages/FollowersFollowing";
 import MyConnections from "./pages/Connections";
+import UserConnections from "@pages/UserConnections";
 
 const queryClient = new QueryClient();
 
@@ -112,7 +113,8 @@ function App() {
 
                 {/* Profile Routes */}
                 <Route path="/profile/:userId">
-                  <Route index element={<ProfileContainer />} />
+                  <Route index element={<ProfileContainer />}/>
+                  <Route path="connections" element={<UserConnections/>}/>
                   <Route
                     path="details/experiences"
                     element={<FullExperiences />}

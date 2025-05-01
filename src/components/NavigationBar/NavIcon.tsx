@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import MeCard from "./MeCard";
 import { BusinessOptionsCard } from "./BusinessOptionsCard";
@@ -16,7 +16,7 @@ function NavIcon({ rightBorder, Icon, Name, Dropdown, pagePath }: NavIconProps) 
   const iconRef = useRef<HTMLAnchorElement>(null);
   const popupRef = useRef<HTMLDivElement>(null);
 
-  const showCard = () => (Name === "Me" ? <MeCard /> : <div className="relative right-15"><BusinessOptionsCard /></div>);
+  const showCard = () => (Name === "Me" ? <MeCard /> : <div className="relative right-10"><BusinessOptionsCard /></div>);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -38,10 +38,10 @@ function NavIcon({ rightBorder, Icon, Name, Dropdown, pagePath }: NavIconProps) 
 
   return (
     <Link
-      to={pagePath || "/"}
+      to={pagePath || "#"}
       className={`group flex flex-col items-center justify-center w-[calc(100%/7)] sm:w-1/2 cursor-pointer ${rightBorder}`}
-      onClick={(e) => {
-        e.preventDefault();
+      ref = {iconRef}
+      onClick={() => {
         if (Name === "Me" || Name === "Businesses") {
           setShowPopup((prev) => !prev);
         }
