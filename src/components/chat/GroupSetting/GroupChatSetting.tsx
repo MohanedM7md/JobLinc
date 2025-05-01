@@ -28,6 +28,7 @@ function GroupChatSetting({
   setUsers: Dispatch<SetStateAction<User[]>>;
   chatId: string;
 }) {
+  const [realParticipants, setRealParticipants] = useState<User[]>([]);
   const [showGroupOptions, setShowGroupOptions] = useState(false);
   const [showPanel, setShowPanel] = useState(false);
   const [showAddParticipants, setShowAddParticipants] = useState(false);
@@ -49,6 +50,7 @@ function GroupChatSetting({
         setShowDeleteConfirmation(false);
         setShowGroupOptions(false);
         setShowPanel(false);
+        setRealParticipants(users.filter((user) => !user.isRemoved));
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
@@ -147,10 +149,10 @@ function GroupChatSetting({
               <div className="p-3">
                 <div className="mb-3">
                   <p className="text-xs text-[var(--color-mutedSilver)] mb-1">
-                    Participants ({users.length})
+                    Participants ({realParticipants.length})
                   </p>
                   <div className="flex flex-wrap gap-1.5 max-h-28 overflow-y-auto pr-1">
-                    {users.map((user) => (
+                    {realParticipants.map((user) => (
                       <div
                         key={user.userId}
                         className="flex items-center bg-[var(--color-SoftRed)] bg-opacity-10 rounded-full pl-1 pr-2 py-0.5"
