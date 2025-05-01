@@ -63,7 +63,6 @@ export default function DocumentPreview({
       let viewerLabel = "Download Document";
 
       if (docType === "DOCX" || docType === "DOC") {
-        // Google Docs viewer approach
         viewerUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(docUrl)}&embedded=true`;
         viewerLabel = `Download ${docType}`;
       }

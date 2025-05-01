@@ -51,6 +51,7 @@ import BlockedUsers from "@pages/BlockedUsers";
 import UserConnections from "@pages/UserConnections";
 import FollowersFollowing from "@pages/FollowersFollowing";
 import DemographicInfo from "@pages/Settings/AccountPreferences/ProfileInformation/DemographicInfo";
+import SavedPosts from "./components/User Profile/Miscellaneous/SavedPosts";
 
 const queryClient = new QueryClient();
 
@@ -112,11 +113,9 @@ function App() {
                     path="details/certificates"
                     element={<FullCertificates />}
                   />
-                  <Route
-                    path="details/activity"
-                    element={<FullActivity />}
-                   />
+                  <Route path="details/activity" element={<FullActivity />} />
                   <Route path="details/skills" element={<FullSkills />} />
+                  <Route path="details/saved-posts" element= {<SavedPosts />} />
                 </Route>
                 <Route path="/thank-you" element={<ThankYouPage />} />
                 <Route path="/premium" element={<SubscriptionLandingPage />} />
@@ -135,6 +134,7 @@ function App() {
                 />
                 <Route path="/post">
                   <Route path=":postId/edit" element={<PostEdit />} />
+                  <Route path=":postId" element={<Post />} />
                 </Route>
               </Route>
               <Route path="/settings" element={<Settings />}>

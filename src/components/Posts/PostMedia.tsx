@@ -277,7 +277,7 @@ export default function PostMedia(props: MediaProps) {
             close
           </button>
 
-          <div className={`${isDocument ? 'h-full' : 'h-96'} mb-4 bg-white rounded-lg overflow-hidden`}>
+          <div className={`${isDocument ? 'h-128' : 'h-96'} mb-4 bg-white rounded-lg overflow-hidden`}>
             {renderMediaItem(
               props.media[selectedMediaIndex],
               selectedMediaIndex,
