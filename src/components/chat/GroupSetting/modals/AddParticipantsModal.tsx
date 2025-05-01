@@ -1,7 +1,7 @@
 // modals/AddParticipantsModal.tsx
 import { IoClose, IoSearch, IoCheckmark, IoRefresh } from "react-icons/io5";
 import { useState, useEffect, RefObject } from "react";
-import { getConnections, addParticipants } from "@services/api/chatServices";
+import { getConnections } from "@services/api/chatServices";
 import ModalWrapper from "./ModalWrapper";
 
 interface Connection {
@@ -15,12 +15,14 @@ interface Connection {
 }
 
 interface AddParticipantsModalProps {
+  chatId: string;
   onCancel: () => void;
   onConfirm: (selectedUserIds: string[]) => void;
   modalRef: RefObject<HTMLDivElement | null>;
 }
 
 function AddParticipantsModal({
+  chatId,
   onCancel,
   onConfirm,
   modalRef,
@@ -40,7 +42,7 @@ function AddParticipantsModal({
       setIsLoading(true);
       setError(null);
 
-      const fetchedConnections = await getConnections();
+      const fetchedConnections = await getConnections(chatId);
       setConnections(fetchedConnections);
       setIsLoading(false);
     } catch (error) {
@@ -67,11 +69,6 @@ function AddParticipantsModal({
 
   const handleConfirm = async () => {
     onConfirm(selectedUsers);
-    try {
-      const response = await addParticipants(selectedUsers);
-    } catch (err) {
-      console.log(err);
-    }
     setConnections(
       connections.filter(
         (connection) => !selectedUsers.includes(connection.userId),
@@ -160,11 +157,6 @@ function AddParticipantsModal({
                   <p className="font-medium text-gray-800">
                     {connection.firstname} {connection.lastname}
                   </p>
-                  {connection.headline && (
-                    <p className="text-xs text-gray-500">
-                      {connection.headline}
-                    </p>
-                  )}
                   {connection.mutualConnections &&
                     connection.mutualConnections > 0 && (
                       <p className="text-xs text-gray-500">

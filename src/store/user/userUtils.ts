@@ -16,6 +16,7 @@ export const loadState = (): UserState => {
           accessToken: null,
           status: "IDLE",
           loggedIn: false,
+          allowMessages: false,
         };
   } catch (err) {
     console.error("Failed to load state:", err);
@@ -30,6 +31,7 @@ export const loadState = (): UserState => {
       accessToken: null,
       status: "IDLE",
       loggedIn: false,
+      allowMessages: false,
     };
   }
 };
