@@ -11,7 +11,14 @@ import {
 } from "chart.js";
 
 // Register required Chart.js components
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+);
 
 function Metrics() {
   // Chart data
