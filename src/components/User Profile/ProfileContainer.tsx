@@ -251,6 +251,8 @@ function ProfileContainer() {
               numberofConnections={
                 userData.numberofConnections ? userData.numberofConnections : 0
               }
+              mutualConnections={userData.mutualConnections}
+              connectionStatus={userData.connectionStatus}
               email={userData.email}
               updateUser={updateUser}
               isUser={isUser}
@@ -284,7 +286,7 @@ function ProfileContainer() {
                       onClick={() =>
                         navigate(`/profile/${userData.userId}/details/activity`)
                       }
-                      className="mt-2 px-4 py-1.5 border-1 border-crimsonRed rounded-3xl hover:bg-crimsonRed hover:text-white font-medium transition duration-400 ease-in-out"
+                      className="mt-2 px-4 py-1.5 border-1 rounded-3xl font-medium transition duration-400 ease-in-out border-crimsonRed hover:bg-crimsonRed hover:text-white"
                     >
                       Show all activity
                     </button>
