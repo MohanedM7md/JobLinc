@@ -48,7 +48,7 @@ export default function PostCreate(props: AddPostProps) {
         {
           loading: "Creating post...",
           success: "Post created successfully!",
-          error: "Error creating post.",
+          error: (error) => error.message,
         },
       );
     } catch (error) {
@@ -165,6 +165,7 @@ export default function PostCreate(props: AddPostProps) {
           >
             <button
               onClick={() => handleRemoveFile(index)}
+              disabled={isPosting}
               className="material-icons absolute top-0 right-0 text-crimsonRed hover:text-hoverSoftRed rounded-full w-5 h-5 flex items-center justify-center text-xs transition duration:300"
             >
               clear
