@@ -1,17 +1,18 @@
 import ManageNetworkCard from "../components/MyNetwork/ManageNetworkCard";
-import MyNetworkOptionsCard from "../components/MyNetwork/MyNetworkOptionsCard";
 import PendingInvitationsCard from "../components/MyNetwork/PendingInvitationsCard";
 import ConnectionsGrid from "../components/MyNetwork/ConnectionsGrid";
+import SearchResultsCard from "../components/Search/SearchResultCard";
 function MyNetwork(){  
     return(
       <>
         <div className="grid sm:grid-cols-20 gap-5 bg-lightGray">
             <div className="sm:col-span-6 justify-items-end">
+            <SearchResultsCard></SearchResultsCard>
             <ManageNetworkCard></ManageNetworkCard>
             </div>
             <div className="sm:col-span-13">
                 <div className="">  
-                <MyNetworkOptionsCard></MyNetworkOptionsCard>
+                {/* <MyNetworkOptionsCard></MyNetworkOptionsCard> */}
                 </div>  
                 <div className="mt-5">
                 <PendingInvitationsCard/>

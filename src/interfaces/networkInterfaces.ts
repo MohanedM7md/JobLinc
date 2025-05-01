@@ -1,3 +1,19 @@
+export interface searchUserInterface {
+  userId: string;
+  firstname: string;
+  lastname: string;
+  username: string;
+  profilePicture: string;
+  country: string;
+  city: string;
+  connectionStatus: "Connected" | "Not Connected";
+  isFollowing: boolean;
+  numberOfConnections: number;
+  mutualConnections: number;
+  skills: string[];
+  experiences: string[];
+  certificates: string[];
+}
 export interface connectsInterface {
     userId: string;
     profilePicture: string,

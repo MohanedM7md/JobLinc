@@ -1,4 +1,16 @@
 import { api } from "./api";
+export const searchUsers = async (keyword: string, page = 1, limit = 7) =>
+{
+  try {
+    const response = await api.get(`user/search`, {
+      params: { keyword, page, limit },
+    });
+    return response.data
+  } catch (error) {
+    console.log("Error fetching searched users", error)
+    return[];
+  }
+}
 export const getNetworkFeed = async (count: number, signal: AbortSignal) => {
     try {
       const response = await api.get(`connection/feed`, {

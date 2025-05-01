@@ -38,7 +38,7 @@ const businessOptions: BusinessOption[] = [
 export function BusinessOptionsCard() {
   const navigate = useNavigate();
   return (
-    <div className="w-full overflow-hidden rounded-lg border border-gray-200 bg-white shadow-xl">
+    <div className="w-full rounded-lg border border-gray-200 bg-white shadow-xl">
       <div className="bg-gradient-to-r border-crimsonRed border-1 px-5 py-3">
         <h2 className="text-crimsonRed text-lg font-semibold">
           Business Options
