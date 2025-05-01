@@ -1,9 +1,13 @@
 
+import { useSearchParams } from "react-router-dom";
 import UserConnectionListCard from "../../components/Connections/UserConnectionListCard";
 import { useEffect, useState } from "react";
+import PeopleList from "../../components/Search/PeopleList";
 
 function SearchResultOptions() {
     const [activeOption, setActiveOption] = useState<"People" | "Companies" | null>(null);
+    const [searchParams] = useSearchParams();
+    const searchQuery = searchParams.get("q") || "";
 
     function handlePeopleClick() {
         setActiveOption("People");
@@ -38,11 +42,11 @@ function SearchResultOptions() {
                     } cursor-pointer p-3 px-10`}
                     onClick={handleCompaniesClick}
                 >
-                    Followers
+                    Companies
                 </div>
             </div>
             <div className="w-full">
-                {activeOption === "People" && <UserConnectionListCard/>}
+                {activeOption === "People" && <PeopleList searchQuery={searchQuery}/>}
                 {activeOption === "Companies" && <UserConnectionListCard/>} 
             </div>
         </div>

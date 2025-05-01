@@ -103,9 +103,10 @@ function SearchResultsCard({ searchQuery, onClose, Searchref }: SearchResultsCar
                 className="w-full p-2 text-sm font-medium text-red-600 hover:bg-gray-50 
                          transition-colors duration-150 border-t border-gray-100
                          focus:outline-none focus:ring-1 focus:ring-red-600/30"
-                onClick={() => {
-                  onClose();
-                }}
+                         onClick={() => {
+                          onClose();
+                          navigate(`/search-results?q=${encodeURIComponent(searchQuery)}`);
+                        }}
               >
                 Show All Results
               </button>

@@ -54,6 +54,7 @@ import BlockedUsers from "@pages/BlockedUsers";
 import UserConnections from "@pages/UserConnections";
 import FollowersFollowing from "@pages/FollowersFollowing";
 import DemographicInfo from "@pages/Settings/AccountPreferences/ProfileInformation/DemographicInfo";
+import SearchResult from "@pages/SearchResult";
 
 const queryClient = new QueryClient();
 
@@ -95,6 +96,7 @@ function App() {
                 <Route path="/home" element={<Home />} />
                 <Route path="/my-network" element={<MyNetwork />} />
                 <Route path="/my-connections" element={<MyConnections />} />
+                <Route path="/search-results" element={<SearchResult/>}/>
                 <Route
                   path="/followers-following"
                   element={<FollowersFollowing />}

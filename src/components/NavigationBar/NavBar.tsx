@@ -42,7 +42,7 @@ function NavBar() {
               id="SearchBar" 
             />
             {searchQuery && (
-              <div className="absolute top-10 left-37 w-full z-50 mt-1">
+              <div className="absolute top-10 left-43 w-full z-50 mt-1">
                 <SearchResultsCard 
                 searchQuery={searchQuery}
                 onClose={() => setSearchQuery('')}

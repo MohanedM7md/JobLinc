@@ -146,7 +146,7 @@ export const removeFollowerRequest = async (userId:string) => {
 }
 export const sendConnectionRequest = async (userId: string) => {
   try {
-    const response = await api.post(`connections/${userId}`);
+    const response = await api.post(`connection/${userId}`);
     return response;
   } catch (error) {
     console.error("Error sending connection request:", error);
