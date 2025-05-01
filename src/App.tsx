@@ -36,7 +36,6 @@ import FullCertificates from "./components/User Profile/Certificates/FullCertifi
 import FullSkills from "./components/User Profile/Skills/FullSkills";
 
 // Post components
-import PostCreate from "./components/Posts/PostCreate";
 import PostEdit from "./components/Posts/PostEdit";
 
 // Settings components
@@ -57,6 +56,7 @@ const Admin = lazy(() => import("./pages/Company/Admin"));
 const MyCompanies = lazy(() => import("./pages/Company/MyCompanies"));
 const Member = lazy(() => import("@pages/Company/Member"));
 import CreateForm from "@pages/Company/CreateForm";
+import FullActivity from "@components/User Profile/Miscellaneous/FullActivity";
 
 const queryClient = new QueryClient();
 
@@ -113,11 +113,11 @@ function App() {
                     element={<FullCertificates />}
                   />
                   <Route path="details/skills" element={<FullSkills />} />
+                  <Route path="details/activity" element={<FullActivity />} />
                 </Route>
 
                 {/* Post Routes */}
                 <Route path="/post">
-                  {/* <Route path="create" element={<PostCreate />} /> */}
                   <Route path=":postId/edit" element={<PostEdit />} />
                 </Route>
 
