@@ -1,40 +1,43 @@
 import { connectsInterface } from "interfaces/networkInterfaces";
 export const connectsResponse: connectsInterface[] = [
-
-        {
-            lincbuttonid: "LincButton1",
-            profilePicture: "src/assets/Tyrone.jpg",
-            userName: "Tyrone",
-            userBio: "Junior plumbing student @ Waterloo University",
-            mutuals: "Abdelrahman Fathy and 3 others are mutual connections"
-        },
-        {
-            lincbuttonid: "LincButton2",
-            profilePicture: "src/assets/Tyrone.jpg",
-            userName: "Jane",
-            userBio: "Senior graphic designer @ Creative Arts",
-            mutuals: "Ahmed El-Sayed and 5 others are mutual connections"
-        },
-        {
-            lincbuttonid: "LincButton3",
-            profilePicture: "src/assets/Tyrone.jpg",
-            userName: "John",
-            userBio: "Software engineer @ Tech Solutions",
-            mutuals: "Sara Ibrahim and 2 others are mutual connections"
-        },
-        {
-            lincbuttonid: "LincButton4",
-            profilePicture: "src/assets/Tyrone.jpg",
-            userName: "Tyrone",
-            userBio: "Junior plumbing student @ Waterloo University",
-            mutuals: "Abdelrahman Fathy and 3 others are mutual connections"
-        },
-        {
-            lincbuttonid: "LincButton5",
-            profilePicture: "src/assets/Tyrone.jpg",
-            userName: "Tyrone",
-            userBio: "Junior plumbing student @ Waterloo University",
-            mutuals: "Abdelrahman Fathy and 3 others are mutual connections"
-        },  
-        
-    ];
+    {
+        userId: "6806f2323d3cc8d460b77796",
+        profilePicture: "src/assets/Tyrone.jpg",
+        firstName: "Tyrone",
+        lastName: "Smith",
+        headline: "Junior plumbing student @ Waterloo University",
+        Mutuals: 3 
+    },
+    {
+        userId: "67fbcbde912042b8580eed94",
+        profilePicture: "src/assets/Tyrone.jpg",
+        firstName: "Jane",
+        lastName: "Doe",
+        headline: "Senior graphic designer @ Creative Arts",
+        Mutuals: 5
+    },
+    {
+        userId: "67fbcbde912042b8580eed94",
+        profilePicture: "src/assets/Tyrone.jpg",
+        firstName: "John",
+        lastName: "Brown",
+        headline: "Software engineer @ Tech Solutions",
+        Mutuals: 2
+    },
+    {
+        userId: "67fbcbde912042b8580eed94",
+        profilePicture: "src/assets/Tyrone.jpg",
+        firstName: "Tyrone",
+        lastName: "Johnson",
+        headline: "Junior plumbing student @ Waterloo University",
+        Mutuals: 3
+    },
+    {
+        userId: "67fbcbde912042b8580eed94",
+        profilePicture: "src/assets/Tyrone.jpg",
+        firstName: "Tyrone",
+        lastName: "Lee",
+        headline: "Junior plumbing student @ Waterloo University",
+        Mutuals: 3
+    },
+];

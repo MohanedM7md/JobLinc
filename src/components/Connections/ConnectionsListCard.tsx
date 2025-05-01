@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import ConnectionsHeader from "./ConnectionsHeader";
 import ConnectionCard from "./ConnectionCard";
 import { ConnectionInterface } from "../../interfaces/networkInterfaces";
-import { getUserConnections } from "@services/api/networkServices";
+import { getConnections } from "@services/api/networkServices";
 
 function ConnectionsListCard() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -13,21 +13,36 @@ function ConnectionsListCard() {
     const controller = new AbortController();
     const fetchData = async () => {
       try {
-        const response = await getUserConnections(5, controller.signal);
-        console.log(response);
-        const parsedConnections = Array.isArray(response)
+        const response = await getConnections();
+        // console.log("Connections of logged in user",response);
+        //   const parsedConnections = Array.isArray(response)
+        //   ? response.map((connection) => ({
+        //     userId: connection.userId,
+        //     profilePicture: connection.profilePicture,
+        //     firstName: connection.firstname,
+        //     lastName: connection.lastname,
+        //     headline: connection.headline || "",
+        //     connectedDate: new Date(connection.time),
+        //   }))
+        //   : [];
+        //   setUserConnections(parsedConnections);
+          const parsedConnections = Array.isArray(response)
           ? response.map((connection) => ({
               ...connection,
-              connectedDate: new Date(connection.connectedDate),
+              connectedDate: connection.connectedDate 
+                ? new Date(connection.connectedDate)
+                : null, 
             }))
           : [];
-        setUserConnections(parsedConnections);
-      } catch (error) {
-        console.error("Error fetching network feed:", error);
+          setUserConnections(parsedConnections);
+          console.log("parsed connections of logged in user",userConnections);
+        } catch (error) {
+          console.error("Error fetching network feed:", error);
       }
     };
+  
     fetchData();
-
+  
     return () => {
       controller.abort();
     };
@@ -35,15 +50,17 @@ function ConnectionsListCard() {
 
   const removeConnection = (connectionId: string) => {
     setUserConnections((prevConnections) =>
-      prevConnections.filter((connection) => connection.id !== connectionId)
+      prevConnections.filter((connection) => connection.userId !== connectionId)
     );
   };
 
-  const filteredConnections = userConnections.filter((connection) =>
-    `${connection.firstName.toLowerCase()} ${connection.lastName.toLowerCase()}`.includes(
-      searchTerm.toLowerCase()
-    )
+const filteredConnections = userConnections.filter((connection) => {
+  const firstName = connection.firstName || "";
+  const lastName = connection.lastName || "";
+  return `${firstName.toLowerCase()} ${lastName.toLowerCase()}`.includes(
+    searchTerm.toLowerCase()
   );
+});
 
   const sortedConnections = [...filteredConnections].sort((a, b) => {
     if (sortBy === "firstname") {
@@ -51,19 +68,21 @@ function ConnectionsListCard() {
     } else if (sortBy === "lastname") {
       return b.lastName.localeCompare(a.lastName);
     } else if (sortBy === "recentlyadded") {
-      return b.connectedDate.getTime() - a.connectedDate.getTime();
+      return (b.connectedDate?.getTime() || 0) - (a.connectedDate?.getTime() || 0);
     }
     return 0;
   });
 
   return (
-    <div className="w-1/2 border border-gray-200 rounded-md m-10">
-      <div className="grid grid-rows-auto w-full">
+    <div className=" lg:w-6/10 border border-gray-200 rounded-md m-10 bg-white">
+      <div className="w-full">
         <ConnectionsHeader
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
           setSortBy={setSortBy}
         />
+      </div>
+      <div className="w-full">
         {sortedConnections.map((connection, index) => (
           <ConnectionCard key={index} {...connection} onRemove={removeConnection} />
         ))}

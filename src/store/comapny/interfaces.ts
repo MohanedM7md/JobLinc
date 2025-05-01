@@ -10,7 +10,7 @@ export interface Location {
 }
 
 export interface Owner {
-  _id: string;
+  id: string;
   firstname: string;
   lastname: string;
   username: string;

@@ -23,7 +23,11 @@ export default function ManageAdmins() {
   useEffect(() => {
     getConnections()
       .then((data) => {
-        setConnections(data);
+        const nonAdminConnections = data.filter(
+          (connection: any) =>
+            !admins.some((admin: any) => admin.id === connection.userId),
+        );
+        setConnections(nonAdminConnections);
       })
       .catch((err) => console.log(err));
   }, [showAddView]);
@@ -33,9 +37,13 @@ export default function ManageAdmins() {
       const response = await addAdmin(userId);
       if (response.status !== 200)
         throw "Failed to add admin. Please try again later.";
+
+      setConnections(
+        connections.filter((connection) => connection.userId !== userId),
+      );
       updateBasicInfo({
         ...company,
-        admins: [...admins, response.data.admins],
+        admins: [...response.data.admins],
       }); //!this is not right and need to be changed when magdy update it
     } catch (error) {
       console.error("Error adding admin:", error);
@@ -49,7 +57,7 @@ export default function ManageAdmins() {
         throw "Failed to delete admin. Please try again later.";
       updateBasicInfo({
         ...company,
-        admins: admins.filter((admin) => admin._id !== userId),
+        admins: admins.filter((admin) => admin.id !== userId),
       });
     } catch (error) {
       console.error("Error deleting admin:", error);
@@ -90,7 +98,7 @@ export default function ManageAdmins() {
               <ul className="space-y-4">
                 {admins.map((admin: any) => (
                   <li
-                    key={admin._id}
+                    key={admin.id}
                     className="flex items-center justify-between bg-white dark:bg-charcoalBlack/30 rounded-xl p-4 shadow-sm"
                   >
                     <div className="flex items-center gap-4">
@@ -106,7 +114,7 @@ export default function ManageAdmins() {
                     </div>
                     <button
                       className="flex items-center gap-1 cursor-pointer transition-transform duration-200"
-                      onClick={() => handleDeleteAdmin(admin._id)}
+                      onClick={() => handleDeleteAdmin(admin.id)}
                     >
                       <Trash2 className="w-4 h-4" />
                       <span className="transition-all duration-200 hover:text-[105%]">
@@ -148,7 +156,7 @@ export default function ManageAdmins() {
               <ul className="space-y-4">
                 {connections.map((user: any) => (
                   <li
-                    key={user._id}
+                    key={user.id}
                     className="flex items-center justify-between bg-white dark:bg-charcoalBlack/30 rounded-xl p-4 shadow-sm"
                   >
                     <div className="flex items-center gap-4">

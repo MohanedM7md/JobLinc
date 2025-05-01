@@ -3,7 +3,7 @@ import ManageNetworkCard from '../../components/MyNetwork/ManageNetworkCard';
 import { describe, it, expect } from 'vitest';
 import { BrowserRouter } from 'react-router-dom';
 
-describe('ManageNetworkCard', () => {
+describe('ManageNetworkCard Component', () => {
   it('renders the title', () => {
     render(
       <BrowserRouter>

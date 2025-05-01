@@ -8,12 +8,13 @@ export default defineConfig({
   resolve: {
     alias: {
       "@chatComponent": "/src/components/chat",
-      "@component": "/src/components",
+      "@components": "/src/components",
       "@context": "/src/context",
       "@hooks": "/src/hooks",
       "@pages": "/src/pages",
       "@services": "/src/services",
       "@utils": "/src/utils",
+      "@routes": "/src/routes",
       "@store": "/src/store",
     },
   },

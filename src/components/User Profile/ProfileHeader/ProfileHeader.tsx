@@ -1,9 +1,12 @@
 import EditProfile from "./EditProfile";
 import Modal from "../../utils/Modal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import EditProfilePicture from "./EditProfilePicture";
 import EditCoverPicture from "./EditCoverPicture";
 import "material-icons";
+import { useNavigate } from "react-router-dom";
+import { ConnectionStatus } from "../../../interfaces/userInterfaces";
+import useChats from "@hooks/useChats";
 
 interface ProfileProps {
   userId: string;
@@ -17,16 +20,26 @@ interface ProfileProps {
   phoneNumber: string;
   email: string;
   numberofConnections: number;
+  mutualConnections: number;
+  connectionStatus: ConnectionStatus;
   updateUser: () => Promise<void>;
 }
 
 function ProfileHeader(props: ProfileProps & { isUser: boolean }) {
+  const { setOpnedChats } = useChats();
+  const [connectionStatus, setConnectionStatus] = useState<ConnectionStatus>(
+    props.connectionStatus,
+  );
+  const [connectionButtonText, setConnectionButtonText] = useState<string>("");
+  const [connectionButtonStyle, setConnectionButtonStyle] =
+    useState<string>("");
   const [isEditUserModalOpen, setIsEditUserModalOpen] =
     useState<boolean>(false);
   const [isEditProfilePictureModalOpen, setIsEditProfilePictureModalOpen] =
     useState<boolean>(false);
   const [isEditCoverPictureModalOpen, setIsEditCoverPictureModalOpen] =
     useState<boolean>(false);
+  const navigate = useNavigate();
 
   async function handleUpdateUser() {
     await props.updateUser();
@@ -43,8 +56,24 @@ function ProfileHeader(props: ProfileProps & { isUser: boolean }) {
     setIsEditCoverPictureModalOpen(false);
   }
 
+  useEffect(() => {
+    switch (props.connectionStatus) {
+      case ConnectionStatus.NotConnected: {
+        setConnectionButtonText("Send Message Req");
+        setConnectionButtonStyle(
+          "border-crimsonRed hover:bg-crimsonRed hover:text-white",
+        );
+      }
+      //make cases for each one with your preferred styling and text
+    }
+  }, [connectionStatus]);
+
+  const handleConnectionsClick = () => {
+    navigate(`/profile/${props.userId}/connections`);
+  };
+
   return (
-    <div className="profile-header p-4 rounded-lg shadow-md relative">
+    <div className="profile-header bg-lightGray p-4 rounded-lg shadow-md relative">
       <div className="relative mb-16">
         <img
           src={props.coverPicture}
@@ -87,8 +116,17 @@ function ProfileHeader(props: ProfileProps & { isUser: boolean }) {
               Contact Info
             </span>
           </div>
-          <p className="text-crimsonRed font-medium cursor-pointer hover:underline">
+          <p
+            className="text-crimsonRed font-medium cursor-pointer hover:underline"
+            onClick={handleConnectionsClick}
+          >
             Connections: {props.numberofConnections}
+          </p>
+          <p
+            className="text-crimsonRed font-medium cursor-pointer hover:underline"
+            onClick={handleConnectionsClick}
+          >
+            Mutuals: {props.mutualConnections}
           </p>
         </div>
         {props.isUser && (
@@ -114,6 +152,27 @@ function ProfileHeader(props: ProfileProps & { isUser: boolean }) {
           </button>
           <button className="bg-darkBurgundy text-warmWhite px-4 py-1.5 rounded-3xl">
             Resources
+          </button>
+        </div>
+      )}
+
+      {!props.isUser && (
+        <div className="flex mt-4 space-x-2">
+          <button
+            onClick={() => {
+              setOpnedChats((prevChats) => [
+                ...prevChats,
+                {
+                  chatId: "",
+                  usersId: [props.userId],
+                  chatName: props.firstname,
+                  chatImage: [props.profilePicture],
+                },
+              ]);
+            }}
+            className={`mt-2 px-4 py-1.5 border-1 rounded-3xl font-medium transition duration-300 ease-in-out ${connectionButtonStyle}`}
+          >
+            {connectionButtonText}
           </button>
         </div>
       )}

@@ -1,5 +1,3 @@
-
-
 import { useCompanyStore } from "@store/comapny/companyStore";
 import { useEffect, useState } from "react";
 import LoadingScreen from "@pages/LoadingScreen";
@@ -18,7 +16,7 @@ function ManageFollowers()
             try {
                 // Get Company Followers on Component's mount
                 await fetchCompanyFollowers();
-                
+                console.log("comapny followers: ", company);
             } catch (err: any) {
                 if (err.response?.status === 401) {
                 setErrPage("Unauthorized");

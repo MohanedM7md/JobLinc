@@ -18,14 +18,16 @@ interface PostReactProps {
   postId: string;
   successHandler: (newReaction: string, oldReaction: string) => void;
   userReaction: string;
+  compact?: boolean;
 }
 
 export default function PostReact({
   postId,
   successHandler,
   userReaction,
+  compact,
 }: PostReactProps) {
-  const [reaction, setReaction] = useState<string>(userReaction || "React");
+  const [reaction, setReaction] = useState<string>(userReaction);
   const [showReact, setShowReact] = useState<boolean>(false);
   const hoverTimeout = useRef<NodeJS.Timeout | null>(null);
 
@@ -81,7 +83,7 @@ export default function PostReact({
 
   function getReactionIcon(reaction: string) {
     switch (reaction) {
-      case "React":
+      case "NoReaction":
         return <SmilePlus className="mr-2 md:align-text-bottom" />;
       case "Like":
         return <ThumbsUp className="mr-2 md:align-text-bottom" />;
@@ -102,7 +104,7 @@ export default function PostReact({
 
   function getReactionStyles(reaction: string) {
     switch (reaction) {
-      case "React":
+      case "NoReaction":
         return "text-gray-500 hover:bg-gray-200";
       case "Like":
         return "text-blue-500 hover:bg-blue-100";
@@ -138,7 +140,11 @@ export default function PostReact({
         }}
       >
         {getReactionIcon(reaction)}
-        <span className="hidden md:inline-block">{reaction}</span>
+        {!compact && (
+          <span className="hidden md:inline-block">
+            {reaction == "NoReaction" ? "React" : reaction}
+          </span>
+        )}
       </button>
       <AnimatePresence>
         {showReact && (
@@ -154,7 +160,7 @@ export default function PostReact({
             {reaction === "Like" ? (
               <motion.div
                 className="text-gray-500 cursor-pointer hover:bg-gray-100 hover:scale-105 transition-transform font-medium flex flex-row px-2 py-1 rounded-3xl"
-                onClick={() => postReaction("")}
+                onClick={() => postReaction("NoReaction")}
               >
                 <X />
                 <span className="hidden md:inline-block mx-2">Remove</span>
@@ -171,7 +177,7 @@ export default function PostReact({
             {reaction === "Celebrate" ? (
               <motion.div
                 className="text-gray-500 cursor-pointer hover:bg-gray-100 hover:scale-105 transition-transform font-medium flex flex-row px-2 py-1 rounded-3xl"
-                onClick={() => postReaction("")}
+                onClick={() => postReaction("NoReaction")}
               >
                 <X />
                 <span className="hidden md:inline-block mx-2">Remove</span>
@@ -188,7 +194,7 @@ export default function PostReact({
             {reaction === "Support" ? (
               <motion.div
                 className="text-gray-500 cursor-pointer hover:bg-gray-100 hover:scale-105 transition-transform font-medium flex flex-row px-2 py-1 rounded-3xl"
-                onClick={() => postReaction("")}
+                onClick={() => postReaction("NoReaction")}
               >
                 <X />
                 <span className="hidden md:inline-block mx-2">Remove</span>
@@ -205,7 +211,7 @@ export default function PostReact({
             {reaction === "Funny" ? (
               <motion.div
                 className="text-gray-500 cursor-pointer hover:bg-gray-100 hover:scale-105 transition-transform font-medium flex flex-row px-2 py-1 rounded-3xl"
-                onClick={() => postReaction("")}
+                onClick={() => postReaction("NoReaction")}
               >
                 <X />
                 <span className="hidden md:inline-block mx-2">Remove</span>
@@ -222,7 +228,7 @@ export default function PostReact({
             {reaction === "Love" ? (
               <motion.div
                 className="text-gray-500 cursor-pointer hover:bg-gray-100 hover:scale-105 transition-transform font-medium flex flex-row px-2 py-1 rounded-3xl"
-                onClick={() => postReaction("")}
+                onClick={() => postReaction("NoReaction")}
               >
                 <X />
                 <span className="hidden md:inline-block mx-2">Remove</span>
@@ -239,7 +245,7 @@ export default function PostReact({
             {reaction === "Insightful" ? (
               <motion.div
                 className="text-gray-500 cursor-pointer hover:bg-gray-100 hover:scale-105 transition-transform font-medium flex flex-row px-2 py-1 rounded-3xl"
-                onClick={() => postReaction("")}
+                onClick={() => postReaction("NoReaction")}
               >
                 <X />
                 <span className="hidden md:inline-block mx-2">Remove</span>

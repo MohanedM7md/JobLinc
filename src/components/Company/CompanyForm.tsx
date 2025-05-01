@@ -9,6 +9,7 @@ import {
   FileText,
   Phone,
   Locate,
+  Home,
 } from "lucide-react";
 import { companySizes, companyTypes, workplaceTypes } from "./form-config";
 import {
@@ -60,9 +61,26 @@ const CompanySchema = z.object({
   website: z
     .string()
     .optional()
-    .refine((value) => !value || z.string().url().safeParse(value).success, {
-      message: "Invalid website URL",
-    })
+    .refine(
+      (value) => {
+        if (!value) return true;
+        const urlPattern =
+          /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?$/;
+        if (!urlPattern.test(value)) return false;
+
+        try {
+          const urlToCheck = value.includes("://") ? value : `https://${value}`;
+          new URL(urlToCheck);
+          return true;
+        } catch {
+          return false;
+        }
+      },
+      {
+        message:
+          "Invalid website URL - must be in format like 'example.com', 'www.example.com', or 'https://example.com'",
+      },
+    )
     .nullish(),
 });
 
@@ -179,196 +197,214 @@ export const CompanyForm = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-6">
-      <form
-        onSubmit={handleSubmit}
-        className="space-y-6 bg-warmWhite dark:bg-warmBlack p-6 rounded-lg shadow-lg"
+    <div className="min-h-screen bg-warmWhite dark:from-gray-900 dark:to-gray-800 flex items-center justify-center py-12">
+      <div
+        className="relative max-w-3xl w-full px-8 py-10 bg-white/80 dark:bg-black/60
+                        shadow-2xl rounded-3xl backdrop-blur-md border border-slate-200 dark:border-charcoalBlack/40
+                        ring-1 ring-pink-100 dark:ring-slate-800 ring-inset overflow-hidden"
       >
-        <h2 className="text-2xl font-semibold text-charcoalBlack dark:text-charcoalWhite">
-          Create Company Page
-        </h2>
+        <div className="absolute -top-10 -left-8">
+          <Building2 className="h-16 w-16 text-crimsonRed opacity-10 blur-[2px]" />
+        </div>
+        <form onSubmit={handleSubmit} className="space-y-7">
+          <h2 className="text-3xl font-bold text-crimsonRed dark:text-pink-200 mb-4 tracking-tight">
+            Create Company Page{" "}
+            <Briefcase className="inline-block align-middle h-6 w-6 text-crimsonRed animate-bounce" />
+          </h2>
 
-        <div className="space-y-4">
-          <Input
-            icon={<Building2 className="h-5 w-5" />}
-            label="Company name"
-            value={name || ""}
-            onChange={(Name) => {
-              setName(Name);
-              dispatchError({ type: "CLEAR_ERROR", payload: "name" });
-            }}
-            error={errors.name}
-            placeholder="Enter company name"
-          />
+          <div className="space-y-4">
+            <Input
+              icon={<Building2 className="h-5 w-5" />}
+              label="Company name"
+              value={name || ""}
+              onChange={(Name) => {
+                setName(Name);
+                dispatchError({ type: "CLEAR_ERROR", payload: "name" });
+              }}
+              error={errors.name}
+              placeholder="Enter company name"
+            />
 
-          <Input
-            label="Company URL"
-            value={urlSlug || ""}
-            onChange={async (UrlSlug) => {
-              setUrlSlug(UrlSlug);
-              dispatchError({ type: "CLEAR_ERROR", payload: "urlSlug" });
-              try {
-                const available: boolean = await debouncedValidateSlug(
-                  UrlSlug,
-                  setIsSlugValidating,
-                );
-                if (available) {
+            <Input
+              label="Company URL"
+              value={urlSlug || ""}
+              onChange={async (UrlSlug) => {
+                setUrlSlug(UrlSlug);
+                dispatchError({ type: "CLEAR_ERROR", payload: "urlSlug" });
+                try {
+                  const available: boolean = await debouncedValidateSlug(
+                    UrlSlug,
+                    setIsSlugValidating,
+                  );
+                  if (available) {
+                    dispatchError({
+                      type: "SET_ERRORS",
+                      payload: { urlSlug: "This URL slug is already taken" },
+                    });
+                  }
+                } catch (error) {
                   dispatchError({
                     type: "SET_ERRORS",
-                    payload: { urlSlug: "This URL slug is already taken" },
+                    payload: { urlSlug: "Error validating slug" },
                   });
+                } finally {
+                  setIsSlugValidating(false);
                 }
-              } catch (error) {
-                dispatchError({
-                  type: "SET_ERRORS",
-                  payload: { urlSlug: "Error validating slug" },
-                });
-              } finally {
-                setIsSlugValidating(false);
+              }}
+              error={errors.urlSlug}
+              prefix="joblinc.me/company/"
+              placeholder="your-company"
+              loading={isSlugValidating}
+            />
+
+            <Input
+              icon={<Briefcase className="h-5 w-5" />}
+              label="Industry"
+              value={industry || ""}
+              onChange={(Industry) => {
+                setIndustry(Industry);
+                dispatchError({ type: "CLEAR_ERROR", payload: "industry" });
+              }}
+              error={errors.industry}
+              placeholder="ex: Information Services"
+            />
+
+            <Select
+              icon={<Users className="h-5 w-5" />}
+              label="Company size"
+              options={companySizes}
+              selected={size!}
+              onSelect={(size) => {
+                setSize(size);
+                dispatchError({ type: "CLEAR_ERROR", payload: "size" });
+              }}
+              error={errors.size}
+            />
+
+            <Select
+              icon={<Building2 className="h-5 w-5" />}
+              label="Company type"
+              options={companyTypes}
+              selected={type!}
+              onSelect={(Type) => {
+                setType(Type);
+                dispatchError({ type: "CLEAR_ERROR", payload: "type" });
+              }}
+              error={errors.type}
+            />
+            <DateInput
+              label="Foundation date"
+              value={foundedDate}
+              onChange={setFoundedDate}
+              error={errors.founded}
+            />
+            <TextArea
+              label="Company overview"
+              value={overview!}
+              onChange={(Overview) => {
+                setOverview(Overview);
+                dispatchError({ type: "CLEAR_ERROR", payload: "overview" });
+              }}
+              error={errors.overview}
+              placeholder="Tell us about your company"
+            />
+
+            <Input
+              icon={<FileText className="h-5 w-5" />}
+              label="Tagline"
+              value={tagline!}
+              onChange={(tagline) => {
+                setTagline(tagline);
+                dispatchError({ type: "CLEAR_ERROR", payload: "tagline" });
+              }}
+              placeholder="Empowering businesses through innovation"
+              error={errors.tagline}
+            />
+
+            <Input
+              icon={<Phone className="h-5 w-5" />}
+              label="Phone"
+              value={phone!}
+              onChange={(phoneNumber) => {
+                setPhoneNumber(phoneNumber);
+                dispatchError({ type: "CLEAR_ERROR", payload: "phone" });
+              }}
+              placeholder="zero onein"
+              error={errors.phone}
+            />
+
+            <Input
+              icon={<Globe className="h-5 w-5" />}
+              label="website"
+              value={website!}
+              onChange={(website) => {
+                setWebsite(website);
+                dispatchError({ type: "CLEAR_ERROR", payload: "website" });
+              }}
+              placeholder="www.company.org"
+              error={errors.website}
+            />
+
+            <Select
+              icon={<Locate className="h-5 w-5" />}
+              label="Workplace type"
+              options={workplaceTypes}
+              selected={workplace!}
+              onSelect={setWorkplace}
+              error={errors.workplace}
+            />
+
+            <FileUpload
+              label="Company Logo"
+              accept="image/*"
+              onChange={(file) => {
+                setLogo(file);
+                dispatchError({ type: "CLEAR_ERROR", payload: "logo" });
+              }}
+              description="300x300px recommended. JPG, JPEG, or PNG."
+              error={errors.logo}
+            />
+
+            <FileUpload
+              label="Cover Photo"
+              accept="image/*"
+              onChange={(file) => {
+                setCoverPhoto(file);
+                dispatchError({ type: "CLEAR_ERROR", payload: "coverPhoto" });
+              }}
+              description="Recommended size: 1128x191 pixels"
+              error={
+                typeof errors.coverPhoto === "string"
+                  ? errors.coverPhoto
+                  : undefined
               }
-            }}
-            error={errors.urlSlug}
-            prefix="joblinc.me/company/"
-            placeholder="your-company"
-            loading={isSlugValidating}
+            />
+          </div>
+          <LocationInputs
+            locations={locations!}
+            onChange={setLocations}
+            errors={errors.locations}
           />
 
-          <Input
-            icon={<Briefcase className="h-5 w-5" />}
-            label="Industry"
-            value={industry || ""}
-            onChange={(Industry) => {
-              setIndustry(Industry);
-              dispatchError({ type: "CLEAR_ERROR", payload: "industry" });
-            }}
-            error={errors.industry}
-            placeholder="ex: Information Services"
-          />
-
-          <Select
-            icon={<Users className="h-5 w-5" />}
-            label="Company size"
-            options={companySizes}
-            selected={size!}
-            onSelect={(size) => {
-              setSize(size);
-              dispatchError({ type: "CLEAR_ERROR", payload: "size" });
-            }}
-            error={errors.size}
-          />
-
-          <Select
-            icon={<Building2 className="h-5 w-5" />}
-            label="Company type"
-            options={companyTypes}
-            selected={type!}
-            onSelect={(Type) => {
-              setType(Type);
-              dispatchError({ type: "CLEAR_ERROR", payload: "type" });
-            }}
-            error={errors.type}
-          />
-          <DateInput
-            label="Foundation date"
-            value={foundedDate}
-            onChange={setFoundedDate}
-            error={errors.founded}
-          />
-          <TextArea
-            label="Company overview"
-            value={overview!}
-            onChange={(Overview) => {
-              setOverview(Overview);
-              dispatchError({ type: "CLEAR_ERROR", payload: "overview" });
-            }}
-            error={errors.overview}
-            placeholder="Tell us about your company"
-          />
-
-          <Input
-            icon={<FileText className="h-5 w-5" />}
-            label="Tagline"
-            value={tagline!}
-            onChange={(tagline) => {
-              setTagline(tagline);
-              dispatchError({ type: "CLEAR_ERROR", payload: "tagline" });
-            }}
-            placeholder="Empowering businesses through innovation"
-            error={errors.tagline}
-          />
-
-          <Input
-            icon={<Phone className="h-5 w-5" />}
-            label="Phone"
-            value={phone!}
-            onChange={(phoneNumber) => {
-              setPhoneNumber(phoneNumber);
-              dispatchError({ type: "CLEAR_ERROR", payload: "phone" });
-            }}
-            placeholder="zero onein"
-            error={errors.phone}
-          />
-
-          <Input
-            icon={<Globe className="h-5 w-5" />}
-            label="website"
-            value={website!}
-            onChange={(website) => {
-              setWebsite(website);
-              dispatchError({ type: "CLEAR_ERROR", payload: "website" });
-            }}
-            placeholder="www.company.org"
-            error={errors.website}
-          />
-
-          <Select
-            icon={<Locate className="h-5 w-5" />}
-            label="Workplace type"
-            options={workplaceTypes}
-            selected={workplace!}
-            onSelect={setWorkplace}
-            error={errors.workplace}
-          />
-
-          <FileUpload
-            label="Company Logo"
-            accept="image/*"
-            onChange={(file) => {
-              setLogo(file);
-              dispatchError({ type: "CLEAR_ERROR", payload: "logo" });
-            }}
-            description="300x300px recommended. JPG, JPEG, or PNG."
-            error={errors.logo}
-          />
-
-          <FileUpload
-            label="Cover Photo"
-            accept="image/*"
-            onChange={(file) => {
-              setCoverPhoto(file);
-              dispatchError({ type: "CLEAR_ERROR", payload: "coverPhoto" });
-            }}
-            description="Recommended size: 1128x191 pixels"
-            error={
-              typeof errors.coverPhoto === "string"
-                ? errors.coverPhoto
-                : undefined
-            }
-          />
-        </div>
-        <LocationInputs
-          locations={locations!}
-          onChange={setLocations}
-          errors={errors.locations}
-        />
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="w-full px-4 py-2 bg-crimsonRed hover:bg-darkBurgundy text-white font-medium rounded-md transition-colors disabled:bg-mutedSilver disabled:cursor-not-allowed"
-        >
-          {isSubmitting ? "Creating..." : "Create Company Page"}
-        </button>
-      </form>
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full px-4 py-2 font-semibold rounded-xl
+            bg-crimsonRed
+            text-white cursor-pointer
+             transition disabled:bg-mutedSilver disabled:cursor-not-allowed"
+          >
+            {isSubmitting ? (
+              <span>
+                <span className="inline-block animate-spin mr-2">🔄</span>
+                Creating...
+              </span>
+            ) : (
+              <>Create Company Page</>
+            )}
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
