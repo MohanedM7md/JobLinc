@@ -2,8 +2,7 @@ import React, { useState, useEffect, FormEvent, ChangeEvent } from "react";
 import JobApplicationModal from "./JobApplicationModal";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
-import { fetchJobs } from "@services/api/jobService";
-
+import { fetchJobs, uploadResume, applyToJob } from "@services/api/jobService";
 
 export interface Job {
   id: string;
@@ -111,18 +110,64 @@ const Jobs_And_Hiring: React.FC<SaveApplyProps> = ({
 
   const handleApplyClick = () => setShowModal(true);
 
-  const handleApplicationSubmit = (
-    status: "Pending" | "Viewed" | "Rejected" | "Accepted" = "Pending",
+  const handleApplicationSubmit = async (
+    jobId: string,
+    {
+      phone,
+      email,
+      resume,
+      coverLetter,
+    }: { phone: string; email: string; resume: File; coverLetter?: string }
   ) => {
-    if (!selectedJob) return;
-    setJobs((prevJobs) =>
-      prevJobs.map((job) =>
-        job.id === selectedJob.id ? { ...job, applicationStatus: status } : job,
-      ),
-    );
-    setSelectedJob({ ...selectedJob, applicationStatus: status });
-    setShowModal(false);
+    try {
+      const resumeResponse = await uploadResume(resume);
+      console.log("📄 Resume upload response:", resumeResponse);
+  
+      const resumeId = resumeResponse?.id;
+      if (!resumeId) {
+        toast.error("Resume upload failed. Please try again.");
+        return;
+      }
+  
+      const applicationResponse = await applyToJob(jobId, phone, resumeId);
+  
+      // ✅ Success case
+      console.log("✅ Application successful:", applicationResponse);
+      toast.success("✅ Successfully applied for the job!");
+  
+      setJobs((prevJobs) =>
+        prevJobs.map((job) =>
+          job.id === jobId ? { ...job, applicationStatus: "Pending" } : job
+        )
+      );
+      setSelectedJob((prev) =>
+        prev?.id === jobId ? { ...prev, applicationStatus: "Pending" } : prev
+      );
+  
+      setShowModal(false);
+    } catch (error: any) {
+      const message = error?.response?.data?.message;
+      const errorCode = error?.response?.data?.errorCode;
+  
+      console.error("❌ Application error:", error);
+  
+      // 🔀 Match based on known backend messages/codes
+      if (message === "User has already applied for this job" && errorCode === 400) {
+        toast.error("You have already applied for this job.");
+      } else if (message === "This job is not accepting more applicants" && errorCode === 403) {
+        toast.error("This job is no longer accepting applications.");
+      } else if (message === "This job is not found" && errorCode === 404) {
+        toast.error("The job you are trying to apply for was not found.");
+      } else if (message === "Employers can't apply for their jobs" && errorCode === 400) {
+        toast.error("Employers are not allowed to apply to their own jobs.");
+      } else {
+        // fallback
+        toast.error(message || "An unexpected error occurred. Please try again.");
+      }
+    }
   };
+  
+  
 
   const getStatusColor = (status: string | null | undefined) => {
     switch (status) {
@@ -161,21 +206,29 @@ const Jobs_And_Hiring: React.FC<SaveApplyProps> = ({
     if (filters.remote && !job.remote) return false;
 
     if (filters.datePosted !== "any" && job.postedDate) {
-      const daysAgoLimit = { day: 1, week: 7, month: 30 }[filters.datePosted] ?? Infinity;
+      const daysAgoLimit =
+        { day: 1, week: 7, month: 30 }[filters.datePosted] ?? Infinity;
       const postedDate = new Date(job.postedDate);
       const now = new Date();
       const diffTime = Math.abs(now.getTime() - postedDate.getTime());
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
       if (diffDays > daysAgoLimit) return false;
     }
-    if (filters.experienceLevel !== "any" && job.title) {
-      if (!job.title.toLowerCase().includes(filters.experienceLevel))
-        return false;
+
+    if (
+      filters.experienceLevel !== "any" &&
+      job.experienceLevel?.toLowerCase() !== filters.experienceLevel
+    ) {
+      return false;
     }
-    if (filters.jobType !== "any" && job.description) {
-      if (!job.description.toLowerCase().includes(filters.jobType))
-        return false;
+
+    if (
+      filters.jobType !== "any" &&
+      job.type?.toLowerCase() !== filters.jobType
+    ) {
+      return false;
     }
+
     return true;
   });
 
@@ -296,9 +349,9 @@ const Jobs_And_Hiring: React.FC<SaveApplyProps> = ({
                 }
               >
                 <option value="any">Any level</option>
-                <option value="entry">Entry level</option>
-                <option value="mid">Mid-level</option>
-                <option value="senior">Senior level</option>
+                <option value="junior">Junior</option>
+                <option value="midlevel">Mid-level</option>
+                <option value="senior">Senior</option>
               </select>
             </div>
             <div>
@@ -313,8 +366,8 @@ const Jobs_And_Hiring: React.FC<SaveApplyProps> = ({
                 }
               >
                 <option value="any">Any type</option>
-                <option value="fulltime">Full-time</option>
-                <option value="parttime">Part-time</option>
+                <option value="full-time">Full-time</option>
+                <option value="part-time">Part-time</option>
                 <option value="contract">Contract</option>
                 <option value="internship">Internship</option>
               </select>
@@ -464,7 +517,14 @@ const Jobs_And_Hiring: React.FC<SaveApplyProps> = ({
                         <div className="flex items-center space-x-2">
                           <button
                             className="bg-softRosewood hover:bg-crimsonRed text-white px-4 py-2 rounded-full"
-                            onClick={() => setShowModal(true)}
+                            onClick={() => {
+                              if (selectedJob) {
+                                setShowModal(true);
+                              } else {
+                                toast.error("No job selected");
+                              }
+                            }}
+                            
                           >
                             View application
                           </button>
@@ -486,6 +546,7 @@ const Jobs_And_Hiring: React.FC<SaveApplyProps> = ({
                       isOpen={showModal}
                       onClose={() => setShowModal(false)}
                       companyName={selectedJob.company?.name || ""}
+                      jobId={selectedJob?.id || ""}
                       existingStatus={selectedJob?.applicationStatus}
                       onSubmit={handleApplicationSubmit}
                     />

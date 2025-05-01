@@ -4,14 +4,20 @@ interface JobApplicationModalProps {
   isOpen: boolean;
   onClose: () => void;
   companyName: string;
+  jobId: string;
   existingStatus?: "Pending" | "Viewed" | "Rejected" | "Accepted" | null;
-  onSubmit: (status: "Pending" | "Viewed" | "Rejected" | "Accepted") => void;
+  // onSubmit: (status: "Pending" | "Viewed" | "Rejected" | "Accepted") => void;
+  onSubmit: (
+    jobId: string,
+    data: { phone: string; email: string; resume: File; coverLetter?: string },
+  ) => Promise<void>;
 }
 
 const JobApplicationModal: React.FC<JobApplicationModalProps> = ({
   isOpen,
   onClose,
   companyName,
+  jobId,
   existingStatus,
   onSubmit,
 }) => {
@@ -20,21 +26,38 @@ const JobApplicationModal: React.FC<JobApplicationModalProps> = ({
   const [phone, setPhone] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [error, setError] = useState<string>("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
+    console.log("✅ Submit clicked");
 
     const errors = [];
     if (!resume && !existingStatus) errors.push("resume");
     if (!email && !existingStatus) errors.push("email");
+    if (!phone && !existingStatus) errors.push("phone");
 
     if (errors.length > 0) {
-      setError(errors.join(","));
+      setError(errors.join(", "));
       return;
     }
 
-    onSubmit(existingStatus || "Pending");
+    try {
+      console.log("📄 Resume file:", resume);
+      setIsSubmitting(true);
+      await onSubmit(jobId, {
+        phone,
+        email,
+        resume: resume as File,
+        coverLetter,
+      });
+      setIsSubmitting(false);
+    } catch (err) {
+      console.error("❌ Failed to submit application:", err);
+      setError("Failed to apply. Please try again.");
+      setIsSubmitting(false);
+    }
   };
 
   if (!isOpen) return null;
@@ -44,7 +67,9 @@ const JobApplicationModal: React.FC<JobApplicationModalProps> = ({
       <div className="bg-white rounded-lg p-6 max-w-lg w-full max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold">
-            {existingStatus ? "Application Details" : `Apply to ${companyName}`}
+            {existingStatus
+              ? "Application Details"
+              : `Apply to ${companyName || "this company"}`}
           </h2>
           <button
             onClick={onClose}
@@ -72,11 +97,17 @@ const JobApplicationModal: React.FC<JobApplicationModalProps> = ({
           <div>
             <div className="mb-4">
               <h3 className="font-medium mb-2">Application Status</h3>
-              <div className={`inline-block px-3 py-1 rounded-full text-sm ${existingStatus === "Pending" ? "bg-yellow-100 text-yellow-800" :
-                existingStatus === "Viewed" ? "bg-blue-100 text-blue-800" :
-                  existingStatus === "Rejected" ? "bg-red-100 text-red-800" :
-                    "bg-green-100 text-green-800"
-                }`}>
+              <div
+                className={`inline-block px-3 py-1 rounded-full text-sm ${
+                  existingStatus === "Pending"
+                    ? "bg-yellow-100 text-yellow-800"
+                    : existingStatus === "Viewed"
+                      ? "bg-blue-100 text-blue-800"
+                      : existingStatus === "Rejected"
+                        ? "bg-red-100 text-red-800"
+                        : "bg-green-100 text-green-800"
+                }`}
+              >
                 {existingStatus}
               </div>
             </div>
@@ -84,7 +115,11 @@ const JobApplicationModal: React.FC<JobApplicationModalProps> = ({
             <div className="mb-4">
               <h3 className="font-medium mb-2">Resume</h3>
               <div className="border border-gray-300 rounded-md p-3 flex items-center">
-                <svg className="w-8 h-8 text-gray-400 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                <svg
+                  className="w-8 h-8 text-gray-400 mr-3"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
                   <path d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"></path>
                 </svg>
                 <div>
@@ -104,7 +139,11 @@ const JobApplicationModal: React.FC<JobApplicationModalProps> = ({
               <h3 className="font-medium mb-2">Cover Letter</h3>
               <div className="border border-gray-300 rounded-md p-3 text-gray-700">
                 <p>Dear Hiring Manager,</p>
-                <p className="my-2">I am writing to express my interest in the position at {companyName}. With my experience in the field, I believe I would be a great fit for your team.</p>
+                <p className="my-2">
+                  I am writing to express my interest in the position at{" "}
+                  {companyName}. With my experience in the field, I believe I
+                  would be a great fit for your team.
+                </p>
                 <p>Thank you for considering my application.</p>
               </div>
             </div>
@@ -117,7 +156,23 @@ const JobApplicationModal: React.FC<JobApplicationModalProps> = ({
                 Close
               </button>
               <button
-                onClick={() => onSubmit("Pending")}
+                onClick={async () => {
+                  if (!resume || !email || !phone) {
+                    setError("resume,email,phone");
+                    return;
+                  }
+                  try {
+                    await onSubmit(jobId, {
+                      phone,
+                      email,
+                      resume,
+                      coverLetter,
+                    });
+                  } catch (err) {
+                    console.error("❌ Reapply failed:", err);
+                    setError("Failed to reapply. Please try again.");
+                  }
+                }}
                 className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
                 disabled={existingStatus === "Pending"}
               >
@@ -129,8 +184,13 @@ const JobApplicationModal: React.FC<JobApplicationModalProps> = ({
           <form onSubmit={handleSubmit} data-testid="application-form">
             {error && (
               <div className="mb-4 p-3 bg-red-50 text-red-700 rounded-md">
-                {error.includes("resume") && <div>Please upload your resume</div>}
+                {error.includes("resume") && (
+                  <div>Please upload your resume</div>
+                )}
                 {error.includes("email") && <div>Please enter your email</div>}
+                {error.includes("phone") && (
+                  <div>Please enter your phone number</div>
+                )}
               </div>
             )}
 
@@ -175,7 +235,9 @@ const JobApplicationModal: React.FC<JobApplicationModalProps> = ({
             </div>
 
             <div className="mb-4">
-              <label htmlFor="coverLetter" className="block font-medium mb-1">Cover Letter</label>
+              <label htmlFor="coverLetter" className="block font-medium mb-1">
+                Cover Letter
+              </label>
               <textarea
                 id="coverLetter"
                 className="w-full border border-gray-300 rounded-md px-3 py-2 h-32"
@@ -187,7 +249,9 @@ const JobApplicationModal: React.FC<JobApplicationModalProps> = ({
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
               <div>
-                <label htmlFor="email" className="block font-medium mb-1">Email *</label>
+                <label htmlFor="email" className="block font-medium mb-1">
+                  Email *
+                </label>
                 <input
                   id="email"
                   type="email"
@@ -203,7 +267,9 @@ const JobApplicationModal: React.FC<JobApplicationModalProps> = ({
               </div>
 
               <div>
-                <label htmlFor="phone" className="block font-medium mb-1">Phone</label>
+                <label htmlFor="phone" className="block font-medium mb-1">
+                  Phone
+                </label>
                 <input
                   id="phone"
                   type="tel"
@@ -225,9 +291,31 @@ const JobApplicationModal: React.FC<JobApplicationModalProps> = ({
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center justify-center"
+                disabled={isSubmitting}
               >
-                Submit Application
+                {isSubmitting ? (
+                  <svg
+                    className="animate-spin h-5 w-5 mr-2 text-white"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    />
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16v-4l-3 3 3 3v-4a8 8 0 01-8-8z"
+                    />
+                  </svg>
+                ) : (
+                  "Submit Application"
+                )}
               </button>
             </div>
           </form>

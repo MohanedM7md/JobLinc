@@ -19,7 +19,7 @@ import UpdateUsername from "./pages/UpdateUsername";
 import Error404 from "@pages/Eror404";
 import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
-import Jobs_And_Hiring from "./components/Jobs&hiring/Jobs_And_Hiring";
+const Jobs_And_Hiring = lazy (()=>import ("./components/Jobs&hiring/Jobs_And_Hiring"));
 import AuthRoute from "./components/AuthRoute";
 import MyConnections from "./pages/Connections";
 import ProfileContainer from "./components/User Profile/ProfileContainer";
@@ -53,7 +53,7 @@ import BlockedUsers from "@pages/BlockedUsers";
 import UserConnections from "@pages/UserConnections";
 import FollowersFollowing from "@pages/FollowersFollowing";
 import DemographicInfo from "@pages/Settings/AccountPreferences/ProfileInformation/DemographicInfo";
-import Saved_Jobs from './components/Jobs&hiring/Saved_Jobs';
+const Saved_Jobs = lazy(()=> import ('./components/Jobs&hiring/Saved_Jobs'));
 
 const queryClient = new QueryClient();
 
@@ -67,7 +67,7 @@ function App() {
         position="bottom-left"
         reverseOrder={false}
       />
-      
+
       <QueryClientProvider client={queryClient}>
         <Elements stripe={stripePromise}>
           <Routes>

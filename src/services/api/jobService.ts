@@ -1,4 +1,4 @@
-import { api } from "./api"; 
+import { api } from "./api";
 import { Job } from "../../components/Jobs&hiring/Jobs_And_Hiring";
 
 // export interface Job {
@@ -27,7 +27,10 @@ import { Job } from "../../components/Jobs&hiring/Jobs_And_Hiring";
 //   postedDate?: string;
 // }
 
-export const fetchJobs = async (searchTerm = "", location = ""): Promise<Job[]> => {
+export const fetchJobs = async (
+  searchTerm = "",
+  location = "",
+): Promise<Job[]> => {
   try {
     const params: any = {};
     if (searchTerm) params.search = searchTerm;
@@ -46,4 +49,32 @@ export const fetchJobs = async (searchTerm = "", location = ""): Promise<Job[]> 
     console.error("Failed to fetch jobs:", error);
     return [];
   }
+};
+
+// Upload resume
+export const uploadResume = async (file: File) => {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const response = await api.post("/user/resume/upload", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+
+  return response.data; // includes resume.id, name, file, etc.
+};
+
+// Apply to job
+export const applyToJob = async (
+  jobId: string,
+  phone: string,
+  resumeId: string,
+) => {
+  const response = await api.post(`/jobs/${jobId}/apply`, {
+    phone,
+    resumeId,
+  });
+
+  return response.data;
 };
