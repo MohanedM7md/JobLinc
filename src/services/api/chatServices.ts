@@ -71,16 +71,16 @@ export const chatRequestStatus = async (chatId: string, status: string) => {
   return response.data;
 };
 
-export const BlockMessaging = async (chatId: string) => {
-  const response = await api.post("/chat/block", {
-    chatId,
+export const BlockMessaging = async (status: boolean) => {
+  const response = await api.put("/user/edit/personal-info", {
+    allowMessages: status,
   });
   if (response.status != 200)
     throw new Error(`Response error:${response.status} failed to block use`);
 };
 
-export const getConnections = async () => {
-  const response = await api.get(`/connection/connected`);
+export const getConnections = async (chatId: id) => {
+  const response = await api.get(`/chat/available-connections/${chatId}`);
   if (!(response.status == 200))
     throw new Error(
       `error status:${response.status} Error while fetching connections`,
@@ -88,9 +88,14 @@ export const getConnections = async () => {
   return response.data;
 };
 
-export const addParticipants = async (participants: string[]) => {
+export const addParticipants = async (
+  participants: string[],
+  chatId: string,
+) => {
   const response = await api.patch("/chat/addParticipants", {
-    participants: participants,
+    userIds: participants,
+    chatId,
+    action: "add",
   });
   if (response.status != 200)
     throw new Error(
@@ -99,9 +104,14 @@ export const addParticipants = async (participants: string[]) => {
   return response.data;
 };
 
-export const removeParticipants = async (participants: string[]) => {
+export const removeParticipants = async (
+  participants: string[],
+  chatId: string,
+) => {
   const response = await api.patch("/chat/removeParticipants", {
-    participants: participants,
+    userIds: participants,
+    chatId,
+    action: "remove",
   });
   if (response.status != 200)
     throw new Error(
