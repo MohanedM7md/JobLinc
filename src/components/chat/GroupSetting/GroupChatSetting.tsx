@@ -219,7 +219,7 @@ function GroupChatSetting({
 
       {showRemoveParticipants && (
         <RemoveParticipantsModal
-          participants={users}
+          participants={realParticipants}
           onCancel={() => setShowRemoveParticipants(false)}
           onConfirm={handleRemoveParticipantsConfirm}
           modalRef={modalRef}
