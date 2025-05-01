@@ -34,10 +34,13 @@ import ProfileContainer from "./components/User Profile/ProfileContainer";
 import FullExperiences from "./components/User Profile/Experiences/FullExperiences";
 import FullCertificates from "./components/User Profile/Certificates/FullCertificates";
 import FullSkills from "./components/User Profile/Skills/FullSkills";
+import FullActivity from "@components/User Profile/Miscellaneous/FullActivity";
+import SavedPosts from "@components/User Profile/Miscellaneous/SavedPosts";
 
 // Post components
 import PostCreate from "./components/Posts/PostCreate";
 import PostEdit from "./components/Posts/PostEdit";
+import Post from "@pages/Post";
 
 // Settings components
 const Settings = lazy(() => import("@pages/Settings/Settings"));
