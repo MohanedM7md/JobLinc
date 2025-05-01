@@ -61,7 +61,7 @@ function ProfileHeader(props: ProfileProps & { isUser: boolean }) {
       }
       //make cases for each one with your preferred styling and text
     }
-  }, [])
+  }, [connectionStatus])
 
   const handleConnectionsClick = () => {
     navigate(`/profile/${props.userId}/connections`);
@@ -153,7 +153,7 @@ function ProfileHeader(props: ProfileProps & { isUser: boolean }) {
       {!props.isUser && (
         <div className="flex mt-4 space-x-2">
           <button
-            className={`mt-2 px-4 py-1.5 border-1 rounded-3xl font-medium transition duration-400 ease-in-out ${connectionButtonStyle}`}
+            className={`mt-2 px-4 py-1.5 border-1 rounded-3xl font-medium transition duration-300 ease-in-out ${connectionButtonStyle}`}
           >
             {connectionButtonText}
           </button>
