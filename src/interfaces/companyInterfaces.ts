@@ -1,5 +1,6 @@
 export interface CompanyInterface {
   id: string;
+  logo?:string;
   name: string;
   urlSlug: string;
   type: string;

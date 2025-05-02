@@ -18,6 +18,7 @@ export const useCompanyStore = create<CompanyStoreState>()(devtools((set) => ({
       const data = response.data;
       console.log("data after fetch by slug: ", data);
       set({ company: data, loading: false });
+      return response.data.isFollowing;
     } catch (error) {
       set({
         error: error instanceof Error ? error.message : "Unknown error",

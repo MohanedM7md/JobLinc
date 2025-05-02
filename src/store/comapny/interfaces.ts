@@ -45,7 +45,7 @@ export interface CompanyStoreState {
   company: Company | null;
   loading: boolean;
   error: string | null;
-  fetchCompany: (slug: string) => Promise<void>;
+  fetchCompany: (slug: string) => boolean;
   fetchAdminCompany: () => Promise<void>;
   fetchCompanyFollowers: () => Promise<void>;
   resetCompany: () => void;

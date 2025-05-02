@@ -10,8 +10,7 @@ import CompanyFooter from "./Cards/CompanyFooter";
 import { getMyCompanies } from "@services/api/userProfileServices";
 import { Company } from "@store/comapny/interfaces";
 import HomeTab from "./Cards/HomeTab";
-import { getMyFollowers, sendFollowRequest, sendUnfollowRequest } from "@services/api/networkServices";
-import store from "@store/store";
+import { sendFollowRequest, sendUnfollowRequest } from "@services/api/networkServices";
 import Modal from "@components/utils/Modal";
 
 
@@ -63,7 +62,10 @@ function Member() {
       (async () => {
         try {
 
-          await fetchCompany(slug);
+          const isFollowing = await fetchCompany(slug);
+          setIsFollowed(isFollowing);
+          console.log("company aheh", company);
+
           
         } catch (err: any) {
           if (err.response?.status === 401) {
@@ -80,30 +82,7 @@ function Member() {
     }
   }, []);
 
-  useEffect(() => {
-    const getCompanyFollowers =  async function()
-    {
-      try {
-        const response = await getMyFollowers();
-        console.log("my followers", response);
-        for (let i = 0; i < response.length; i++)
-        {
-          if (response.at(i).userId === store.getState().user.userId)
-          {
-            setIsFollowed(true);
-            break;
-          }
-        }
-      }
-      catch(error)
-      {
-        console.error("Error fetching company followers: ", error)
-      }
-    }
 
-    getCompanyFollowers();
-    
-  }, [])
 
   
 
