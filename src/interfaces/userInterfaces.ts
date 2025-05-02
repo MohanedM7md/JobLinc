@@ -10,7 +10,7 @@ export interface ProfileInterface {
   city: string;
   phoneNumber: string;
   role: number;
-  numberofConnections: number;
+  numberOfConnections: number;
   mutualConnections: number;
   connectionStatus: ConnectionStatus;
   isFollowing: boolean;
@@ -139,6 +139,15 @@ export enum ExperienceTypes {
   contract = "Contract",
   temporary = "Temporary",
   volunteer = "Volunteer"
+}
+
+export interface FollowerData {
+  firstname: string;
+  headline: string;
+  lastname: string;
+  profilePicture: string;
+  time: string;
+  userId: string
 }
 
 export enum ConnectionStatus {

@@ -3,9 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { BrowserRouter } from "react-router-dom";
 import "@testing-library/jest-dom/vitest";
-import PostCreate from "../../components/Posts/PostCreate";
-
-
+import PostCreate from "../../components/Posts/PostCreation/PostCreate";
 
 describe("PostCreate", () => {
   beforeEach(() => {

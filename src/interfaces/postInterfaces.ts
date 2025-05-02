@@ -47,6 +47,8 @@ export interface PostInterface {
   userReaction: PostReactions;
   text: string;
   media: Media[];
+  taggedUsers: TaggedObject[];
+  taggedCompanies: TaggedObject[];
   time: Date;
   likes: number;
   comments: number;
@@ -83,6 +85,11 @@ export enum MediaTypes {
   Video = "Video",
   Audio = "Audio",
   Document = "Document",
+}
+
+export interface TaggedObject {
+  id: string;
+  index: number;
 }
 
 enum PostReactions {
