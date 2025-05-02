@@ -6,16 +6,25 @@ import connectToChat, {
   disconnectChatSocket,
   onConnect,
 } from "@services/api/ChatSocket";
+import store from "@store/store";
 import { AnimatePresence, motion } from "framer-motion";
-import { EllipsisVertical, Menu, X } from "lucide-react";
+import { Menu, X, Users2 } from "lucide-react";
 import SearchBar from "@chatComponent/UI/SearchBar";
 import NetWorksChatList from "@chatComponent/NetWorksChatList";
 import useNetworkUserId from "@context/NetworkUserIdProvider";
 import ConnectionsSidebar from "@chatComponent/PageChat/ConnectionsSidebar";
-import { Users2, ShieldAlert } from "lucide-react";
-import DropdownMenu from "@chatComponent/UI/DropdownMenu";
 import ConfirmationModal from "@chatComponent/UI/ConfirmationModal";
 import { BlockMessaging } from "@services/api/chatServices";
+import ToggleSwitch from "../UI/ToggleSwitch";
+// Mock API function to fetch messaging status (replace with actual implementation)
+const getMessagingStatus = async (): Promise<boolean> => {
+  try {
+    return false; // Default mock value
+  } catch (error) {
+    console.error("Failed to fetch messaging status:", error);
+    return false; // Default to unblocked on error
+  }
+};
 
 function PageChatSystem() {
   const { setChatId } = useChatId();
@@ -27,16 +36,44 @@ function PageChatSystem() {
   const [opnedChatName, setOpnedChatName] = useState<string>("");
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const [isMobileView, setIsMobileView] = useState<boolean>(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [showBlockConfirmation, setShowBlockConfirmation] = useState(false);
 
+  const [showBlockConfirmation, setShowBlockConfirmation] = useState(false);
+  const [isBlocked, setIsBlocked] = useState<boolean>(
+    !store.getState().user.allowMessages!,
+  );
+  const [pendingBlockState, setPendingBlockState] = useState<boolean | null>(
+    null,
+  );
+
+  const toggleBlockMessaging = () => {
+    setPendingBlockState(isBlocked);
+    setShowBlockConfirmation(true);
+  };
   const handleBlockUser = async () => {
+    if (pendingBlockState === null) return;
     try {
-      BlockMessaging("");
+      console.log(
+        "send to the back end the wanted status: ",
+        pendingBlockState,
+      );
       setShowBlockConfirmation(false);
+      await BlockMessaging(pendingBlockState);
+      setIsBlocked(!pendingBlockState);
+      setPendingBlockState(null);
     } catch (error) {
-      console.error("Failed to block user:", error);
+      console.error(
+        pendingBlockState
+          ? "Failed to block messaging:"
+          : "Failed to unblock messaging:",
+        error,
+      );
+      setShowBlockConfirmation(false);
     }
+  };
+
+  const handleCancelToggle = () => {
+    setShowBlockConfirmation(false);
+    setPendingBlockState(null);
   };
 
   useEffect(() => {
@@ -104,18 +141,18 @@ function PageChatSystem() {
 
   return (
     <div className="h-full flex flex-col">
-      <header className="flex items-center justify-between bg-gray-100 p-3 rounded-lg shadow-md">
+      <header className="flex items-center justify-between bg-gray-100 p-2 sm:p-3 rounded-lg shadow-md">
         <div className="flex items-center gap-2">
           {isMobileView && (
             <button
               onClick={() => setIsChatSidebarOpen(!isChatSidebarOpen)}
-              className="p-2 rounded-full hover:bg-gray-200 transition"
+              className="p-1 sm:p-2 rounded-full hover:bg-gray-200 transition"
               aria-label="Toggle chat sidebar"
             >
               {isChatSidebarOpen ? (
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4 sm:w-5 sm:h-5" />
               ) : (
-                <Menu className="w-5 h-5" />
+                <Menu className="w-4 h-4 sm:w-5 sm:h-5" />
               )}
             </button>
           )}
@@ -123,23 +160,23 @@ function PageChatSystem() {
             Messaging
           </h2>
           {isMobileView && !isChatSidebarOpen && (
-            <h2 className="font-semibold text-base text-gray-800 truncate">
+            <h2 className="font-semibold text-base text-gray-800 truncate max-w-[100px] sm:max-w-[150px]">
               {opnedChatName || "Messaging"}
             </h2>
           )}
         </div>
 
-        <div className="flex items-center gap-3 w-full justify-end">
+        <div className="flex items-center gap-1 sm:gap-2 w-full justify-end">
           <SearchBar
             FocusToggler={onFocusedToggler}
             onChange={handleSearchChange}
-            className="sm:w-lg md:w-xl"
+            className="w-32 sm:w-48 md:w-64"
           />
           <button
             onClick={() => setIsSidebarOpen(true)}
-            className="p-2 rounded-full hover:bg-gray-200 transition"
+            className="p-1 sm:p-2 rounded-full hover:bg-gray-200 transition"
           >
-            <Users2 />
+            <Users2 className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
           {isSidebarOpen && (
             <ConnectionsSidebar
@@ -148,39 +185,27 @@ function PageChatSystem() {
             />
           )}
           <div className="relative">
-            <button
-              onClick={() => setMenuOpen(!menuOpen)}
-              className="p-2 rounded-full hover:bg-gray-100 transition-colors duration-200"
-              aria-label="Chat options"
-            >
-              <EllipsisVertical className="w-5 h-5 text-gray-600" />
-            </button>
-
-            <DropdownMenu isOpen={menuOpen} onClose={() => setMenuOpen(false)}>
-              <button
-                onClick={() => {
-                  setMenuOpen(false);
-                  setShowBlockConfirmation(true);
-                }}
-                className="flex items-center gap-2 w-full px-4 py-3 text-left text-sm hover:bg-red-50 text-red-600 transition-colors duration-150"
-              >
-                <ShieldAlert className="w-4 h-4" />
-                <span>Block messaging</span>
-              </button>
-            </DropdownMenu>
+            <ToggleSwitch
+              checked={isBlocked}
+              onChange={toggleBlockMessaging}
+              label="Block Messaging"
+              ariaLabel="Toggle block messaging"
+              className=""
+            />
           </div>
 
           <ConfirmationModal
             isOpen={showBlockConfirmation}
-            onClose={() => setShowBlockConfirmation(false)}
+            onClose={handleCancelToggle}
             onConfirm={handleBlockUser}
-            title="Block messaging"
+            title={pendingBlockState ? "Unblock Messaging" : "Block Messaging"}
             confirmText="Confirm"
-            isDangerous={true}
+            isDangerous={pendingBlockState || false}
           >
-            <p className="text-gray-600">
-              Are you sure you want to block messageing users will no longer be
-              able to message you .
+            <p className="text-gray-600 font-bold text-2xl">
+              {pendingBlockState
+                ? "Finally you decided to stop being karzma😀"
+                : "NOOOOOO please. No one will talk to you again 😭"}
             </p>
           </ConfirmationModal>
         </div>
@@ -198,7 +223,11 @@ function PageChatSystem() {
                 exit={isMobileView ? { x: -300, opacity: 0 } : { opacity: 0 }}
                 transition={{ duration: 0.3 }}
                 className={`
-                  ${isMobileView ? "absolute z-10 h-[calc(100%-70px)] bg-white" : "relative"} 
+                  ${
+                    isMobileView
+                      ? "absolute z-10 h-[calc(100%-70px)] bg-white"
+                      : "relative"
+                  } 
                   w-full md:w-1/3 border-r bg-charcoalWhite border-gray-300 p-4 overflow-y-scroll
                 `}
               >

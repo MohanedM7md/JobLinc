@@ -6,6 +6,7 @@ import EditCoverPicture from "./EditCoverPicture";
 import "material-icons";
 import { useNavigate } from "react-router-dom";
 import { ConnectionStatus } from "../../../interfaces/userInterfaces";
+import useChats from "@hooks/useChats";
 
 interface ProfileProps {
   userId: string;
@@ -20,14 +21,18 @@ interface ProfileProps {
   email: string;
   numberofConnections: number;
   mutualConnections: number;
-  connectionStatus: ConnectionStatus
+  connectionStatus: ConnectionStatus;
   updateUser: () => Promise<void>;
 }
 
 function ProfileHeader(props: ProfileProps & { isUser: boolean }) {
-  const [connectionStatus, setConnectionStatus] = useState<ConnectionStatus>(props.connectionStatus);
+  const { setOpnedChats } = useChats();
+  const [connectionStatus, setConnectionStatus] = useState<ConnectionStatus>(
+    props.connectionStatus,
+  );
   const [connectionButtonText, setConnectionButtonText] = useState<string>("");
-  const [connectionButtonStyle, setConnectionButtonStyle] = useState<string>("");
+  const [connectionButtonStyle, setConnectionButtonStyle] =
+    useState<string>("");
   const [isEditUserModalOpen, setIsEditUserModalOpen] =
     useState<boolean>(false);
   const [isEditProfilePictureModalOpen, setIsEditProfilePictureModalOpen] =
@@ -61,11 +66,11 @@ function ProfileHeader(props: ProfileProps & { isUser: boolean }) {
       }
       //make cases for each one with your preferred styling and text
     }
-  }, [connectionStatus])
+  }, [connectionStatus]);
 
   const handleConnectionsClick = () => {
     navigate(`/profile/${props.userId}/connections`);
-  }
+  };
 
   return (
     <div className="profile-header bg-lightGray p-4 rounded-lg shadow-md relative">
@@ -150,9 +155,21 @@ function ProfileHeader(props: ProfileProps & { isUser: boolean }) {
           </button>
         </div>
       )}
+
       {!props.isUser && (
         <div className="flex mt-4 space-x-2">
           <button
+            onClick={() => {
+              setOpnedChats((prevChats) => [
+                ...prevChats,
+                {
+                  chatId: "",
+                  usersId: [props.userId],
+                  chatName: props.firstname,
+                  chatImage: [props.profilePicture],
+                },
+              ]);
+            }}
             className={`mt-2 px-4 py-1.5 border-1 rounded-3xl font-medium transition duration-300 ease-in-out ${connectionButtonStyle}`}
           >
             {connectionButtonText}

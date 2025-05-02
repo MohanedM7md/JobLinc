@@ -72,6 +72,7 @@ export default function PostCard(props: PostProps) {
               postId={props.post.postId}
               posterId={posterId}
               postText={props.post.text}
+              postMedia={props.post.media}
             />
           </AnimatePresence>
         </div>

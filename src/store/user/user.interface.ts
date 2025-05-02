@@ -7,6 +7,7 @@ export interface UserState {
   confirmed: boolean | null;
   role: number | null;
   accessToken: string | null;
+  allowMessages: boolean | null;
   status: "IDLE" | "LOADING" | "SUCCESS" | "FAILED";
   loggedIn: boolean;
 }

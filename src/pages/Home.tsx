@@ -1,5 +1,4 @@
 import PostContainer from "../components/Posts/PostContainer";
-
 export default function Home() {
   return (
     <div className="bg-lightGray">

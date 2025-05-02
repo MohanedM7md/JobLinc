@@ -195,3 +195,13 @@ export const RejectConnectionRequest = async (
     throw error;
   }
 };
+
+export async function blockUser(userId: string) {
+  try {
+    const response = await api.post(`connection/${userId}/change`, { status: "Blocked" });
+    return response;
+  } catch (error) {
+    console.error("Error blocking user:", error);
+    throw error;
+  }
+} 
