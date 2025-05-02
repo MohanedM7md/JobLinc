@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { ConnectionStatus } from "../../../interfaces/userInterfaces";
 import useChats from "@hooks/useChats";
 import ProfileUtilityButton from "./ProfileUtilityButton";
+import ContactInfo from "./ContactInfo";
 
 interface ProfileProps {
   userId: string;
@@ -43,6 +44,8 @@ function ProfileHeader(props: ProfileProps & { isUser: boolean }) {
   const [isEditProfilePictureModalOpen, setIsEditProfilePictureModalOpen] =
     useState<boolean>(false);
   const [isEditCoverPictureModalOpen, setIsEditCoverPictureModalOpen] =
+    useState<boolean>(false);
+  const [isContactInfoModalOpen, setIsContactInfoModalOpen] =
     useState<boolean>(false);
   const navigate = useNavigate();
 
@@ -137,7 +140,10 @@ function ProfileHeader(props: ProfileProps & { isUser: boolean }) {
             <p className="text-mutedSilver">
               {props.city}, {props.country}
             </p>
-            <span className="text-crimsonRed font-medium cursor-pointer ml-2 hover:underline">
+            <span
+              onClick={() => setIsContactInfoModalOpen(true)}
+              className="text-crimsonRed font-medium cursor-pointer ml-2 hover:underline"
+            >
               Contact Info
             </span>
           </div>
@@ -248,6 +254,17 @@ function ProfileHeader(props: ProfileProps & { isUser: boolean }) {
         <EditCoverPicture
           coverPicture={props.coverPicture}
           onSave={handleUpdateCoverPicture}
+        />
+      </Modal>
+
+      <Modal
+        isOpen={isContactInfoModalOpen}
+        onClose={() => setIsContactInfoModalOpen(false)}
+      >
+        <ContactInfo
+          phoneNumber={props.phoneNumber}
+          userId={props.userId}
+          email={props.email}
         />
       </Modal>
     </div>
