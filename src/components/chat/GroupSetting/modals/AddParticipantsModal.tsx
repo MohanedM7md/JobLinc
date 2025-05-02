@@ -5,7 +5,7 @@ import { getConnections } from "@services/api/chatServices";
 import ModalWrapper from "./ModalWrapper";
 
 interface Connection {
-  userId: string;
+  id: string;
   firstname: string;
   lastname: string;
   profilePicture: string;
@@ -52,11 +52,11 @@ function AddParticipantsModal({
     }
   };
 
-  const toggleUserSelection = (userId: string) => {
-    if (selectedUsers.includes(userId)) {
-      setSelectedUsers(selectedUsers.filter((id) => id !== userId));
+  const toggleUserSelection = (id: string) => {
+    if (selectedUsers.includes(id)) {
+      setSelectedUsers(selectedUsers.filter((id) => id !== id));
     } else {
-      setSelectedUsers([...selectedUsers, userId]);
+      setSelectedUsers([...selectedUsers, id]);
     }
   };
 
@@ -68,12 +68,8 @@ function AddParticipantsModal({
   });
 
   const handleConfirm = async () => {
+    console.log("logw", selectedUsers);
     onConfirm(selectedUsers);
-    setConnections(
-      connections.filter(
-        (connection) => !selectedUsers.includes(connection.userId),
-      ),
-    );
     setSelectedUsers([]);
   };
 
@@ -125,13 +121,13 @@ function AddParticipantsModal({
           ) : filteredConnections.length > 0 ? (
             filteredConnections.map((connection) => (
               <div
-                key={connection.userId}
+                key={connection.id}
                 className={`flex items-center p-3 hover:bg-[var(--color-SoftRed)] cursor-pointer transition-colors ${
-                  selectedUsers.includes(connection.userId)
+                  selectedUsers.includes(connection.id)
                     ? "bg-[var(--color-hoverSoftRed)]"
                     : ""
                 }`}
-                onClick={() => toggleUserSelection(connection.userId)}
+                onClick={() => toggleUserSelection(connection.id)}
               >
                 <div className="relative">
                   {connection.profilePicture ? (
@@ -147,7 +143,7 @@ function AddParticipantsModal({
                       </span>
                     </div>
                   )}
-                  {selectedUsers.includes(connection.userId) && (
+                  {selectedUsers.includes(connection.id) && (
                     <div className="absolute bottom-0 right-0 bg-[var(--color-crimsonRed)] rounded-full p-1">
                       <IoCheckmark className="h-3 w-3 text-white" />
                     </div>

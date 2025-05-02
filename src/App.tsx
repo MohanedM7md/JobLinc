@@ -74,7 +74,6 @@ function App() {
           },
         }}
       />
-
       <QueryClientProvider client={queryClient}>
         <Suspense fallback={<LoadingScreen />}>
           <Routes>
