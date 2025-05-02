@@ -1,5 +1,5 @@
 import SignUpInformation from "../components/Authentication/SignUpInformation";
-import { AuthenticationGoogleButton } from "../components/Authentication/AuthenticationButtons";
+import { AuthenticationGoogleButton, AuthenticationMicrosoftButton } from "../components/Authentication/AuthenticationButtons";
 import SignHeader from "../components/Authentication/Headers/SignHeader";
 import { Outlet, Link } from "react-router-dom";
 

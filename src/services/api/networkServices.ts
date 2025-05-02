@@ -1,16 +1,4 @@
 import { api } from "./api";
-export const searchUsers = async (keyword: string, page = 1, limit = 7) =>
-{
-  try {
-    const response = await api.get(`user/search`, {
-      params: { keyword, page, limit },
-    });
-    return response.data
-  } catch (error) {
-    console.log("Error fetching searched users", error)
-    return[];
-  }
-}
 export const getNetworkFeed = async (count: number, signal: AbortSignal) => {
   try {
     const response = await api.get(`connection/feed`, {
@@ -25,6 +13,15 @@ export const getNetworkFeed = async (count: number, signal: AbortSignal) => {
   }
 };
 
+// export const getNetworkFeedTest = async () => {
+//   try {
+//     const response = await api.get(`connection/connected`);
+//     return response.data;
+//   } catch (error) {
+//     console.error("Error fetching feed:", error);
+//   }
+// };
+
 export const getMyFollowing = async () => {
   try {
     const response = await api.get("follow/following");
@@ -33,26 +30,7 @@ export const getMyFollowing = async () => {
     console.log("Error fetching followed users:", error);
     return [];
   }
-}
-
-export const getUserFollowing = async (userId : string) => {
-  try {
-    const response = await api.get(`follow/${userId}/following`);
-    return response.data;
-  } catch (error) {
-    console.log('Error fetching User following', error);
-    return[];
-  }
-}
-export const getUserFollowers = async (userId : string) => {
-  try {
-    const response = await api.get(`follow/${userId}/followers`);
-    return response.data;
-  } catch (error) {
-    console.log('Error fetching User followers', error);
-    return[];
-  }
-}
+};
 export const getMyFollowers = async () => {
   try {
     const response = await api.get("follow/followers");
@@ -139,7 +117,7 @@ export const removeFollowerRequest = async (userId: string) => {
 };
 export const sendConnectionRequest = async (userId: string) => {
   try {
-    const response = await api.post(`connection/${userId}`);
+    const response = await api.post(`connections/${userId}`);
     return response;
   } catch (error) {
     console.error("Error sending connection request:", error);
@@ -218,3 +196,15 @@ export async function unblockUser(userId: string) {
     throw error;
   }
 }
+
+export const searchUsers = async (keyword: string, page = 1, limit = 7) => {
+  try {
+    const response = await api.get(`user/search`, {
+      params: { keyword, page, limit },
+    });
+    return response.data;
+  } catch (error) {
+    console.log("Error fetching searched users", error);
+    return [];
+  }
+};

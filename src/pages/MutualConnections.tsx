@@ -2,7 +2,7 @@ import MutualConnectionListCard from "../components/Connections/MutualConnection
 function MutualConnections() {
   return (
     <>
-      <div className="bg-lightGray h-dvh w-full flex flex-col">
+      <div className="bg-lightGray h-screen w-full flex flex-col">
         <MutualConnectionListCard></MutualConnectionListCard>
       </div>
     </>

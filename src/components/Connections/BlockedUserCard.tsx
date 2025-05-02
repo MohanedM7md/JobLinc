@@ -3,7 +3,7 @@ import { changeConnectionStatus } from "@services/api/networkServices";
 import toast from "react-hot-toast";
 
 function BlockedUserCard(props : BlockedUserInterface & { onRemove: (id: string) => void }) {
-  const { firstname: firstName, lastname: lastName, profilePicture, userId } = props;
+  const { firstName, lastName, profilePicture, userId } = props;
   const handleUnblockClick = () => {
     const unblockPromise = changeConnectionStatus(userId, "Unblock");
     toast.promise(

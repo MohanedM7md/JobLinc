@@ -1,11 +1,11 @@
 import ManageNetworkCard from "../components/MyNetwork/ManageNetworkCard";
+import MyNetworkOptionsCard from "../components/MyNetwork/MyNetworkOptionsCard";
 import PendingInvitationsCard from "../components/MyNetwork/PendingInvitationsCard";
 import ConnectionsGrid from "../components/MyNetwork/ConnectionsGrid";
-import MyNetworkOptionsCard from "@components/MyNetwork/MyNetworkOptionsCard";
 function MyNetwork(){  
     return(
       <>
-        <div className="grid sm:grid-cols-20 gap-5 bg-lightGray h-dvh">
+        <div className="grid sm:grid-cols-20 gap-5 bg-lightGray">
             <div className="sm:col-span-6 justify-items-end">
             <ManageNetworkCard></ManageNetworkCard>
             </div>
