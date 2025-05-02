@@ -1,4 +1,5 @@
-import { getMyCompanies, getMyCompany } from "@services/api/companyServices";
+import { getMyCompany } from "@services/api/companyServices";
+import { getMyCompanies } from "@services/api/userProfileServices";
 import { useEffect, useState } from "react";
 import { Company } from "@store/comapny/interfaces";
 import { useNavigate } from "react-router-dom";

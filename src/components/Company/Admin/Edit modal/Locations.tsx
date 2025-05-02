@@ -4,6 +4,7 @@ import { z } from "zod";
 import { updateInfo } from "@services/api/companyServices";
 import { LocationInputs } from "../../Inputs";
 
+
 const CompanySchema = z.object({
   locations: z
     .array(
@@ -40,7 +41,7 @@ function errorReducer(
 }
 
 export default function LocationsForm() {
-  const { company } = useCompanyStore();
+  const { company, updateLocation } = useCompanyStore();
   const [errors, dispatchError] = useReducer(errorReducer, {});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [locations, setLocations] = useState<FormFields["locations"]>(
@@ -89,6 +90,7 @@ export default function LocationsForm() {
       if (response.status < 200 || response.status >= 300) {
         throw new Error("Submission failed");
       }
+      //! eb2a e3mel update
     } catch (error) {
       console.error("Submission error:", error);
       dispatchError({
@@ -123,7 +125,7 @@ export default function LocationsForm() {
           </h3>
 
           <LocationInputs
-            locations={locations}
+            locations={locations!}
             onChange={handleLocationChange}
             errors={errors.locations}
           />

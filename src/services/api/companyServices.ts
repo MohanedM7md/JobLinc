@@ -43,10 +43,11 @@ export const getMyCompany = async () => {
   const response = await api.get(`/companies/me`);
   return response;
 };
-export const getMyCompanies = async () => {
-  const response = await api.get(`/user/companies`);
+
+export const getAllCompanies = async () => {
+  const response = await api.get('/companies');
   return response;
-};
+}
 
 export const getMyCompanyFollowers = async () => {
   const response = await api.get(`/follow/followers`);

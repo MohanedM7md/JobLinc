@@ -72,6 +72,20 @@ export async function updateCoverPicture(file: File) {
   }
 }
 
+export async function getMyCompanies()
+{
+  try {
+    const response = await api.get("user/companies");
+    console.log(response);
+    return response;
+  }
+  catch(error)
+  {
+    console.error("Error fetching user companies", error);
+    throw error;
+  }
+}
+
 export async function deleteCoverPicture() {
   try {
     const response = await api.delete("user/edit/cover-picture")
@@ -259,6 +273,17 @@ export async function getUserById(userId: string) {
   }
 }
 
+export async function deleteAccount(password: string) {
+  try {
+    const response = await api.delete("user/me", {
+      data: { password },
+    });
+    return response;
+  } catch (error) {
+    console.error("Error deleting account:", error);
+    throw error;
+  }
+}
 export async function getMyPosts() {
   try {
     const response = await api.get(`post/my-posts`)
@@ -273,6 +298,7 @@ export async function getMyPosts() {
 export async function getUserPosts(userId: string) {
   try {
     const response = await api.get(`post/${userId}/posts`);
+    console.log(response);
     return response.data;
   } catch (error) {
     console.error("Error fetching posts:", error);
