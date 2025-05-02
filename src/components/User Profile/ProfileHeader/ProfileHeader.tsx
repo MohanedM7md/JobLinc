@@ -20,7 +20,7 @@ interface ProfileProps {
   coverPicture: string;
   phoneNumber: string;
   email: string;
-  numberofConnections: number;
+  numberOfConnections: number;
   mutualConnections: number;
   connectionStatus: ConnectionStatus;
   isFollowing: boolean;
@@ -145,7 +145,7 @@ function ProfileHeader(props: ProfileProps & { isUser: boolean }) {
             className="text-crimsonRed font-medium cursor-pointer hover:underline"
             onClick={handleConnectionsClick}
           >
-            Connections: {props.numberofConnections}
+            Connections: {props.numberOfConnections}
           </p>
           {!props.isUser && (
             <p

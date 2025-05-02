@@ -10,7 +10,7 @@ export interface ProfileInterface {
   city: string;
   phoneNumber: string;
   role: number;
-  numberofConnections: number;
+  numberOfConnections: number;
   mutualConnections: number;
   connectionStatus: ConnectionStatus;
   isFollowing: boolean;

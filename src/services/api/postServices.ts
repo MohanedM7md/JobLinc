@@ -1,4 +1,4 @@
-import { Media } from "@interfaces/postInterfaces";
+import { Media, TaggedObject } from "@interfaces/postInterfaces";
 import { api } from "./api";
 
 // Fetch a a number of posts to populate a user's feed
@@ -54,6 +54,8 @@ export async function createPost(postContent: {
   repost?: string;
   text: string;
   media?: Media[];
+  taggedUsers?: TaggedObject[];
+  taggedCompanies?: TaggedObject[];
   isPublic: boolean
 }) {
   try {
