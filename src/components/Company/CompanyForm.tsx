@@ -43,7 +43,14 @@ const CompanySchema = z.object({
     .refine((value) => !value || /^[0-9]+$/.test(value), {
       message: "Phone number must contain only digits",
     }),
-  founded: z.date().optional(),
+  founded: z
+    .date()
+    .optional()
+    .refine(
+      (date) =>
+        !date || (date.getFullYear() >= 1777 && date.getFullYear() <= 2025),
+      { message: "Foundation date is not valid" },
+    ),
   tagline: z.string().optional(),
   workplace: z.string().default("Onsite"),
   logo: z.string().optional(),

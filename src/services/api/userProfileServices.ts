@@ -287,6 +287,7 @@ export async function deleteAccount(password: string) {
 export async function getMyPosts() {
   try {
     const response = await api.get(`post/my-posts`)
+    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error("Error fetching posts:", error);

@@ -60,7 +60,7 @@ export default function DocumentPreview({
   ): Promise<void> {
     try {
       let viewerUrl = docUrl;
-      let viewerLabel = "Download Document";
+      let viewerLabel = "Open in new tab";
 
       if (docType === "DOCX" || docType === "DOC") {
         viewerUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(docUrl)}&embedded=true`;
@@ -82,7 +82,7 @@ export default function DocumentPreview({
             href={docUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-4 inline-block bg-blue-500 text-white px-4 py-2 rounded"
+            className="mt-4 inline-block border-2 font-medium border-crimsonRed hover:bg-crimsonRed hover:text-white px-4 py-1 rounded-3xl transition duration-300"
           >
             {viewerLabel}
           </a>

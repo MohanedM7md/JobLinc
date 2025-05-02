@@ -84,9 +84,11 @@ export const getConnections = async () => {
   return response.data;
 };
 
-export async function searchCompanies(name?: string) {
+export async function searchCompanies({name, values}:{name?: string, values?: string}) {
   try {
-    const params = name ? { search: name } : {};
+    let params;
+    params = name ? { search: name } : {};
+    params = values ? {...params, fields: values} : {...params}
     const response = await api.get(`companies`, { params });
     return response.data;
   } catch (error) {
