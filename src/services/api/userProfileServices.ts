@@ -77,7 +77,7 @@ export async function getMyCompanies()
   try {
     const response = await api.get("user/companies");
     console.log(response);
-    return response.data;
+    return response;
   }
   catch(error)
   {

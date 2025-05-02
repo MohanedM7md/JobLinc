@@ -79,7 +79,6 @@ const Member = lazy(() => import("@pages/Company/Member"));
 import CreateForm from "@pages/Company/CreateForm";
 import FullEducations from "@components/User Profile/Educations/FullEducations";
 import BlockList from "@components/Connections/BlockList";
-import AllCompanies from "@pages/Company/AllCompanies";
 
 const queryClient = new QueryClient();
 
@@ -198,7 +197,6 @@ function App() {
 
           {/* 404 Route */}
           <Route path="*" element={<Error404 />} />
-          <Route path="/company/all" element={<AllCompanies />} />
         </Routes>
       </QueryClientProvider>
     </>
