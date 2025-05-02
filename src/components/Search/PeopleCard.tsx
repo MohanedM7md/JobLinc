@@ -119,7 +119,6 @@ function PeopleCard(props: searchUserInterface) {
 
   return (
     <div data-testid="people-card" className="flex flex-col sm:flex-row items-start sm:items-center border-b border-gray-300 w-full p-3 gap-3 sm:gap-0">
-      {/* Profile Image */}
       <img
         src={props.profilePicture}
         alt="Profile"
@@ -127,7 +126,6 @@ function PeopleCard(props: searchUserInterface) {
         onClick={handleUserClick}
       />
 
-      {/* User Info Section */}
       <div className="ml-0 sm:ml-4 flex-grow mr-2 sm:mr-7 min-w-0">
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-2">
           <h3 

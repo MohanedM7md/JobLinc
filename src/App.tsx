@@ -81,9 +81,7 @@ import FollowersFollowing from "@pages/FollowersFollowing";
 import MyConnections from "./pages/Connections";
 import UserConnections from "@pages/UserConnections";
 import BlockList from "@components/Connections/BlockList";
-import MutualConnectionListCard from "@components/Connections/MutualConnectionListCard";
 import MutualConnections from "@pages/MutualConnections";
-import BlockList from "@components/Connections/BlockList";
 import AccountVisibility from "@components/AccountVisibility/AccountVisibilityCard";
 
 const queryClient = new QueryClient();
