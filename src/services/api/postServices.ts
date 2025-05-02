@@ -54,6 +54,7 @@ export async function createPost(postContent: {
   repost?: string;
   text: string;
   media?: Media[];
+  isPublic: boolean
 }) {
   try {
     const response = await api.post(`post/add`, postContent);
@@ -174,12 +175,14 @@ export async function createReply({
 export async function editPost({
   postId,
   text,
+  media,
 }: {
   postId: string;
   text: string;
+  media: Media[]
 }) {
   try {
-    const response = await api.post(`post/${postId}/edit`, { text });
+    const response = await api.post(`post/${postId}/edit`, { text, media });
     return response.status;
   } catch (error) {
     console.error("Error editing post:", error);
@@ -229,6 +232,16 @@ export async function savePost(postId: string) {
     return response.status;
   } catch (error) {
     console.error("Error saving post:", error);
+    throw error;
+  }
+}
+
+export async function getSavedPosts() {
+  try {
+    const response = await api.get(`post/saved-posts`);
+    return response.data;
+  } catch (error) {
+    console.log("Error retrieving posts:", error)
     throw error;
   }
 }

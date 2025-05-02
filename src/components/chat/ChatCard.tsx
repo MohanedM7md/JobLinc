@@ -104,13 +104,10 @@ export default function ChatCard({
         <div
           className="absolute inset-0 flex items-center justify-center 
             bg-darkGray bg-opacity-50 rounded-full opacity-0 hover:opacity-100 transition-all"
-        >
-          {/* <Checkbox /> */}
-        </div>
+        ></div>
       </div>
 
       <div className="flex-1 flex flex-col ml-3 overflow-hidden min-w-0">
-        {/* Top row with name and date */}
         <div className="flex justify-between items-center w-full">
           <div className="font-medium truncate pr-1">{chatName}</div>
           <div className="flex items-center shrink-0">
@@ -120,10 +117,9 @@ export default function ChatCard({
           </div>
         </div>
 
-        {/* Bottom row with message */}
         <div className="flex justify-between items-center w-full mt-0.5">
           <div className="text-sm text-gray-500 truncate pr-2 flex-1">
-            {(senderName ? senderName : "me") + ": " + lastMessage}
+            {`${senderName ? senderName + ": " : ""}    ${lastMessage}`}
           </div>
 
           <div className="flex items-center shrink-0">
@@ -152,7 +148,6 @@ export default function ChatCard({
         </div>
       </div>
 
-      {/* Menu */}
       {isMenuOpen && (
         <div
           ref={menuRef}

@@ -56,9 +56,9 @@ function PageChatSystem() {
         "send to the back end the wanted status: ",
         pendingBlockState,
       );
+      setShowBlockConfirmation(false);
       await BlockMessaging(pendingBlockState);
       setIsBlocked(!pendingBlockState);
-      setShowBlockConfirmation(false);
       setPendingBlockState(null);
     } catch (error) {
       console.error(
@@ -198,14 +198,14 @@ function PageChatSystem() {
             isOpen={showBlockConfirmation}
             onClose={handleCancelToggle}
             onConfirm={handleBlockUser}
-            title={pendingBlockState ? "Block Messaging" : "Unblock Messaging"}
+            title={pendingBlockState ? "Unblock Messaging" : "Block Messaging"}
             confirmText="Confirm"
             isDangerous={pendingBlockState || false}
           >
             <p className="text-gray-600 font-bold text-2xl">
               {pendingBlockState
                 ? "Finally you decided to stop being karzma😀"
-                : "NOOOOOO please no No one will talk to you again 😭"}
+                : "NOOOOOO please. No one will talk to you again 😭"}
             </p>
           </ConfirmationModal>
         </div>
