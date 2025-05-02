@@ -6,7 +6,8 @@ import { useCompanyStore } from "@store/comapny/companyStore";
 import LoadingScreen from "../LoadingScreen";
 import { enterAdminPage } from "@services/api/companyServices";
 import { useParams } from "react-router-dom";
-
+import store from "@store/store";
+import { updateAccessToken } from "@store/user/userSlice";
 export default function Admin() {
   const { company, loading, error, resetCompany, fetchAdminCompany } =
     useCompanyStore();
@@ -33,7 +34,8 @@ export default function Admin() {
       return () => {
         resetCompany();
         localStorage.removeItem("companyId");
-        
+        store.dispatch(updateAccessToken(""));
+
       };
     }
   }, [companyId]);

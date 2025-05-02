@@ -128,30 +128,31 @@ function App() {
                   <Route
                     path="account-preferences"
                     element={<AccountPreferences />}
-                  >
-                    <Route
-                      path="profile-information/demographic-info"
-                      element={<DemographicInfo />}
-                    />
-                    <Route path="display/dark-mode" element={<DarkMode />} />
-                    <Route
-                      path="account-management/close-account"
-                      element={<CloseAccount />}
-                    />
-                  </Route>
+                  />
+                  <Route
+                    path="account-preferences/display/dark-mode"
+                    element={<DarkMode />}
+                  />
+                  <Route
+                    path="account-preferences/account-management/close-account"
+                    element={<CloseAccount />}
+                  />
+                  <Route
+                    path="account-preferences/profile-information/demographic-info"
+                    element={<DemographicInfo />}
+                  />
                   <Route
                     path="sign-in-security"
                     element={<SignInAndSecurity />}
-                  >
-                    <Route
-                      path="account-access/change-password"
-                      element={<ChangePassword />}
-                    />
-                    <Route
-                      path="account-access/email-address"
-                      element={<EmailAddress />}
-                    />
-                  </Route>
+                  />
+                  <Route
+                    path="sign-in-security/account-access/change-password"
+                    element={<ChangePassword />}
+                  />
+                  <Route
+                    path="sign-in-security/account-access/email-address"
+                    element={<EmailAddress />}
+                  />
                   <Route path="visibility" element={<Visibility />} />
                   <Route path="data-privacy" element={<DataAndPrivacy />} />
                   <Route
