@@ -109,30 +109,36 @@ const Jobs_And_Hiring: React.FC<SaveApplyProps> = ({
 
   useEffect(() => {
     const fetchAllJobs = async () => {
-      const [fetchedJobs, myApplications] = await Promise.all([
+      const [fetchedJobs, myApplications, saved] = await Promise.all([
         fetchJobs(),
         fetchMyApplications(),
+        fetchSavedJobs(),
       ]);
-    
+
       const appMap: Record<string, any> = {};
       const allowedStatuses = ["Pending", "Viewed", "Rejected", "Accepted"];
-    
-      const applicationMap: Record<string, "Pending" | "Viewed" | "Rejected" | "Accepted"> = {};
+
+      const applicationMap: Record<string,"Pending" | "Viewed" | "Rejected" | "Accepted"> = {};
+
       myApplications.forEach((app: any) => {
         if (allowedStatuses.includes(app.status)) {
           appMap[app.job.id] = app;
         }
       });
-    
+
       const enrichedJobs = fetchedJobs.map((job) => ({
         ...job,
         applicationStatus: appMap[job.id]?.status ?? null,
       }));
-    
+
       setAppliedJobs(appMap);
       setJobs(enrichedJobs);
+      setSavedJobs(saved);
+
       if (enrichedJobs.length > 0) {
         setSelectedJob(enrichedJobs[0]);
+        const isJobSaved = saved.some((job) => job.id === enrichedJobs[0].id);
+        setIsSaved(isJobSaved);
       }
     };
     fetchAllJobs();
@@ -140,9 +146,21 @@ const Jobs_And_Hiring: React.FC<SaveApplyProps> = ({
 
   useEffect(() => {
     if (!selectedJob) return;
-    const isAlreadySaved = savedJobs.some((job) => job.id === selectedJob.id);
-    setIsSaved(isAlreadySaved);
-  }, [selectedJob, savedJobs]);
+  
+    const checkIfSaved = async () => {
+      try {
+        const saved = await fetchSavedJobs();
+        setSavedJobs(saved);
+        const isAlreadySaved = saved.some((job) => job.id === selectedJob.id);
+        setIsSaved(isAlreadySaved);
+      } catch (error) {
+        console.error("Failed to fetch saved jobs:", error);
+      }
+    };
+  
+    checkIfSaved();
+  }, [selectedJob]);
+  
 
   const handleSearchSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
