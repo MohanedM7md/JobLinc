@@ -37,7 +37,7 @@ const businessOptions: BusinessOption[] = [
 
 export function BusinessOptionsCard() {
   return (
-    <div className="mr-auto w-full max-w-sm rounded-lg border border-gray-200 bg-white shadow-md">
+    <div className="mr-auto w-50 max-w- rounded-lg border border-gray-200 bg-white shadow-md">
       <div className="border-b border-gray-200 px-4 py-3">
         <h2 className="text-crimsonRed text-base font-semibold">
           Business Options
