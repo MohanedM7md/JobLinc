@@ -1,7 +1,6 @@
 import { api } from "./api";
-import store from "@store/store";
 import axios from "axios";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 export const fetchChats = async () => {
   const response = await api.get("/chat/all");
   return response.data;

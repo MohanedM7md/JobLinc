@@ -14,12 +14,8 @@ export const onConnect = (setTrue: (boolean: boolean) => void) => {
   ChatSocket?.on("connect", () => {
     setTrue(true);
     ChatSocket?.on("error", (error: { event: string; message: string }) => {
-      if (error.event === "sendMessage") {
-        toast.success(error.message);
-      } else {
-        console.log(error.message);
-        toast.error(error.message);
-      }
+      console.log(error.message);
+      toast.error(error.message);
     });
   });
 };
