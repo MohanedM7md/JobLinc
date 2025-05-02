@@ -34,10 +34,13 @@ import ProfileContainer from "./components/User Profile/ProfileContainer";
 import FullExperiences from "./components/User Profile/Experiences/FullExperiences";
 import FullCertificates from "./components/User Profile/Certificates/FullCertificates";
 import FullSkills from "./components/User Profile/Skills/FullSkills";
+import FullActivity from "@components/User Profile/Miscellaneous/FullActivity";
+import SavedPosts from "@components/User Profile/Miscellaneous/SavedPosts";
 
 // Post components
 import PostCreate from "./components/Posts/PostCreate";
 import PostEdit from "./components/Posts/PostEdit";
+import Post from "@pages/Post";
 
 // Settings components
 const Settings = lazy(() => import("@pages/Settings/Settings"));
@@ -112,13 +115,16 @@ function App() {
                     path="details/certificates"
                     element={<FullCertificates />}
                   />
+                  <Route path="details/activity" element={<FullActivity />} />
                   <Route path="details/skills" element={<FullSkills />} />
+                  <Route path="details/saved-posts" element= {<SavedPosts />} />
                 </Route>
 
                 {/* Post Routes */}
                 <Route path="/post">
                   {/* <Route path="create" element={<PostCreate />} /> */}
                   <Route path=":postId/edit" element={<PostEdit />} />
+                  <Route path=":postId" element={<Post />} />
                 </Route>
 
                 {/* Settings Routes */}
