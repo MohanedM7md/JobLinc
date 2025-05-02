@@ -2,9 +2,10 @@ import { Company } from "@store/comapny/interfaces";
 import { useState, useEffect } from "react";
 import { Frown, ChevronDown } from "lucide-react";
 import { PostInterface } from "@interfaces/postInterfaces";
-import { getMyPosts } from "@services/api/userProfileServices";
+import { getMyPosts, getUserPosts } from "@services/api/userProfileServices";
 import { useNavigate } from "react-router-dom";
 import { MediaTypes } from "../../../interfaces/postInterfaces";
+import { useCompanyStore } from "@store/comapny/companyStore";
 
 import PostCard from "@components/Posts/PostCard";
 
@@ -37,32 +38,31 @@ const PostSkeleton = () => (
 
 
 function Posts(props: PostsProps) {
-    const [choiceOfSort, setChoiceOfSort] = useState("Top");
-    const [dropDownSort, setDropDownSort] = useState(false);
     const [filterChoice, setFilterChoice] = useState("All");
     
     const [posts, setPosts] = useState<PostInterface[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const filters = ["All", "Images", "Videos", "Audios", "Documents"];
+
     const navigate = useNavigate();
 
     const companyPosts = posts.filter(post => post.companyId === props.company?.id);
     const mapFilterToMediaType = (filter: string): MediaTypes | undefined => {
-        switch(filter) {
-          case 'Images': return MediaTypes.Image;
-          case 'Videos': return MediaTypes.Video;
-          case 'Audios': return MediaTypes.Audio;
-          case 'Documents': return MediaTypes.Document;
-          default: return undefined;
-        }
-      };
+    switch(filter) {
+        case 'Images': return MediaTypes.Image;
+        case 'Videos': return MediaTypes.Video;
+        case 'Audios': return MediaTypes.Audio;
+        case 'Documents': return MediaTypes.Document;
+        default: return undefined;
+    }
+    };
       
-      // Replace the existing companyPosts declaration with this filtered version
-      const filteredPosts = companyPosts.filter(post => {
-        if (filterChoice === 'All') return true;
-        const targetType = mapFilterToMediaType(filterChoice);
-        return post.media?.some(media => media.type === targetType);
-      });
+    const filteredPosts = companyPosts.filter(post => {
+    if (filterChoice === 'All') return true;
+    const targetType = mapFilterToMediaType(filterChoice);
+    return post.media?.some(media => media.type === targetType);
+    });
+
     
 
 
@@ -72,7 +72,7 @@ function Posts(props: PostsProps) {
         {
             try {
                 setIsLoading(true);
-                const response = await getMyPosts();
+                const response = await getUserPosts(props.company?.id || "");
                 setPosts(response);
             }
             catch (error) {
@@ -84,11 +84,11 @@ function Posts(props: PostsProps) {
 
 
         fetchCompanyPosts();
-    }, [])
+    }, []);
     
 
     return (
-        <div className="flex flex-col md:flex-row gap-5 max-w-7xl mx-auto px-4 w-full">
+        <div className="flex flex-col md:flex-row gap-5 max-w-7xl mx-auto px-4 w-full mt-10">
             {/* Left Sidebar - becomes top section on mobile */}
             <div className="w-full md:w-64 flex-shrink-0 flex flex-col gap-5">
                 <div className="bg-white rounded-xl shadow-sm p-4 md:p-6 text-center">
@@ -145,7 +145,7 @@ function Posts(props: PostsProps) {
                 ) : filteredPosts.length > 0 ? (
                     // Actual Posts
                     filteredPosts.map((post) => (
-                        <div className="bg-white p-5 rounded-xl">
+                        <div className="bg-white p-5 rounded-xl" onClick={() => navigate(`/post/${post.postId}`)}>
                             <PostCard post={post} isRepost={false} compact={true}/>
                         </div>
                     ))

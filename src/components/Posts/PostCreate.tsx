@@ -22,7 +22,7 @@ export default function PostCreate(props: AddPostProps) {
   const addPost = useMutation({
     mutationFn: createPost,
     onSuccess: () => {
-      props.onUpdate();
+      props.onUpdate && props.onUpdate();
       props.onClose();
     },
   });

@@ -11,7 +11,7 @@ function Overview(props: OverviewProps) {
   const formattedDate = date.toLocaleString("default", { month: "long", year: "numeric" });
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-5 mt-10">
       {/* Overview Section */}
       <div className="bg-white rounded-xl p-6 shadow-sm">
         <h2 className="text-2xl font-semibold text-gray-900 mb-4">Company Overview</h2>

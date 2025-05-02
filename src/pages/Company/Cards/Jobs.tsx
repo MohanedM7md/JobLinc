@@ -2,7 +2,7 @@ import { Bell, Briefcase } from "lucide-react";
 
 function Jobs() {
     return (
-        <div className="flex flex-col gap-5 max-w-4xl mx-auto w-full">
+        <div className="flex flex-col gap-5 max-w-4xl mx-auto w-full mt-10">
             {/* Job Alert Card */}
             <div className="bg-white rounded-xl shadow-sm p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div className="flex items-center gap-3 flex-1">

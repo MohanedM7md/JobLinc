@@ -2,10 +2,11 @@ import PostCreate from "@components/Posts/PostCreate";
 import Modal from "@components/utils/Modal";
 import { useState, useEffect } from "react";
 import { Edit, Plus } from "lucide-react";
-import { getMyPosts } from "@services/api/userProfileServices";
+import { getUserPosts } from "@services/api/userProfileServices";
 import { PostInterface } from "@interfaces/postInterfaces";
 import { useNavigate } from "react-router-dom";
 import PostCard from "@components/Posts/PostCard";
+import { useCompanyStore } from "@store/comapny/companyStore";
 
 const PostSkeleton = () => (
     <div className="bg-white rounded-xl shadow-sm p-6 animate-pulse">
@@ -29,10 +30,17 @@ const PostSkeleton = () => (
     </div>
 );
 
+
+
+
 function PostsContent() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [posts, setPosts] = useState<PostInterface[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [fetchAgain, setFetchAgain] = useState(false);
+    const { company } = useCompanyStore();
+    console.log("Here is the data about the company: ", company)
+
 
     const navigate = useNavigate();
 
@@ -40,10 +48,11 @@ function PostsContent() {
     const companyPosts = posts.filter(post => post.companyId);
 
     useEffect(() => {
-        const getUserPosts = async function () {
+        const getUserPostss = async function () {
             try {
                 setIsLoading(true);
-                const response = await getMyPosts();
+                const response = await getUserPosts(company?.id || "");
+                console.log(response);
                 setPosts(response);
             }
             catch (error) {
@@ -52,8 +61,8 @@ function PostsContent() {
                 setIsLoading(false);
             }
         }
-        getUserPosts();
-    }, []);
+        getUserPostss();
+    }, [fetchAgain]);
 
     
       
@@ -86,7 +95,7 @@ function PostsContent() {
                 {/* Filtered Company Posts */}
                 {companyPosts.length > 0 ? (
                     companyPosts.map(post => (
-                        <div className="bg-white p-5 rounded-xl">
+                        <div className="bg-white p-5 rounded-xl" onClick={() => navigate(`/post/${post.postId}`)} key={post.postId}>
                             <PostCard post={post} isRepost={false} compact={true}/>
                         </div>
                     ))
@@ -108,7 +117,7 @@ function PostsContent() {
 
             {/* Create Post Modal */}
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-                <PostCreate onClose={() => setIsModalOpen(false)} />
+                <PostCreate onUpdate={() => setFetchAgain(!fetchAgain)} onClose={() => setIsModalOpen(false)} />
             </Modal>
         </div>
     );

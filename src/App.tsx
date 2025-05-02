@@ -59,8 +59,9 @@ const Admin = lazy(() => import("./pages/Company/Admin"));
 const MyCompanies = lazy(() => import("./pages/Company/MyCompanies"));
 const Member = lazy(() => import("@pages/Company/Member"));
 import CreateForm from "@pages/Company/CreateForm";
-import Post from "@pages/Post";
 import FullEducations from "@components/User Profile/Educations/FullEducations";
+import BlockList from "@components/Connections/BlockList";
+import AllCompanies from "@pages/Company/AllCompanies";
 
 const queryClient = new QueryClient();
 
@@ -162,6 +163,7 @@ function App() {
                     element={<EmailAddress />}
                   />
                   <Route path="visibility" element={<Visibility />} />
+                  <Route path="visibility/profile-network/blocking" element={<BlockList />} />
                   <Route path="data-privacy" element={<DataAndPrivacy />} />
                   <Route
                     path="advertising-data"
@@ -176,14 +178,13 @@ function App() {
                   <Route path="my-companies" element={<MyCompanies />} />
                   <Route path="admin/:companyId" element={<Admin />} />
                   <Route path="member/:slug" element={<Member />} />
-                   <Route path="all" element={<AllCompanies />} />
                 </Route>
               </Route>
             </Route>
 
             {/* 404 Route */}
             <Route path="*" element={<Error404 />} />
-            
+            <Route path="/company/all" element={<AllCompanies />} />
           </Routes>
         </Suspense>
       </QueryClientProvider>

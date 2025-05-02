@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Company } from "@store/comapny/interfaces";
 import { useNavigate } from "react-router-dom";
-import { getMyCompanies } from "@services/api/companyServices";
+import { getAllCompanies } from "@services/api/companyServices";
 
 
 function AllCompanies()
@@ -12,7 +12,7 @@ function AllCompanies()
     useEffect(() => {
         const fetchCompanies = async () => {
             try {
-            const response = await getMyCompanies();
+            const response = await getAllCompanies();
             setCompanies(response.data);
             } catch (error) {
             console.error("Failed to fetch companies:", error);

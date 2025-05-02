@@ -297,6 +297,7 @@ export async function getMyPosts() {
 export async function getUserPosts(userId: string) {
   try {
     const response = await api.get(`post/${userId}/posts`);
+    console.log(response);
     return response.data;
   } catch (error) {
     console.error("Error fetching posts:", error);

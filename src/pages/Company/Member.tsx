@@ -10,6 +10,7 @@ import { Plus } from "lucide-react";
 import CompanyFooter from "./Cards/CompanyFooter";
 import { getMyCompanies } from "@services/api/userProfileServices";
 import { Company } from "@store/comapny/interfaces";
+import HomeTab from "./Cards/HomeTab";
 
 
 
@@ -80,7 +81,7 @@ function Member() {
   const [navItemSelected, setNavItemSelected] = useState<string>("Home");
 
   const navItems = [
-    { text: "Home", content: <div>Home</div> },
+    { text: "Home", content: <HomeTab company={company || undefined} setActive={setNavItemSelected}/> },
     { text: "About", content: <Overview company={company || undefined} /> },
     { text: "Posts", content: <Posts company={company || undefined} /> },
     { text: "Jobs", content: <Jobs /> },
@@ -172,7 +173,7 @@ function Member() {
         
       </div>
       {/* Content Section */}
-      <div className="w-full max-w-7xl mx-4 md:mx-8 lg:mx-auto rounded-xl p-4 md:p-6 lg:p-8">
+      <div className="w-full max-w-7xl mx-4 md:mx-8 lg:mx-auto rounded-xl">
         {selectedNavItem?.content}
       </div>
 
