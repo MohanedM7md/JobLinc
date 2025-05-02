@@ -218,15 +218,3 @@ export async function unblockUser(userId: string) {
     throw error;
   }
 }
-
-export const searchUsers = async (keyword: string, page = 1, limit = 7) => {
-  try {
-    const response = await api.get(`user/search`, {
-      params: { keyword, page, limit },
-    });
-    return response.data;
-  } catch (error) {
-    console.log("Error fetching searched users", error);
-    return [];
-  }
-};
