@@ -56,7 +56,7 @@ export async function createPost(postContent: {
   media?: Media[];
   taggedUsers?: TaggedObject[];
   taggedCompanies?: TaggedObject[];
-  isPublic: boolean
+  isPublic?: boolean
 }) {
   try {
     const response = await api.post(`post/add`, postContent);

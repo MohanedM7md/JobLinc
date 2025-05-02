@@ -11,6 +11,7 @@ import ProfileUtilityButton from "./ProfileUtilityButton";
 import { AcceptConnectionRequest, changeConnectionStatus, sendConnectionRequest } from "@services/api/networkServices";
 import toast from "react-hot-toast";
 import NetworkModal from "@components/MyNetwork/NetworkModal";
+import ContactInfo from "./ContactInfo";
 
 interface ProfileProps {
   userId: string;
@@ -48,6 +49,8 @@ function ProfileHeader(props: ProfileProps & { isUser: boolean }) {
   const [isEditProfilePictureModalOpen, setIsEditProfilePictureModalOpen] =
     useState<boolean>(false);
   const [isEditCoverPictureModalOpen, setIsEditCoverPictureModalOpen] =
+    useState<boolean>(false);
+  const [isContactInfoModalOpen, setIsContactInfoModalOpen] =
     useState<boolean>(false);
   const navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState(false);
@@ -298,7 +301,10 @@ const handleConnectClick = async () => {
             <p className="text-mutedSilver">
               {props.city}, {props.country}
             </p>
-            <span className="text-crimsonRed font-medium cursor-pointer ml-2 hover:underline">
+            <span
+              onClick={() => setIsContactInfoModalOpen(true)}
+              className="text-crimsonRed font-medium cursor-pointer ml-2 hover:underline"
+            >
               Contact Info
             </span>
           </div>
@@ -444,6 +450,17 @@ const handleConnectClick = async () => {
         <EditCoverPicture
           coverPicture={props.coverPicture}
           onSave={handleUpdateCoverPicture}
+        />
+      </Modal>
+
+      <Modal
+        isOpen={isContactInfoModalOpen}
+        onClose={() => setIsContactInfoModalOpen(false)}
+      >
+        <ContactInfo
+          phoneNumber={props.phoneNumber}
+          userId={props.userId}
+          email={props.email}
         />
       </Modal>
     </div>
