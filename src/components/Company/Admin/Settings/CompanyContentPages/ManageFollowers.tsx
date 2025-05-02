@@ -49,7 +49,7 @@ function ManageFollowers()
 
         
 
-        <div className="flex flex-col items-center w-full h-full p-4 md:p-6 lg:p-8 xl:p-10">
+        <div className="flex flex-col items-center w-full h-dvh p-4 md:p-6 lg:p-8 xl:p-10">
             <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4 md:mb-6 text-center">
                 Manage Followers
             </h2>

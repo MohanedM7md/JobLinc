@@ -141,6 +141,15 @@ export enum ExperienceTypes {
   volunteer = "Volunteer"
 }
 
+export interface FollowerData {
+  firstname: string;
+  headline: string;
+  lastname: string;
+  profilePicture: string;
+  time: string;
+  userId: string
+}
+
 export enum ConnectionStatus {
     Pending="Pending",
     Sent="Sent",

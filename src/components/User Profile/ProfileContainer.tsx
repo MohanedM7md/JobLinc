@@ -24,7 +24,7 @@ import { useQuery } from "@tanstack/react-query";
 import store from "@store/store";
 import { PostInterface } from "@interfaces/postInterfaces";
 import PostCard from "../Posts/PostCard";
-import PostCreate from "../Posts/PostCreate";
+import PostCreate from "../Posts/PostCreation/PostCreate";
 import UserEducation from "./Educations/UserEducation";
 import AddEducation from "./Educations/AddEducation";
 

@@ -90,7 +90,7 @@ export default function AddExperience(props: AddExperienceProps) {
     enabled: typeof companyValue === "string" && companyValue.trim() !== "",
     queryFn: async () => {
       try {
-        const data = await searchCompanies(companyValue);
+        const data = await searchCompanies({name: companyValue});
         setCompanyOptions(data);
         return data;
       } catch {

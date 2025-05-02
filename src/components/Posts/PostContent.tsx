@@ -1,16 +1,19 @@
 import { useState, useEffect, useRef } from "react";
 import PostMedia from "./PostMedia";
-import { Media } from "@interfaces/postInterfaces";
+import { Media, TaggedObject } from "@interfaces/postInterfaces";
+import FormattedPostText from "./FormattedPostText";
 
 interface PostDetailsProps {
   text: string;
   media: Media[];
+  taggedUsers: TaggedObject[];
+  taggedCompanies: TaggedObject[];
 }
 
 export default function PostContent(props: PostDetailsProps) {
   const [showMore, setShowMore] = useState<boolean>(false);
   const [isOverflowing, setIsOverflowing] = useState<boolean>(false);
-  const textRef = useRef<HTMLParagraphElement>(null);
+  const textRef = useRef<HTMLDivElement>(null);
   const show = !showMore ? "Show more" : "Show less";
 
   useEffect(() => {
@@ -23,12 +26,16 @@ export default function PostContent(props: PostDetailsProps) {
   return (
     <div>
       <div className="min-w-0 mr-3 ml-3">
-        <p
+        <div
           ref={textRef}
           className={`text-wrap ${!showMore ? "truncate line-clamp-3" : ""}`}
         >
-          {props.text}
-        </p>
+          <FormattedPostText
+            text={props.text}
+            taggedUsers={props.taggedUsers}
+            taggedCompanies={props.taggedCompanies}
+          />
+        </div>
         {isOverflowing && (
           <button
             onClick={() => setShowMore(!showMore)}

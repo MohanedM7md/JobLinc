@@ -92,6 +92,8 @@ export default function PostCard(props: PostProps) {
           key={`Details of post ${props.post.postId}`}
           text={props.post.text}
           media={props.post.media}
+          taggedUsers={props.post.taggedUsers}
+          taggedCompanies={props.post.taggedCompanies}
         />
         {props.post.repost ? (
           <div className="w-12/12 m-auto my-2 border-1 rounded-lg border-gray-300 transform scale-90">
