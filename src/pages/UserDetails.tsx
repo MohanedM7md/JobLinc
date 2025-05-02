@@ -1,15 +1,15 @@
 import { useState } from "react";
-import { AuthenticationSignInButton } from "./AuthenticationButtons";
-import SignHeader from "./Headers/SignHeader";
-import Modal from "../utils/Modal";
+import { AuthenticationSignInButton } from "../components/Authentication/AuthenticationButtons";
+import SignHeader from "../components/Authentication/Headers/SignHeader";
+import Modal from "../components/utils/Modal";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { registerUser } from "../../store/user/userThunks";
-import type { AppDispatch } from "../../store/store"; // Import the correct type
-import NameFieldNormal from "./Utilities/NameFieldNormal";
-import { isValidName } from "./Utilities/Validations";
+import { registerUser } from "../store/user/userThunks";
+import type { AppDispatch } from "../store/store"; // Import the correct type
+import NameFieldNormal from "../components/Authentication/Utilities/NameFieldNormal";
+import { isValidName } from "../components/Authentication/Utilities/Validations";
 import { useLocation } from "react-router-dom";
-import { isValidPhoneNo } from "./Utilities/Validations";
+import { isValidPhoneNo } from "../components/Authentication/Utilities/Validations";
 
 interface UserDetailsProps {
   email: string;
