@@ -5,7 +5,7 @@ interface UserCardProps {
 }
 
 function UserCard({ user }: UserCardProps) {
-  const headline = user.experiences[0]?.replace(/ at .*/, '') || 'Professional';
+  const headline = user.country + " • " + user.city + " • " + user.mutualConnections + " Mutual Connections " || 'Professional';
 
   return (
     <div className="flex p-1.5 w-full max-w-[300px] bg-white hover:bg-gray-50 rounded-md transition-colors duration-150 cursor-pointer">

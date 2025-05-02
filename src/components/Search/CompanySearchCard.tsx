@@ -5,7 +5,7 @@ interface CompanyCardProps {
 }
 
 function CompanySearchCard({ company }: CompanyCardProps) {
-  const companyInfo = `${company.industry} • ${company.size || '0'} employees`;
+  const companyInfo = `${company.industry} • ${company.followers || '0'} Followers`;
 
   return (
     <div className="flex p-1.5 w-full max-w-[300px] bg-white hover:bg-gray-50 rounded-md transition-colors duration-150 cursor-pointer">

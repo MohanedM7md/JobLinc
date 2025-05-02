@@ -4,6 +4,20 @@ import ConnectionCard from "./ConnectionCard";
 import { ConnectionInterface } from "../../interfaces/networkInterfaces";
 import { getConnections } from "@services/api/networkServices";
 
+const SkeletonConnectionCard = () => (
+  <div className="flex items-center p-4 border-b border-gray-200">
+    <div className="w-12 h-12 rounded-full bg-gray-200 animate-pulse" />
+    <div className="ml-4 flex-grow space-y-2">
+      <div className="h-4 w-32 bg-gray-200 rounded animate-pulse" />
+      <div className="h-4 w-48 bg-gray-200 rounded animate-pulse" />
+    </div>
+    <div className="flex gap-2">
+      <div className="h-8 w-24 bg-gray-200 rounded-full animate-pulse" />
+      <div className="h-8 w-10 bg-gray-200 rounded-full animate-pulse" />
+    </div>
+  </div>
+);
+
 function ConnectionsListCard() {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("recentlyadded");
@@ -12,31 +26,36 @@ function ConnectionsListCard() {
 
   useEffect(() => {
     const controller = new AbortController();
+    let isMounted = true;
+
     const fetchData = async () => {
       try {
         setIsLoading(true);
         const response = await getConnections();
-        const parsedConnections = Array.isArray(response)
-          ? response.map((connection) => ({
-              userId: connection.userId,
-              profilePicture: connection.profilePicture,
-              firstname: connection.firstname,
-              lastname: connection.lastname,
-              headline: connection.headline || "",
-              time: new Date(connection.time),
-            }))
-          : [];
-        setUserConnections(parsedConnections);
+        if (isMounted) {
+          const parsedConnections = Array.isArray(response)
+            ? response.map((connection) => ({
+                userId: connection.userId,
+                profilePicture: connection.profilePicture,
+                firstname: connection.firstname,
+                lastname: connection.lastname,
+                headline: connection.headline || "",
+                time: new Date(connection.time),
+              }))
+            : [];
+          setUserConnections(parsedConnections);
+        }
       } catch (error) {
         console.error("Error fetching network feed:", error);
       } finally {
-        setIsLoading(false);
+        if (isMounted) setIsLoading(false);
       }
     };
 
     fetchData();
 
     return () => {
+      isMounted = false;
       controller.abort();
     };
   }, []);
@@ -78,21 +97,23 @@ function ConnectionsListCard() {
       <div className="w-full">
         {isLoading ? (
           Array.from({ length: 5 }).map((_, index) => (
-            <div key={index} className="flex items-center p-4 border-b border-gray-200">
-              <div className="w-12 h-12 rounded-full bg-gray-200 animate-pulse"></div>
-              <div className="ml-4 flex-grow space-y-2">
-                <div className="h-4 w-32 bg-gray-200 rounded animate-pulse"></div>
-                <div className="h-4 w-48 bg-gray-200 rounded animate-pulse"></div>
-              </div>
-              <div className="flex gap-2">
-                <div className="h-8 w-24 bg-gray-200 rounded-full animate-pulse"></div>
-                <div className="h-8 w-10 bg-gray-200 rounded-full animate-pulse"></div>
-              </div>
-            </div>
+            <SkeletonConnectionCard key={index} />
           ))
+        ) : userConnections.length === 0 ? (
+          <div className="p-6 text-gray-600 text-center">
+            You don't have any connections yet.
+          </div>
+        ) : sortedConnections.length === 0 ? (
+          <div className="p-6 text-gray-600 text-center">
+            No connections match your search criteria.
+          </div>
         ) : (
           sortedConnections.map((connection, index) => (
-            <ConnectionCard key={index} {...connection} onRemove={removeConnection} />
+            <ConnectionCard
+              key={index}
+              {...connection}
+              onRemove={removeConnection}
+            />
           ))
         )}
       </div>

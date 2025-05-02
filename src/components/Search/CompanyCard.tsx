@@ -9,7 +9,7 @@ function CompanyCard({ company }: CompanyCardProps) {
   const navigate = useNavigate();
 
   const handleCompanyClick = () => {
-    navigate(`/company/${company.urlSlug}`);
+    navigate(`/company/member/${company.urlSlug}`);
   };
 
   const formatFollowers = (followers: number) => {
@@ -49,6 +49,9 @@ function CompanyCard({ company }: CompanyCardProps) {
       <div className="w-1/3 flex justify-end items-center gap-2">
         <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
           {company.industry}
+        </span>
+        <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+          {company.type}
         </span>
         <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
           {company.size} employees

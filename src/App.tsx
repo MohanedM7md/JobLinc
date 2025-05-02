@@ -65,6 +65,9 @@ import CreateForm from "@pages/Company/CreateForm";
 import FollowersFollowing from "@pages/FollowersFollowing";
 import MyConnections from "./pages/Connections";
 import UserConnections from "@pages/UserConnections";
+import BlockList from "@components/Connections/BlockList";
+import MutualConnectionListCard from "@components/Connections/MutualConnectionListCard";
+import MutualConnections from "@pages/MutualConnections";
 
 const queryClient = new QueryClient();
 
@@ -118,6 +121,7 @@ function App() {
                 <Route path="/profile/:userId">
                   <Route index element={<ProfileContainer />}/>
                   <Route path="connections" element={<UserConnections/>}/>
+                  <Route path="mutual-connections" element={<MutualConnections />} />
                   <Route
                     path="details/experiences"
                     element={<FullExperiences />}
@@ -169,6 +173,7 @@ function App() {
                     />
                   </Route>
                   <Route path="visibility" element={<Visibility />} />
+                  <Route path="visibility/profile-network/blocking" element = {<BlockList/>}/>
                   <Route path="data-privacy" element={<DataAndPrivacy />} />
                   <Route
                     path="advertising-data"

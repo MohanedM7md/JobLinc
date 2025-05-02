@@ -71,7 +71,7 @@ function PeopleList({ searchQuery }: PeopleListProps) {
     );
   }
 
-  if (!results.length) {
+  if (!results.length && !isLoading) {
     return (
       <div className="w-full bg-white rounded-lg shadow-sm border border-gray-100 p-6 text-center text-gray-500">
         {searchQuery ? "No people found matching your search" : "Enter a name or keyword to search people"}

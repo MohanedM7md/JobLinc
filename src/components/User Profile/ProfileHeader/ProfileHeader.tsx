@@ -71,6 +71,9 @@ function ProfileHeader(props: ProfileProps & { isUser: boolean }) {
   const handleConnectionsClick = () => {
     navigate(`/profile/${props.userId}/connections`);
   };
+  const handleMutualsClick = () => {
+    navigate(`/profile/${props.userId}/mutual-connections`);
+  };
 
   return (
     <div className="profile-header bg-lightGray p-4 rounded-lg shadow-md relative">
@@ -124,7 +127,7 @@ function ProfileHeader(props: ProfileProps & { isUser: boolean }) {
           </p>
           <p
             className="text-crimsonRed font-medium cursor-pointer hover:underline"
-            onClick={handleConnectionsClick}
+            onClick={handleMutualsClick}
           >
             Mutuals: {props.mutualConnections}
           </p>

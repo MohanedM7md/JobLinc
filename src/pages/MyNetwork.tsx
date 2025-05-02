@@ -5,7 +5,7 @@ import MyNetworkOptionsCard from "@components/MyNetwork/MyNetworkOptionsCard";
 function MyNetwork(){  
     return(
       <>
-        <div className="grid sm:grid-cols-20 gap-5 bg-lightGray">
+        <div className="grid sm:grid-cols-20 gap-5 bg-lightGray h-dvh">
             <div className="sm:col-span-6 justify-items-end">
             <ManageNetworkCard></ManageNetworkCard>
             </div>

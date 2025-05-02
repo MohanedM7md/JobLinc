@@ -69,7 +69,7 @@ function CompanyList({ searchQuery }: CompanyListProps) {
     );
   }
 
-  if (!results.length) {
+  if (!results.length && !isLoading) {
     return (
       <div className="p-6 text-center text-gray-500">
         {searchQuery ? "No companies found" : "Start typing to search companies"}
