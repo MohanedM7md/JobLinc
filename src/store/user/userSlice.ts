@@ -69,24 +69,27 @@ const userSlice = createSlice({
       .addCase(loginWithGoogle.pending, (state) => {
         state.status = "LOADING";
       })
-      .addCase(loginWithGoogle.fulfilled, (state, action: PayloadAction<any>) => {
-        const userData = action.payload; // Extract user object from response
+      .addCase(
+        loginWithGoogle.fulfilled,
+        (state, action: PayloadAction<any>) => {
+          const userData = action.payload; // Extract user object from response
 
-        if (userData) {
-          console.log("Login Response Payload:", userData);
-          state.userId = userData.userId || null;
-          state.role = userData.role || null;
-          state.accessToken = userData.accessToken || null;
-          state.confirmed = userData.confirmed || null;
-          state.email = userData.email || null;
-          state.status = "SUCCESS";
-          state.loggedIn = true;
-          localStorage.setItem("refreshToken", userData.refreshToken);
-          localStorage.setItem("userId", userData.userId);
-        } else {
-          console.error("User data missing in API response:", action.payload);
-        }
-      })
+          if (userData) {
+            console.log("Login Response Payload:", userData);
+            state.userId = userData.userId || null;
+            state.role = userData.role || null;
+            state.accessToken = userData.accessToken || null;
+            state.confirmed = userData.confirmed || null;
+            state.email = userData.email || null;
+            state.status = "SUCCESS";
+            state.loggedIn = true;
+            localStorage.setItem("refreshToken", userData.refreshToken);
+            localStorage.setItem("userId", userData.userId);
+          } else {
+            console.error("User data missing in API response:", action.payload);
+          }
+        },
+      )
       .addCase(loginWithGoogle.rejected, (state) => {
         state.status = "FAILED";
       })
@@ -215,6 +218,7 @@ const userSlice = createSlice({
             state.lastname = userData.lastname || null;
             state.profilePicture = userData.profilePicture || null;
             state.role = userData.role || null;
+            state.allowMessages = userData.allowMessages || null;
             state.confirmed = userData.confirmed || null;
             state.status = "SUCCESS";
           } else {

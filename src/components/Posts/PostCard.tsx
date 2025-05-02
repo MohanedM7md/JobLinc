@@ -29,6 +29,7 @@ export default function PostCard(props: PostProps) {
   const [showRepostModal, setShowRepostModal] = useState<boolean>(false);
   const [showReactionsModal, setShowReactionsModal] = useState<boolean>(false);
 
+  const isCompany: boolean = props.post.companyId ? true : false;
   const posterId: string = props.post.companyId
     ? props.post.companyId
     : props.post.userId;
@@ -59,6 +60,7 @@ export default function PostCard(props: PostProps) {
       <div className="flex flex-row w-1/1">
         <PostHeader
           key={`Details of poster ${posterId}`}
+          isCompany={isCompany}
           id={posterId}
           name={name}
           headline={props.post.headline}
@@ -72,6 +74,7 @@ export default function PostCard(props: PostProps) {
               postId={props.post.postId}
               posterId={posterId}
               postText={props.post.text}
+              postMedia={props.post.media}
             />
           </AnimatePresence>
         </div>

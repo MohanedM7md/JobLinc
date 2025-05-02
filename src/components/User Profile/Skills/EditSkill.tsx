@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { SkillInterface } from "interfaces/userInterfaces";
+import { NewSkill, SkillInterface } from "interfaces/userInterfaces";
 import { editSkill, deleteSkill } from "@services/api/userProfileServices";
 import ConfirmAction from "../../utils/ConfirmAction";
 import skillLevels from "@utils/skillLevels";
@@ -59,12 +59,11 @@ export default function EditSkill(props: EditSkillProps) {
     deleteSkillMutation.status === "pending";
 
   const onSubmit: SubmitHandler<SkillFields> = (data) => {
-    const updatedSkill: SkillInterface = {
-      id: props.id,
+    const updatedSkill: NewSkill = {
       name: data.name,
       level: data.level,
     };
-    toast.promise(editSkillMutation.mutateAsync(updatedSkill), {
+    toast.promise(editSkillMutation.mutateAsync({skillId: props.id, skill: updatedSkill}), {
       loading: "Saving skill...",
       success: "Skill updated successfully!",
       error: (error) => error.message,

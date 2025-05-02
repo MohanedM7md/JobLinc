@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { Company } from "@store/comapny/interfaces";
 import { useNavigate } from "react-router-dom";
 import { useCompanyStore } from "@store/comapny/companyStore";
-
 function MyCompanies() {
   const [companies, setCompanies] = useState<Company[]>([]);
   const [loading, setLoading] = useState(true);

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import timeDifference from "@utils/timeDifferenceCalculator";
 
 interface ProfileDetailsProps {
+  isCompany: boolean;
   id: string;
   name: string;
   headline: string;
@@ -24,7 +25,12 @@ export default function PostHeader(props: ProfileDetailsProps) {
       <div className="mt-5 w-1/1 min-w-0">
         <div
           onClick={() => {
-            navigate(`/profile/${props.id}`);
+            if (props.isCompany) {
+              navigate(`/company/member/${props.id}`);
+            }
+            else {
+              navigate(`/profile/${props.id}`)
+            }
           }}
           className="flex flex-row justify-between w-1/1 cursor-pointer"
         >
