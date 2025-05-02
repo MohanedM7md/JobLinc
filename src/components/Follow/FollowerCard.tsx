@@ -41,8 +41,8 @@ function FollowerCard(props: FollowInterface & { onRemove: (id: string) => void 
     const removePromise = removeFollowerRequest(id);
     toast.promise(removePromise, {
       loading: "Removing follower...",
-      success: `${props.firstName ?? props.companyName ?? `user`} removed successfully!`,
-      error: `Failed to remove ${props.firstName ?? props.companyName ?? `user`}. Please try again.`,
+      success: `${props.firstname ?? props.companyName ?? `user`} removed successfully!`,
+      error: `Failed to remove ${props.firstname ?? props.companyName ?? `user`}. Please try again.`,
     });
 
     try {
@@ -66,7 +66,7 @@ function FollowerCard(props: FollowInterface & { onRemove: (id: string) => void 
       <div className="ml-4 flex-grow mr-7">
         {props.userId ? (
           <h3 role="heading" className="font-semibold cursor-pointer hover:underline" onClick={handleUserClick}>
-            {props.firstName} {props.lastName}
+            {props.firstname} {props.lastname}
           </h3>
         ) : (
           <h3 role="heading" className="font-semibold cursor-pointer hover:underline" onClick={handleCompanyClick}>
@@ -94,7 +94,7 @@ function FollowerCard(props: FollowInterface & { onRemove: (id: string) => void 
             </div>
             <div className="border-b border-gray-300 flex items-center justify-center py-3">
               <p className="font-semibold">
-                Are you sure you want to remove {props.userId ? `${props.firstName} ${props.lastName}` : props.companyName}?
+                Are you sure you want to remove {props.userId ? `${props.firstname} ${props.lastname}` : props.companyName}?
               </p>
             </div>
             <div className="flex items-center justify-end space-x-4 pt-3">
