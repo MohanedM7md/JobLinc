@@ -38,6 +38,7 @@ function GroupChatSetting({
   const gearRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
+    setRealParticipants(users.filter((user) => !user.isRemoved));
     function handleClickOutside(event: MouseEvent) {
       if (
         modalRef.current &&
@@ -50,7 +51,6 @@ function GroupChatSetting({
         setShowDeleteConfirmation(false);
         setShowGroupOptions(false);
         setShowPanel(false);
-        setRealParticipants(users.filter((user) => !user.isRemoved));
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
@@ -88,14 +88,17 @@ function GroupChatSetting({
   };
 
   const handleAddParticipantsConfirm = async (selectedUserIds: string[]) => {
+    console.log("selected", selectedUserIds);
     const response = await addParticipants(selectedUserIds, chatId);
     setUsers(response);
+    setRealParticipants(response);
     setShowAddParticipants(false);
   };
 
   const handleRemoveParticipantsConfirm = async (selectedUserIds: string[]) => {
     const response = await removeParticipants(selectedUserIds, chatId);
     setUsers(response);
+    setRealParticipants(response.filter((user) => !user.isRemoved));
     setShowRemoveParticipants(false);
   };
 
