@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useCompanyStore } from "@store/comapny/companyStore";
 import { useNavigate, useParams } from "react-router-dom";
 import LoadingScreen from "@pages/LoadingScreen";
-import NavBar from "../../components/NavigationBar/NavBar";
 import Overview from "./Cards/Overview";
 import Posts from "./Cards/Posts";
 import Jobs from "./Cards/Jobs";
@@ -32,13 +31,13 @@ function Member() {
       (async () => {
         try {
           const response = await getMyCompanies();
-          setUserCompanies(response);
+          setUserCompanies(response.data);
 
           // setUserCompanies(response.data);
           // console.log(userCompanies);
-          for (let i = 0; i < response.length; i++)
+          for (let i = 0; i < response.data.length; i++)
           {
-            if (response.at(i)?.id === company?.id)
+            if (response.data.at(i)?.id === company?.id)
             {
               setIsTheUserAdmin(true);
               break;
