@@ -16,7 +16,7 @@ const SignUpPage = lazy(() => import("./pages/SignUp"));
 const SignInPage = lazy(() => import("./pages/SignIn"));
 const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
 const UserDetails = lazy(
-  () => import("./components/Authentication/UserDetails"),
+  () => import("./pages/UserDetails"),
 );
 const ChangePassword = lazy(() => import("./pages/ChangePassword"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
