@@ -112,7 +112,7 @@ function ChatContent({
       } finally {
         setLoading(false);
       }
-      if (!error || chatId) {
+      if (!error && chatId) {
         subscribeToMessages(
           chatId,
           (message) => setMessages((prev) => [...prev, message]),
