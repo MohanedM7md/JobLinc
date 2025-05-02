@@ -6,11 +6,14 @@ import NavBar from "../../components/NavigationBar/NavBar";
 import Overview from "./Cards/Overview";
 import Posts from "./Cards/Posts";
 import Jobs from "./Cards/Jobs";
-import { Plus } from "lucide-react";
+import { Plus, UserMinus } from "lucide-react";
 import CompanyFooter from "./Cards/CompanyFooter";
 import { getMyCompanies } from "@services/api/userProfileServices";
 import { Company } from "@store/comapny/interfaces";
 import HomeTab from "./Cards/HomeTab";
+import { getMyFollowers, sendFollowRequest, sendUnfollowRequest } from "@services/api/networkServices";
+import store from "@store/store";
+import Modal from "@components/utils/Modal";
 
 
 
@@ -22,6 +25,8 @@ function Member() {
   const navigate = useNavigate();
 
   const [err, setErrPage] = useState<string | undefined>(undefined);
+
+  const [unfollowModal, setUnfollowModal] = useState(false);
   useEffect(() => {
     if (slug) {
       (async () => {
@@ -76,6 +81,31 @@ function Member() {
     }
   }, []);
 
+  useEffect(() => {
+    const getCompanyFollowers =  async function()
+    {
+      try {
+        const response = await getMyFollowers();
+        console.log("my followers", response);
+        for (let i = 0; i < response.length; i++)
+        {
+          if (response.at(i).userId === store.getState().user.userId)
+          {
+            setIsFollowed(true);
+            break;
+          }
+        }
+      }
+      catch(error)
+      {
+        console.error("Error fetching company followers: ", error)
+      }
+    }
+
+    getCompanyFollowers();
+    
+  }, [])
+
   
 
   const [navItemSelected, setNavItemSelected] = useState<string>("Home");
@@ -96,9 +126,44 @@ function Member() {
   if (loading) return <LoadingScreen />;
   if (!company) return <div>No company data found</div>;
 
-  function handleFollow()
+  async function handleFollow()
   {
+    try {
+      if (!isFollowed)
+      {
+        const response = await sendFollowRequest(company?.id || "");
+        if (response.status === 200)
+        {
+          setIsFollowed(true);
+        }
+      }
+      else
+      {
+        setUnfollowModal(true);
+      }
+      
+      
+    }
+    catch(error)
+    {
+      console.error("Error following the company ", error);
+    }
+  }
 
+  async function handleUnfollow()
+  {
+    try {
+      const response = await sendUnfollowRequest(company?.id || "");
+      if (response.status === 200)
+      {
+        setIsFollowed(false);
+        setUnfollowModal(false);
+      }
+    }
+    catch (error)
+    {
+      console.error("Error unfollowing the company ", error);
+    }
   }
 
   return (
@@ -141,12 +206,32 @@ function Member() {
             {/* Action Buttons */}
             <div className="flex flex-wrap gap-3">
               <button
-                className="flex items-center gap-2 bg-crimsonRed hover:bg-darkBurgundy text-white text-sm sm:text-base px-4 py-2 rounded-lg md:rounded-xl transition-colors"
-                onClick={handleFollow}
+              className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs sm:text-sm font-medium transition-all ${
+                isFollowed
+                  ? "bg-white text-crimsonRed border border-crimsonRed hover:bg-red-50"
+                  : "bg-crimsonRed text-white hover:bg-darkBurgundy"
+              }`}
+              onClick={handleFollow}
               >
-                <Plus className="w-4 h-4 md:w-5 md:h-5" />
-                Follow
-              </button>
+              {isFollowed ? <UserMinus className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
+              <span>{isFollowed ? "Following" : "Follow"}</span>
+             </button>
+
+              <Modal isOpen={unfollowModal} onClose={() => setUnfollowModal(false)}>
+              <div className="flex flex-col gap-3 justify-center">
+                <h3 className="text-center font-semibold">Are you sure you want to unfollow?</h3>
+                <button className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors duration-200"
+                onClick={() => setUnfollowModal(false)}
+                >
+                  Cancel
+                </button>
+                <button className="px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200"
+                onClick={handleUnfollow}
+                >
+                  Unfollow
+                </button>
+              </div>
+              </Modal>
             </div>
           </div>
         </div>

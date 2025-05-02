@@ -98,7 +98,7 @@ function HomeTab(props: HomeTabProps) {
 
             {!isLoading &&
             posts.slice(0, 3).map((post) => (
-                <div className="shadow-sm p-5 rounded-xl">
+                <div className="shadow-sm p-5 rounded-xl" key={post.postId}>
                     <PostCard key={post.postId} post={post} isRepost={false} compact={true} />
                 </div>
             ))}
