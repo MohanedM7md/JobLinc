@@ -8,6 +8,8 @@ import AuthRoute from "./components/AuthRoute";
 import Error404 from "@pages/Eror404";
 import LoadingScreen from "@pages/LoadingScreen";
 
+const UserProfile = lazy(() => import("./pages/UserProfile"));
+
 const SubscriptionManager = lazy(() => import("./pages/SubscriptionManager"));
 
 //  auth and frequently used pages
@@ -30,13 +32,12 @@ const Messaging = lazy(() => import("./pages/Messaging"));
 import MyNetwork from "./pages/MyNetwork";
 
 // Profile components
-const ProfileContainer = lazy(() => import("./components/User Profile/ProfileContainer"));
-const FullExperiences = lazy(() => import("./components/User Profile/Experiences/FullExperiences"));
-const FullEducations = lazy(() => import("@components/User Profile/Educations/FullEducations"));
-const FullCertificates = lazy(() => import("./components/User Profile/Certificates/FullCertificates"));
-const FullSkills = lazy(() => import("./components/User Profile/Skills/FullSkills"));
-const FullActivity = lazy(() => import("@components/User Profile/Miscellaneous/FullActivity"));
-const SavedPosts = lazy(() => import("@components/User Profile/Miscellaneous/SavedPosts"));
+import ProfileContainer from "./components/User Profile/ProfileContainer";
+import FullExperiences from "./components/User Profile/Experiences/FullExperiences";
+import FullCertificates from "./components/User Profile/Certificates/FullCertificates";
+import FullSkills from "./components/User Profile/Skills/FullSkills";
+import FullActivity from "@components/User Profile/Miscellaneous/FullActivity";
+import SavedPosts from "@components/User Profile/Miscellaneous/SavedPosts";
 
 // Post components
 import PostEdit from "./components/Posts/PostEdit";
@@ -76,7 +77,9 @@ const Admin = lazy(() => import("./pages/Company/Admin"));
 const MyCompanies = lazy(() => import("./pages/Company/MyCompanies"));
 const Member = lazy(() => import("@pages/Company/Member"));
 import CreateForm from "@pages/Company/CreateForm";
+import FullEducations from "@components/User Profile/Educations/FullEducations";
 import BlockList from "@components/Connections/BlockList";
+import AllCompanies from "@pages/Company/AllCompanies";
 
 const queryClient = new QueryClient();
 
@@ -195,6 +198,7 @@ function App() {
 
           {/* 404 Route */}
           <Route path="*" element={<Error404 />} />
+          <Route path="/company/all" element={<AllCompanies />} />
         </Routes>
       </QueryClientProvider>
     </>
