@@ -6,6 +6,7 @@ const Layout = lazy(() => import("./components/Layout"));
 import ProtectedRoute from "./components/ProtectedRoute";
 import AuthRoute from "./components/AuthRoute";
 import Error404 from "@pages/Eror404";
+import LoadingScreen from "@pages/LoadingScreen";
 
 const UserProfile = lazy(() => import("./pages/UserProfile"));
 
@@ -76,9 +77,8 @@ function App() {
           },
         }}
       />
-
       <QueryClientProvider client={queryClient}>
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<LoadingScreen />}>
           <Routes>
             {/* Public Routes */}
             <Route element={<AuthRoute />}>
