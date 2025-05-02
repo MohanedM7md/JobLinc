@@ -1,5 +1,6 @@
 import { api } from "./api";
 import store from "@store/store";
+import { toast } from "react-toastify";
 export const fetchChats = async () => {
   const response = await api.get("/chat/all");
   return response.data;
@@ -71,16 +72,16 @@ export const chatRequestStatus = async (chatId: string, status: string) => {
   return response.data;
 };
 
-export const BlockMessaging = async (chatId: string) => {
-  const response = await api.post("/chat/block", {
-    chatId,
+export const BlockMessaging = async (status: boolean) => {
+  const response = await api.put("/user/edit/personal-info", {
+    allowMessages: status,
   });
   if (response.status != 200)
     throw new Error(`Response error:${response.status} failed to block use`);
 };
 
-export const getConnections = async () => {
-  const response = await api.get(`/connection/connected`);
+export const getConnections = async (chatId: string) => {
+  const response = await api.get(`/chat/available-connections/${chatId}`);
   if (!(response.status == 200))
     throw new Error(
       `error status:${response.status} Error while fetching connections`,
@@ -88,24 +89,39 @@ export const getConnections = async () => {
   return response.data;
 };
 
-export const addParticipants = async (participants: string[]) => {
-  const response = await api.patch("/chat/addParticipants", {
-    participants: participants,
+export const addParticipants = async (
+  participants: string[],
+  chatId: string,
+) => {
+  toast.error(`nooooooooooooooo}`);
+  const response = await api.post("/chat/add-or-remove-participants", {
+    userIds: participants,
+    chatId,
+    action: "add",
   });
-  if (response.status != 200)
+  if (response.status != 200) {
+    toast.error(`sdasdasda${response.statusText}`);
     throw new Error(
       `Response error: ${response.status} - Failed to remove participants`,
     );
+  }
   return response.data;
 };
 
-export const removeParticipants = async (participants: string[]) => {
-  const response = await api.patch("/chat/removeParticipants", {
-    participants: participants,
+export const removeParticipants = async (
+  participants: string[],
+  chatId: string,
+) => {
+  const response = await api.post("/chat/add-or-remove-participants", {
+    userIds: participants,
+    chatId,
+    action: "remove",
   });
-  if (response.status != 200)
+  if (response.status != 200) {
+    toast.error(`${response.statusText}`);
     throw new Error(
       `Response error: ${response.status} - Failed to remove participants`,
     );
+  }
   return response.data;
 };

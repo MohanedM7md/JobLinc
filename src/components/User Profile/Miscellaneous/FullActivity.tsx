@@ -169,10 +169,10 @@ export default function FullActivity() {
           </div>
           {userPosts && userPosts.length > 0 ? (
             userPosts.map((post, index) => (
-              <div key={post.postId} className="relative w-1/1">
+              <div key={post.postId} className="relative w-1/1 mt-2">
                 <PostCard post={post} isRepost={false} />
                 {index < userPosts.length - 1 && (
-                  <div className="border-b border-gray-500 w-11/12 mx-auto mt-2 mb-3"></div>
+                  <div className="border-b border-gray-500 w-12/12 mx-auto py"></div>
                 )}
               </div>
             ))

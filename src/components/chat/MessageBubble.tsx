@@ -18,7 +18,7 @@ const MessageBubble = React.memo(({ message, users }: MessageBubbleProps) => {
   return (
     <div
       data-testid={message.messageId}
-      className="flex flex-col items-start gap-3 pl-1 cursor-pointer"
+      className="flex flex-col items-start gap-3 pl-1 cursor-pointer w-full"
       onClick={() => setIsExpanded((prev) => !prev)}
     >
       <div className="flex items-start gap-3">
@@ -34,11 +34,11 @@ const MessageBubble = React.memo(({ message, users }: MessageBubbleProps) => {
           </div>
 
           <div
-            className={`hover:bg-gray-200 rounded-md bg-gray-100 p-2 w-full 
+            className={`hover:bg-gray-200 rounded-md bg-gray-100 p-2 whitespace-normal break-words max-w-xs
             ${rtl ? "text-right" : "text-left"}`}
           >
             {message.content.text && (
-              <p className="transition-all duration-200">
+              <p className="transition-all duration-200 whitespace-normal break-words max-w-full">
                 {message.content.text}
               </p>
             )}

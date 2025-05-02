@@ -1,11 +1,11 @@
 // modals/AddParticipantsModal.tsx
 import { IoClose, IoSearch, IoCheckmark, IoRefresh } from "react-icons/io5";
 import { useState, useEffect, RefObject } from "react";
-import { getConnections, addParticipants } from "@services/api/chatServices";
+import { getConnections } from "@services/api/chatServices";
 import ModalWrapper from "./ModalWrapper";
 
 interface Connection {
-  userId: string;
+  id: string;
   firstname: string;
   lastname: string;
   profilePicture: string;
@@ -15,12 +15,14 @@ interface Connection {
 }
 
 interface AddParticipantsModalProps {
+  chatId: string;
   onCancel: () => void;
   onConfirm: (selectedUserIds: string[]) => void;
   modalRef: RefObject<HTMLDivElement | null>;
 }
 
 function AddParticipantsModal({
+  chatId,
   onCancel,
   onConfirm,
   modalRef,
@@ -40,7 +42,7 @@ function AddParticipantsModal({
       setIsLoading(true);
       setError(null);
 
-      const fetchedConnections = await getConnections();
+      const fetchedConnections = await getConnections(chatId);
       setConnections(fetchedConnections);
       setIsLoading(false);
     } catch (error) {
@@ -50,11 +52,11 @@ function AddParticipantsModal({
     }
   };
 
-  const toggleUserSelection = (userId: string) => {
-    if (selectedUsers.includes(userId)) {
-      setSelectedUsers(selectedUsers.filter((id) => id !== userId));
+  const toggleUserSelection = (id: string) => {
+    if (selectedUsers.includes(id)) {
+      setSelectedUsers(selectedUsers.filter((id) => id !== id));
     } else {
-      setSelectedUsers([...selectedUsers, userId]);
+      setSelectedUsers([...selectedUsers, id]);
     }
   };
 
@@ -66,17 +68,8 @@ function AddParticipantsModal({
   });
 
   const handleConfirm = async () => {
+    console.log("logw", selectedUsers);
     onConfirm(selectedUsers);
-    try {
-      const response = await addParticipants(selectedUsers);
-    } catch (err) {
-      console.log(err);
-    }
-    setConnections(
-      connections.filter(
-        (connection) => !selectedUsers.includes(connection.userId),
-      ),
-    );
     setSelectedUsers([]);
   };
 
@@ -128,13 +121,13 @@ function AddParticipantsModal({
           ) : filteredConnections.length > 0 ? (
             filteredConnections.map((connection) => (
               <div
-                key={connection.userId}
+                key={connection.id}
                 className={`flex items-center p-3 hover:bg-[var(--color-SoftRed)] cursor-pointer transition-colors ${
-                  selectedUsers.includes(connection.userId)
+                  selectedUsers.includes(connection.id)
                     ? "bg-[var(--color-hoverSoftRed)]"
                     : ""
                 }`}
-                onClick={() => toggleUserSelection(connection.userId)}
+                onClick={() => toggleUserSelection(connection.id)}
               >
                 <div className="relative">
                   {connection.profilePicture ? (
@@ -150,7 +143,7 @@ function AddParticipantsModal({
                       </span>
                     </div>
                   )}
-                  {selectedUsers.includes(connection.userId) && (
+                  {selectedUsers.includes(connection.id) && (
                     <div className="absolute bottom-0 right-0 bg-[var(--color-crimsonRed)] rounded-full p-1">
                       <IoCheckmark className="h-3 w-3 text-white" />
                     </div>
@@ -160,11 +153,6 @@ function AddParticipantsModal({
                   <p className="font-medium text-gray-800">
                     {connection.firstname} {connection.lastname}
                   </p>
-                  {connection.headline && (
-                    <p className="text-xs text-gray-500">
-                      {connection.headline}
-                    </p>
-                  )}
                   {connection.mutualConnections &&
                     connection.mutualConnections > 0 && (
                       <p className="text-xs text-gray-500">
