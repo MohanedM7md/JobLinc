@@ -19,19 +19,8 @@ export interface ProfileInterface {
   skills: SkillInterface[];
   experiences: ExperienceInterface[];
   certificates: CertificateInterface[];
+  education : EducationInterface[];
 }
-
-export enum ConnectionStatus {
-    Pending="Pending",
-    Sent="Sent",
-    Received="Received",
-    Accepted="Accepted",
-    Rejected="Rejected",
-    Blocked="Blocked",
-    Canceled="Canceled",
-    NotConnected="Not Connected",
-    Unblocked="Unblocked"
-};
 
 export interface ProfileUpdateInterface {
   firstname: string;
@@ -43,12 +32,24 @@ export interface ProfileUpdateInterface {
 }
 
 export interface EducationInterface {
-  educationId: string;
+  id: string;
   school: string;
   degree: string;
   fieldOfStudy: string;
-  startYear: Date;
-  endYear: Date;
+  startDate: Date;
+  endDate: Date;
+  description: string;
+  CGPA: number;
+}
+
+export interface NewEducation {
+  school: string;
+  degree: string;
+  fieldOfStudy: string;
+  startDate: Date;
+  endDate: Date;
+  description: string;
+  CGPA: number;
 }
 
 export interface ExperienceInterface {
@@ -116,6 +117,15 @@ export interface NewSkill {
   level: number;
 }
 
+export interface FollowerData {
+  firstname: string;
+  headline: string;
+  lastname: string;
+  profilePicture: string;
+  time: string;
+  userId: string;
+}
+
 export enum ExperienceModes {
   onsite = "OnSite",
   remote = "Remote",
@@ -131,11 +141,15 @@ export enum ExperienceTypes {
   volunteer = "Volunteer"
 }
 
-export interface FollowerData {
-  firstname: string;
-  headline: string;
-  lastname: string;
-  profilePicture: string;
-  time: string;
-  userId: string
-}
+export enum ConnectionStatus {
+    Pending="Pending",
+    Sent="Sent",
+    Received="Received",
+    Accepted="Accepted",
+    Rejected="Rejected",
+    Blocked="Blocked",
+    Canceled="Canceled",
+    NotConnected="Not Connected",
+    Unblocked="Unblocked"
+};
+

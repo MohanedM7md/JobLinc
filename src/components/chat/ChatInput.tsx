@@ -180,7 +180,7 @@ function ChatInput({
             onKeyDown={handleKeyPress}
             rows={3}
             maxLength={300}
-            placeholder="Write a message (max 300 characters)..."
+            placeholder="Write a message..."
             className={`flex-1 resize-none rounded-lg px-4 py-2 bg-gray-100 overflow-visible dark:bg-gray-800 text-gray-800 dark:text-gray-200 shadow-sm focus:outline-none transition-all text-sm ${
               isFocused ? "ring-2 ring-crimsonRed" : "ring-1 ring-gray-300"
             }`}

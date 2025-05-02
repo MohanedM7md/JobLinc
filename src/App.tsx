@@ -39,7 +39,6 @@ import FullActivity from "@components/User Profile/Miscellaneous/FullActivity";
 import SavedPosts from "@components/User Profile/Miscellaneous/SavedPosts";
 
 // Post components
-import PostCreate from "./components/Posts/PostCreate";
 import PostEdit from "./components/Posts/PostEdit";
 import Post from "@pages/Post";
 
@@ -68,6 +67,7 @@ import UserConnections from "@pages/UserConnections";
 import BlockList from "@components/Connections/BlockList";
 import MutualConnectionListCard from "@components/Connections/MutualConnectionListCard";
 import MutualConnections from "@pages/MutualConnections";
+import FullEducations from "@components/User Profile/Educations/FullEducations";
 
 const queryClient = new QueryClient();
 
@@ -130,14 +130,17 @@ function App() {
                     path="details/certificates"
                     element={<FullCertificates />}
                   />
+                  <Route
+                    path="details/education"
+                    element={<FullEducations />}
+                  />
                   <Route path="details/activity" element={<FullActivity />} />
                   <Route path="details/skills" element={<FullSkills />} />
-                  <Route path="details/saved-posts" element= {<SavedPosts />} />
+                  <Route path="details/saved-items" element={<SavedPosts />} />
                 </Route>
 
                 {/* Post Routes */}
                 <Route path="/post">
-                  {/* <Route path="create" element={<PostCreate />} /> */}
                   <Route path=":postId/edit" element={<PostEdit />} />
                   <Route path=":postId" element={<Post />} />
                 </Route>

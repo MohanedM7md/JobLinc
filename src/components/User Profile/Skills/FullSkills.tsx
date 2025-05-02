@@ -72,9 +72,9 @@ export default function FullSkills() {
   }
 
   return (
-    <>
+    <div className="bg-warmWhite h-dvh text-charcoalBlack">
       {userData && (
-        <div className="w-full bg-darkGray text-white">
+        <div className="bg-lightGray w-full">
           <MiniProfileHeader
             userId={userData.userId}
             firstname={userData.firstname}
@@ -84,13 +84,13 @@ export default function FullSkills() {
           />
         </div>
       )}
-      <div className="bg-darkGray my-2 p-4 rounded-lg shadow-md relative text-white w-12/12 lg:w-6/12 m-auto">
+      <div className="my-2 p-4 rounded-lg shadow-md relative w-12/12 lg:w-6/12 m-auto">
         <div className="flex flex-row justify-between items-center">
           <h1 className="font-medium text-xl mb-4">Skills</h1>
           {isUser && (
             <button
               onClick={() => setAddSkillModal(true)}
-              className="material-icons font-medium text-2xl p-2 rounded-full hover:bg-gray-600 transition duration-400 ease-in-out"
+              className="material-icons text-mutedSilver font-medium text-2xl p-2 rounded-full hover:bg-gray-200 transition duration-400 ease-in-out"
             >
               add
             </button>
@@ -102,7 +102,7 @@ export default function FullSkills() {
               <UserSkill skill={skill} />
               {isUser && (
                 <button
-                  className="material-icons absolute top-0 right-0 text-xl p-1 rounded-full hover:bg-gray-600 mr-1 transition duration-400 ease-in-out"
+                  className="material-icons text-mutedSilver absolute top-0 right-0 text-xl p-1 rounded-full hover:bg-gray-200 mr-1 transition duration-400 ease-in-out"
                   onClick={() => setEditSkillData(skill)}
                 >
                   edit
@@ -134,6 +134,6 @@ export default function FullSkills() {
           />
         </Modal>
       </div>
-    </>
+    </div>
   );
 }
