@@ -7,8 +7,8 @@ export const FollowerResponse: FollowInterface[] = [
       companyLogo: "https://example.com/logos/tech_innovators.png",
       userId: null,
       profilePicture: null,
-      firstname: null,
-      lastname: null,
+      firstName: null,
+      lastName: null,
       headline: "saye2",
       time: new Date("2025-04-27T14:23:00")
     },
@@ -18,8 +18,8 @@ export const FollowerResponse: FollowInterface[] = [
       companyLogo: "https://example.com/logos/green_earth.png",
       userId: null,
       profilePicture: null,
-      firstname: null,
-      lastname: null,
+      firstName: null,
+      lastName: null,
       headline: "Software Engineer at CloudSoft",
       time: new Date("2025-04-26T09:45:00")
     },
@@ -29,8 +29,8 @@ export const FollowerResponse: FollowInterface[] = [
       companyLogo: null,
       userId: "user12345",
       profilePicture: "https://example.com/profiles/user12345.png",
-      firstname: "John",
-      lastname: "Doe",
+      firstName: "John",
+      lastName: "Doe",
       headline: "Software Engineer at CloudSoft",
       time: new Date("2025-04-28T10:15:00")
     },
@@ -40,8 +40,8 @@ export const FollowerResponse: FollowInterface[] = [
       companyLogo: null,
       userId: "user67890",
       profilePicture: "https://example.com/profiles/user67890.png",
-      firstname: "Jane",
-      lastname: "Smith",
+      firstName: "Jane",
+      lastName: "Smith",
       headline: "Marketing Specialist at BrightMedia",
       time: new Date("2025-04-28T12:30:00")
     }

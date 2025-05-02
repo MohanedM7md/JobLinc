@@ -1,19 +1,3 @@
-export interface searchUserInterface {
-  userId: string;
-  firstname: string;
-  lastname: string;
-  username: string;
-  profilePicture: string;
-  country: string;
-  city: string;
-  connectionStatus: "Accepted" | "Received" | "Sent" | "NotConnected" | "Canceled" | "Blocked" | "Unblocked";
-  isFollowing: boolean;
-  numberOfConnections: number;
-  mutualConnections: number;
-  skills: string[];
-  experiences: string[];
-  certificates: string[];
-}
 export interface connectsInterface {
     userId: string;
     profilePicture: string,
@@ -25,23 +9,23 @@ export interface connectsInterface {
 export interface invitationInterface {
     userId: string;
     profilePicture: string;
-    firstname: string;
-    lastname: string;
+    firstName: string;
+    lastName: string;
     headline: string;
-    mutualConnections: Number;
-    connectionStatus?: "Accepted" | "Sent" | "Received" | "NotConnected";
+    Mutuals: Number;
+    acknowledged?: boolean;
   }
   export interface ConnectionInterface {
     userId: string;
     profilePicture: string;
-    firstname: string;
-    lastname: string;
+    firstName: string;
+    lastName: string;
     headline: string;
     city?: string | null;
     country?: string | null;
     mutualConnections?: number | null;
-    connectionStatus?: "Pending" | "Accepted" | "Rejected" | "Canceled" | null;
-    time?: Date | null;
+    connectionStatus?: "pending" | "accepted" | "rejected" | null;
+    connectedDate?: Date | null;
   }
   export interface FollowInterface {
     companyId: string | null;
@@ -49,17 +33,17 @@ export interface invitationInterface {
     companyLogo: string | null;
     userId: string | null;
     profilePicture: string | null;
-    firstname: string | null;
-    lastname: string | null;
+    firstName: string | null;
+    lastName: string | null;
     headline: string;
     time: Date;
   }
   export interface BlockedUserInterface {
     userId: string;
     profilePicture: string;
-    firstname: string;
-    lastname: string;
-    connectionStatus: "Blocked" | "Unblocked";
+    firstName: string;
+    lastName: string;
+    connectionStatus: "blocked" | "unblocked";
     mutualConnections: number;
   }
 

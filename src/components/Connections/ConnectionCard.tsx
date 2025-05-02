@@ -1,10 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { ConnectionInterface } from "../../interfaces/networkInterfaces";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import NetworkModal from "../../components/MyNetwork/NetworkModal";
 import { changeConnectionStatus } from "@services/api/networkServices";
 import toast from "react-hot-toast";
-import useChats from "@hooks/useChats";
 
 function  ConnectionCard(props: ConnectionInterface & { onRemove: (id: string) => void }) {
   const [showPopup, setShowPopup] = useState(false);
@@ -13,8 +12,6 @@ function  ConnectionCard(props: ConnectionInterface & { onRemove: (id: string) =
   const divRef = useRef<HTMLDivElement>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const navigate = useNavigate();
-  const { setOpnedChats } = useChats();
-
 
   
   function getRelativeTime(connectedDate: Date): string {
@@ -57,15 +54,15 @@ function  ConnectionCard(props: ConnectionInterface & { onRemove: (id: string) =
   }
   const handleRemoveConnection= async ()  => {
     const removeconnectionpromise =  changeConnectionStatus(props.userId, "Canceled");
-    removeconnectionpromise.then((response) => {
-        toast.promise (
-          removeconnectionpromise,
-          {
-            loading: "Removing Connection...",
-            success: "User removed successfully!",
-            error: "Failed to remove user. Please try again.",
-          }
-        )
+    toast.promise (
+      removeconnectionpromise,
+      {
+        loading: "Removing Connection...",
+        success: "User removed successfully!",
+        error: "Failed to remove user. Please try again.",
+      }
+    )
+      removeconnectionpromise.then((response) => {
         if (response?.status === 200) {
           props.onRemove(props.userId)
           console.log("Remove Connection Response:", response);
@@ -96,7 +93,7 @@ function  ConnectionCard(props: ConnectionInterface & { onRemove: (id: string) =
     };
   }, []);
 
-  const { profilePicture: profileImage, firstname: firstName, lastname: lastName, headline: userBio, time: connectedDate} = props;
+  const { profilePicture: profileImage, firstName: firstName, lastName, headline: userBio, connectedDate} = props;
 
   return (
     <div 
@@ -116,24 +113,14 @@ function  ConnectionCard(props: ConnectionInterface & { onRemove: (id: string) =
         <p className="text-xs text-gray-500">{connectedDate ? getRelativeTime(connectedDate) : "connected date unavailable"}</p>
       </div>
       <div className="w-1/3 flex justify-end items-center">
+        <Link data-testid="message-button-route" to="/messaging">
           <button
             data-testid="message-button"
             className="border-2 px-5 py-0.5 text-crimsonRed border-crimsonRed rounded-full font-semibold hover:bg-lightGray hover:outline-1 cursor-pointer "
-            onClick={() => {
-              setOpnedChats((prevChats) => [
-                ...prevChats,
-                {
-                  chatId: "",
-                  usersId: [props.userId],
-                  chatName: props.firstname,
-                  chatImage: [props.profilePicture],
-                },
-              ]);
-            }}
           >
-
             Message
           </button>
+        </Link>
         <div>
           <i
             data-testid="ellipsis-button"

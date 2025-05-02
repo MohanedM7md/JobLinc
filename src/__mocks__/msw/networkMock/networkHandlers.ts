@@ -1,4 +1,4 @@
-import { BlockedUserInterface, connectsInterface, FollowInterface, searchUserInterface } from "interfaces/networkInterfaces";
+import { BlockedUserInterface, connectsInterface, FollowInterface } from "interfaces/networkInterfaces";
 import { invitationInterface } from "interfaces/networkInterfaces";
 import { http, HttpResponse } from "msw";
 import { connectsResponse } from "./connectsDB";
@@ -10,7 +10,6 @@ import { blockedUsersResponse } from "./blockedDB";
 import { API_URL } from "@services/api/config";
 import { FollowerResponse } from "./followersDB";
 import { FollowingResponse } from "./followingDB";
-import { SearchResponse } from "./searchDB";
 
 interface FollowRequestResponse{
   followedId:string;
@@ -71,12 +70,6 @@ interface RejectParams{
 const connectionRequests: ConnectionRequestResponse[] = [];
 
 export const connectsHandler = [
-    http.get(`${API_URL}user/search`, async () => {
-    return HttpResponse.json<searchUserInterface[]>(SearchResponse, {
-      status: 200,
-      statusText: "OK",
-    });
-    }),
     http.get(`${API_URL}connection/feed`, async () => {
       return HttpResponse.json<connectsInterface[]>(connectsResponse, {
         status: 200,

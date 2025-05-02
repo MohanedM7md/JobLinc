@@ -2,7 +2,7 @@ import UserConnectionListCard from "../components/Connections/UserConnectionList
 function UserConnections() {
   return (
     <>
-      <div className="bg-lightGray h-dvh w-full flex flex-col">
+      <div className="bg-lightGray h-screen w-full flex flex-col">
         <UserConnectionListCard />
       </div>
     </>

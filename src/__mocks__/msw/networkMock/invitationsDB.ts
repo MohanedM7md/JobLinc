@@ -4,65 +4,65 @@ export const invitationsResponse: invitationInterface[] = [
   {
       userId: "67fbcbde912042b8580eed94",
       profilePicture: "src/assets/Tyrone.jpg",
-      firstname: "Ben",
-      lastname: "Allen",
+      firstName: "Ben",
+      lastName: "Allen",
       headline: "Frontend Developer at Tech Inc.",
-      mutualConnections: 5
+      Mutuals: 5
   },
   {
       userId: "67fbcbde912042b8580eed94",
       profilePicture: "src/assets/Tyrone.jpg",
-      firstname: "Abdelrahman",
-      lastname: "Sakr",
+      firstName: "Abdelrahman",
+      lastName: "Sakr",
       headline: "UI/UX Designer at Design Studio",
-      mutualConnections: 2
+      Mutuals: 2
   },
   {
       userId: "67fbcbde912042b8580eed94",
       profilePicture: "src/assets/Tyrone.jpg",
-      firstname: "Abdelrahman",
-      lastname: "Fathy",
+      firstName: "Abdelrahman",
+      lastName: "Fathy",
       headline: "Mobile Developer at Monster Inc.",
-      mutualConnections: 2
+      Mutuals: 2
   },
   {
       userId: "67fbcbde912042b8580eed94",
       profilePicture: "src/assets/Tyrone.jpg",
-      firstname: "Ben",
-      lastname: "Allen",
+      firstName: "Ben",
+      lastName: "Allen",
       headline: "Frontend Developer at Tech Inc.",
-      mutualConnections: 5
+      Mutuals: 5
   },
   {
       userId: "67fbcbde912042b8580eed94",
       profilePicture: "src/assets/Tyrone.jpg",
-      firstname: "Ben",
-      lastname: "Allen",
+      firstName: "Ben",
+      lastName: "Allen",
       headline: "Frontend Developer at Tech Inc.",
-      mutualConnections:5
+      Mutuals:5
   },
   {
       userId: "67fbcbde912042b8580eed94",
       profilePicture: "src/assets/Tyrone.jpg",
-      firstname: "Ben",
-      lastname: "Allen",
+      firstName: "Ben",
+      lastName: "Allen",
       headline: "Frontend Developer at Tech Inc.",
-      mutualConnections: 5,
+      Mutuals: 5,
   },
   {
       userId: "67fbcbde912042b8580eed94",
       profilePicture: "src/assets/Tyrone.jpg",
-      firstname: "Ben",
-      lastname: "Allen",
+      firstName: "Ben",
+      lastName: "Allen",
       headline: "Frontend Developer at Tech Inc.",
-      mutualConnections: 5
+      Mutuals: 5
   },
   {
       userId: "67fbcbde912042b8580eed94",
       profilePicture: "src/assets/Tyrone.jpg",
-      firstname: "Ben",
-      lastname: "Allen",
+      firstName: "Ben",
+      lastName: "Allen",
       headline: "Frontend Developer at Tech Inc.",
-      mutualConnections: 5
+      Mutuals: 5
   }
 ];
