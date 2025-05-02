@@ -1,5 +1,6 @@
 import { api } from "./api";
 import store from "@store/store";
+import axios from "axios";
 import { toast } from "react-toastify";
 export const fetchChats = async () => {
   const response = await api.get("/chat/all");
@@ -25,16 +26,34 @@ export const fetchChatData = async (chatId: string) => {
   const response = await api.get(`/chat/c/${chatId}`);
   return response.data;
 };
-
 export const createChat = async (
   recievers: string[],
   title: string | undefined,
 ) => {
-  const response = await api.post(`/chat/create`, {
-    receiverIds: recievers,
-    title,
-  });
-  return response.data;
+  try {
+    const response = await api.post(`/chat/create`, {
+      receiverIds: recievers,
+      title,
+    });
+    return response;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response?.status === 429) {
+        toast.error("Too many requests! Please upgrade your plan.");
+        throw "429";
+      } else {
+        const errorMessage =
+          error.response?.data?.message || error.message || "Unknown error";
+        toast.error(`Error: ${errorMessage}`);
+        throw new Error(errorMessage);
+      }
+    } else {
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
+      toast.error(`Error: ${errorMessage}`);
+      throw error;
+    }
+  }
 };
 
 export const ReadToggler = async (chatId: string) => {

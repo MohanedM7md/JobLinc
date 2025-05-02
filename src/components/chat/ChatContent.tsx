@@ -17,10 +17,20 @@ import useChatid from "@context/ChatIdProvider";
 import useNetworkUserId from "@context/NetworkUserIdProvider";
 import UserTypingIndicator from "./UserTyping";
 import GroupChatSetting from "./GroupSetting/GroupChatSetting";
-function ChatContent({ className }: { className?: string }) {
+import { toast } from "react-toastify"; // Ensure you're importing toast
+import ChatError from "./ChatError";
+function ChatContent({
+  className,
+  onClose,
+}: {
+  className?: string;
+  onClose?: () => void;
+}) {
   const [users, setUsers] = useState<User[]>([]);
   const [messages, setMessages] = useState<RecievedMessage[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
   const { chatId, setChatId } = useChatid();
   const { setOpnedChats } = useChats();
   const { usersId } = useNetworkUserId();
@@ -52,47 +62,88 @@ function ChatContent({ className }: { className?: string }) {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      if (usersId.length && !chatId) {
-        console.log("Create new chat with: ", usersId);
-        const data = await createChat(usersId, title);
-        setUsers(data.participants);
-        console.log(data.participants);
-        setMessages(data.messages);
-        setChatId(data.chatId);
-        setOpnedChats((prev) => [...prev]);
-        chatType.current = data.chatType;
-      } else {
-        const data = await fetchChatData(chatId);
-        setUsers(data.participants);
-        setMessages(data.messages);
-        chatType.current = data.chatType;
+      setError(null);
+      try {
+        if (usersId.length && !chatId) {
+          console.log("Create new chat with: ", usersId);
+          try {
+            const { data } = await createChat(usersId, title);
+            setUsers(data.participants);
+            console.log(data.participants);
+            setMessages(data.messages);
+            setChatId(data.chatId);
+            setOpnedChats((prev) => [...prev]);
+            chatType.current = data.chatType;
+          } catch (err) {
+            console.error("Failed to create chat:", err);
+            if (err == "429")
+              setError("انت دلوقتي على باقة الفقراء 5 شاتات فاليوم بس");
+            else setError("Failed to create chat");
+            onClose?.();
+            return;
+          }
+        } else if (chatId) {
+          try {
+            const data = await fetchChatData(chatId);
+            setUsers(data.participants);
+            setMessages(data.messages);
+            chatType.current = data.chatType;
+          } catch (err) {
+            console.error("Failed to fetch chat data:", err);
+            toast.error("Failed to load chat data. Please try again later.");
+            setError("Failed to load chat data");
+            onClose?.();
+            return;
+          }
+        } else {
+          setError("No users or chat ID provided");
+          if (onClose) onClose();
+          return;
+        }
+      } catch (err) {
+        console.error("Error in chat initialization:", err);
+        toast.error("An unexpected error occurred. Please try again later.");
+        setError("Unexpected error");
+
+        if (onClose) {
+          onClose();
+        }
+        return;
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
+      if (!error) {
+        subscribeToMessages(
+          chatId,
+          (message) => setMessages((prev) => [...prev, message]),
+          (userId) =>
+            setMessages((prev) =>
+              prev.map((msg) => ({ ...msg, seenBy: [...msg.seenBy, userId] })),
+            ),
+          (userId) =>
+            setTypingUsers((prevTypingUsers) => {
+              if (!prevTypingUsers.includes(userId)) {
+                return [...prevTypingUsers, userId];
+              }
+              return prevTypingUsers;
+            }),
+          (userId) =>
+            setTypingUsers((prev) =>
+              prev.filter((preUser) => preUser != userId),
+            ),
+        );
+        listenToOpenChatErrors();
+      }
     };
 
     fetchData();
-    subscribeToMessages(
-      chatId,
-      (message) => setMessages((prev) => [...prev, message]),
-      (userId) =>
-        setMessages((prev) =>
-          prev.map((msg) => ({ ...msg, seenBy: [...msg.seenBy, userId] })),
-        ),
-      (userId) =>
-        setTypingUsers((prevTypingUsers) => {
-          if (!prevTypingUsers.includes(userId)) {
-            return [...prevTypingUsers, userId];
-          }
-          return prevTypingUsers;
-        }),
-      (userId) =>
-        setTypingUsers((prev) => prev.filter((preUser) => preUser != userId)),
-    );
-    listenToOpenChatErrors();
+
     return () => {
-      unsubscribeFromMessages(chatId);
+      if (chatId) {
+        unsubscribeFromMessages(chatId);
+      }
     };
-  }, [chatId]);
+  }, [chatId, usersId, title]);
 
   const messageId = Date.now().toString();
 
@@ -100,6 +151,11 @@ function ChatContent({ className }: { className?: string }) {
     message: string | File | string,
     type: string,
   ) => {
+    if (error || !chatId) {
+      toast.error("Can't send message: chat not properly initialized");
+      return;
+    }
+
     const newMessage: any = {
       messageId,
       senderId: userIdRef.current,
@@ -130,21 +186,19 @@ function ChatContent({ className }: { className?: string }) {
 
     setMessages((prevMsgs) => [...prevMsgs, newMessage]);
 
-    if (chatId) {
-      handleMessageStatus();
-      sendMessage(chatId, newMessage, () => {
-        messageDelivered.current = true;
-        setMessages((prevMsgs) =>
-          prevMsgs.map((msg) =>
-            msg.messageId === messageId ? { ...msg, status: "delivered" } : msg,
-          ),
-        );
-      });
-    }
+    handleMessageStatus();
+    sendMessage(chatId, newMessage, () => {
+      messageDelivered.current = true;
+      setMessages((prevMsgs) =>
+        prevMsgs.map((msg) =>
+          msg.messageId === messageId ? { ...msg, status: "delivered" } : msg,
+        ),
+      );
+    });
   };
 
   const handleTypingMessage = (isTyping: boolean) => {
-    if (!chatId) return;
+    if (!chatId || error) return;
     switch (isTyping) {
       case true:
         typing(chatId);
@@ -154,6 +208,7 @@ function ChatContent({ className }: { className?: string }) {
         break;
     }
   };
+  if (error) return <ChatError error={error} />;
 
   return (
     <>
