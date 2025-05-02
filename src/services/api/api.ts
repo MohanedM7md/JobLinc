@@ -50,11 +50,18 @@ api.interceptors.response.use(
         }
         let data;
         try {
-          const response = await api.post("auth/refresh-token", {
-            userId,
-            refreshToken,
-            companyId,
-          });
+          let response;
+          if (companyId)
+            response = await api.post("auth/refresh-token", {
+              userId,
+              refreshToken,
+              companyId,
+            });
+          else
+            response = await api.post("auth/refresh-token", {
+              userId,
+              refreshToken,
+            });
           data = response.data;
         } catch (refreshError) {
           console.log("Failed to refresh token, logging out...");

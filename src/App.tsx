@@ -17,7 +17,9 @@ const LandPage = lazy(() => import("./pages/Land"));
 const SignUpPage = lazy(() => import("./pages/SignUp"));
 const SignInPage = lazy(() => import("./pages/SignIn"));
 const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
-const UserDetails = lazy(() => import("./components/Authentication/UserDetails"));
+const UserDetails = lazy(
+  () => import("./components/Authentication/UserDetails"),
+);
 const ChangePassword = lazy(() => import("./pages/ChangePassword"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const UpdateUsername = lazy(() => import("./pages/UpdateUsername"));
@@ -43,16 +45,32 @@ import Post from "@pages/Post";
 
 // Settings components
 const Settings = lazy(() => import("@pages/Settings/Settings"));
-const AccountPreferences = lazy(() => import("@pages/Settings/AccountPreferences"));
+const AccountPreferences = lazy(
+  () => import("@pages/Settings/AccountPreferences"),
+);
 const Notifications = lazy(() => import("@pages/Settings/Notifications"));
-const SignInAndSecurity = lazy(() => import("@pages/Settings/SignInAndSecurity"));
+const SignInAndSecurity = lazy(
+  () => import("@pages/Settings/SignInAndSecurity"),
+);
 const Visibility = lazy(() => import("@pages/Settings/Visibility"));
 const DataAndPrivacy = lazy(() => import("@pages/Settings/DataAndPrivacy"));
 const AdvertisingData = lazy(() => import("@pages/Settings/AdvertisingData"));
-const DarkMode = lazy(() => import("@pages/Settings/AccountPreferences/Display/DarkMode"));
-const CloseAccount = lazy(() => import("@pages/Settings/AccountPreferences/AccountManagement/CloseAccount"));
-const EmailAddress = lazy(() => import("@pages/Settings/SignInAndSecurity/AccountAccess/EmailAddress"));
-const DemographicInfo = lazy(() => import("@pages/Settings/AccountPreferences/ProfileInformation/DemographicInfo"));
+const DarkMode = lazy(
+  () => import("@pages/Settings/AccountPreferences/Display/DarkMode"),
+);
+const CloseAccount = lazy(
+  () =>
+    import("@pages/Settings/AccountPreferences/AccountManagement/CloseAccount"),
+);
+const EmailAddress = lazy(
+  () => import("@pages/Settings/SignInAndSecurity/AccountAccess/EmailAddress"),
+);
+const DemographicInfo = lazy(
+  () =>
+    import(
+      "@pages/Settings/AccountPreferences/ProfileInformation/DemographicInfo"
+    ),
+);
 
 // Componay Pages
 const Admin = lazy(() => import("./pages/Company/Admin"));
@@ -79,114 +97,109 @@ function App() {
         }}
       />
       <QueryClientProvider client={queryClient}>
-        <Suspense fallback={<LoadingScreen />}>
-          <Routes>
-            {/* Public Routes */}
-            <Route element={<AuthRoute />}>
-              <Route path="/" element={<LandPage />} />
-              <Route path="/signup" element={<SignUpPage />} />
-              <Route path="/signin" element={<SignInPage />} />
-              <Route path="/user-details" element={<UserDetails />} />
-              <Route
-                path="/signin/forgot-password"
-                element={<ForgotPassword />}
-              />
-              <Route path="/reset-password" element={<ResetPassword />} />
-            </Route>
+        <Routes>
+          {/* Public Routes */}
+          <Route element={<AuthRoute />}>
+            <Route path="/" element={<LandPage />} />
+            <Route path="/signup" element={<SignUpPage />} />
+            <Route path="/signin" element={<SignInPage />} />
+            <Route path="/user-details" element={<UserDetails />} />
+            <Route
+              path="/signin/forgot-password"
+              element={<ForgotPassword />}
+            />
+            <Route path="/reset-password" element={<ResetPassword />} />
+          </Route>
 
-            {/* Protected Routes with Layout */}
-            <Route element={<ProtectedRoute />}>
-              <Route element={<Layout />}>
-                {/* Main App Routes */}
-                <Route path="/home" element={<Home />} />
-                <Route path="/my-network" element={<MyNetwork />} />
-                <Route path="/connections" element={<Connections />} />
-                <Route path="/messaging" element={<Messaging />} />
-                <Route path="/change-password" element={<ChangePassword />} />
-                <Route path="/update-username" element={<UpdateUsername />} />
+          {/* Protected Routes with Layout */}
+          <Route element={<ProtectedRoute />}>
+            <Route element={<Layout />}>
+              {/* Main App Routes */}
+              <Route path="/home" element={<Home />} />
+              <Route path="/my-network" element={<MyNetwork />} />
+              <Route path="/connections" element={<Connections />} />
+              <Route path="/messaging" element={<Messaging />} />
+              <Route path="/change-password" element={<ChangePassword />} />
+              <Route path="/update-username" element={<UpdateUsername />} />
 
-                {/* Profile Routes */}
-                <Route path="/profile/:userId">
-                  <Route index element={<ProfileContainer />} />
-                  <Route
-                    path="details/experiences"
-                    element={<FullExperiences />}
-                  />
-                  <Route
-                    path="details/certificates"
-                    element={<FullCertificates />}
-                  />
-                  <Route
-                    path="details/education"
-                    element={<FullEducations />}
-                  />
-                  <Route path="details/activity" element={<FullActivity />} />
-                  <Route path="details/skills" element={<FullSkills />} />
-                  <Route path="details/saved-items" element={<SavedPosts />} />
-                </Route>
+              {/* Profile Routes */}
+              <Route path="/profile/:userId">
+                <Route index element={<ProfileContainer />} />
+                <Route
+                  path="details/experiences"
+                  element={<FullExperiences />}
+                />
+                <Route
+                  path="details/certificates"
+                  element={<FullCertificates />}
+                />
+                <Route path="details/education" element={<FullEducations />} />
+                <Route path="details/activity" element={<FullActivity />} />
+                <Route path="details/skills" element={<FullSkills />} />
+                <Route path="details/saved-items" element={<SavedPosts />} />
+              </Route>
 
-                {/* Post Routes */}
-                <Route path="/post">
-                  <Route path=":postId/edit" element={<PostEdit />} />
-                  <Route path=":postId" element={<Post />} />
-                </Route>
+              {/* Post Routes */}
+              <Route path="/post">
+                <Route path=":postId/edit" element={<PostEdit />} />
+                <Route path=":postId" element={<Post />} />
+              </Route>
 
-                {/* Settings Routes */}
-                <Route path="/settings" element={<Settings />}>
-                  <Route index element={<AccountPreferences />} />
-                  <Route
-                    path="account-preferences"
-                    element={<AccountPreferences />}
-                  />
-                  <Route
-                    path="account-preferences/display/dark-mode"
-                    element={<DarkMode />}
-                  />
-                  <Route
-                    path="account-preferences/account-management/close-account"
-                    element={<CloseAccount />}
-                  />
-                  <Route
-                    path="account-preferences/profile-information/demographic-info"
-                    element={<DemographicInfo />}
-                  />
-                  <Route
-                    path="sign-in-security"
-                    element={<SignInAndSecurity />}
-                  />
-                  <Route
-                    path="sign-in-security/account-access/change-password"
-                    element={<ChangePassword />}
-                  />
-                  <Route
-                    path="sign-in-security/account-access/email-address"
-                    element={<EmailAddress />}
-                  />
-                  <Route path="visibility" element={<Visibility />} />
-                  <Route path="visibility/profile-network/blocking" element={<BlockList />} />
-                  <Route path="data-privacy" element={<DataAndPrivacy />} />
-                  <Route
-                    path="advertising-data"
-                    element={<AdvertisingData />}
-                  />
-                  <Route path="notifications" element={<Notifications />} />
-                </Route>
+              {/* Settings Routes */}
+              <Route path="/settings" element={<Settings />}>
+                <Route index element={<AccountPreferences />} />
+                <Route
+                  path="account-preferences"
+                  element={<AccountPreferences />}
+                />
+                <Route
+                  path="account-preferences/display/dark-mode"
+                  element={<DarkMode />}
+                />
+                <Route
+                  path="account-preferences/account-management/close-account"
+                  element={<CloseAccount />}
+                />
+                <Route
+                  path="account-preferences/profile-information/demographic-info"
+                  element={<DemographicInfo />}
+                />
+                <Route
+                  path="sign-in-security"
+                  element={<SignInAndSecurity />}
+                />
+                <Route
+                  path="sign-in-security/account-access/change-password"
+                  element={<ChangePassword />}
+                />
+                <Route
+                  path="sign-in-security/account-access/email-address"
+                  element={<EmailAddress />}
+                />
+                <Route path="visibility" element={<Visibility />} />
+                <Route
+                  path="visibility/profile-network/blocking"
+                  element={<BlockList />}
+                />
+                <Route path="data-privacy" element={<DataAndPrivacy />} />
+                <Route path="advertising-data" element={<AdvertisingData />} />
+                <Route path="notifications" element={<Notifications />} />
+              </Route>
 
-                {/* Company Routes */}
-                <Route path="/company">
-                  <Route path="setup/new" element={<CreateForm />} />
-                  <Route path="my-companies" element={<MyCompanies />} />
-                  <Route path="admin/:companyId" element={<Admin />} />
-                  <Route path="member/:slug" element={<Member />} />
-                </Route>
+              {/* Company Routes */}
+              <Route path="/company">
+                <Route path="setup/new" element={<CreateForm />} />
+                <Route path="my-companies" element={<MyCompanies />} />
+                <Route path="admin/:companyId" element={<Admin />} />
+                <Route path="member/:slug" element={<Member />} />
               </Route>
             </Route>
+          </Route>
 
-            {/* 404 Route */}
-            <Route path="*" element={<Error404 />} />
-            <Route path="/company/all" element={<AllCompanies />} />
-          </Routes>
-        </Suspense>
+          {/* 404 Route */}
+          <Route path="*" element={<Error404 />} />
+          <Route path="/company/all" element={<AllCompanies />} />
+        </Routes>
       </QueryClientProvider>
     </>
   );
