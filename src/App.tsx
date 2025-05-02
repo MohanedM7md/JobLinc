@@ -59,6 +59,7 @@ const Admin = lazy(() => import("./pages/Company/Admin"));
 const MyCompanies = lazy(() => import("./pages/Company/MyCompanies"));
 const Member = lazy(() => import("@pages/Company/Member"));
 import CreateForm from "@pages/Company/CreateForm";
+import FullEducations from "@components/User Profile/Educations/FullEducations";
 
 const queryClient = new QueryClient();
 
@@ -114,9 +115,13 @@ function App() {
                     path="details/certificates"
                     element={<FullCertificates />}
                   />
+                  <Route
+                    path="details/education"
+                    element={<FullEducations />}
+                  />
                   <Route path="details/activity" element={<FullActivity />} />
                   <Route path="details/skills" element={<FullSkills />} />
-                  <Route path="details/saved-posts" element= {<SavedPosts />} />
+                  <Route path="details/saved-items" element={<SavedPosts />} />
                 </Route>
 
                 {/* Post Routes */}

@@ -1,29 +1,29 @@
 import {
-  ExperienceInterface,
+  EducationInterface,
   ProfileInterface,
 } from "interfaces/userInterfaces";
 import { useState, useEffect } from "react";
-import UserExperience from "./UserExperience";
-import EditExperience from "./EditExperience";
 import "material-icons";
 import { useParams } from "react-router-dom";
-import AddExperience from "./AddExperience";
 import Modal from "../../utils/Modal";
 import {
-  getExperience,
+  getEducation,
   getMe,
   getUserById,
 } from "@services/api/userProfileServices";
 import { useQuery } from "@tanstack/react-query";
 import store from "@store/store";
 import MiniProfileHeader from "../ProfileHeader/MiniProfileHeader";
+import UserEducation from "./UserEducation";
+import EditEducation from "./EditEducation";
+import AddEducation from "./AddEducation";
 
-export default function FullExperiences() {
+export default function FullEducations() {
   const { userId } = useParams();
   const [isUser, setIsUser] = useState<boolean>(true);
-  const [addExperienceModal, setAddExperienceModal] = useState<boolean>(false);
-  const [editExperienceData, setEditExperienceData] =
-    useState<ExperienceInterface | null>(null);
+  const [addEducationModal, setAddEducationModal] = useState<boolean>(false);
+  const [editEducationData, setEditEducationData] =
+    useState<EducationInterface | null>(null);
   const [userData, setUserData] = useState<ProfileInterface>();
 
   const {
@@ -42,11 +42,9 @@ export default function FullExperiences() {
     enabled: false,
   });
 
-  const {
-    refetch: refetchExperiences,
-  } = useQuery({
-    queryKey: ["getExperiences"],
-    queryFn: getExperience,
+  const { refetch: refetchEducations } = useQuery({
+    queryKey: ["getEducations"],
+    queryFn: getEducation,
     enabled: false,
   });
 
@@ -65,9 +63,9 @@ export default function FullExperiences() {
     }
   }, [userId, refetchMe, refetchUser]);
 
-  async function updateExperiences() {
-    const { data } = await refetchExperiences();
-    setUserData((prev) => (prev ? { ...prev, experiences: data } : prev));
+  async function updateEducations() {
+    const { data } = await refetchEducations();
+    setUserData((prev) => (prev ? { ...prev, education: data } : prev));
   }
 
   if (isMeFetching || isUserFetching) {
@@ -75,7 +73,7 @@ export default function FullExperiences() {
   }
 
   if (isMeError || isUserError) {
-    return <div>Error loading experiences</div>;
+    return <div>Error loading educations</div>;
   }
 
   return (
@@ -93,57 +91,57 @@ export default function FullExperiences() {
       )}
       <div className="bg-charcoalWhite my-2 p-4 rounded-lg shadow-md relative w-12/12 lg:w-6/12 m-auto">
         <div className="flex flex-row justify-between items-center">
-          <h1 className="font-medium text-xl mb-4">Experience</h1>
+          <h1 className="font-medium text-xl mb-4">Education</h1>
           {isUser && (
             <button
-              onClick={() => setAddExperienceModal(true)}
+              onClick={() => setAddEducationModal(true)}
               className="material-icons text-mutedSilver font-medium text-2xl p-1 mr-1 rounded-full hover:bg-gray-200 -mt-5 transition duration-400 ease-in-out"
             >
               add
             </button>
           )}
         </div>
-        {userData && userData.experiences.length > 0 ? (
-          userData.experiences.map((exp, index) => (
+        {userData && userData.education.length > 0 ? (
+          userData.education.map((exp, index) => (
             <div key={exp.id} className="relative">
-              <UserExperience experience={exp} />
+              <UserEducation education={exp} />
               {isUser && (
                 <button
-                  className="material-icons text-mutedSilver absolute top-0 right-0 text-xl p-2 rounded-full hover:bg-gray-200 mr-1 transition duration-400 ease-in-out"
-                  onClick={() => setEditExperienceData(exp)}
+                  className="material-icons text-mutedSilver absolute top-0 right-0 text-xl p-1 rounded-full hover:bg-gray-200 mr-1 transition duration-400 ease-in-out"
+                  onClick={() => setEditEducationData(exp)}
                 >
                   edit
                 </button>
               )}
-              {index < userData.experiences.length - 1 && (
+              {index < userData.education.length - 1 && (
                 <div className="border-b border-gray-500 w-11/12 mx-auto mt-2 mb-3"></div>
               )}
             </div>
           ))
         ) : (
           <div className="text-mutedSilver font-medium flex justify-center">
-            No experiences are registered for this user
+            No Educations are registered for this user
           </div>
         )}
         <Modal
-          isOpen={!!editExperienceData}
-          onClose={() => setEditExperienceData(null)}
+          isOpen={!!editEducationData}
+          onClose={() => setEditEducationData(null)}
         >
-          {editExperienceData && (
-            <EditExperience
-              {...editExperienceData}
-              onClose={() => setEditExperienceData(null)}
-              onUpdate={updateExperiences}
+          {editEducationData && (
+            <EditEducation
+              {...editEducationData}
+              onClose={() => setEditEducationData(null)}
+              onUpdate={updateEducations}
             />
           )}
         </Modal>
         <Modal
-          isOpen={addExperienceModal}
-          onClose={() => setAddExperienceModal(false)}
+          isOpen={addEducationModal}
+          onClose={() => setAddEducationModal(false)}
         >
-          <AddExperience
-            onUpdate={updateExperiences}
-            onClose={() => setAddExperienceModal(false)}
+          <AddEducation
+            onUpdate={updateEducations}
+            onClose={() => setAddEducationModal(false)}
           />
         </Modal>
       </div>

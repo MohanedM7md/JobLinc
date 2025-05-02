@@ -174,9 +174,31 @@ export const RejectConnectionRequest = async (
   }
 };
 
+export async function reportUser(reportedId: string) {
+  try {
+    const response = await api.post(`reports/reportUser`, { reportedId });
+    return response.status;
+  } catch (error) {
+    console.error("Error reporting user:", error);
+    throw error;
+  }
+}
+
 export async function blockUser(userId: string) {
   try {
     const response = await api.post(`connection/${userId}/change`, { status: "Blocked" });
+    return response;
+  } catch (error) {
+    console.error("Error blocking user:", error);
+    throw error;
+  }
+}
+
+export async function unblockUser(userId: string) {
+  try {
+    const response = await api.post(`connection/${userId}/change`, {
+      status: "Unblocked",
+    });
     return response;
   } catch (error) {
     console.error("Error blocking user:", error);
