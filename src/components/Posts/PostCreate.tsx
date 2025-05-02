@@ -167,10 +167,10 @@ export default function PostCreate(props: AddPostProps) {
                     exit={{ opacity: 0, y: -10 }}
                   >
                     <MenuItem>
-                      {({ active }) => (
+                      
                         <button
                           onClick={() => setIsPublic(true)}
-                          className={`${active ? "bg-gray-100" : ""} ${
+                          className={`${
                             isPublic ? "bg-blue-50" : ""
                           } w-full flex items-center px-4 py-3 text-sm transition duration-200 ease-in-out border-b border-gray-100`}
                         >
@@ -184,13 +184,13 @@ export default function PostCreate(props: AddPostProps) {
                             </span>
                           </div>
                         </button>
-                      )}
+                      
                     </MenuItem>
                     <MenuItem>
-                      {({ active }) => (
+                      
                         <button
                           onClick={() => setIsPublic(false)}
-                          className={`${active ? "bg-gray-100" : ""} ${
+                          className={`${
                             !isPublic ? "bg-blue-50" : ""
                           } w-full flex items-center px-4 py-3 text-sm transition duration-200 ease-in-out`}
                         >
@@ -204,7 +204,7 @@ export default function PostCreate(props: AddPostProps) {
                             </span>
                           </div>
                         </button>
-                      )}
+                      
                     </MenuItem>
                   </MenuItems>
                 )}

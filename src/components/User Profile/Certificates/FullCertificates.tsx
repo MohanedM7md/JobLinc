@@ -79,73 +79,75 @@ export default function FullCertificates() {
   }
 
   return (
-    <div className="w-full bg-darkGray text-warmWhite">
-      {userData && (
-        <AnimatePresence>
-          <MiniProfileHeader
-            userId={userData.userId}
-            firstname={userData.firstname}
-            lastname={userData.lastname}
-            headline={userData.headline}
-            profilePicture={userData.profilePicture}
-          />
-        </AnimatePresence>
-      )}
-      <div className="my-2 p-4 rounded-lg shadow-md relative w-12/12 lg:w-6/12 m-auto">
-        <div className="flex flex-row justify-between items-center">
-          <h1 className="font-medium text-xl mb-4">Certificates</h1>
-          {isUser && (
-            <button
-              onClick={() => setAddCertificateModal(true)}
-              className="material-icons font-medium text-2xl p-2 rounded-full hover:bg-gray-600 -mt-5 transition duration-400 ease-in-out"
-            >
-              add
-            </button>
-          )}
-        </div>
-        {userData && userData.certificates.length > 0 ? (
-          userData.certificates.map((cert, index) => (
-            <div key={cert.id} className="relative">
-              <UserCertificate certificate={cert} />
-              {isUser && (
-                <button
-                  className="material-icons absolute top-0 right-0 text-xl p-1 rounded-full hover:bg-gray-600 mr-1 transition duration-400 ease-in-out"
-                  onClick={() => setEditCertificateData(cert)}
-                >
-                  edit
-                </button>
-              )}
-              {index < userData.certificates.length - 1 && (
-                <div className="border-b border-gray-500 w-11/12 mx-auto mt-2 mb-3"></div>
-              )}
-            </div>
-          ))
-        ) : (
-          <div className="text-mutedSilver font-medium flex justify-center">
-            No certificates are registered for this user
-          </div>
-        )}
-        <Modal
-          isOpen={!!editCertificateData}
-          onClose={() => setEditCertificateData(null)}
-        >
-          {editCertificateData && (
-            <EditCertificate
-              {...editCertificateData}
-              onClose={() => setEditCertificateData(null)}
-              onUpdate={updateCertificates}
+    <div className="bg-warmWhite text-charcoalBlack min-h-dvh h-full">
+      <div className="w-full bg-charcoalWhite">
+        {userData && (
+          <AnimatePresence>
+            <MiniProfileHeader
+              userId={userData.userId}
+              firstname={userData.firstname}
+              lastname={userData.lastname}
+              headline={userData.headline}
+              profilePicture={userData.profilePicture}
             />
+          </AnimatePresence>
+        )}
+        <div className="bg-charcoalWhite my-2 p-4 rounded-lg shadow-md relative w-12/12 lg:w-6/12 m-auto">
+          <div className="flex flex-row justify-between items-center">
+            <h1 className="font-medium text-xl mb-4">Certificates</h1>
+            {isUser && (
+              <button
+                onClick={() => setAddCertificateModal(true)}
+                className="material-icons text-mutedSilver font-medium text-2xl p-2 rounded-full hover:bg-gray-300 -mt-5 transition duration-400 ease-in-out"
+              >
+                add
+              </button>
+            )}
+          </div>
+          {userData && userData.certificates.length > 0 ? (
+            userData.certificates.map((cert, index) => (
+              <div key={cert.id} className="relative">
+                <UserCertificate certificate={cert} />
+                {isUser && (
+                  <button
+                    className="material-icons text-mutedSilver absolute top-0 right-0 text-xl p-1 rounded-full hover:bg-gray-300 mr-1 transition duration-400 ease-in-out"
+                    onClick={() => setEditCertificateData(cert)}
+                  >
+                    edit
+                  </button>
+                )}
+                {index < userData.certificates.length - 1 && (
+                  <div className="border-b border-gray-500 w-11/12 mx-auto mt-2 mb-3"></div>
+                )}
+              </div>
+            ))
+          ) : (
+            <div className="text-mutedSilver font-medium flex justify-center">
+              No certificates are registered for this user
+            </div>
           )}
-        </Modal>
-        <Modal
-          isOpen={addCertificateModal}
-          onClose={() => setAddCertificateModal(false)}
-        >
-          <AddCertificate
-            onUpdate={updateCertificates}
+          <Modal
+            isOpen={!!editCertificateData}
+            onClose={() => setEditCertificateData(null)}
+          >
+            {editCertificateData && (
+              <EditCertificate
+                {...editCertificateData}
+                onClose={() => setEditCertificateData(null)}
+                onUpdate={updateCertificates}
+              />
+            )}
+          </Modal>
+          <Modal
+            isOpen={addCertificateModal}
             onClose={() => setAddCertificateModal(false)}
-          />
-        </Modal>
+          >
+            <AddCertificate
+              onUpdate={updateCertificates}
+              onClose={() => setAddCertificateModal(false)}
+            />
+          </Modal>
+        </div>
       </div>
     </div>
   );
