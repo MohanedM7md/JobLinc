@@ -1,4 +1,4 @@
-import UserDetails from "../../../components/Authentication/UserDetails";
+import UserDetails from "../../../pages/UserDetails";
 import { MemoryRouter } from "react-router-dom";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import {describe, it, expect, afterEach} from "vitest";

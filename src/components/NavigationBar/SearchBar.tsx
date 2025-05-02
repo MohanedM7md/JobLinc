@@ -1,11 +1,13 @@
-import { useRef } from 'react';
+import { forwardRef, useRef } from 'react';
 
 interface SearchbarProps {
   [key: string]: any;
+  value: string;
+  Searchref: React.RefObject<HTMLInputElement | null>;
+  onChange: (value: string) => void;
 }
 
-function Searchbar(_props: SearchbarProps) {
-  const inputRef = useRef<HTMLInputElement>(null);
+function Searchbar({ value, onChange, Searchref, ..._props }: SearchbarProps) {
 
   return (
     <div
@@ -24,25 +26,17 @@ function Searchbar(_props: SearchbarProps) {
         cursor-text`}
       tabIndex={0}
       onFocus={() => {
-        inputRef.current?.focus();
+        Searchref.current?.focus();
       }}
     >
-      <i
-        className="
-        fa-solid
-        fa-magnifying-glass
-        text-black
-        text-md"
-      ></i>
+      <i className="fa-solid fa-magnifying-glass text-black text-md"></i>
       <input
         type="text"
-        className="
-          flex-grow
-          text-black
-          outline-none
-          placeholder-gray-500"
+        className="flex-grow text-black outline-none placeholder-gray-500"
         placeholder="Search"
-        ref={inputRef}
+        ref={Searchref}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
       />
     </div>
   );

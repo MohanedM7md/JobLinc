@@ -12,10 +12,11 @@ import {
   ShieldCheck,
   UserX,
 } from "lucide-react";
-import { blockUser, reportUser, unblockUser } from "@services/api/networkServices";
+import { blockUser, reportUser, unblockUser, sendFollowRequest, sendUnfollowRequest } from "@services/api/networkServices";
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 interface UtilityProps {
   isUser: boolean;
@@ -26,6 +27,7 @@ interface UtilityProps {
 
 export default function ProfileUtilityButton(props: UtilityProps) {
   const navigate = useNavigate();
+  const [isFollowing, setIsFollowing] = useState(props.isFollowing);
   const reportUserMutation = useMutation({
     mutationFn: reportUser,
   });
@@ -39,6 +41,18 @@ export default function ProfileUtilityButton(props: UtilityProps) {
   const unblockUserMutation = useMutation({
     mutationFn: unblockUser,
     onSuccess: () => {
+    },
+  });
+  const followUserMutation = useMutation({
+    mutationFn: sendFollowRequest,
+    onSuccess: () => {
+      setIsFollowing(!isFollowing)
+    },
+  });
+  const unfollowUserMutation = useMutation({
+    mutationFn: sendUnfollowRequest,
+    onSuccess: () => {
+      setIsFollowing(!isFollowing)
     },
   });
 
@@ -73,6 +87,21 @@ export default function ProfileUtilityButton(props: UtilityProps) {
       toast.promise(unblockUserMutation.mutateAsync(props.userId), {
         loading: "Unblocking user...",
         success: "Unblocked",
+        error: (error) => error.message,
+      });
+    }
+  }
+  function handlefollow() {
+    if (!isFollowing) {
+      toast.promise(followUserMutation.mutateAsync(props.userId), {
+        loading: "Following user...",
+        success: "Followed",
+        error: (error) => error.message,
+      });
+    } else {
+      toast.promise(unfollowUserMutation.mutateAsync(props.userId), {
+        loading: "Unfollowing user...",
+        success: "Unfollowed",
         error: (error) => error.message,
       });
     }
@@ -154,14 +183,16 @@ export default function ProfileUtilityButton(props: UtilityProps) {
                       </button>
                     </MenuItem>
                     <MenuItem as="div">
-                      <button className="w-full flex items-center px-4 py-3 text-sm transition duration-200 ease-in-out border-b border-gray-100 hover:bg-gray-50">
-                        {props.isFollowing ? (
+                      <button
+                      onClick={handlefollow}
+                      className="w-full flex items-center px-4 py-3 text-sm transition duration-200 ease-in-out border-b border-gray-100 hover:bg-gray-50">
+                        {isFollowing ? (
                           <UserMinus className="w-5 h-5 mr-3 text-gray-600" />
                         ) : (
                           <UserPlus className="w-5 h-5 mr-3 text-gray-600" />
                         )}
                         <span className="font-medium text-warmBlack">
-                          {props.isFollowing ? "Unfollow" : "Follow"}
+                          {isFollowing ? "Unfollow" : "Follow"}
                         </span>
                       </button>
                     </MenuItem>
