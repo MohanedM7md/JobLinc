@@ -1,4 +1,4 @@
-import PostCreate from "@components/Posts/PostCreate";
+import PostCreate from "@components/Posts/PostCreation/PostCreate";
 import Modal from "@components/utils/Modal";
 import { useState, useEffect } from "react";
 import { Edit, Plus } from "lucide-react";
