@@ -102,6 +102,16 @@ describe("ChatContent", () => {
   });
 
   it("creates new chat when usersId is provided without chatId", async () => {
+    // Mock successful chat creation
+    (chatServices.createChat as jest.Mock).mockResolvedValue({
+      data: {
+        chatId: "new-chat-id",
+        participants: [],
+        messages: [],
+        chatType: "private",
+      },
+    });
+
     await act(async () => {
       renderWithProviders(null, ["2", "3"]);
     });
