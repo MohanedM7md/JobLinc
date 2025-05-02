@@ -1,6 +1,6 @@
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CertificateInterface } from "interfaces/userInterfaces";
+import { CertificateInterface, NewCertificate } from "interfaces/userInterfaces";
 import {
   editCertificate,
   deleteCertificate,
@@ -84,8 +84,7 @@ export default function EditCertificate(props: EditCertificateProps) {
     deleteCertificateMutation.status === "pending";
 
   const onSubmit: SubmitHandler<CertificateFields> = (data) => {
-    const editedCertificate: CertificateInterface = {
-      id: props.id,
+    const editedCertificate: NewCertificate = {
       name: data.name,
       organization: data.organization,
       issueDate: new Date(data.issueYear, data.issueMonth - 1, 1),
@@ -96,7 +95,7 @@ export default function EditCertificate(props: EditCertificateProps) {
       ),
     };
 
-    toast.promise(editCertificateMutation.mutateAsync(editedCertificate), {
+    toast.promise(editCertificateMutation.mutateAsync({certificateId: props.id, certificate: editedCertificate}), {
       loading: "Saving certificate...",
       success: "Certificate edited successfully!",
       error: (error) => error.message,

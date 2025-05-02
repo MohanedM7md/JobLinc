@@ -7,6 +7,7 @@ import "material-icons";
 import { useNavigate } from "react-router-dom";
 import { ConnectionStatus } from "../../../interfaces/userInterfaces";
 import useChats from "@hooks/useChats";
+import ProfileUtilityButton from "./ProfileUtilityButton";
 
 interface ProfileProps {
   userId: string;
@@ -22,6 +23,7 @@ interface ProfileProps {
   numberofConnections: number;
   mutualConnections: number;
   connectionStatus: ConnectionStatus;
+  isFollowing: boolean;
   updateUser: () => Promise<void>;
 }
 
@@ -31,8 +33,11 @@ function ProfileHeader(props: ProfileProps & { isUser: boolean }) {
     props.connectionStatus,
   );
   const [connectionButtonText, setConnectionButtonText] = useState<string>("");
+  const [messageButtonText, setMessageButtonText] = useState<string>("");
   const [connectionButtonStyle, setConnectionButtonStyle] =
     useState<string>("");
+  const [showConnectionButton, setShowConnectionButton] =
+    useState<boolean>(false);
   const [isEditUserModalOpen, setIsEditUserModalOpen] =
     useState<boolean>(false);
   const [isEditProfilePictureModalOpen, setIsEditProfilePictureModalOpen] =
@@ -59,12 +64,32 @@ function ProfileHeader(props: ProfileProps & { isUser: boolean }) {
   useEffect(() => {
     switch (props.connectionStatus) {
       case ConnectionStatus.NotConnected: {
-        setConnectionButtonText("Send Message Req");
+        setConnectionButtonText("Connect");
+        setMessageButtonText("Send Message Request");
         setConnectionButtonStyle(
           "border-crimsonRed hover:bg-crimsonRed hover:text-white",
         );
+        setShowConnectionButton(true);
+        break;
       }
-      //make cases for each one with your preferred styling and text
+      case ConnectionStatus.Pending: {
+        setConnectionButtonText("Pending");
+        setMessageButtonText("Message");
+        setConnectionButtonStyle(
+          "border-gray-400 hover:bg-gray-200 text-gray-400",
+        );
+        setShowConnectionButton(true);
+        break;
+      }
+      default: {
+        setConnectionButtonText("Connect");
+        setMessageButtonText("Send Message Request");
+        setConnectionButtonStyle(
+          "border-crimsonRed hover:bg-crimsonRed hover:text-white",
+        );
+        setShowConnectionButton(true);
+        break;
+      }
     }
   }, [connectionStatus]);
 
@@ -122,17 +147,19 @@ function ProfileHeader(props: ProfileProps & { isUser: boolean }) {
           >
             Connections: {props.numberofConnections}
           </p>
-          <p
-            className="text-crimsonRed font-medium cursor-pointer hover:underline"
-            onClick={handleConnectionsClick}
-          >
-            Mutuals: {props.mutualConnections}
-          </p>
+          {!props.isUser && (
+            <p
+              className="text-crimsonRed font-medium cursor-pointer hover:underline"
+              onClick={handleConnectionsClick}
+            >
+              Mutuals: {props.mutualConnections}
+            </p>
+          )}
         </div>
         {props.isUser && (
           <button
             onClick={() => setIsEditUserModalOpen(true)}
-            className="material-icons w-10 h-10 flex items-center justify-center hover:bg-gray-200 rounded-full cursor-pointer transition duration-400 ease-in-out"
+            className="material-icons text-mutedSilver w-10 h-10 flex items-center justify-center hover:bg-gray-200 rounded-full cursor-pointer transition duration-400 ease-in-out"
           >
             edit
           </button>
@@ -141,18 +168,15 @@ function ProfileHeader(props: ProfileProps & { isUser: boolean }) {
 
       {props.isUser && (
         <div className="flex mt-4 space-x-2">
-          <button className="bg-crimsonRed text-warmWhite px-4 py-1.5 rounded-3xl">
-            Open to Work
-          </button>
-          <button className="bg-darkBurgundy text-warmWhite px-4 py-1.5 rounded-3xl">
-            Add Profile Section
-          </button>
-          <button className="bg-darkBurgundy text-warmWhite px-4 py-1.5 rounded-3xl">
+          <button className="mt-2 px-4 py-1.5 border-1 rounded-3xl font-medium transition duration-300 ease-in-out border-crimsonRed hover:bg-crimsonRed hover:text-white">
             Enhance Profile
           </button>
-          <button className="bg-darkBurgundy text-warmWhite px-4 py-1.5 rounded-3xl">
-            Resources
-          </button>
+          <ProfileUtilityButton
+            isUser={props.isUser}
+            userId={props.userId}
+            connectionStatus={props.connectionStatus}
+            isFollowing={props.isFollowing}
+          />
         </div>
       )}
 
@@ -170,10 +194,23 @@ function ProfileHeader(props: ProfileProps & { isUser: boolean }) {
                 },
               ]);
             }}
-            className={`mt-2 px-4 py-1.5 border-1 rounded-3xl font-medium transition duration-300 ease-in-out ${connectionButtonStyle}`}
+            className={`mt-2 px-4 py-1.5 border-1 rounded-3xl font-medium transition duration-300 ease-in-out border-crimsonRed hover:bg-crimsonRed hover:text-white`}
           >
-            {connectionButtonText}
+            {messageButtonText}
           </button>
+          {showConnectionButton && ( //Add the connection on click here please
+            <button
+              className={`mt-2 px-4 py-1.5 border-1 rounded-3xl font-medium transition duration-300 ease-in-out ${connectionButtonStyle}`}
+            >
+              {connectionButtonText}
+            </button>
+          )}
+          <ProfileUtilityButton
+            isUser={props.isUser}
+            userId={props.userId}
+            connectionStatus={props.connectionStatus}
+            isFollowing={props.isFollowing}
+          />
         </div>
       )}
 
