@@ -26,8 +26,7 @@ import Connections from "./pages/Connections";
 
 //Home & Static pages
 import Home from "./pages/Home";
-const Messaging = lazy(() => const Jobs_And_Hiring = lazy (()=>import ("./components/Jobs&hiring/Jobs_And_Hiring"));
-import("./pages/Messaging"));
+const Messaging = lazy(() => import("./pages/Messaging"));
 import MyNetwork from "./pages/MyNetwork";
 
 // Profile components
@@ -58,6 +57,9 @@ const Admin = lazy(() => import("./pages/Company/Admin"));
 const MyCompanies = lazy(() => import("./pages/Company/MyCompanies"));
 const Member = lazy(() => import("@pages/Company/Member"));
 import CreateForm from "@pages/Company/CreateForm";
+
+// Jobs & Hiring Pages
+const Jobs_And_Hiring = lazy (()=>import ("./components/Jobs&hiring/Jobs_And_Hiring"));
 const Saved_Jobs = lazy(()=> import ('./components/Jobs&hiring/Saved_Jobs'));
 
 const queryClient = new QueryClient();

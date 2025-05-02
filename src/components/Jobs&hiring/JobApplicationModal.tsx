@@ -1,4 +1,4 @@
-import React, { useState, FormEvent } from "react";
+import React, { useState, FormEvent, useEffect } from "react";
 
 interface JobApplicationModalProps {
   isOpen: boolean;
@@ -11,6 +11,14 @@ interface JobApplicationModalProps {
     jobId: string,
     data: { phone: string; email: string; resume: File; coverLetter?: string },
   ) => Promise<void>;
+  applicationData?: {
+    phone?: string;
+    email?: string;
+    resume?: {
+      name: string;
+      size: number;
+    };
+  };
 }
 
 const JobApplicationModal: React.FC<JobApplicationModalProps> = ({
@@ -20,6 +28,7 @@ const JobApplicationModal: React.FC<JobApplicationModalProps> = ({
   jobId,
   existingStatus,
   onSubmit,
+  applicationData,
 }) => {
   const [resume, setResume] = useState<File | null>(null);
   const [coverLetter, setCoverLetter] = useState<string>("");
@@ -27,6 +36,12 @@ const JobApplicationModal: React.FC<JobApplicationModalProps> = ({
   const [email, setEmail] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submittedInfo, setSubmittedInfo] = useState<{
+    resumeName?: string;
+    resumeSize?: number;
+    email?: string;
+    phone?: string;
+  }>({});
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -52,6 +67,14 @@ const JobApplicationModal: React.FC<JobApplicationModalProps> = ({
         resume: resume as File,
         coverLetter,
       });
+      localStorage.setItem(`applied-email-${jobId}`, email);
+      setSubmittedInfo({
+        resumeName: resume?.name,
+        resumeSize: resume?.size,
+        email,
+        phone,
+      });
+
       setIsSubmitting(false);
     } catch (err) {
       console.error("❌ Failed to submit application:", err);
@@ -59,6 +82,25 @@ const JobApplicationModal: React.FC<JobApplicationModalProps> = ({
       setIsSubmitting(false);
     }
   };
+
+  const resetForm = () => {
+    setResume(null);
+    setCoverLetter("");
+    setPhone("");
+    setEmail("");
+    setError("");
+    setSubmittedInfo({});
+  };
+
+  useEffect(() => {
+    if (isOpen && existingStatus) {
+      const storedEmail = localStorage.getItem(`applied-email-${jobId}`);
+      if (storedEmail) {
+        setSubmittedInfo((prev) => ({ ...prev, email: storedEmail }));
+      }
+    }
+  }, [isOpen, existingStatus, jobId]);
+  
 
   if (!isOpen) return null;
 
@@ -72,7 +114,10 @@ const JobApplicationModal: React.FC<JobApplicationModalProps> = ({
               : `Apply to ${companyName || "this company"}`}
           </h2>
           <button
-            onClick={onClose}
+            onClick={() => {
+              resetForm();
+              onClose();
+            }}
             className="text-gray-500 hover:text-gray-700"
             aria-label="Close"
           >
@@ -123,19 +168,39 @@ const JobApplicationModal: React.FC<JobApplicationModalProps> = ({
                   <path d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"></path>
                 </svg>
                 <div>
-                  <p className="font-medium">Your_Resume.pdf</p>
-                  <p className="text-sm text-gray-500">PDF, 1.2 MB</p>
+                  <p className="font-medium">
+                    {applicationData?.resume?.name ||
+                      submittedInfo.resumeName ||
+                      "Your_Resume.pdf"}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    PDF,{" "}
+                    {(
+                      (applicationData?.resume?.size ??
+                        submittedInfo.resumeSize ??
+                        1200000) /
+                      (1024 * 1024)
+                    ).toFixed(1)}{" "}
+                    MB
+                  </p>
                 </div>
               </div>
             </div>
 
             <div className="mb-4">
               <h3 className="font-medium mb-2">Contact Information</h3>
-              <p className="text-gray-700">Email: john.doe@example.com</p>
-              <p className="text-gray-700">Phone: (555) 123-4567</p>
+              <p className="text-gray-700">
+                Email: {submittedInfo.email || applicationData?.email || "john.doe@example.com"}
+              </p>
+              <p className="text-gray-700">
+                Phone:{" "}
+                {applicationData?.phone ||
+                  submittedInfo.phone ||
+                  "(555) 123-4567"}
+              </p>
             </div>
 
-            <div className="mb-4">
+            {/* <div className="mb-4">
               <h3 className="font-medium mb-2">Cover Letter</h3>
               <div className="border border-gray-300 rounded-md p-3 text-gray-700">
                 <p>Dear Hiring Manager,</p>
@@ -146,7 +211,7 @@ const JobApplicationModal: React.FC<JobApplicationModalProps> = ({
                 </p>
                 <p>Thank you for considering my application.</p>
               </div>
-            </div>
+            </div> */}
 
             <div className="mt-6 flex justify-end space-x-3">
               <button
@@ -155,7 +220,7 @@ const JobApplicationModal: React.FC<JobApplicationModalProps> = ({
               >
                 Close
               </button>
-              <button
+              {/* <button
                 onClick={async () => {
                   if (!resume || !email || !phone) {
                     setError("resume,email,phone");
@@ -177,7 +242,7 @@ const JobApplicationModal: React.FC<JobApplicationModalProps> = ({
                 disabled={existingStatus === "Pending"}
               >
                 Reapply
-              </button>
+              </button> */}
             </div>
           </div>
         ) : (
@@ -234,7 +299,7 @@ const JobApplicationModal: React.FC<JobApplicationModalProps> = ({
               </div>
             </div>
 
-            <div className="mb-4">
+            {/* <div className="mb-4">
               <label htmlFor="coverLetter" className="block font-medium mb-1">
                 Cover Letter
               </label>
@@ -245,7 +310,7 @@ const JobApplicationModal: React.FC<JobApplicationModalProps> = ({
                 value={coverLetter}
                 onChange={(e) => setCoverLetter(e.target.value)}
               ></textarea>
-            </div>
+            </div> */}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
               <div>
@@ -268,7 +333,7 @@ const JobApplicationModal: React.FC<JobApplicationModalProps> = ({
 
               <div>
                 <label htmlFor="phone" className="block font-medium mb-1">
-                  Phone
+                  Phone*
                 </label>
                 <input
                   id="phone"
@@ -284,14 +349,17 @@ const JobApplicationModal: React.FC<JobApplicationModalProps> = ({
             <div className="mt-6 flex justify-end space-x-3">
               <button
                 type="button"
-                onClick={onClose}
+                onClick={() => {
+                  resetForm();
+                  onClose();
+                }}
                 className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center justify-center"
+                className="px-4 py-2 bg-darkBurgundy text-white rounded-md hover:bg-softRosewood flex items-center justify-center"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? (

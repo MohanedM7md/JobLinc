@@ -2,32 +2,55 @@ import React, { useState, useEffect, FormEvent, ChangeEvent } from "react";
 import JobApplicationModal from "./JobApplicationModal";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
-import { fetchJobs, uploadResume, applyToJob } from "@services/api/jobService";
+import {
+  fetchJobs,
+  uploadResume,
+  applyToJob,
+  saveJob,
+  unsaveJob,
+  fetchSavedJobs,
+  fetchMyApplications,
+} from "@services/api/jobService";
 
 export interface Job {
   id: string;
   title: string;
+  industry?: string;
   company?: {
+    id?: string;
     name: string;
     logo?: string;
+    urlSlug?: string;
+    size?: string;
+    industry?: string;
+    overview?: string;
+    followers?: number;
   };
   location?: {
+    id?: string;
+    address?: string;
     city: string;
     country: string;
   };
   description?: string;
   remote?: boolean;
+  workplace?: string;
   type?: string;
   experienceLevel?: string;
   salaryRange?: {
+    id?: string;
     from: number;
     to: number;
     currency: string;
   };
+  skills?: string[];
   highlights?: string[];
   applicants?: number;
-  postedDate?: string;
   applicationStatus?: "Pending" | "Viewed" | "Rejected" | "Accepted" | null;
+  postedDate?: string;
+  createdAt?: string;
+  accepting?: boolean;
+  easyApply?: true;
 }
 
 interface FilterOptions {
@@ -80,18 +103,46 @@ const Jobs_And_Hiring: React.FC<SaveApplyProps> = ({
     remote: false,
   });
   const [isSaved, setIsSaved] = useState(false);
+  const [savedJobs, setSavedJobs] = useState<Job[]>([]);
+  const [appliedJobs, setAppliedJobs] = useState<Record<string, any>>({});
   const hasApplied = !!selectedJob?.applicationStatus;
 
   useEffect(() => {
     const fetchAllJobs = async () => {
-      const fetchedJobs = await fetchJobs();
-      setJobs(fetchedJobs);
-      if (fetchedJobs.length > 0) {
-        setSelectedJob(fetchedJobs[0]);
+      const [fetchedJobs, myApplications] = await Promise.all([
+        fetchJobs(),
+        fetchMyApplications(),
+      ]);
+    
+      const appMap: Record<string, any> = {};
+      const allowedStatuses = ["Pending", "Viewed", "Rejected", "Accepted"];
+    
+      const applicationMap: Record<string, "Pending" | "Viewed" | "Rejected" | "Accepted"> = {};
+      myApplications.forEach((app: any) => {
+        if (allowedStatuses.includes(app.status)) {
+          appMap[app.job.id] = app;
+        }
+      });
+    
+      const enrichedJobs = fetchedJobs.map((job) => ({
+        ...job,
+        applicationStatus: appMap[job.id]?.status ?? null,
+      }));
+    
+      setAppliedJobs(appMap);
+      setJobs(enrichedJobs);
+      if (enrichedJobs.length > 0) {
+        setSelectedJob(enrichedJobs[0]);
       }
     };
     fetchAllJobs();
   }, []);
+
+  useEffect(() => {
+    if (!selectedJob) return;
+    const isAlreadySaved = savedJobs.some((job) => job.id === selectedJob.id);
+    setIsSaved(isAlreadySaved);
+  }, [selectedJob, savedJobs]);
 
   const handleSearchSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -114,60 +165,72 @@ const Jobs_And_Hiring: React.FC<SaveApplyProps> = ({
     jobId: string,
     {
       phone,
+      //@ts-ignore
       email,
       resume,
+      //@ts-ignore
       coverLetter,
-    }: { phone: string; email: string; resume: File; coverLetter?: string }
+    }: { phone: string; email: string; resume: File; coverLetter?: string },
   ) => {
     try {
       const resumeResponse = await uploadResume(resume);
       console.log("📄 Resume upload response:", resumeResponse);
-  
+
       const resumeId = resumeResponse?.id;
       if (!resumeId) {
         toast.error("Resume upload failed. Please try again.");
         return;
       }
-  
+
       const applicationResponse = await applyToJob(jobId, phone, resumeId);
-  
+
       // ✅ Success case
       console.log("✅ Application successful:", applicationResponse);
       toast.success("✅ Successfully applied for the job!");
-  
+
       setJobs((prevJobs) =>
         prevJobs.map((job) =>
-          job.id === jobId ? { ...job, applicationStatus: "Pending" } : job
-        )
+          job.id === jobId ? { ...job, applicationStatus: "Pending" } : job,
+        ),
       );
+
       setSelectedJob((prev) =>
-        prev?.id === jobId ? { ...prev, applicationStatus: "Pending" } : prev
+        prev?.id === jobId ? { ...prev, applicationStatus: "Pending" } : prev,
       );
-  
+
       setShowModal(false);
     } catch (error: any) {
       const message = error?.response?.data?.message;
       const errorCode = error?.response?.data?.errorCode;
-  
+
       console.error("❌ Application error:", error);
-  
+
       // 🔀 Match based on known backend messages/codes
-      if (message === "User has already applied for this job" && errorCode === 400) {
+      if (
+        message === "User has already applied for this job" &&
+        errorCode === 400
+      ) {
         toast.error("You have already applied for this job.");
-      } else if (message === "This job is not accepting more applicants" && errorCode === 403) {
+      } else if (
+        message === "This job is not accepting more applicants" &&
+        errorCode === 403
+      ) {
         toast.error("This job is no longer accepting applications.");
       } else if (message === "This job is not found" && errorCode === 404) {
         toast.error("The job you are trying to apply for was not found.");
-      } else if (message === "Employers can't apply for their jobs" && errorCode === 400) {
+      } else if (
+        message === "Employers can't apply for their jobs" &&
+        errorCode === 400
+      ) {
         toast.error("Employers are not allowed to apply to their own jobs.");
       } else {
         // fallback
-        toast.error(message || "An unexpected error occurred. Please try again.");
+        toast.error(
+          message || "An unexpected error occurred. Please try again.",
+        );
       }
     }
   };
-  
-  
 
   const getStatusColor = (status: string | null | undefined) => {
     switch (status) {
@@ -184,21 +247,56 @@ const Jobs_And_Hiring: React.FC<SaveApplyProps> = ({
     }
   };
 
-  const handleSaveClick = () => {
-    if (!isSaved) {
-      setIsSaved(true);
-      toast.success(
-        <div>
-          You've saved this job.{" "}
-          <Link to="/saved-jobs" className="text-blue-600 underline">
-            See saved jobs
-          </Link>
-        </div>,
-        { duration: 10000 },
-      );
-    } else {
-      setIsSaved(false);
-      toast.success("This job is no longer saved", { duration: 10000 });
+  const handleSaveClick = async () => {
+    if (!selectedJob) return;
+
+    try {
+      if (!isSaved) {
+        await saveJob(selectedJob.id);
+        setIsSaved(true);
+        setSavedJobs((prev) => [...prev, selectedJob]);
+        toast.success(
+          <div>
+            You've saved this job.{" "}
+            <Link to="/saved-jobs" className="text-blue-600 underline">
+              See saved jobs
+            </Link>
+          </div>,
+          { duration: 10000 },
+        );
+      } else {
+        await unsaveJob(selectedJob.id);
+        setIsSaved(false);
+        setSavedJobs((prev) => prev.filter((job) => job.id !== selectedJob.id));
+        toast.success("This job is no longer saved", { duration: 10000 });
+      }
+    } catch (error: any) {
+      const message = error?.response?.data?.message;
+      const code = error?.response?.data?.errorCode;
+
+      console.error("Save/Unsave error:", error);
+
+      if (!isSaved) {
+        // Save errors
+        if (message === "This job is already saved" && code === 400) {
+          toast.error("You've already saved this job.");
+        } else if (message === "This job is not found" && code === 404) {
+          toast.error("This job was not found.");
+        } else {
+          toast.error(message || "An unexpected error occurred while saving.");
+        }
+      } else {
+        // Unsave errors
+        if (message === "This job is not saved" && code === 400) {
+          toast.error("This job wasn't saved in the first place.");
+        } else if (message === "This job is not found" && code === 404) {
+          toast.error("This job was not found.");
+        } else {
+          toast.error(
+            message || "An unexpected error occurred while unsaving.",
+          );
+        }
+      }
     }
   };
 
@@ -524,7 +622,6 @@ const Jobs_And_Hiring: React.FC<SaveApplyProps> = ({
                                 toast.error("No job selected");
                               }
                             }}
-                            
                           >
                             View application
                           </button>
@@ -549,6 +646,7 @@ const Jobs_And_Hiring: React.FC<SaveApplyProps> = ({
                       jobId={selectedJob?.id || ""}
                       existingStatus={selectedJob?.applicationStatus}
                       onSubmit={handleApplicationSubmit}
+                      applicationData={appliedJobs[selectedJob?.id]}
                     />
                   </div>
 

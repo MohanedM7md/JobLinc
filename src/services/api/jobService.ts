@@ -27,6 +27,7 @@ import { Job } from "../../components/Jobs&hiring/Jobs_And_Hiring";
 //   postedDate?: string;
 // }
 
+// Jobs
 export const fetchJobs = async (
   searchTerm = "",
   location = "",
@@ -77,4 +78,34 @@ export const applyToJob = async (
   });
 
   return response.data;
+};
+
+// Save a job
+export const saveJob = async (jobId: string): Promise<string[]> => {
+  const response = await api.post("/user/saved-jobs/", { jobId });
+  return response.data;
+};
+
+// Unsave a job
+export const unsaveJob = async (jobId: string): Promise<string[]> => {
+  const response = await api.delete(`/user/saved-jobs/${jobId}`);
+  return response.data;
+};
+
+// Fetch saved jobs
+export const fetchSavedJobs = async (): Promise<Job[]> => {
+  const response = await api.get("/user/saved-jobs");
+
+  return response.data.map((job: any) => ({
+    ...job,
+    highlights: job.skills || [],
+    postedDate: job.createdAt?.split("T")[0],
+    remote: job.workplace === "Remote",
+  }));
+};
+
+// Fetch My Applications
+export const fetchMyApplications = async () => {
+  const response = await api.get("/jobs/my-job-applications");
+  return response.data; // returns array of applications
 };
