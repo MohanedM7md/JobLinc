@@ -48,8 +48,10 @@ function FollowingCard(props: FollowInterface) {
 
     try {
       const response = await followPromise;
+      if(response.status === 200){
       console.log("Follow Request Response:", response);
       setIsFollowing(true); 
+      }
     } catch (err) {
       console.error("Failed to send Follow request:", err);
     }
@@ -71,9 +73,11 @@ function FollowingCard(props: FollowInterface) {
 
     try {
       const response = await unfollowPromise;
+      if(response.status === 200){
       console.log("UnFollow Request Response:", response);
       setIsFollowing(false);
       setModalOpen(false);
+      }
     } catch (err) {
       console.error("Failed to send UnFollow request:", err);
     }

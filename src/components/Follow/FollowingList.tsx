@@ -12,6 +12,7 @@ function FollowingList() {
     const fetchData = async () => {
       try {
         const response = await getMyFollowing();
+        console.log("following response", response)
         const parsedFollowing = Array.isArray(response)
           ? response.map((item) => ({
               companyId: item.companyId || null,
@@ -32,7 +33,6 @@ function FollowingList() {
         setLoading(false);
       }
     };
-
     fetchData();
 
     return () => {
@@ -64,10 +64,9 @@ function FollowingList() {
         <div className="p-6 text-center text-gray-500">
           You're not following any people or companies yet.
         </div>
-      ) : (
-      
+      ) : (      
         following.map((follower, index) => (
-          <FollowingCard key={index} {...follower} />
+          <FollowingCard key={index} {...follower}/>
         ))
       )}
     </div>

@@ -44,13 +44,13 @@ function PendingInvitationsCard() {
 
   const handleAccept = async (index: number) => {
     const AcceptPromise = AcceptConnectionRequest(invitations[index].userId);
+    toast.promise(AcceptPromise, {
+      loading: `Accepting Invitation...`,
+      success: `${invitations[index].firstname} ${invitations[index].lastname} is now a connection!`,
+      error: "Failed to Accept Invitation. Please try again.",
+    });
     try {
       const response = await AcceptPromise;
-      toast.promise(AcceptPromise, {
-        loading: `Accepting Invitation...`,
-        success: `${invitations[index].firstname} ${invitations[index].lastname} is now a connection!`,
-        error: "Failed to Accept Invitation. Please try again.",
-      });
       if(response?.status === 200){
         setInvitations((prevInvitations) =>
           prevInvitations.map((invitation, i) =>
@@ -67,13 +67,13 @@ function PendingInvitationsCard() {
 
   const handleReject = async (index: number) => {
     const RejectPromise = RejectConnectionRequest(invitations[index].userId);
+    toast.promise(RejectPromise, {
+      loading: `Rejecting Invitation...`,
+      success: `${invitations[index].firstname} ${invitations[index].lastname}'s Invitation is rejected`,
+      error: "Failed to Reject Invitation. Please try again.",
+    });
     try {
       const response = await RejectPromise;
-      toast.promise(RejectPromise, {
-        loading: `Rejecting Invitation...`,
-        success: `${invitations[index].firstname} ${invitations[index].lastname}'s Invitation is rejected`,
-        error: "Failed to Reject Invitation. Please try again.",
-      });
       if(response?.status === 200){
         setInvitations((prevInvitations) =>
           prevInvitations.filter((_, i) => i !== index)

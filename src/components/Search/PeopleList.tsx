@@ -9,7 +9,7 @@ interface PeopleListProps {
 
 function PeopleList({ searchQuery }: PeopleListProps) {
   const [results, setResults] = useState<searchUserInterface[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchResults = async () => {
@@ -80,6 +80,7 @@ function PeopleList({ searchQuery }: PeopleListProps) {
   }
 
   return (
+
     <div className="w-full bg-white rounded-lg shadow-sm border border-gray-100">
       <div className="divide-y divide-gray-200">
         {results.map((user) => (

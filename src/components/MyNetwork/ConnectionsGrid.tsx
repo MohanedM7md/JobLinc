@@ -26,24 +26,7 @@ function ConnectionsGrid() {
       controller.abort();
     };
   }, []);
-  // useEffect(() => {
-  //   const controller = new AbortController();
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await getNetworkFeedTest();
-  //       console.log(response);
-  //       setConnects(Array.isArray(response) ? response : []);
-  //     } catch (error) {
-  //       console.error("Error fetching network feed:", error);
-  //     }
-  //   };
-  //   fetchData();
-
-  //   return () => {
-  //     controller.abort();
-  //   };
-  // }, []);
-
+  
   return (
     <div
       role="grid"

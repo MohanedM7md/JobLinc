@@ -9,7 +9,7 @@ interface CompanyListProps {
 
 function CompanyList({ searchQuery }: CompanyListProps) {
   const [results, setResults] = useState<CompanyInterface[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchResults = async () => {

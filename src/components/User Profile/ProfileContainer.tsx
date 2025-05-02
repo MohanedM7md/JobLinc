@@ -265,8 +265,8 @@ function ProfileContainer() {
                   : "https://fastly.picsum.photos/id/6/500/150.jpg?hmac=DNsBPoYhZrvLVc__YwZt4A-PY7MIPBseudP2AQzu4Is"
               }
               phoneNumber={userData.phoneNumber}
-              numberofConnections={
-                userData.numberofConnections ? userData.numberofConnections : 0
+              numberOfConnections={
+                userData.numberOfConnections ? userData.numberOfConnections : 0
               }
               mutualConnections={userData.mutualConnections}
               connectionStatus={userData.connectionStatus}

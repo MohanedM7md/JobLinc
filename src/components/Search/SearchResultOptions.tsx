@@ -1,6 +1,5 @@
 
 import { useSearchParams } from "react-router-dom";
-import UserConnectionListCard from "../../components/Connections/UserConnectionListCard";
 import { useEffect, useState } from "react";
 import PeopleList from "../../components/Search/PeopleList";
 import CompanyList from "./CompanyList";

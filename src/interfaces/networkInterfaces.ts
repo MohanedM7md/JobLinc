@@ -6,7 +6,7 @@ export interface searchUserInterface {
   profilePicture: string;
   country: string;
   city: string;
-  connectionStatus: "Connected" | "Not Connected";
+  connectionStatus: "Accepted" | "Received" | "Sent" | "NotConnected" | "Canceled" | "Blocked" | "Unblocked";
   isFollowing: boolean;
   numberOfConnections: number;
   mutualConnections: number;

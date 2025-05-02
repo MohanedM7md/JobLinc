@@ -68,6 +68,7 @@ import BlockList from "@components/Connections/BlockList";
 import MutualConnectionListCard from "@components/Connections/MutualConnectionListCard";
 import MutualConnections from "@pages/MutualConnections";
 import FullEducations from "@components/User Profile/Educations/FullEducations";
+import AccountVisibility from "@components/AccountVisibility/AccountVisibilityCard";
 
 const queryClient = new QueryClient();
 
@@ -177,6 +178,7 @@ function App() {
                   </Route>
                   <Route path="visibility" element={<Visibility />} />
                   <Route path="visibility/profile-network/blocking" element = {<BlockList/>}/>
+                  <Route path="visibility/profile-network/account-visibility" element = {<AccountVisibility/>}/>
                   <Route path="data-privacy" element={<DataAndPrivacy />} />
                   <Route
                     path="advertising-data"
