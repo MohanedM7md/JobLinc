@@ -32,7 +32,6 @@ function ChatContent({
   const [error, setError] = useState<string | null>(null);
 
   const { chatId, setChatId } = useChatid();
-  const { setOpnedChats } = useChats();
   const { usersId } = useNetworkUserId();
   const { title } = useNetworkUserId();
 
@@ -72,12 +71,12 @@ function ChatContent({
             console.log(data.participants);
             setMessages(data.messages);
             setChatId(data.chatId);
-            setOpnedChats((prev) => [...prev]);
+            //setOpnedChats((prev) => [...prev]);
             chatType.current = data.chatType;
           } catch (err) {
             console.error("Failed to create chat:", err);
             if (err == "429")
-              setError("انت دلوقتي على باقة الفقراء 5 شاتات فاليوم بس");
+              setError(" انت الان على باقة الفقراء مسموحلك 5 شاتس فاليوم بس");
             else setError("Failed to create chat");
             onClose?.();
             return;

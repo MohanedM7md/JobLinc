@@ -11,13 +11,15 @@ export const fetchNetWorks = async (Id: string) => {
   const users = response.data.map(
     ({
       userId,
-      firstname: chatName,
+      firstname,
+      lastname,
       profilePicture: chatPicture,
     }: {
       userId: string;
       firstname: string;
+      lastname: string;
       profilePicture: string;
-    }) => ({ userId, chatName, chatPicture }),
+    }) => ({ userId, chatName: `${firstname} ${lastname}`, chatPicture }),
   );
   return users;
 };

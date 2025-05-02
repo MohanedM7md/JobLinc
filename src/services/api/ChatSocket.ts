@@ -17,6 +17,10 @@ export const onConnect = (setTrue: (boolean: boolean) => void) => {
       console.log(error.message);
       toast.error(error.message);
     });
+    ChatSocket?.on("notify", (error: { event: string; message: string }) => {
+      console.log(error.message);
+      toast.error(error.message);
+    });
   });
 };
 export const subscribeToMessages = (
@@ -79,6 +83,7 @@ export const unsubscribeFromMessages = (chatId: string) => {
 export const disconnectChatSocket = () => {
   if (ChatSocket) {
     ChatSocket.off("error");
+    ChatSocket.off("notify");
     ChatSocket.disconnect();
   }
 };

@@ -5,7 +5,7 @@ interface ChatErrorProps {
 export default function ChatError({ error }: ChatErrorProps) {
   return (
     <div className="flex flex-col items-center justify-center h-full bg-gray-100 p-4">
-      <div className="text-red-500 text-xl mb-4">
+      <div className="text-red-500 text-xl mb-4" dir="rtl">
         <svg
           className="w-12 h-12 mx-auto mb-2"
           fill="none"
