@@ -84,7 +84,6 @@ function Member() {
     { text: "About", content: <Overview company={company || undefined} /> },
     { text: "Posts", content: <Posts company={company || undefined} /> },
     { text: "Jobs", content: <Jobs /> },
-    { text: "People", content: <div>People</div> },
   ];
   const selectedNavItem = navItems.find(
     (item) => item.text === navItemSelected,

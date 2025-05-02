@@ -1,17 +1,91 @@
 import { Company } from "@store/comapny/interfaces";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Frown, ChevronDown } from "lucide-react";
+import { PostInterface } from "@interfaces/postInterfaces";
+import { getMyPosts } from "@services/api/userProfileServices";
+import { useNavigate } from "react-router-dom";
+import { MediaTypes } from "../../../interfaces/postInterfaces";
+
+import PostCard from "@components/Posts/PostCard";
 
 type PostsProps = {
     company?: Company;
 };
+
+const PostSkeleton = () => (
+    <div className="bg-white rounded-xl shadow-sm p-6 animate-pulse">
+      <div className="flex items-center gap-3 mb-4">
+        <div className="w-10 h-10 rounded-full bg-gray-200" />
+        <div className="flex-1 space-y-2">
+          <div className="h-4 bg-gray-200 rounded w-3/4" />
+          <div className="h-3 bg-gray-200 rounded w-1/2" />
+        </div>
+      </div>
+      <div className="space-y-3 mb-4">
+        <div className="h-3 bg-gray-200 rounded" />
+        <div className="h-3 bg-gray-200 rounded w-5/6" />
+        <div className="h-3 bg-gray-200 rounded w-4/6" />
+      </div>
+      <div className="flex gap-4 pt-3">
+        <div className="h-3 bg-gray-200 rounded w-1/4" />
+        <div className="h-3 bg-gray-200 rounded w-1/4" />
+        <div className="h-3 bg-gray-200 rounded w-1/4" />
+      </div>
+    </div>
+);
+
+
 
 function Posts(props: PostsProps) {
     const [choiceOfSort, setChoiceOfSort] = useState("Top");
     const [dropDownSort, setDropDownSort] = useState(false);
     const [filterChoice, setFilterChoice] = useState("All");
     
-    const filters = ["All", "Images", "Videos", "Articles", "Documents"];
+    const [posts, setPosts] = useState<PostInterface[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const filters = ["All", "Images", "Videos", "Audios", "Documents"];
+    const navigate = useNavigate();
+
+    const companyPosts = posts.filter(post => post.companyId === props.company?.id);
+    const mapFilterToMediaType = (filter: string): MediaTypes | undefined => {
+        switch(filter) {
+          case 'Images': return MediaTypes.Image;
+          case 'Videos': return MediaTypes.Video;
+          case 'Audios': return MediaTypes.Audio;
+          case 'Documents': return MediaTypes.Document;
+          default: return undefined;
+        }
+      };
+      
+      // Replace the existing companyPosts declaration with this filtered version
+      const filteredPosts = companyPosts.filter(post => {
+        if (filterChoice === 'All') return true;
+        const targetType = mapFilterToMediaType(filterChoice);
+        return post.media?.some(media => media.type === targetType);
+      });
+    
+
+
+
+    useEffect(() => {
+        const fetchCompanyPosts = async function ()
+        {
+            try {
+                setIsLoading(true);
+                const response = await getMyPosts();
+                setPosts(response);
+            }
+            catch (error) {
+                console.error("Cannot fetch companies' posts ", error);
+            } finally {
+                setIsLoading(false);
+            }
+        }
+
+
+        fetchCompanyPosts();
+    }, [])
+    
 
     return (
         <div className="flex flex-col md:flex-row gap-5 max-w-7xl mx-auto px-4 w-full">
@@ -61,47 +135,34 @@ function Posts(props: PostsProps) {
                         ))}
                     </div>
 
-                    {/* Sort Dropdown - moves below filters on mobile */}
-                    <div className="md:absolute md:right-4 md:top-1/2 md:-translate-y-1/2">
-                        <button 
-                            onClick={() => setDropDownSort(!dropDownSort)}
-                            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 group w-full md:w-auto justify-center md:justify-start"
-                        >
-                            <span className="text-xs md:text-sm font-medium">Sort: {choiceOfSort}</span>
-                            <ChevronDown className={`w-3 h-3 md:w-4 md:h-4 transition-transform ${dropDownSort ? "rotate-180" : ""}`} />
-                        </button>
-
-                        {dropDownSort && (
-                            <div className="md:absolute right-0 top-8 bg-white rounded-lg shadow-lg py-2 w-full md:w-40 z-10 border border-gray-100 mt-2 md:mt-0">
-                                {["Top", "Recent"].map((option) => (
-                                    <button
-                                        key={option}
-                                        onClick={() => {
-                                            setChoiceOfSort(option);
-                                            setDropDownSort(false);
-                                        }}
-                                        className={`w-full px-4 py-2 text-xs md:text-sm text-left hover:bg-gray-50 
-                                            ${choiceOfSort === option ? "text-red-600 font-medium" : "text-gray-700"}`}
-                                    >
-                                        {option}
-                                    </button>
-                                ))}
-                            </div>
-                        )}
-                    </div>
+                    
                 </div>
 
-                {/* Empty State */}
-                <div className="bg-white rounded-xl shadow-sm p-6 md:p-8 flex flex-col items-center justify-center min-h-[300px] md:min-h-[400px]">
-                    <div className="max-w-xs text-center">
-                        <Frown className="w-12 h-12 md:w-16 md:h-16 text-gray-400 mx-auto mb-3 md:mb-4" />
-                        <h3 className="text-lg md:text-xl font-semibold text-gray-900 mb-1 md:mb-2">
-                            No posts available yet
-                        </h3>
-                        <p className="text-gray-600 text-xs md:text-sm">
-                            Check back later for updates from {props.company?.name}
-                        </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {isLoading ? (
+                    // Loading Skeletons
+                    [...Array(3)].map((_, index) => <PostSkeleton key={index} />)
+                ) : filteredPosts.length > 0 ? (
+                    // Actual Posts
+                    filteredPosts.map((post) => (
+                        <div className="bg-white p-5 rounded-xl">
+                            <PostCard post={post} isRepost={false} compact={true}/>
+                        </div>
+                    ))
+                ) : (
+                    // Empty State
+                    <div className="col-span-full bg-white rounded-xl shadow-sm p-12 text-center">
+                        <div className="max-w-md mx-auto">
+                            <Frown className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                            No Posts Found
+                            </h3>
+                            <p className="text-gray-600 mb-6">
+                            {props.company?.name} hasn't shared any updates yet.
+                            </p>
+                        </div>
                     </div>
+                )}
                 </div>
             </div>
         </div>

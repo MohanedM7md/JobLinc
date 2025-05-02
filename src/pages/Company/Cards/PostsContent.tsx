@@ -5,6 +5,7 @@ import { Edit, Plus } from "lucide-react";
 import { getMyPosts } from "@services/api/userProfileServices";
 import { PostInterface } from "@interfaces/postInterfaces";
 import { useNavigate } from "react-router-dom";
+import PostCard from "@components/Posts/PostCard";
 
 const PostSkeleton = () => (
     <div className="bg-white rounded-xl shadow-sm p-6 animate-pulse">
@@ -85,35 +86,8 @@ function PostsContent() {
                 {/* Filtered Company Posts */}
                 {companyPosts.length > 0 ? (
                     companyPosts.map(post => (
-                        <div key={post.postId} className="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow" onClick={() => navigate(`/post/${post.postId}`)}>
-                            {/* Company Header */}
-                            <div className="flex items-center gap-3 mb-4">
-                                <img 
-                                    src={post.companyLogo || ""} 
-                                    alt={`${post.companyName} logo`}
-                                    className="w-10 h-10 rounded-full object-cover"
-                                />
-                                <div>
-                                    <h3 className="font-semibold text-gray-900">{post.companyName}</h3>
-                                    <p className="text-sm text-gray-500">
-                                        {new Date(post.time).toLocaleDateString('en-US', {
-                                            year: 'numeric',
-                                            month: 'short',
-                                            day: 'numeric'
-                                        })}
-                                    </p>
-                                </div>
-                            </div>
-                            
-                            {/* Post Content */}
-                            <p className="text-gray-600 line-clamp-3 mb-4">{post.text}</p>
-                            
-                            {/* Engagement Metrics */}
-                            <div className="flex items-center gap-4 text-sm text-gray-500 border-t pt-3">
-                                <span>{post.likes} likes</span>
-                                <span>{post.comments} comments</span>
-                                <span>{post.reposts} reposts</span>
-                            </div>
+                        <div className="bg-white p-5 rounded-xl">
+                            <PostCard post={post} isRepost={false} compact={true}/>
                         </div>
                     ))
                 ) : (
