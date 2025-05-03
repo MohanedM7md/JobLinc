@@ -10,7 +10,7 @@ import { ChatCardInterface } from "./interfaces/Chat.interfaces";
 import { subscribeToChats } from "@services/api/ChatSocket";
 import ReqChatCard from "./ReqChatCard";
 import { useUnreadCount } from "@context/UnreadCountProvider";
-
+import { getTotalUnread } from "./Utils/getTotalUnread";
 const ChatCardsList = ({
   onCardClick,
   className = "",
@@ -49,8 +49,10 @@ const ChatCardsList = ({
           prev.unshift(UpdatedChatCard);
           return [...prev];
         }),
-      (newChatCard) => setChats((prev) => [...prev, newChatCard]),
-      (unseenCount) => setTotalUnreadCount?.((prev) => prev + unseenCount),
+      (newChatCard) => {
+        setChats((prev) => [...prev, newChatCard]);
+        setTotalUnreadCount?.(getTotalUnread(chats));
+      },
     );
   }, []);
 
@@ -125,9 +127,7 @@ const ChatCardsList = ({
                         chatCard.chatName,
                         chatCard.chatPicture,
                       );
-                      setTotalUnreadCount?.(
-                        (prev) => prev - chatCard.unreadCount,
-                      );
+                      setTotalUnreadCount?.(getTotalUnread(chats));
                     }}
                   />
                 ))

@@ -43,12 +43,11 @@ function errorReducer(
 }
 
 export default function PageInfo() {
-  const { company, updateBasicInfo, updateLogo } = useCompanyStore();
+  const { company, updateBasicInfo } = useCompanyStore();
   const [isSlugValidating, setIsSlugValidating] = useState(false);
   const [errors, dispatchError] = useReducer(errorReducer, {});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Form state management
   const [formData, setFormData] = useState<Partial<FormFields>>({
     logo: company?.logo,
     urlSlug: company?.urlSlug,
@@ -65,7 +64,6 @@ export default function PageInfo() {
 
   const [hasChanges, setHasChanges] = useState(false);
 
-  // Check for changes whenever formData changes
   useEffect(() => {
     const changesExist = Object.keys(formData).some((key) => {
       const formKey = key as keyof typeof formData;
@@ -74,7 +72,6 @@ export default function PageInfo() {
     setHasChanges(changesExist);
   }, [formData, initialData]);
 
-  // Handle field changes
   const handleFieldChange = <K extends keyof FormFields>(
     field: K,
     value: FormFields[K],
