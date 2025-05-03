@@ -67,13 +67,24 @@ export const uploadingMedia = async (file: File): Promise<string> => {
   const formData = new FormData();
   formData.append("file", file);
 
-  const response = await api.post(`/chat/upload-media`, formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
-  if (response.status != 200) toast.error("File not Supported");
-  return response.data;
+  try {
+    const response = await api.post(`/chat/upload-media`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.status === 400) {
+      toast.error("File not supported");
+      throw new Error("File not supported");
+    } else {
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
+      toast.error(`Error: ${errorMessage}`);
+      throw error;
+    }
+  }
 };
 
 export const fetchRequestChatData = async () => {
