@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, ChangeEvent } from "react";
-import { Paperclip, Image, Smile, X, Loader2 } from "lucide-react";
+import { Paperclip, X, Loader2 } from "lucide-react";
 import { ChatInputProps } from "./interfaces/Chat.interfaces";
 import { uploadingMedia } from "@services/api/chatServices";
 
@@ -209,18 +209,6 @@ function ChatInput({
             disabled={uploading}
           >
             <Paperclip size={20} />
-          </button>
-          <button
-            className="text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white p-1"
-            disabled={uploading}
-          >
-            <Image size={20} />
-          </button>
-          <button
-            className="text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white p-1"
-            disabled={uploading}
-          >
-            <Smile size={20} />
           </button>
         </div>
 
