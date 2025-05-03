@@ -107,5 +107,30 @@ export const fetchSavedJobs = async (): Promise<Job[]> => {
 // Fetch My Applications
 export const fetchMyApplications = async () => {
   const response = await api.get("/jobs/my-job-applications");
-  return response.data; // returns array of applications
+  return response.data; 
+};
+
+// Fetch Create job 
+export const createJob = async (jobData: any) => {
+  const response = await api.post("/jobs", jobData);
+  return response.data;
+};
+
+// Fetch job applicants
+export const fetchJobApplications = async (jobId: string) => {
+  const response = await api.get(`/jobs/${jobId}/job-applications`);
+  return response.data;
+};
+
+// Fetch status update
+export const updateJobApplicationStatus = async (
+  jobId: string,
+  applicationId: string,
+  status: "Pending" | "Viewed" | "Rejected" | "Accepted"
+) => {
+  const response = await api.patch(
+    `/jobs/${jobId}/job-applications/${applicationId}`,
+    { status }
+  );
+  return response.data;
 };

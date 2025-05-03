@@ -1,119 +1,82 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Job } from "../Jobs&hiring/Jobs_And_Hiring";
-import { fetchSavedJobs } from "@services/api/jobService";
+import {
+  fetchSavedJobs,
+  fetchMyApplications,
+  fetchJobApplications,
+  fetchJobs,
+  updateJobApplicationStatus,
+} from "@services/api/jobService";
+import { useAppSelector } from "@store/hooks";
 
-// interface Job {
-//   id: number;
-//   title: string;
-//   company: string;
-//   location: string;
-//   posted: string;
-//   remote: string;
-//   activelyRecruiting: boolean;
-//   easyApply: boolean;
-//   logo: string;
-// }
-
-// const jobs: Job[] = [
-//   {
-//     id: 1,
-//     title: "Senior Software Engineer",
-//     company: "TechCorp Industries",
-//     location: "San Francisco, CA",
-//     posted: "2 days ago",
-//     remote: "Remote",
-//     activelyRecruiting: false,
-//     easyApply: true,
-//     logo: "/logos/swatx.png",
-//   },
-//   {
-//     id: 2,
-//     title: "Product Manager",
-//     company: "InnovateSoft",
-//     location: "New York, NY",
-//     posted: "4 days ago",
-//     remote: "",
-//     activelyRecruiting: true,
-//     easyApply: true,
-//     logo: "/logos/micro1.png",
-//   },
-//   {
-//     id: 3,
-//     title: "UX Designer",
-//     company: "CreativeDesigns",
-//     location: "Austin, TX",
-//     posted: "1 week ago",
-//     remote: "remote",
-//     activelyRecruiting: false,
-//     easyApply: true,
-//     logo: "/logos/envision.png",
-//   },
-//   {
-//     id: 4,
-//     title: "Data Scientist",
-//     company: "DataDriven Solutions",
-//     location: "Seattle, WA",
-//     posted: "3 days ago",
-//     remote: "",
-//     activelyRecruiting: true,
-//     easyApply: true,
-//     logo: "/logos/linrco.png",
-//   },
-// ];
-
-const appliedJobs: Job[] = [
-    {
-        "id": "681359bc657430f724b65e87",
-        "title": "Financial Analyst",
-        "industry": "Finance",
-        "company": {
-            "id": "681359bb657430f724b65e28",
-            "name": "WaveTech Innovations",
-            "urlSlug": "wavetech-innovations",
-            "size": "200-300 employees",
-            "industry": "Technology",
-            "overview": "Focused on cloud computing and data analytics.",
-            "logo": "https://joblinc.me/uploads/placeholders/company_logo.png",
-            "followers": 450
-        },
-        "description": "Analyze financial data to guide decision-making.",
-        "workplace": "Hybrid",
-        "type": "Full-time",
-        "experienceLevel": "Junior",
-        "salaryRange": {
-            "id": "681359bc657430f724b65e89",
-            "from": 3500,
-            "to": 5500,
-            "currency": "USD"
-        },
-        "location": {
-            "id": "681359bc657430f724b65e8a",
-            "address": "222 Finance Dr",
-            "city": "Houston",
-            "country": "USA"
-        },
-        "skills": [
-            "Excel",
-            "Forecasting",
-            "Budgeting"
-        ],
-        "accepting": true,
-        "createdAt": "2025-05-01T11:23:40.028Z"
-    }
-];
-
-const JobTabs = ["Saved", "Applied"];
+const JobTabs = ["Saved", "Applied", "View Applicants"] as const;
 
 const SavedJobs: React.FC = () => {
+  const userprofile = useAppSelector((state) => state.user.profilePicture);
+  const userId = useAppSelector((state) => state.user.userId);
+
   const [selectedTab, setSelectedTab] = useState("Saved");
   const [savedJobs, setSavedJobs] = useState<Job[]>([]);
+  const [appliedJobs, setAppliedJobs] = useState<Job[]>([]);
+  const [applications, setApplications] = useState<any[]>([]);
+  const [postedJobs, setPostedJobs] = useState<Job[]>([]);
+
+  const allowedStatuses = [
+    "Pending",
+    "Viewed",
+    "Rejected",
+    "Accepted",
+  ] as const;
+  type StatusType = (typeof allowedStatuses)[number];
+
+  const getStatusColor = (status: StatusType) => {
+    switch (status) {
+      case "Pending":
+        return "bg-yellow-100 text-yellow-800";
+      case "Viewed":
+        return "bg-blue-100 text-blue-800";
+      case "Rejected":
+        return "bg-red-100 text-red-800";
+      case "Accepted":
+        return "bg-green-100 text-green-800";
+      default:
+        return "";
+    }
+  };
+
+  const handleStatusChange = async (
+    jobId: string,
+    appId: string,
+    newStatus: StatusType,
+  ) => {
+    try {
+      await updateJobApplicationStatus(jobId, appId, newStatus);
+      const updatedApplications = applications.map((app) =>
+        app.id === appId ? { ...app, status: newStatus } : app,
+      );
+      setApplications(updatedApplications);
+    } catch (err) {
+      console.error("Failed to update application status", err);
+    }
+  };
 
   useEffect(() => {
     const loadJobs = async () => {
       try {
         const saved = await fetchSavedJobs();
+        const applied = await fetchMyApplications();
+
+        const appliedJobsMapped: Job[] = applied.map((app: any) => ({
+          ...app.job,
+          createdAt: app.createdAt,
+          accepting: app.job.accepting,
+          easyApply: true,
+          applicationStatus: app.status,
+        }));
+
         setSavedJobs(saved);
+        setAppliedJobs(appliedJobsMapped);
       } catch (error) {
         console.error("Failed to load saved jobs:", error);
       }
@@ -121,8 +84,28 @@ const SavedJobs: React.FC = () => {
     loadJobs();
   }, []);
 
+  useEffect(() => {
+    const fetchApplicants = async () => {
+      try {
+        const allJobs = await fetchJobs();
+        const posted = allJobs.filter((job) => job.employer?.id === userId);
+        setPostedJobs(posted);
+        const allApplications = await Promise.all(
+          posted.map((job) => fetchJobApplications(job.id)),
+        );
+        setApplications(allApplications.flat());
+      } catch (err) {
+        console.error("Failed to fetch applicants:", err);
+      }
+    };
+
+    if (selectedTab === "View Applicants") {
+      fetchApplicants();
+    }
+  }, [selectedTab, userId]);
+
   return (
-    <div className="h-screen bg-warmWhite">
+    <div className="min-h-screen bg-warmWhite">
       <div className="flex items-start justify-center p-6">
         <aside className="inline-block bg-white p-4 rounded-xl shadow">
           <h2 className="text-lg font-medium mb-4 flex items-center gap-2">
@@ -152,13 +135,25 @@ const SavedJobs: React.FC = () => {
           <Link
             to="/saved-jobs"
             onClick={() => setSelectedTab("Applied")}
-            className={`flex items-center justify-between font-medium border-l-4 pl-2 py-2 ${
+            className={`flex items-center justify-between font-medium border-l-4 pl-2 py-2 mb-2 ${
               selectedTab === "Applied"
                 ? "text-crimsonRed border-crimsonRed"
                 : "text-gray-600 border-transparent"
             }`}
           >
             My Applied jobs <span className="ml-6">{appliedJobs.length}</span>
+          </Link>
+
+          <Link
+            to="/saved-jobs"
+            onClick={() => setSelectedTab("View Applicants")}
+            className={`flex items-center justify-between font-medium border-l-4 pl-2 py-2 ${
+              selectedTab === "View Applicants"
+                ? "text-crimsonRed border-crimsonRed"
+                : "text-gray-600 border-transparent"
+            }`}
+          >
+            View My Applicants
           </Link>
         </aside>
 
@@ -181,12 +176,16 @@ const SavedJobs: React.FC = () => {
             </div>
 
             <ul className="space-y-7">
-              {(selectedTab === "Saved" ? savedJobs : appliedJobs).map(
-                (job) => (
+              {selectedTab === "Saved" &&
+                savedJobs.map((job) => (
                   <li key={job.id} className="flex items-start justify-between">
                     <div className="flex gap-4">
                       <img
-                        src={job.company?.logo || "/default-logo.png"}
+                        src={
+                          job.company?.logo ??
+                          userprofile ??
+                          "/default-logo.png"
+                        }
                         alt={job.company?.name}
                         className="h-12 w-12 rounded"
                       />
@@ -203,15 +202,18 @@ const SavedJobs: React.FC = () => {
                           {job.accepting && (
                             <>
                               <span className="text-softRosewood flex items-center">
-                                {" "}
-                                <i className="fa-solid fa-check"></i>{" "}
+                                <i className="fa-solid fa-check"></i>
                               </span>
                               <span className="text-softRosewood flex items-center">
                                 Actively recruiting
                               </span>
                             </>
                           )}
-                          <span>{job.createdAt ? new Date(job.createdAt).toLocaleDateString() : "Unknown date"}</span>
+                          <span>
+                            {job.createdAt
+                              ? new Date(job.createdAt).toLocaleDateString()
+                              : "Unknown date"}
+                          </span>
                           {job.easyApply && (
                             <span className="text-softRosewood">
                               LinkedIn Easy Apply
@@ -220,10 +222,153 @@ const SavedJobs: React.FC = () => {
                         </div>
                       </div>
                     </div>
-                    {/* <button className="text-gray-500 hover:text-gray-700">•••</button> */}
                   </li>
-                ),
-              )}
+                ))}
+
+              {selectedTab === "Applied" &&
+                appliedJobs.map((job) => (
+                  <li key={job.id} className="flex items-start justify-between">
+                    <div className="flex gap-4">
+                      <img
+                        src={
+                          job.company?.logo ??
+                          userprofile ??
+                          "/default-logo.png"
+                        }
+                        alt={job.company?.name}
+                        className="h-12 w-12 rounded"
+                      />
+                      <div>
+                        <h3 className="font-semibold text-lg text-charcoalBlack">
+                          {job.title}
+                        </h3>
+                        <p className="text-mutedSilver">{job.company?.name}</p>
+                        <p className="text-sm text-mutedSilver">
+                          {job.location?.city + ", " + job.location?.country}
+                          {job.workplace ? ` (${job.workplace})` : ""}
+                        </p>
+                        <div className="flex flex-wrap text-sm text-mutedSilver gap-2 mt-1">
+                          {job.accepting && (
+                            <>
+                              <span className="text-softRosewood flex items-center">
+                                <i className="fa-solid fa-check"></i>
+                              </span>
+                              <span className="text-softRosewood flex items-center">
+                                Actively recruiting
+                              </span>
+                            </>
+                          )}
+                          <span>
+                            {job.createdAt
+                              ? new Date(job.createdAt).toLocaleDateString()
+                              : "Unknown date"}
+                          </span>
+                          {job.easyApply && (
+                            <span className="text-softRosewood">
+                              LinkedIn Easy Apply
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                    {job.applicationStatus && (
+                      <span
+                        className={`ml-2 text-xs font-medium px-3 py-1 rounded ${getStatusColor(job.applicationStatus)}`}
+                      >
+                        {job.applicationStatus}
+                      </span>
+                    )}
+                  </li>
+                ))}
+
+              {selectedTab === "View Applicants" &&
+                (applications.length === 0 ? (
+                  <p>No applicants found for your jobs.</p>
+                ) : (
+                  applications.map((application) => {
+                    const relatedJob = postedJobs.find(
+                      (job) => job.id === application.job,
+                    );
+                    return (
+                      <li
+                        key={application.id}
+                        className="border p-4 rounded-lg bg-white shadow-sm"
+                      >
+                        <h3 className="text-lg font-semibold">
+                          {application.applicant.firstname}{" "}
+                          {application.applicant.lastname}
+                        </h3>
+                        <p>Applied to: {relatedJob?.title || "Unknown Job"}</p>
+                        <p>
+                          Company: {relatedJob?.employer?.firstname}{" "}
+                          {relatedJob?.employer?.lastname}
+                        </p>
+                        <p>Email: {application.applicant.email}</p>
+                        <p>Phone: {application.phone}</p>
+                        <p>
+                          Location: {application.applicant.city},{" "}
+                          {application.applicant.country}
+                        </p>
+                        <a
+                          href={application.resume?.file}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 underline"
+                        >
+                          View Resume
+                        </a>
+                        <p>Status: {application.status}</p>
+                        <div className="flex gap-2 mt-2">
+                          {application.status !== "Rejected" &&
+                            application.status !== "Accepted" && (
+                              <>
+                                <button
+                                  onClick={() =>
+                                    handleStatusChange(
+                                      application.job,
+                                      application.id,
+                                      "Viewed",
+                                    )
+                                  }
+                                  className="px-2 py-1 bg-blue-100 text-blue-800 rounded"
+                                >
+                                  Mark as Viewed
+                                </button>
+                                <button
+                                  onClick={() =>
+                                    handleStatusChange(
+                                      application.job,
+                                      application.id,
+                                      "Accepted",
+                                    )
+                                  }
+                                  className="px-2 py-1 bg-green-100 text-green-800 rounded"
+                                >
+                                  Accept
+                                </button>
+                                <button
+                                  onClick={() =>
+                                    handleStatusChange(
+                                      application.job,
+                                      application.id,
+                                      "Rejected",
+                                    )
+                                  }
+                                  className="px-2 py-1 bg-red-100 text-red-800 rounded"
+                                >
+                                  Reject
+                                </button>
+                              </>
+                            )}
+                        </div>
+                        <p>
+                          Applied on:{" "}
+                          {new Date(application.createdAt).toLocaleString()}
+                        </p>
+                      </li>
+                    );
+                  })
+                ))}
             </ul>
           </div>
         </main>

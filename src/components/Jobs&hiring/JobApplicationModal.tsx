@@ -67,7 +67,7 @@ const JobApplicationModal: React.FC<JobApplicationModalProps> = ({
         resume: resume as File,
         coverLetter,
       });
-      localStorage.setItem(`applied-email-${jobId}`, email);
+      // localStorage.setItem(`applied-email-${jobId}`, email);
       setSubmittedInfo({
         resumeName: resume?.name,
         resumeSize: resume?.size,
@@ -92,14 +92,14 @@ const JobApplicationModal: React.FC<JobApplicationModalProps> = ({
     setSubmittedInfo({});
   };
 
-  useEffect(() => {
-    if (isOpen && existingStatus) {
-      const storedEmail = localStorage.getItem(`applied-email-${jobId}`);
-      if (storedEmail) {
-        setSubmittedInfo((prev) => ({ ...prev, email: storedEmail }));
-      }
-    }
-  }, [isOpen, existingStatus, jobId]);
+  // useEffect(() => {
+  //   if (isOpen && existingStatus) {
+  //     const storedEmail = localStorage.getItem(`applied-email-${jobId}`);
+  //     if (storedEmail) {
+  //       setSubmittedInfo((prev) => ({ ...prev, email: storedEmail }));
+  //     }
+  //   }
+  // }, [isOpen, existingStatus, jobId]);
   
 
   if (!isOpen) return null;
@@ -190,7 +190,7 @@ const JobApplicationModal: React.FC<JobApplicationModalProps> = ({
             <div className="mb-4">
               <h3 className="font-medium mb-2">Contact Information</h3>
               <p className="text-gray-700">
-                Email: {submittedInfo.email || applicationData?.email || "john.doe@example.com"}
+                {/* Email: {submittedInfo.email || applicationData?.email || "john.doe@example.com"} */}
               </p>
               <p className="text-gray-700">
                 Phone:{" "}

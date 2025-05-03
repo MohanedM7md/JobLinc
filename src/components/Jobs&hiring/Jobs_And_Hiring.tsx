@@ -1,7 +1,9 @@
 import React, { useState, useEffect, FormEvent, ChangeEvent } from "react";
 import JobApplicationModal from "./JobApplicationModal";
+import CreateJobModal from "./CreateJobModal";
 import toast from "react-hot-toast";
-import { Link } from "react-router-dom";
+import {useAppSelector} from "../../store/hooks"
+import { Link, useNavigate } from "react-router-dom";
 import {
   fetchJobs,
   uploadResume,
@@ -51,6 +53,17 @@ export interface Job {
   createdAt?: string;
   accepting?: boolean;
   easyApply?: true;
+  employer?: {
+    id: string;
+    firstname: string;
+    lastname: string;
+    username: string;
+    country?: string;
+    city?: string;
+    phoneNumber?: string;
+    profilePicture?: string;
+    coverPicture?: string;
+  };
 }
 
 interface FilterOptions {
@@ -92,6 +105,7 @@ const Jobs_And_Hiring: React.FC<SaveApplyProps> = ({
   companyName,
 }) => {
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
   const [jobs, setJobs] = useState<Job[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -107,46 +121,50 @@ const Jobs_And_Hiring: React.FC<SaveApplyProps> = ({
   const [appliedJobs, setAppliedJobs] = useState<Record<string, any>>({});
   const hasApplied = !!selectedJob?.applicationStatus;
 
-  useEffect(() => {
-    const fetchAllJobs = async () => {
-      const [fetchedJobs, myApplications, saved] = await Promise.all([
-        fetchJobs(),
-        fetchMyApplications(),
-        fetchSavedJobs(),
-      ]);
+  const fetchAllJobs = async () => {
+    const [fetchedJobs, myApplications, saved] = await Promise.all([
+      fetchJobs(),
+      fetchMyApplications(),
+      fetchSavedJobs(),
+    ]);
 
-      const appMap: Record<string, any> = {};
-      const allowedStatuses = ["Pending", "Viewed", "Rejected", "Accepted"];
+    const appMap: Record<string, any> = {};
+    const allowedStatuses = ["Pending", "Viewed", "Rejected", "Accepted"];
 
-      const applicationMap: Record<string,"Pending" | "Viewed" | "Rejected" | "Accepted"> = {};
+    const applicationMap: Record<
+      string,
+      "Pending" | "Viewed" | "Rejected" | "Accepted"
+    > = {};
 
-      myApplications.forEach((app: any) => {
-        if (allowedStatuses.includes(app.status)) {
-          appMap[app.job.id] = app;
-        }
-      });
-
-      const enrichedJobs = fetchedJobs.map((job) => ({
-        ...job,
-        applicationStatus: appMap[job.id]?.status ?? null,
-      }));
-
-      setAppliedJobs(appMap);
-      setJobs(enrichedJobs);
-      setSavedJobs(saved);
-
-      if (enrichedJobs.length > 0) {
-        setSelectedJob(enrichedJobs[0]);
-        const isJobSaved = saved.some((job) => job.id === enrichedJobs[0].id);
-        setIsSaved(isJobSaved);
+    myApplications.forEach((app: any) => {
+      if (allowedStatuses.includes(app.status)) {
+        appMap[app.job.id] = app;
       }
-    };
+    });
+
+    const enrichedJobs = fetchedJobs.map((job) => ({
+      ...job,
+      applicationStatus: appMap[job.id]?.status ?? null,
+    }));
+
+    setAppliedJobs(appMap);
+    setJobs(enrichedJobs);
+    setSavedJobs(saved);
+
+    if (enrichedJobs.length > 0) {
+      setSelectedJob(enrichedJobs[0]);
+      const isJobSaved = saved.some((job) => job.id === enrichedJobs[0].id);
+      setIsSaved(isJobSaved);
+    }
+  };
+
+  useEffect(() => {
     fetchAllJobs();
   }, []);
 
   useEffect(() => {
     if (!selectedJob) return;
-  
+
     const checkIfSaved = async () => {
       try {
         const saved = await fetchSavedJobs();
@@ -157,10 +175,9 @@ const Jobs_And_Hiring: React.FC<SaveApplyProps> = ({
         console.error("Failed to fetch saved jobs:", error);
       }
     };
-  
+
     checkIfSaved();
   }, [selectedJob]);
-  
 
   const handleSearchSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -348,14 +365,26 @@ const Jobs_And_Hiring: React.FC<SaveApplyProps> = ({
     return true;
   });
 
+  const navigate = useNavigate();
+  const userprofile = useAppSelector((state) => state.user.profilePicture);
+
   return (
     <div className="flex flex-col min-h-screen bg-warmWhite">
       <main className="flex-grow max-w-7xl mx-auto w-full px-4 py-6">
         <h1 className="text-2xl font-semibold mb-6 text-darkBurgundy">
           Find your next job
         </h1>
-        <button className="bg-softRosewood hover:bg-crimsonRed text-white px-6 py-3 rounded-md mb-5">
+        <button
+          onClick={() => setShowCreateModal(true)}
+          className="bg-softRosewood hover:bg-crimsonRed text-white px-6 py-3 rounded-md mb-5"
+        >
           Create New Job
+        </button>
+        <button
+          onClick={() => navigate("/saved-jobs")}
+          className="bg-softRosewood hover:bg-crimsonRed text-white px-6 py-3 rounded-md mb-5 ml-5"
+        >
+          View Saved,applied Jobs & My applicants
         </button>
 
         <form onSubmit={handleSearchSubmit} className="mb-6">
@@ -528,7 +557,7 @@ const Jobs_And_Hiring: React.FC<SaveApplyProps> = ({
                   >
                     <div className="flex">
                       <img
-                        src={job.company?.logo || "/default-logo.png"}
+                        src={job.company?.logo ?? (userprofile ?? "/default-logo.png")}
                         alt={job.company?.name}
                         className="w-12 h-12 rounded-md mr-4"
                       />
@@ -570,7 +599,7 @@ const Jobs_And_Hiring: React.FC<SaveApplyProps> = ({
                   <div className="flex items-start justify-between">
                     <div className="flex">
                       <img
-                        src={selectedJob.company?.logo || "/default-logo.png"}
+                        src={selectedJob.company?.logo ?? (userprofile ?? "/default-logo.png")}
                         alt={selectedJob.company?.name}
                         className="w-16 h-16 rounded-md mr-4"
                       />
@@ -718,9 +747,7 @@ const Jobs_And_Hiring: React.FC<SaveApplyProps> = ({
                             <p className="text-gray-500">
                               Your application was submitted successfully
                             </p>
-                            <p className="text-gray-500 text-sm">
-                              April 10, 2025
-                            </p>
+                            <p className="text-gray-500 text-sm"></p>
                           </div>
                         </div>
 
@@ -761,11 +788,7 @@ const Jobs_And_Hiring: React.FC<SaveApplyProps> = ({
                             </p>
                             {["Viewed", "Rejected", "Accepted"].includes(
                               selectedJob.applicationStatus || "",
-                            ) && (
-                              <p className="text-gray-500 text-sm">
-                                April 12, 2025
-                              </p>
-                            )}
+                            ) && <p className="text-gray-500 text-sm"></p>}
                           </div>
                         </div>
 
@@ -812,11 +835,7 @@ const Jobs_And_Hiring: React.FC<SaveApplyProps> = ({
                             </p>
                             {["Rejected", "Accepted"].includes(
                               selectedJob.applicationStatus || "",
-                            ) && (
-                              <p className="text-gray-500 text-sm">
-                                April 14, 2025
-                              </p>
-                            )}
+                            ) && <p className="text-gray-500 text-sm"></p>}
                           </div>
                         </div>
                       </div>
@@ -869,6 +888,13 @@ const Jobs_And_Hiring: React.FC<SaveApplyProps> = ({
             </div>
           </div>
         </div>
+        <CreateJobModal
+          isOpen={showCreateModal}
+          onClose={() => setShowCreateModal(false)}
+          onJobCreated={() => {
+            fetchAllJobs();
+          }}
+        />
       </main>
 
       {/* Footer */}
