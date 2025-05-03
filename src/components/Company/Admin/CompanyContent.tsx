@@ -20,12 +20,6 @@ export function CompanyContent({
         return <PostsContent />;
       case "Manage Followers":
         return <ManageFollowers />;
-      case "Feed":
-        return <div>Feed Content</div>;
-      case "Activity":
-        return <div>Activity Content</div>;
-      case "Inbox":
-        return <div>Inbox Content</div>;
       case "Edit page":
         return (
           <CompanyEditModal
