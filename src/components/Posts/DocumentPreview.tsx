@@ -74,7 +74,6 @@ export default function DocumentPreview({
               src={viewerUrl}
               className="w-full h-96"
               title={`${docType} Document`}
-              sandbox="allow-scripts allow-same-origin allow-popups"
             />
           </div>
 
