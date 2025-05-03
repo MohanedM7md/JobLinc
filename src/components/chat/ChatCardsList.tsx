@@ -9,6 +9,7 @@ import {
 import { ChatCardInterface } from "./interfaces/Chat.interfaces";
 import { subscribeToChats } from "@services/api/ChatSocket";
 import ReqChatCard from "./ReqChatCard";
+import { useUnreadCount } from "@context/UnreadCountProvider";
 
 const ChatCardsList = ({
   onCardClick,
@@ -21,6 +22,8 @@ const ChatCardsList = ({
   const [reqChats, setReqChats] = useState<ChatCardInterface[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<"chats" | "requests">("chats");
+  const unreadCountContext = useUnreadCount();
+  const setTotalUnreadCount = unreadCountContext?.setTotalUnreadCount;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -28,8 +31,10 @@ const ChatCardsList = ({
         const data = await fetchChats();
         setChats(data.chats);
         const ReqChats = await fetchRequestChatData();
-
         setReqChats(ReqChats.chats);
+        setTotalUnreadCount?.(
+          data.totalUnreadChats + ReqChats.requestedChatsCount,
+        );
       } catch (error) {
         console.error("Error fetching chat data:", error);
       } finally {
@@ -45,6 +50,7 @@ const ChatCardsList = ({
           return [...prev];
         }),
       (newChatCard) => setChats((prev) => [...prev, newChatCard]),
+      (unseenCount) => setTotalUnreadCount?.((prev) => prev + unseenCount),
     );
   }, []);
 
@@ -113,13 +119,16 @@ const ChatCardsList = ({
                   <ChatCard
                     key={chatCard.chatId}
                     {...chatCard}
-                    onClick={() =>
+                    onClick={() => {
                       onCardClick(
                         chatCard.chatId,
                         chatCard.chatName,
                         chatCard.chatPicture,
-                      )
-                    }
+                      );
+                      setTotalUnreadCount?.(
+                        (prev) => prev - chatCard.unreadCount,
+                      );
+                    }}
                   />
                 ))
               ) : (

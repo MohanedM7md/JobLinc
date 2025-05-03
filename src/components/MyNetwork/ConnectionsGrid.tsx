@@ -2,12 +2,9 @@ import ConnectCard from "./ConnectCard";
 import { useEffect, useState } from "react";
 import { getNetworkFeed } from "../../services/api/networkServices";
 import { connectsInterface } from "interfaces/networkInterfaces";
-import { testconnectsInterface } from "interfaces/networkInterfaces";
 
 function ConnectionsGrid() {
   const [connects, setConnects] = useState<connectsInterface[]>([]);
-  const [connectstest, setConnectstest] = useState<testconnectsInterface[]>([]);
-
 
   useEffect(() => {
     const controller = new AbortController();
@@ -26,7 +23,7 @@ function ConnectionsGrid() {
       controller.abort();
     };
   }, []);
-  
+
   return (
     <div
       role="grid"

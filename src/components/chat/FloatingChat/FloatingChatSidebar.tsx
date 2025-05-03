@@ -13,7 +13,7 @@ import {
   ChevronDown,
   ChevronUp,
 } from "lucide-react";
-
+import { useUnreadCount } from "@context/UnreadCountProvider";
 function FloatingChatSidebar() {
   const userProfilePic = useAppSelector((state) => state.user.profilePicture);
   const [isActive, setActive] = useState<boolean>(() => {
@@ -23,13 +23,12 @@ function FloatingChatSidebar() {
   const { setOpnedChats } = useChats();
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [searchVisible, setSearchVisible] = useState<boolean>(false);
-
-  // Animation variants
+  const { totalUnreadCount } = useUnreadCount() || { totalUnreadCount: 0 };
   const sidebarVariants = {
     collapsed: { height: "56px", borderRadius: "12px 12px 0 0" },
     expanded: { height: "calc(60vh)", borderRadius: "12px 12px 8px 8px" },
   };
-
+  console.log("total unread Count please:", totalUnreadCount);
   const contentVariants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1, transition: { duration: 0.2, delay: 0.1 } },
@@ -79,17 +78,16 @@ function FloatingChatSidebar() {
       setActive(true);
       setTimeout(() => {
         setSearchVisible(true);
-        setIsFocused(true); // Always switch to people when search is clicked
+        setIsFocused(true);
       }, 300);
     } else {
       setSearchVisible(!searchVisible);
       if (!searchVisible) {
-        setIsFocused(true); // Switch to people when enabling search
+        setIsFocused(true);
       }
     }
   };
 
-  // Auto-hide search when sidebar collapses
   useEffect(() => {
     if (!isActive) {
       setSearchVisible(false);
@@ -104,7 +102,7 @@ function FloatingChatSidebar() {
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
       className="w-80 shadow-lg md:block hidden mr-8  bg-charcoalWhite dark:bg-warmBlack overflow-hidden z-50 border border-lightGray dark:border-darkGray"
     >
-      <div className="flex w-full h-14 items-center px-4 gap-2 bg-charcoalWhite dark:bg-darkGray border-b border-lightGray dark:border-darkGray">
+      <header className="flex w-full h-14 items-center px-4 gap-2 bg-charcoalWhite dark:bg-darkGray border-b border-lightGray dark:border-darkGray">
         <div className="relative">
           <img
             src={userProfilePic || "/default-avatar.png"}
@@ -117,7 +115,11 @@ function FloatingChatSidebar() {
         <h2 className="font-medium text-charcoalBlack dark:text-charcoalWhite flex-1">
           Messaging
         </h2>
-
+        {totalUnreadCount > 0 && (
+          <span className="ml-2 px-1.5 py-0.5 text-xs font-semibold bg-crimsonRed text-white rounded-full">
+            {totalUnreadCount}
+          </span>
+        )}
         <div className="flex gap-1">
           <button
             onClick={toggleSearch}
@@ -135,10 +137,10 @@ function FloatingChatSidebar() {
             {isActive ? <ChevronDown size={18} /> : <ChevronUp size={18} />}
           </button>
         </div>
-      </div>
+      </header>
 
       <AnimatePresence>
-        {isActive && (
+        {true && (
           <motion.div
             initial="hidden"
             animate="visible"
@@ -146,7 +148,6 @@ function FloatingChatSidebar() {
             variants={contentVariants}
             className="flex flex-col"
           >
-            {/* Search bar (conditionally shown) */}
             <AnimatePresence>
               {searchVisible && (
                 <motion.div
@@ -161,7 +162,6 @@ function FloatingChatSidebar() {
                       <div className="flex-1">
                         <SearchBar
                           FocusToggler={() => {
-                            // Keep in people view when using search
                             if (!isFocused) setIsFocused(true);
                           }}
                           onChange={handleSearchChange}
@@ -175,12 +175,11 @@ function FloatingChatSidebar() {
               )}
             </AnimatePresence>
 
-            {/* Navigation Tabs */}
             <div className="flex border-b border-lightGray dark:border-darkGray relative">
               <button
                 onClick={() => {
                   setIsFocused(false);
-                  setSearchVisible(false); // Close search when switching to chats
+                  setSearchVisible(false);
                 }}
                 className={`flex-1 py-2 px-4 text-sm font-medium transition-colors ${
                   !isFocused
@@ -207,7 +206,6 @@ function FloatingChatSidebar() {
                 </div>
               </button>
 
-              {/* Active tab indicator - properly animated */}
               <motion.div
                 className="absolute bottom-0 h-0.5 bg-crimsonRed"
                 initial={false}
@@ -219,7 +217,6 @@ function FloatingChatSidebar() {
               />
             </div>
 
-            {/* Chat Lists */}
             <div className="overflow-y-auto">
               <AnimatePresence mode="wait" initial={false}>
                 {!isFocused ? (

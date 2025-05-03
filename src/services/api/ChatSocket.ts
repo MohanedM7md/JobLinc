@@ -90,14 +90,19 @@ export const disconnectChatSocket = () => {
 export const subscribeToChats = (
   onChatUpdate: (chatCard: ChatCardInterface) => void,
   onNewChat: (chatCard: ChatCardInterface) => void,
+  unseenUpdate: (count: number) => void,
 ) => {
-  ChatSocket!.on("cardUpdate", (chatCard: ChatCardInterface) => {
+  if (ChatSocket) console.log("i am listing for any Chat card changes");
+  else console.log("El socket chat card listing is died");
+  ChatSocket?.on("cardUpdate", (chatCard: ChatCardInterface) => {
     console.log("📩 Received modified chatCard:", chatCard);
     onChatUpdate(chatCard);
+    unseenUpdate(!chatCard.isRead ? 1 : 0);
   });
-  ChatSocket!.on("newChat", (chatCard: ChatCardInterface) => {
+  ChatSocket?.on("newChat", (chatCard: ChatCardInterface) => {
     console.log("📩 Received new chatCard:", chatCard);
     onNewChat(chatCard);
+    unseenUpdate(!chatCard.isRead ? 1 : 0);
   });
 };
 export const listenToOpenChatErrors = () => {};

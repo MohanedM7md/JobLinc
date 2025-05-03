@@ -6,6 +6,7 @@ import { NetworkUserIdProvider } from "@context/NetworkUserIdProvider";
 import connectToChat, { disconnectChatSocket } from "@services/api/ChatSocket";
 import { onConnect } from "@services/api/ChatSocket";
 import { useEffect, useState } from "react";
+import { UnreadCountProvider } from "@context/UnreadCountProvider";
 function FloatingChatSystem() {
   const { opnedChats = [] } = useChats();
   const [isConnected, setIsConnected] = useState<boolean>(false);
@@ -23,8 +24,10 @@ function FloatingChatSystem() {
   }, []);
   return (
     <div className="flex flex-row-reverse items-end fixed bottom-0 right-0 z-10">
-      {isConnected && <FloatingChatSidebar />}
-      {opnedChats.map((opnedChat, index) => {
+      <UnreadCountProvider>
+        {isConnected && <FloatingChatSidebar />}
+      </UnreadCountProvider>
+      {opnedChats.map((opnedChat) => {
         const { chatId, usersId, chatName, chatImage } = opnedChat;
 
         return (
