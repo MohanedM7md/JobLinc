@@ -24,11 +24,15 @@ export default function Post() {
 
   if (isPostFetching) {
     return (
-      <div className="flex flex-col items-center p-4 rounded-md shadow-md bg-gray-100 animate-pulse w-full sm:w-11/12 md:w-10/12 lg:w-9/12 xl:w-8/12 m-auto">
-        <div className="w-3/4 h-6 bg-gray-300 rounded mb-4"></div>
-        <div className="w-full h-4 bg-gray-300 rounded mb-2"></div>
-        <div className="w-full h-4 bg-gray-300 rounded mb-2"></div>
-        <div className="w-2/3 h-4 bg-gray-300 rounded"></div>
+      <div className="bg-warmWhite w-full h-dvh">
+        <div className="m-auto lg:w-5/12 md:w-8/12 sm:1/1 bg-white">
+          <div className="flex flex-col p-4 items-center rounded-md shadow-md bg-gray-100 animate-pulse">
+            <div className="w-3/4 h-6 bg-gray-300 rounded mb-4"></div>
+            <div className="w-full h-4 bg-gray-300 rounded mb-2"></div>
+            <div className="w-full h-4 bg-gray-300 rounded mb-2"></div>
+            <div className="w-2/3 h-4 bg-gray-300 rounded"></div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -38,7 +42,7 @@ export default function Post() {
 
     if (statusCode === 404) {
       return (
-        <div className="flex flex-col items-center p-6 rounded-md shadow-md bg-yellow-100 text-yellow-700 w-full sm:w-11/12 md:w-10/12 lg:w-9/12 xl:w-8/12 m-auto">
+        <div className="flex flex-col items-center p-6 rounded-md shadow-md bg-warmWhite text-yellow-700 w-full h-dvh lg:w-5/12 md:w-8/12 sm:1/1 m-auto">
           <span className="material-icons-round text-6xl mb-4">warning</span>
           <h1 className="text-xl font-bold">Post Not Found</h1>
           <p className="text-center">
@@ -49,7 +53,7 @@ export default function Post() {
     }
 
     return (
-      <div className="flex flex-col items-center p-6 rounded-md shadow-md bg-red-100 text-red-700 w-full sm:w-11/12 md:w-10/12 lg:w-9/12 xl:w-8/12 m-auto">
+      <div className="flex flex-col items-center p-6 rounded-md shadow-md bg-red-100 text-red-700 w-full lg:w-5/12 md:w-8/12 sm:1/12 m-auto">
         <span className="material-icons-round text-6xl mb-4">error</span>
         <h1 className="text-xl font-bold">Error</h1>
         <p className="text-center">
@@ -60,18 +64,10 @@ export default function Post() {
   }
 
   return (
-    <div className="w-full sm:w-11/12 md:w-10/12 lg:w-9/12 xl:w-8/12 m-auto">
-      {postData ? (
-        <PostCard post={postData} isRepost={false} />
-      ) : (
-        <div className="flex flex-col items-center p-6 rounded-md shadow-md bg-yellow-100 text-yellow-700">
-          <span className="material-icons-round text-6xl mb-4">warning</span>
-          <h1 className="text-xl font-bold">Post Not Found</h1>
-          <p className="text-center">
-            The post you are looking for does not exist or has been removed.
-          </p>
-        </div>
-      )}
+    <div className="bg-warmWhite h-full min-h-dvh">
+      <div className="bg-charcoalWhite w-full lg:w-5/12 md:w-8/12 sm:1/1 m-auto">
+        {postData && <PostCard post={postData} isRepost={false} />}
+      </div>
     </div>
   );
 }
