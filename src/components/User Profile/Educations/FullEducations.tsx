@@ -17,6 +17,8 @@ import MiniProfileHeader from "../ProfileHeader/MiniProfileHeader";
 import UserEducation from "./UserEducation";
 import EditEducation from "./EditEducation";
 import AddEducation from "./AddEducation";
+import ErrorState from "../Miscellaneous/ErrorState";
+import LoadingSkeleton from "../Miscellaneous/LoadingSkeleton";
 
 export default function FullEducations() {
   const { userId } = useParams();
@@ -69,17 +71,17 @@ export default function FullEducations() {
   }
 
   if (isMeFetching || isUserFetching) {
-    return <div>Loading...</div>;
-  }
-
-  if (isMeError || isUserError) {
-    return <div>Error loading educations</div>;
-  }
+      return <LoadingSkeleton />
+    }
+  
+    if (isMeError || isUserError) {
+      return <ErrorState message="Error loading page, Please try again" fullScreen={true} retry={updateEducations} />
+    }
 
   return (
     <div className="bg-warmWhite text-charcoalBlack min-h-dvh h-full">
       {userData && (
-        <div className="w-full bg-charcoalWhite">
+        <div className="w-full">
           <MiniProfileHeader
             userId={userData.userId}
             firstname={userData.firstname}
