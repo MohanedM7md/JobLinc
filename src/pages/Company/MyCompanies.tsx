@@ -1,10 +1,8 @@
-import { getMyCompany } from "@services/api/companyServices";
 import { getMyCompanies } from "@services/api/userProfileServices";
 import { useEffect, useState } from "react";
 import { Company } from "@store/comapny/interfaces";
 import { useNavigate } from "react-router-dom";
 import { useCompanyStore } from "@store/comapny/companyStore";
-import { FaCommentsDollar } from "react-icons/fa";
 import CompanyCard from "./Cards/CompanyCard";
 function MyCompanies() {
   const [companies, setCompanies] = useState<Company[]>([]);

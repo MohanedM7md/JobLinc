@@ -2,7 +2,6 @@ import { ArrowRight, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import ManageAdmins from "./ManageAdmins";
-// Dummy components (replace with real ones)
 
 const RestrictedMembers = () => <div>Restricted Members Component</div>;
 const Following = () => <div>Following Component</div>;
