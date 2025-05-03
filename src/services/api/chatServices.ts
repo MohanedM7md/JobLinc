@@ -36,6 +36,7 @@ export const createChat = async (
       receiverIds: recievers,
       title,
     });
+    toast.success("Chat succefully created!");
     return response;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -66,13 +67,24 @@ export const uploadingMedia = async (file: File): Promise<string> => {
   const formData = new FormData();
   formData.append("file", file);
 
-  const response = await api.post(`/chat/upload-media`, formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
-
-  return response.data;
+  try {
+    const response = await api.post(`/chat/upload-media`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.status === 400) {
+      toast.error("File not supported");
+      throw new Error("File not supported");
+    } else {
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
+      toast.error(`Error: ${errorMessage}`);
+      throw error;
+    }
+  }
 };
 
 export const fetchRequestChatData = async () => {
@@ -113,7 +125,6 @@ export const addParticipants = async (
   participants: string[],
   chatId: string,
 ) => {
-  toast.error(`nooooooooooooooo}`);
   const response = await api.post("/chat/add-or-remove-participants", {
     userIds: participants,
     chatId,
@@ -125,6 +136,7 @@ export const addParticipants = async (
       `Response error: ${response.status} - Failed to remove participants`,
     );
   }
+  toast.success("paricipant successfuly added!");
   return response.data;
 };
 
@@ -143,5 +155,6 @@ export const removeParticipants = async (
       `Response error: ${response.status} - Failed to remove participants`,
     );
   }
+  toast.success("paricipant successfuly added!");
   return response.data;
 };

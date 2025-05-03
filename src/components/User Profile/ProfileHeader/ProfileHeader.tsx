@@ -8,7 +8,11 @@ import { useNavigate } from "react-router-dom";
 import { ConnectionStatus } from "../../../interfaces/userInterfaces";
 import useChats from "@hooks/useChats";
 import ProfileUtilityButton from "./ProfileUtilityButton";
-import { AcceptConnectionRequest, changeConnectionStatus, sendConnectionRequest } from "@services/api/networkServices";
+import {
+  AcceptConnectionRequest,
+  changeConnectionStatus,
+  sendConnectionRequest,
+} from "@services/api/networkServices";
 import toast from "react-hot-toast";
 import NetworkModal from "@components/MyNetwork/NetworkModal";
 import ContactInfo from "./ContactInfo";
@@ -42,8 +46,7 @@ function ProfileHeader(props: ProfileProps & { isUser: boolean }) {
     useState<string>("");
   const [showConnectionButton, setShowConnectionButton] =
     useState<boolean>(false);
-  const [showIgnoreButton, setShowIgnoreButton] =
-    useState<boolean>(false);
+  const [showIgnoreButton, setShowIgnoreButton] = useState<boolean>(false);
   const [isEditUserModalOpen, setIsEditUserModalOpen] =
     useState<boolean>(false);
   const [isEditProfilePictureModalOpen, setIsEditProfilePictureModalOpen] =
@@ -54,8 +57,6 @@ function ProfileHeader(props: ProfileProps & { isUser: boolean }) {
     useState<boolean>(false);
   const navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState(false);
-
-  
 
   async function handleUpdateUser() {
     await props.updateUser();
@@ -74,7 +75,7 @@ function ProfileHeader(props: ProfileProps & { isUser: boolean }) {
 
   useEffect(() => {
     switch (connectionStatus) {
-      case ConnectionStatus.NotConnected : {
+      case ConnectionStatus.NotConnected: {
         setConnectionButtonText("Connect");
         setMessageButtonText("Send Message Request");
         setConnectionButtonStyle(
@@ -101,21 +102,21 @@ function ProfileHeader(props: ProfileProps & { isUser: boolean }) {
         setShowConnectionButton(true);
         break;
       }
-      case ConnectionStatus.Received:{
+      case ConnectionStatus.Received: {
         setConnectionButtonText("Accept");
         setMessageButtonText("Send Message Request");
         setConnectionButtonStyle(
           "border-crimsonRed hover:bg-crimsonRed hover:text-white",
         );
         setShowConnectionButton(true);
-        setShowIgnoreButton(true)
+        setShowIgnoreButton(true);
         break;
       }
-      case ConnectionStatus.Blocked:{
+      case ConnectionStatus.Blocked: {
         setShowConnectionButton(false);
         break;
       }
-      case ConnectionStatus.Accepted:{
+      case ConnectionStatus.Accepted: {
         setConnectionButtonText("Remove Connection");
         setMessageButtonText("Message");
         setConnectionButtonStyle(
@@ -137,10 +138,9 @@ function ProfileHeader(props: ProfileProps & { isUser: boolean }) {
   }, [connectionStatus]);
 
   const handleConnectionsClick = () => {
-    if(props.isUser){
-    navigate(`/my-connections`);
-    }
-    else{
+    if (props.isUser) {
+      navigate(`/my-connections`);
+    } else {
       navigate(`/profile/${props.userId}/connections`);
     }
   };
@@ -149,39 +149,42 @@ function ProfileHeader(props: ProfileProps & { isUser: boolean }) {
   };
   const handleAssuringModal = () => {
     setModalOpen(true);
-};
+  };
 
-const handleCloseModal = () => {
+  const handleCloseModal = () => {
     setModalOpen(false);
-};
-const handleIgnoreClick = () => {
-  const removeconnectionpromise =  changeConnectionStatus(props.userId, "Canceled");
-  removeconnectionpromise.then((response) => {
-    toast.promise (
-      removeconnectionpromise,
-      {
-        loading: "Rejecting Connection...",
-        success: "User rejected successfully!",
-        error: "Failed to Reject user. Please try again.",
-      }
-    )
-    if (response.status === 200) {
-      console.log("Reject Connection Response:", response);
-      setConnectionStatus(ConnectionStatus.Rejected);
-      setShowIgnoreButton(false)
-    } else {
-      console.error("Failed to Remove user:", response);
-    }
-  }).catch((error) => {
-    console.error("Error Removing user:", error);
-  });
-}
-const handleConnectClick = async () => {
-    if(connectionStatus === ConnectionStatus.Pending || connectionStatus === ConnectionStatus.Sent)
-      {
-          handleAssuringModal()
-      }
-    else if(connectionStatus === ConnectionStatus.Received){
+  };
+  const handleIgnoreClick = () => {
+    const removeconnectionpromise = changeConnectionStatus(
+      props.userId,
+      "Canceled",
+    );
+    removeconnectionpromise
+      .then((response) => {
+        toast.promise(removeconnectionpromise, {
+          loading: "Rejecting Connection...",
+          success: "User rejected successfully!",
+          error: "Failed to Reject user. Please try again.",
+        });
+        if (response.status === 200) {
+          console.log("Reject Connection Response:", response);
+          setConnectionStatus(ConnectionStatus.Rejected);
+          setShowIgnoreButton(false);
+        } else {
+          console.error("Failed to Remove user:", response);
+        }
+      })
+      .catch((error) => {
+        console.error("Error Removing user:", error);
+      });
+  };
+  const handleConnectClick = async () => {
+    if (
+      connectionStatus === ConnectionStatus.Pending ||
+      connectionStatus === ConnectionStatus.Sent
+    ) {
+      handleAssuringModal();
+    } else if (connectionStatus === ConnectionStatus.Received) {
       const AcceptPromise = AcceptConnectionRequest(props.userId);
       toast.promise(AcceptPromise, {
         loading: `Accepting Invitation...`,
@@ -189,77 +192,79 @@ const handleConnectClick = async () => {
         error: "Failed to Accept Invitation. Please try again.",
       });
       try {
-      const response = await AcceptPromise;
-      if(response.status === 200){
-        console.log("Accept invitation response", response);
-        setConnectionStatus(ConnectionStatus.Accepted)
+        const response = await AcceptPromise;
+        if (response.status === 200) {
+          console.log("Accept invitation response", response);
+          setConnectionStatus(ConnectionStatus.Accepted);
+        }
+      } catch (err) {
+        console.error("Failed to accept connection request:", err);
       }
-    } catch (err) {
-      console.error("Failed to accept connection request:", err);
-    }
-    }
-    else if(connectionStatus === ConnectionStatus.Blocked){
+    } else if (connectionStatus === ConnectionStatus.Blocked) {
       setShowConnectionButton(false);
-    }
-    else if(connectionStatus === ConnectionStatus.Accepted){
-      const removeconnectionpromise =  changeConnectionStatus(props.userId, "Canceled");
-      removeconnectionpromise.then((response) => {
-        toast.promise (
-          removeconnectionpromise,
-          {
+    } else if (connectionStatus === ConnectionStatus.Accepted) {
+      const removeconnectionpromise = changeConnectionStatus(
+        props.userId,
+        "Canceled",
+      );
+      removeconnectionpromise
+        .then((response) => {
+          toast.promise(removeconnectionpromise, {
             loading: "Removing Connection...",
             success: "User removed successfully!",
             error: "Failed to remove user. Please try again.",
+          });
+          if (response.status === 200) {
+            console.log("Remove Connection Response:", response);
+            setConnectionStatus(ConnectionStatus.Canceled);
+          } else {
+            console.error("Failed to Remove user:", response);
           }
-        )
-        if (response.status === 200) {
-          console.log("Remove Connection Response:", response);
-          setConnectionStatus(ConnectionStatus.Canceled)
-        } else {
-          console.error("Failed to Remove user:", response);
-        }
-      }).catch((error) => {
-        console.error("Error Removing user:", error);
-      });
-    }
-    else {
+        })
+        .catch((error) => {
+          console.error("Error Removing user:", error);
+        });
+    } else {
       const connectpromise = sendConnectionRequest(props.userId);
       toast.promise(connectpromise, {
         loading: "Sending connection request...",
-        success: "Connection sent successfully!", 
-        error: "Failed to send connection request. Please try again.", 
-    }); 
-    try {
-      const response = await connectpromise;
-      console.log("Connection Request Response:", response);
-      if (response.status === 200) { 
+        success: "Connection sent successfully!",
+        error: "Failed to send connection request. Please try again.",
+      });
+      try {
+        const response = await connectpromise;
+        console.log("Connection Request Response:", response);
+        if (response.status === 200) {
           setConnectionStatus(ConnectionStatus.Pending);
+        }
+      } catch (err) {
+        console.error("Failed to send connection request:", err);
       }
-  } catch (err) {
-      console.error("Failed to send connection request:", err);
-  }
     }
-  }
+  };
   const handleWithdrawModal = async () => {
-    const withdrawRequestPromise = changeConnectionStatus(props.userId, "Canceled");
-    toast.promise(withdrawRequestPromise, { 
-        loading: "Withdrawing connection request...",
-        success: "Request Withdrawn successfully!", 
-        error: "Failed to withdraw connection request. Please try again." 
+    const withdrawRequestPromise = changeConnectionStatus(
+      props.userId,
+      "Canceled",
+    );
+    toast.promise(withdrawRequestPromise, {
+      loading: "Withdrawing connection request...",
+      success: "Request Withdrawn successfully!",
+      error: "Failed to withdraw connection request. Please try again.",
     });
     try {
-        const response = await withdrawRequestPromise;
-        if (response.status === 200) { 
-            console.log("Withdraw Request response:", response);
-            setConnectionStatus(ConnectionStatus.Canceled);
-        } else {
-            console.error("Failed to withdraw connection request:", response);
-        }
+      const response = await withdrawRequestPromise;
+      if (response.status === 200) {
+        console.log("Withdraw Request response:", response);
+        setConnectionStatus(ConnectionStatus.Canceled);
+      } else {
+        console.error("Failed to withdraw connection request:", response);
+      }
     } catch (error) {
-        console.error("Failed to withdraw connection request:", error);
+      console.error("Failed to withdraw connection request:", error);
     }
     setModalOpen(false);
-};
+  };
 
   return (
     <div className="profile-header bg-lightGray p-4 rounded-lg shadow-md relative">
@@ -314,12 +319,14 @@ const handleConnectClick = async () => {
           >
             Connections: {props.numberOfConnections}
           </p>
-          <p
-            className="text-crimsonRed font-medium cursor-pointer hover:underline"
-            onClick={handleMutualsClick}
-          >
-            Mutuals: {props.mutualConnections}
-          </p>
+          {!props.isUser && (
+            <p
+              className="text-crimsonRed font-medium cursor-pointer hover:underline"
+              onClick={handleMutualsClick}
+            >
+              Mutuals: {props.mutualConnections}
+            </p>
+          )}
         </div>
         {props.isUser && (
           <button
@@ -370,7 +377,7 @@ const handleConnectClick = async () => {
             >
               {connectionButtonText}
             </button>
-            )}
+          )}
           {showIgnoreButton && (
             <button
               className={`mt-2 px-4 py-1.5 border-1 rounded-3xl font-medium transition duration-300 ease-in-out border-gray-400 hover:bg-gray-200 text-gray-400`}
@@ -378,34 +385,34 @@ const handleConnectClick = async () => {
             >
               Ignore
             </button>
-            )}
+          )}
           <NetworkModal isOpen={modalOpen} onClose={handleCloseModal}>
-                  <div className="flex flex-col">
-                      <div className="border-b border-gray-300 py-2">
-                          <h1 className="font-bold">Withdraw Invitation.</h1>
-                      </div>
-                      <div className="border-b border-gray-300 flex items-center justify-center py-3">
-                          <p className="font-semibold">
-                              Are you sure you want to withdraw your invitation?
-                          </p>
-                      </div>
-                      <div className="flex items-center justify-end space-x-4 pt-3">
-                          <button
-                              data-testid="withdraw-modal-button"
-                              className="cursor-pointer border-2 px-5 py-0.5 rounded-full font-semibold hover:bg-lightGray hover:outline-1 text-crimsonRed border-crimsonRed"
-                              onClick={handleWithdrawModal}
-                          >
-                              Withdraw
-                          </button>
-                          <button
-                              data-testid="cancel-modal-button"
-                              className="cursor-pointer border-2 px-5 py-0.5 rounded-full font-semibold hover:bg-lightGray hover:outline-1 text-darkGray border-darkGray"
-                              onClick={handleCloseModal}
-                          >
-                              Cancel
-                          </button>
-                      </div>
-                  </div>
+            <div className="flex flex-col">
+              <div className="border-b border-gray-300 py-2">
+                <h1 className="font-bold">Withdraw Invitation.</h1>
+              </div>
+              <div className="border-b border-gray-300 flex items-center justify-center py-3">
+                <p className="font-semibold">
+                  Are you sure you want to withdraw your invitation?
+                </p>
+              </div>
+              <div className="flex items-center justify-end space-x-4 pt-3">
+                <button
+                  data-testid="withdraw-modal-button"
+                  className="cursor-pointer border-2 px-5 py-0.5 rounded-full font-semibold hover:bg-lightGray hover:outline-1 text-crimsonRed border-crimsonRed"
+                  onClick={handleWithdrawModal}
+                >
+                  Withdraw
+                </button>
+                <button
+                  data-testid="cancel-modal-button"
+                  className="cursor-pointer border-2 px-5 py-0.5 rounded-full font-semibold hover:bg-lightGray hover:outline-1 text-darkGray border-darkGray"
+                  onClick={handleCloseModal}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
           </NetworkModal>
           <ProfileUtilityButton
             isUser={props.isUser}

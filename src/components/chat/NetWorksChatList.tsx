@@ -24,7 +24,7 @@ const NetWorksChatList = ({
         console.log("Fetching ConnectionList");
         const data = await fetchNetWorks(user);
         setAllUsers(data);
-        setFilteredUsers(data); // Initialize filtered users with all users
+        setFilteredUsers(data);
         setIsLoading(false);
       } catch (error) {
         console.error("Error fetching chat data:", error);

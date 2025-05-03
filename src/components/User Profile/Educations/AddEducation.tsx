@@ -229,7 +229,14 @@ export default function AddEducation(props: AddEducationProps) {
           className="bg-crimsonRed text-warmWhite px-4 py-1.5 rounded-3xl cursor-pointer hover:bg-red-700 transition duration-400 ease-in-out"
           disabled={isProcessing}
         >
-          {isProcessing ? "Adding..." : "Add"}
+          {isProcessing ? (
+            <span className="flex items-center">
+              <span className="w-4 h-4 border-2 border-t-transparent border-white rounded-full animate-spin mr-2"></span>
+              Adding...
+            </span>
+          ) : (
+            "Add"
+          )}
         </button>
       </div>
     </form>

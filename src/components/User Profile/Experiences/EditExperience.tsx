@@ -102,7 +102,7 @@ export default function EditExperience(props: EditExperienceProps) {
     enabled: typeof companyValue === "string" && companyValue.trim() !== "",
     queryFn: async () => {
       try {
-        const data = await searchCompanies(companyValue);
+        const data = await searchCompanies({name: companyValue});
         setCompanyOptions(data);
         return data;
       } catch {
@@ -148,7 +148,7 @@ export default function EditExperience(props: EditExperienceProps) {
     console.log(editedExperience);
     toast.promise(editExperienceMutation.mutateAsync({experienceId: props.id, experience: editedExperience}), {
       loading: "Saving experience...",
-      success: "Experience edited successfully",
+      success: "Saved!",
       error: (error) => error.message,
     });
   };
@@ -156,7 +156,7 @@ export default function EditExperience(props: EditExperienceProps) {
   const handleDelete = () => {
     toast.promise(deleteExperienceMutation.mutateAsync(props.id), {
       loading: "Deleting experience...",
-      success: "Experience deleted successfully",
+      success: "Deleted!",
       error: (error) => error.message,
     });
   };
@@ -387,7 +387,14 @@ export default function EditExperience(props: EditExperienceProps) {
             }`}
             disabled={isProcessing}
           >
-            {editExperienceMutation.status === "pending" ? "Saving..." : "Save"}
+            {editExperienceMutation.status === "pending" ? (
+              <span className="flex items-center">
+                <span className="w-4 h-4 border-2 border-t-transparent border-white rounded-full animate-spin mr-2"></span>
+                Saving...
+              </span>
+            ) : (
+              "Save"
+            )}
           </button>
           <button
             type="button"
@@ -397,9 +404,14 @@ export default function EditExperience(props: EditExperienceProps) {
             onClick={() => setShowConfirmDelete(true)}
             disabled={isProcessing}
           >
-            {deleteExperienceMutation.status === "pending"
-              ? "Deleting..."
-              : "Delete"}
+            {deleteExperienceMutation.status === "pending" ? (
+              <span className="flex items-center">
+                <span className="w-4 h-4 border-2 border-t-transparent border-white rounded-full animate-spin mr-2"></span>
+                Deleting...
+              </span>
+            ) : (
+              "Delete"
+            )}
           </button>
         </div>
       </form>

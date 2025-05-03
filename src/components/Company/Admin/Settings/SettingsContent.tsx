@@ -30,13 +30,6 @@ const menuItems = [
     component: <Following />,
   },
   {
-    id: "inbox-settings",
-    title: "Inbox settings",
-    subtitle:
-      "Choose whether members can message the page and select conversation topics",
-    component: <InboxSettings />,
-  },
-  {
     id: "job-posting",
     title: "Job posting",
     subtitle: "Manage who can post jobs and how jobs are shared on your page",

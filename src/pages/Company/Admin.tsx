@@ -6,11 +6,9 @@ import { useCompanyStore } from "@store/comapny/companyStore";
 import LoadingScreen from "../LoadingScreen";
 import { enterAdminPage } from "@services/api/companyServices";
 import { useParams } from "react-router-dom";
-import store from "@store/store";
-import { updateAccessToken } from "@store/user/userSlice";
 import { refreshToken } from "@services/api/authService";
 export default function Admin() {
-  const { company, loading, error, resetCompany, fetchAdminCompany } =
+  const { company, loading, resetCompany, fetchAdminCompany } =
     useCompanyStore();
   const { companyId } = useParams<string>();
   const [activeContent, setActiveContent] = useState("Dashboard");
@@ -35,7 +33,7 @@ export default function Admin() {
       return () => {
         resetCompany();
         localStorage.removeItem("companyId");
-        // store.dispatch(updateAccessToken(""));
+
         refreshToken();
       };
     }
@@ -73,12 +71,11 @@ export default function Admin() {
           activeContent={activeContent}
           setActiveContent={(content) => {
             setActiveContent(content);
-            setIsSidebarOpen(false); // Close sidebar on mobile when selecting item
+            setIsSidebarOpen(false);
           }}
         />
       </div>
 
-      {/* Overlay for mobile */}
       {isSidebarOpen && (
         <div
           className="fixed inset-0 bg-black/50 lg:hidden z-30"
@@ -86,7 +83,6 @@ export default function Admin() {
         />
       )}
 
-      {/* Main Content */}
       <div className="flex-1 overflow-auto">
         <CompanyContent
           activeContent={activeContent}

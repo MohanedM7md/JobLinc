@@ -42,6 +42,7 @@ export interface PostInterface {
   companyId: string | null;
   companyName: string | null;
   companyLogo: string | null;
+  companyUrlSlug: string | null;
   profilePicture: string | null;
   headline: string;
   userReaction: PostReactions;

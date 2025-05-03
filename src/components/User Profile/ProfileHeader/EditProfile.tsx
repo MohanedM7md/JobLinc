@@ -59,7 +59,7 @@ function EditProfile({ user, onSave }: EditProfileProps) {
   const onSubmit: SubmitHandler<ProfileFields> = (data) => {
     toast.promise(editUserMutation.mutateAsync(data), {
       loading: "Saving changes...",
-      success: "Saved changes!",
+      success: "Saved!",
       error: (error) => error.message,
     });
   };
@@ -163,7 +163,14 @@ function EditProfile({ user, onSave }: EditProfileProps) {
           className="bg-crimsonRed text-warmWhite px-4 py-2 rounded-3xl hover:bg-red-700 cursor-pointer transition duration-400 ease-in-out"
           disabled={isPending}
         >
-          {isPending ? "Saving..." : "Save changes"}
+          {isPending ? (
+            <span className="flex items-center">
+              <span className="w-4 h-4 border-2 border-t-transparent border-white rounded-full animate-spin mr-2"></span>
+              Saving...
+            </span>
+          ) : (
+            "Save changes"
+          )}
         </button>
       </div>
     </form>

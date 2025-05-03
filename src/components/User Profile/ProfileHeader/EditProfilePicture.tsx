@@ -113,7 +113,7 @@ export default function EditProfilePicture(props: EditProfilePictureProps) {
       toast
         .promise(updateProfilePictureMutation.mutateAsync(file), {
           loading: "Updating profile picture...",
-          success: "Profile picture updated successfully!",
+          success: "Updated!",
           error: (error) => error.message,
         })
         .then(() => {
@@ -186,18 +186,28 @@ export default function EditProfilePicture(props: EditProfilePictureProps) {
           className="bg-crimsonRed text-warmWhite px-4 py-1.5 rounded-3xl cursor-pointer hover:bg-red-700 transition duration-400 ease-in-out"
           disabled={isPending}
         >
-          {updateProfilePictureMutation.isPending
-            ? "Saving"
-            : "Confirm picture"}
+          {updateProfilePictureMutation.isPending ? (
+            <span className="flex items-center">
+              <span className="w-4 h-4 border-2 border-t-transparent border-white rounded-full animate-spin mr-2"></span>
+              Saving...
+            </span>
+          ) : (
+            "Confirm picture"
+          )}
         </button>
         <button
           onClick={() => setConfirmDelete(true)}
           className="bg-gray-500 text-warmWhite px-4 py-1.5 rounded-3xl cursor-pointer hover:bg-gray-700 transition duration-400 ease-in-out"
           disabled={isPending}
         >
-          {deleteProfilePictureMutation.isPending
-            ? "Removing"
-            : "Remove picture"}
+          {deleteProfilePictureMutation.isPending ? (
+            <span className="flex items-center">
+              <span className="w-4 h-4 border-2 border-t-transparent border-white rounded-full animate-spin mr-2"></span>
+              Removing...
+            </span>
+          ) : (
+            "Remove picture"
+          )}
         </button>
       </div>
       {confirmDelete && (

@@ -101,7 +101,7 @@ export default function EditEducation(props: EditEducationProps) {
 
     toast.promise(editEducationMutation.mutateAsync({educationId: props.id, education: editedEducation}), {
       loading: "Saving education...",
-      success: "Edited!",
+      success: "Saved!",
       error: (error) => error.message,
     });
   };
@@ -262,7 +262,14 @@ export default function EditEducation(props: EditEducationProps) {
           className="bg-crimsonRed text-warmWhite px-4 py-1.5 rounded-3xl cursor-pointer hover:bg-red-700 transition duration-400 ease-in-out"
           disabled={isProcessing}
         >
-          {isProcessing ? "Saving..." : "Save"}
+          {isProcessing ? (
+            <span className="flex items-center">
+              <span className="w-4 h-4 border-2 border-t-transparent border-white rounded-full animate-spin mr-2"></span>
+              Saving...
+            </span>
+          ) : (
+            "Save"
+          )}
         </button>
         <button
           type="button"
@@ -270,7 +277,14 @@ export default function EditEducation(props: EditEducationProps) {
           className="bg-gray-500 text-warmWhite px-4 py-1.5 rounded-3xl cursor-pointer hover:bg-gray-700 transition duration-400 ease-in-out"
           disabled={isProcessing}
         >
-          {isProcessing ? "Deleting..." : "Delete"}
+          {isProcessing ? (
+            <span className="flex items-center">
+              <span className="w-4 h-4 border-2 border-t-transparent border-white rounded-full animate-spin mr-2"></span>
+              Deleting...
+            </span>
+          ) : (
+            "Delete"
+          )}
         </button>
       </div>
       {showConfirmDelete && (

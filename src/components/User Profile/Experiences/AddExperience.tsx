@@ -116,7 +116,7 @@ export default function AddExperience(props: AddExperienceProps) {
     console.log(newExperience);
     toast.promise(addExperienceMutation.mutateAsync(newExperience), {
       loading: "Adding experience...",
-      success: "Experience added successfully",
+      success: "Added!",
       error: (error) => error.message,
     });
   };
@@ -366,7 +366,14 @@ export default function AddExperience(props: AddExperienceProps) {
           }`}
           disabled={addExperienceMutation.status === "pending"}
         >
-          {addExperienceMutation.status === "pending" ? "Adding..." : "Add"}
+          {addExperienceMutation.status === "pending" ? (
+            <span className="flex items-center">
+              <span className="w-4 h-4 border-2 border-t-transparent border-white rounded-full animate-spin mr-2"></span>
+              Adding...
+            </span>
+          ) : (
+            "Add"
+          )}
         </button>
       </div>
     </form>

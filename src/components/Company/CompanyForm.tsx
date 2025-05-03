@@ -259,7 +259,7 @@ export const CompanyForm = () => {
                 }
               }}
               error={errors.urlSlug}
-              prefix="joblinc.me/company/"
+              prefix="joblinc.me/company/member"
               placeholder="your-company"
               loading={isSlugValidating}
             />

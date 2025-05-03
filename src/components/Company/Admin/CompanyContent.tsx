@@ -1,8 +1,8 @@
 import { CompanyEditModal } from "./Edit modal/CompanyEditModal";
 import SettingsContent from "./Settings/SettingsContent";
-import ManageFollowers from "./Settings/CompanyContentPages/ManageFollowers";
+import ManageFollowers from "./CompanyContentPages/ManageFollowers";
 import PostsContent from "@pages/Company/Cards/PostsContent";
-
+import CompanyDashboard from "./CompanyContentPages/Dashboard/Dashboard";
 type CompanyContentProps = {
   activeContent: string;
   setActiveContent: (activeContent: string) => void;
@@ -15,25 +15,11 @@ export function CompanyContent({
   const getContent = () => {
     switch (activeContent) {
       case "Dashboard":
-        return (
-          <div className="space-y-6">
-            <h1 className="text-2xl font-bold">Dashboard</h1>
-            <p>
-              This is your dashboard content. Replace with your actual
-              component.
-            </p>
-          </div>
-        );
+        return <CompanyDashboard />;
       case "Page posts":
         return <PostsContent />;
       case "Manage Followers":
         return <ManageFollowers />;
-      case "Feed":
-        return <div>Feed Content</div>;
-      case "Activity":
-        return <div>Activity Content</div>;
-      case "Inbox":
-        return <div>Inbox Content</div>;
       case "Edit page":
         return (
           <CompanyEditModal

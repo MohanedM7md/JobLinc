@@ -9,7 +9,8 @@ import {
 import { ChatCardInterface } from "./interfaces/Chat.interfaces";
 import { subscribeToChats } from "@services/api/ChatSocket";
 import ReqChatCard from "./ReqChatCard";
-
+import { useUnreadCount } from "@context/UnreadCountProvider";
+import { getTotalUnread } from "./Utils/getTotalUnread";
 const ChatCardsList = ({
   onCardClick,
   className = "",
@@ -21,6 +22,8 @@ const ChatCardsList = ({
   const [reqChats, setReqChats] = useState<ChatCardInterface[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<"chats" | "requests">("chats");
+  const unreadCountContext = useUnreadCount();
+  const setTotalUnreadCount = unreadCountContext?.setTotalUnreadCount;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -28,8 +31,10 @@ const ChatCardsList = ({
         const data = await fetchChats();
         setChats(data.chats);
         const ReqChats = await fetchRequestChatData();
-
         setReqChats(ReqChats.chats);
+        setTotalUnreadCount?.(
+          data.totalUnreadChats + ReqChats.requestedChatsCount,
+        );
       } catch (error) {
         console.error("Error fetching chat data:", error);
       } finally {
@@ -44,7 +49,10 @@ const ChatCardsList = ({
           prev.unshift(UpdatedChatCard);
           return [...prev];
         }),
-      (newChatCard) => setChats((prev) => [...prev, newChatCard]),
+      (newChatCard) => {
+        setChats((prev) => [...prev, newChatCard]);
+        setTotalUnreadCount?.(getTotalUnread(chats));
+      },
     );
   }, []);
 
@@ -113,13 +121,14 @@ const ChatCardsList = ({
                   <ChatCard
                     key={chatCard.chatId}
                     {...chatCard}
-                    onClick={() =>
+                    onClick={() => {
                       onCardClick(
                         chatCard.chatId,
                         chatCard.chatName,
                         chatCard.chatPicture,
-                      )
-                    }
+                      );
+                      setTotalUnreadCount?.(getTotalUnread(chats));
+                    }}
                   />
                 ))
               ) : (

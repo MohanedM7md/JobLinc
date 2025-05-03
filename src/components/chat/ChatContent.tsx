@@ -71,7 +71,7 @@ function ChatContent({
             console.log(data.participants);
             setMessages(data.messages);
             setChatId(data.chatId);
-            //setOpnedChats((prev) => [...prev]);
+
             chatType.current = data.chatType;
           } catch (err) {
             console.error("Failed to create chat:", err);
