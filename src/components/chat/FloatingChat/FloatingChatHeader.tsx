@@ -1,4 +1,4 @@
-import { MoreHorizontal, X } from "lucide-react";
+import { X } from "lucide-react";
 import { FlaotingHeaderProbs } from "../interfaces/Chat.interfaces";
 import ChatAvatarGrid from "@chatComponent/ChatAvatarGrid";
 import { memo } from "react";

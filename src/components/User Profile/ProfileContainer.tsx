@@ -6,6 +6,7 @@ import {
   getUserById,
   getMyPosts,
   getUserPosts,
+  getEducation,
 } from "@services/api/userProfileServices";
 import UserExperience from "./Experiences/UserExperience";
 import ProfileHeader from "./ProfileHeader/ProfileHeader";
@@ -23,13 +24,16 @@ import { useQuery } from "@tanstack/react-query";
 import store from "@store/store";
 import { PostInterface } from "@interfaces/postInterfaces";
 import PostCard from "../Posts/PostCard";
-import PostCreate from "../Posts/PostCreate";
+import PostCreate from "../Posts/PostCreation/PostCreate";
+import UserEducation from "./Educations/UserEducation";
+import AddEducation from "./Educations/AddEducation";
 
 function ProfileContainer() {
   const { userId } = useParams();
   const [userData, setUserData] = useState<ProfileInterface>();
   const [userPosts, setUserPosts] = useState<PostInterface[]>();
   const [addExperienceModal, setAddExperienceModal] = useState<boolean>(false);
+  const [addEducationModal, setAddEducationModal] = useState<boolean>(false);
   const [addCertificateModal, setAddCertificateModal] =
     useState<boolean>(false);
   const [addSkillModal, setAddSkillModal] = useState<boolean>(false);
@@ -103,6 +107,16 @@ function ProfileContainer() {
     enabled: false,
   });
 
+  const {
+    isFetching: isEducationFetching,
+    isError: isEducationError,
+    refetch: refetchEducations,
+  } = useQuery({
+    queryKey: ["getEducations"],
+    queryFn: getEducation,
+    enabled: false,
+  });
+
   useEffect(() => {
     const loggedInUserId = store.getState().user.userId;
     if (userId === loggedInUserId) {
@@ -144,6 +158,11 @@ function ProfileContainer() {
     setUserData((prev) => (prev ? { ...prev, skills: data } : prev));
   }
 
+  async function updateEducations() {
+    const { data } = await refetchEducations();
+    setUserData((prev) => (prev ? { ...prev, education: data } : prev));
+  }
+
   async function updatePosts() {
     refetchMyPosts().then(({ data }) => {
       setUserPosts(data);
@@ -152,16 +171,13 @@ function ProfileContainer() {
 
   if (
     isMeFetching ||
-    isCertificatesFetching ||
-    isExperiencesFetching ||
-    isSkillsFetching ||
     isUserFetching ||
     isMyPostsFetching ||
     isUserPostsFetching
   ) {
     return (
       <div className="bg-warmWhite">
-        <div className="profile-container pb-4 w-12/12 lg:w-8/12 m-auto bg-lightGray text-charcoalBlack">
+        <div className="profile-container pb-4 w-12/12 lg:w-8/12 m-auto bg-charcoalWhite text-charcoalBlack">
           <div className="p-4 rounded-lg shadow-md relative animate-pulse">
             <div className="relative mb-16">
               <div className="w-full h-80 bg-gray-300 rounded-lg"></div>
@@ -193,14 +209,15 @@ function ProfileContainer() {
     isCertificatesError ||
     isExperiencesError ||
     isSkillsError ||
+    isEducationError ||
     isUserError ||
     isMyPostsError ||
     isUserPostsError
   ) {
     const errorType = isUserError && userId ? 404 : 500;
     return (
-      <div className="bg-warmWhite">
-        <div className="profile-container pb-4 w-12/12 lg:w-8/12 m-auto bg-lightGray text-charcoalBlack">
+      <div className="bg-warmWhite h-dvh">
+        <div className="profile-container pb-4 w-12/12 lg:w-8/12 m-auto text-charcoalBlack">
           {errorType === 404 ? (
             <div className="text-center p-4">
               <h1 className="text-2xl font-bold text-crimsonRed">
@@ -248,22 +265,25 @@ function ProfileContainer() {
                   : "https://fastly.picsum.photos/id/6/500/150.jpg?hmac=DNsBPoYhZrvLVc__YwZt4A-PY7MIPBseudP2AQzu4Is"
               }
               phoneNumber={userData.phoneNumber}
-              numberofConnections={
-                userData.numberofConnections ? userData.numberofConnections : 0
+              numberOfConnections={
+                userData.numberOfConnections ? userData.numberOfConnections : 0
               }
               mutualConnections={userData.mutualConnections}
               connectionStatus={userData.connectionStatus}
+              isFollowing={userData.isFollowing}
               email={userData.email}
               updateUser={updateUser}
               isUser={isUser}
             />
-            <div className="my-2 p-4 rounded-lg shadow-md relative bg-lightGray">
+            <div
+              className={`my-2 p-4 rounded-lg shadow-md relative bg-charcoalWhite ${isMyPostsFetching || isUserPostsFetching ? "opacity-50" : ""}`}
+            >
               <div className="flex flex-row justify-between items-center">
                 <h1 className="font-medium text-xl mb-4">Activity</h1>
                 {isUser && (
                   <button
                     onClick={() => setAddPostModal(true)}
-                    className="material-icons font-medium text-2xl p-2 rounded-full hover:bg-gray-200 transition duration-400 ease-in-out"
+                    className="material-icons text-mutedSilver font-medium text-2xl p-2 rounded-full hover:bg-gray-200 transition duration-400 ease-in-out"
                   >
                     add
                   </button>
@@ -303,14 +323,16 @@ function ProfileContainer() {
           </>
         )}
         {userData && (
-          <div className="my-2 p-4 rounded-lg shadow-md relative bg-lightGray">
+          <div
+            className={`my-2 p-4 rounded-lg shadow-md relative bg-charcoalWhite ${isExperiencesFetching ? "opacity-50" : ""}`}
+          >
             <div className="flex flex-row justify-between items-center">
               <h1 className="font-medium text-xl mb-4">Experience</h1>
               {isUser && (
                 <div className="flex flex-row gap-2">
                   <button
                     onClick={() => setAddExperienceModal(true)}
-                    className="material-icons font-medium text-2xl p-2 rounded-full hover:bg-gray-200 transition duration-400 ease-in-out"
+                    className="material-icons text-mutedSilver font-medium text-2xl p-2 rounded-full hover:bg-gray-200 transition duration-400 ease-in-out"
                   >
                     add
                   </button>
@@ -320,7 +342,7 @@ function ProfileContainer() {
                         `/profile/${userData?.userId}/details/experiences`,
                       )
                     }
-                    className="material-icons font-medium text-2xl p-2 rounded-full hover:bg-gray-200 transition duration-400 ease-in-out"
+                    className="material-icons text-mutedSilver font-medium text-2xl p-2 rounded-full hover:bg-gray-200 transition duration-400 ease-in-out"
                   >
                     edit
                   </button>
@@ -372,14 +394,83 @@ function ProfileContainer() {
           </div>
         )}
         {userData && (
-          <div className="my-2 p-4 rounded-lg shadow-md relative bg-lightGray">
+          <div
+            className={`my-2 p-4 rounded-lg shadow-md relative bg-charcoalWhite ${isEducationFetching ? "opacity-50" : ""}`}
+          >
+            <div className="flex flex-row justify-between items-center">
+              <h1 className="font-medium text-xl mb-4">Education</h1>
+              {isUser && (
+                <div className="flex flex-row gap-2">
+                  <button
+                    onClick={() => setAddEducationModal(true)}
+                    className="material-icons text-mutedSilver font-medium text-2xl p-2 rounded-full hover:bg-gray-200 transition duration-400 ease-in-out"
+                  >
+                    add
+                  </button>
+                  <button
+                    onClick={() =>
+                      navigate(`/profile/${userData?.userId}/details/education`)
+                    }
+                    className="material-icons text-mutedSilver font-medium text-2xl p-2 rounded-full hover:bg-gray-200 transition duration-400 ease-in-out"
+                  >
+                    edit
+                  </button>
+                </div>
+              )}
+            </div>
+            {userData.education.length > 0 ? (
+              <>
+                {userData.education.slice(0, 2).map((education, i) => {
+                  return (
+                    <div className="flex flex-row justify-between items-center">
+                      <UserEducation
+                        key={`Education ${i} of user ${userData.firstname}`}
+                        education={education}
+                      />
+                    </div>
+                  );
+                })}
+                {userData.education.length > 2 && (
+                  <button
+                    onClick={() =>
+                      navigate(`/profile/${userData.userId}/details/education`)
+                    }
+                    className="mt-2 px-4 py-1.5 border-1 border-crimsonRed rounded-3xl hover:bg-crimsonRed hover:text-white font-medium transition duration-400 ease-in-out"
+                  >
+                    Show all {userData.education.length} education
+                  </button>
+                )}
+              </>
+            ) : (
+              <div>
+                <h2 className="text-mutedSilver">
+                  {isUser
+                    ? "Add your education to show your worth!"
+                    : "User has no education"}
+                </h2>
+                {isUser && (
+                  <button
+                    onClick={() => setAddEducationModal(true)}
+                    className="cursor-pointer mt-2 px-4 py-1.5 border-1 border-crimsonRed rounded-3xl hover:bg-crimsonRed hover:text-white font-medium transition duration-400 ease-in-out"
+                  >
+                    Add education
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+        {userData && (
+          <div
+            className={`my-2 p-4 rounded-lg shadow-md relative bg-charcoalWhite ${isCertificatesFetching ? "opacity-50" : ""}`}
+          >
             <div className="flex flex-row justify-between items-center">
               <h1 className="font-medium text-xl mb-4">Certificates</h1>
               {isUser && (
                 <div className="flex flex-row gap-2">
                   <button
                     onClick={() => setAddCertificateModal(true)}
-                    className="material-icons font-medium text-2xl p-2 rounded-full hover:bg-gray-200 transition duration-400 ease-in-out"
+                    className="material-icons text-mutedSilver font-medium text-2xl p-2 rounded-full hover:bg-gray-200 transition duration-400 ease-in-out"
                   >
                     add
                   </button>
@@ -389,7 +480,7 @@ function ProfileContainer() {
                         `/profile/${userData?.userId}/details/certificates`,
                       )
                     }
-                    className="material-icons font-medium text-2xl p-2 rounded-full hover:bg-gray-200 transition duration-400 ease-in-out"
+                    className="material-icons text-mutedSilver font-medium text-2xl p-2 rounded-full hover:bg-gray-200 transition duration-400 ease-in-out"
                   >
                     edit
                   </button>
@@ -439,14 +530,16 @@ function ProfileContainer() {
           </div>
         )}
         {userData && (
-          <div className="my-2 p-4 rounded-lg shadow-md relative bg-lightGray">
+          <div
+            className={`my-2 p-4 rounded-lg shadow-md relative bg-charcoalWhite ${isSkillsFetching ? "opacity-50" : ""}`}
+          >
             <div className="flex flex-row justify-between items-center">
               <h1 className="font-medium text-xl mb-4">Skills</h1>
               {isUser && (
                 <div className="flex flex-row gap-2">
                   <button
                     onClick={() => setAddSkillModal(true)}
-                    className="material-icons font-medium text-2xl p-2 rounded-full hover:bg-gray-200 transition duration-400 ease-in-out"
+                    className="material-icons text-mutedSilver font-medium text-2xl p-2 rounded-full hover:bg-gray-200 transition duration-400 ease-in-out"
                   >
                     add
                   </button>
@@ -454,7 +547,7 @@ function ProfileContainer() {
                     onClick={() =>
                       navigate(`/profile/${userData?.userId}/details/skills`)
                     }
-                    className="material-icons font-medium text-2xl p-2 rounded-full hover:bg-gray-200 transition duration-400 ease-in-out"
+                    className="material-icons text-mutedSilver font-medium text-2xl p-2 rounded-full hover:bg-gray-200 transition duration-400 ease-in-out"
                   >
                     edit
                   </button>
@@ -518,6 +611,16 @@ function ProfileContainer() {
           <AddCertificate
             onUpdate={updateCertificates}
             onClose={() => setAddCertificateModal(false)}
+          />
+        </Modal>
+        <Modal
+          isOpen={addEducationModal}
+          onClose={() => setAddEducationModal(false)}
+        >
+          <AddEducation
+            key={`Adding Education to ${userData?.firstname} ${userData?.lastname}`}
+            onUpdate={updateEducations}
+            onClose={() => setAddEducationModal(false)}
           />
         </Modal>
         <Modal isOpen={addSkillModal} onClose={() => setAddSkillModal(false)}>

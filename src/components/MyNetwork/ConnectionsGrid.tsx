@@ -2,12 +2,9 @@ import ConnectCard from "./ConnectCard";
 import { useEffect, useState } from "react";
 import { getNetworkFeed } from "../../services/api/networkServices";
 import { connectsInterface } from "interfaces/networkInterfaces";
-import { testconnectsInterface } from "interfaces/networkInterfaces";
 
 function ConnectionsGrid() {
   const [connects, setConnects] = useState<connectsInterface[]>([]);
-  const [connectstest, setConnectstest] = useState<testconnectsInterface[]>([]);
-
 
   useEffect(() => {
     const controller = new AbortController();
@@ -26,23 +23,6 @@ function ConnectionsGrid() {
       controller.abort();
     };
   }, []);
-  // useEffect(() => {
-  //   const controller = new AbortController();
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await getNetworkFeedTest();
-  //       console.log(response);
-  //       setConnects(Array.isArray(response) ? response : []);
-  //     } catch (error) {
-  //       console.error("Error fetching network feed:", error);
-  //     }
-  //   };
-  //   fetchData();
-
-  //   return () => {
-  //     controller.abort();
-  //   };
-  // }, []);
 
   return (
     <div

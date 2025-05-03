@@ -1,11 +1,10 @@
 import {
-  CertificateInterface,
   EditExperienceInterface,
   NewCertificate,
+  NewEducation,
   NewExperience,
   NewSkill,
   ProfileUpdateInterface,
-  SkillInterface,
 } from "interfaces/userInterfaces";
 import { api } from "./api";
 
@@ -69,6 +68,20 @@ export async function updateCoverPicture(file: File) {
     return response.data;
   } catch (error) {
     console.error("Error updating cover picture:", error);
+    throw error;
+  }
+}
+
+export async function getMyCompanies()
+{
+  try {
+    const response = await api.get("user/companies");
+    console.log(response);
+    return response;
+  }
+  catch(error)
+  {
+    console.error("Error fetching user companies", error);
     throw error;
   }
 }
@@ -146,10 +159,10 @@ export async function addCertificate(certificate: NewCertificate) {
   }
 }
 
-export async function editCertificate(certificate: CertificateInterface) {
+export async function editCertificate({certificateId, certificate}: {certificateId: string, certificate: NewCertificate}) {
   try {
     const response = await api.put(
-      `user/certificate/${certificate.id}`,
+      `user/certificate/${certificateId}`,
       certificate,
     );
     return response.status;
@@ -189,9 +202,9 @@ export async function addSkill(skill: NewSkill) {
   }
 }
 
-export async function editSkill(skill: SkillInterface) {
+export async function editSkill({skillId, skill}: {skillId: string, skill: NewSkill}) {
   try {
-    const response = await api.put(`user/skills/${skill.id}`, skill);
+    const response = await api.put(`user/skills/${skillId}`, skill);
     return response.status;
   } catch (error) {
     console.error("Error editing skill:", error);
@@ -209,6 +222,46 @@ export async function deleteSkill(skillId: string) {
   }
 }
 
+export async function getEducation() {
+  try {
+    const response = await api.get("user/education");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching educations:", error);
+    throw error;
+  }
+}
+
+export async function addEducation(education: NewEducation) {
+  try {
+    const response = await api.post("user/education/add", education);
+    return response.status;
+  } catch (error) {
+    console.error("Error adding new education:", error);
+    throw error;
+  }
+}
+
+export async function editEducation({educationId, education}:{educationId: string, education: NewEducation}) {
+  try {
+    const response = await api.put(`user/education/${educationId}`, education);
+    return response.status;
+  } catch (error) {
+    console.error("Error editing education:", error);
+    throw error;
+  }
+}
+
+export async function deleteEducation(educationId: string) {
+  try {
+    const response = await api.delete(`user/education/${educationId}`);
+    return response.status;
+  } catch (error) {
+    console.error("Error deleting education:", error);
+    throw error;
+  }
+}
+
 export async function getUserById(userId: string) {
   try {
     const response = await api.get(`user/u/${userId}/public`);
@@ -220,9 +273,21 @@ export async function getUserById(userId: string) {
   }
 }
 
+export async function deleteAccount(password: string) {
+  try {
+    const response = await api.delete("user/me", {
+      data: { password },
+    });
+    return response;
+  } catch (error) {
+    console.error("Error deleting account:", error);
+    throw error;
+  }
+}
 export async function getMyPosts() {
   try {
     const response = await api.get(`post/my-posts`)
+    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error("Error fetching posts:", error);
@@ -233,6 +298,7 @@ export async function getMyPosts() {
 export async function getUserPosts(userId: string) {
   try {
     const response = await api.get(`post/${userId}/posts`);
+    console.log(response);
     return response.data;
   } catch (error) {
     console.error("Error fetching posts:", error);

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { EllipsisVertical } from "lucide-react";
-import Checkbox from "./UI/CheckBox";
+import { useUnreadCount } from "@context/UnreadCountProvider";
 import { getRelativeTimeString } from "@utils/DateFormatter";
 import { ChatCardProps } from "./interfaces/Chat.interfaces";
 import ChatAvatarGrid from "./ChatAvatarGrid";
@@ -22,7 +22,6 @@ export default function ChatCard({
   const [markAsRead, setMarkAsRead] = useState(isRead);
   const menuRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
-
   useEffect(() => {
     setMarkAsRead(isRead);
   }, [isRead]);
@@ -65,18 +64,16 @@ export default function ChatCard({
 
   const handleClick = async (e: React.MouseEvent) => {
     setMarkAsRead(true);
+
     if (onClick) {
       onClick();
     }
   };
 
-  // Format the relative time string to be shorter if needed
   const getCompactTimeString = (date: Date) => {
     const timeString = getRelativeTimeString(date);
 
-    // For small screens, abbreviate time strings
     if (window.innerWidth < 640) {
-      // Adjust this breakpoint as needed
       return timeString
         .replace("minutes", "m")
         .replace("minute", "m")

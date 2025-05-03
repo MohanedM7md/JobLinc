@@ -7,6 +7,11 @@ import "material-icons";
 import { useNavigate } from "react-router-dom";
 import { ConnectionStatus } from "../../../interfaces/userInterfaces";
 import useChats from "@hooks/useChats";
+import ProfileUtilityButton from "./ProfileUtilityButton";
+import { AcceptConnectionRequest, changeConnectionStatus, sendConnectionRequest } from "@services/api/networkServices";
+import toast from "react-hot-toast";
+import NetworkModal from "@components/MyNetwork/NetworkModal";
+import ContactInfo from "./ContactInfo";
 
 interface ProfileProps {
   userId: string;
@@ -19,9 +24,10 @@ interface ProfileProps {
   coverPicture: string;
   phoneNumber: string;
   email: string;
-  numberofConnections: number;
+  numberOfConnections: number;
   mutualConnections: number;
   connectionStatus: ConnectionStatus;
+  isFollowing: boolean;
   updateUser: () => Promise<void>;
 }
 
@@ -31,15 +37,25 @@ function ProfileHeader(props: ProfileProps & { isUser: boolean }) {
     props.connectionStatus,
   );
   const [connectionButtonText, setConnectionButtonText] = useState<string>("");
+  const [messageButtonText, setMessageButtonText] = useState<string>("");
   const [connectionButtonStyle, setConnectionButtonStyle] =
     useState<string>("");
+  const [showConnectionButton, setShowConnectionButton] =
+    useState<boolean>(false);
+  const [showIgnoreButton, setShowIgnoreButton] =
+    useState<boolean>(false);
   const [isEditUserModalOpen, setIsEditUserModalOpen] =
     useState<boolean>(false);
   const [isEditProfilePictureModalOpen, setIsEditProfilePictureModalOpen] =
     useState<boolean>(false);
   const [isEditCoverPictureModalOpen, setIsEditCoverPictureModalOpen] =
     useState<boolean>(false);
+  const [isContactInfoModalOpen, setIsContactInfoModalOpen] =
+    useState<boolean>(false);
   const navigate = useNavigate();
+  const [modalOpen, setModalOpen] = useState(false);
+
+  
 
   async function handleUpdateUser() {
     await props.updateUser();
@@ -57,20 +73,193 @@ function ProfileHeader(props: ProfileProps & { isUser: boolean }) {
   }
 
   useEffect(() => {
-    switch (props.connectionStatus) {
-      case ConnectionStatus.NotConnected: {
-        setConnectionButtonText("Send Message Req");
+    switch (connectionStatus) {
+      case ConnectionStatus.NotConnected : {
+        setConnectionButtonText("Connect");
+        setMessageButtonText("Send Message Request");
         setConnectionButtonStyle(
           "border-crimsonRed hover:bg-crimsonRed hover:text-white",
         );
+        setShowConnectionButton(true);
+        break;
       }
-      //make cases for each one with your preferred styling and text
+      case ConnectionStatus.Pending: {
+        setConnectionButtonText("Pending");
+        setMessageButtonText("Send Message Request");
+        setConnectionButtonStyle(
+          "border-gray-400 hover:bg-gray-200 text-gray-400",
+        );
+        setShowConnectionButton(true);
+        break;
+      }
+      case ConnectionStatus.Sent: {
+        setConnectionButtonText("Pending");
+        setMessageButtonText("Send Message Request");
+        setConnectionButtonStyle(
+          "border-gray-400 hover:bg-gray-200 text-gray-400",
+        );
+        setShowConnectionButton(true);
+        break;
+      }
+      case ConnectionStatus.Received:{
+        setConnectionButtonText("Accept");
+        setMessageButtonText("Send Message Request");
+        setConnectionButtonStyle(
+          "border-crimsonRed hover:bg-crimsonRed hover:text-white",
+        );
+        setShowConnectionButton(true);
+        setShowIgnoreButton(true)
+        break;
+      }
+      case ConnectionStatus.Blocked:{
+        setShowConnectionButton(false);
+        break;
+      }
+      case ConnectionStatus.Accepted:{
+        setConnectionButtonText("Remove Connection");
+        setMessageButtonText("Message");
+        setConnectionButtonStyle(
+          "border-gray-400 hover:bg-gray-200 text-gray-400",
+        );
+        setShowConnectionButton(true);
+        break;
+      }
+      default: {
+        setConnectionButtonText("Connect");
+        setMessageButtonText("Send Message Request");
+        setConnectionButtonStyle(
+          "border-crimsonRed hover:bg-crimsonRed hover:text-white",
+        );
+        setShowConnectionButton(true);
+        break;
+      }
     }
   }, [connectionStatus]);
 
   const handleConnectionsClick = () => {
-    navigate(`/profile/${props.userId}/connections`);
+    if(props.isUser){
+    navigate(`/my-connections`);
+    }
+    else{
+      navigate(`/profile/${props.userId}/connections`);
+    }
   };
+  const handleMutualsClick = () => {
+    navigate(`/profile/${props.userId}/mutual-connections`);
+  };
+  const handleAssuringModal = () => {
+    setModalOpen(true);
+};
+
+const handleCloseModal = () => {
+    setModalOpen(false);
+};
+const handleIgnoreClick = () => {
+  const removeconnectionpromise =  changeConnectionStatus(props.userId, "Canceled");
+  removeconnectionpromise.then((response) => {
+    toast.promise (
+      removeconnectionpromise,
+      {
+        loading: "Rejecting Connection...",
+        success: "User rejected successfully!",
+        error: "Failed to Reject user. Please try again.",
+      }
+    )
+    if (response.status === 200) {
+      console.log("Reject Connection Response:", response);
+      setConnectionStatus(ConnectionStatus.Rejected);
+      setShowIgnoreButton(false)
+    } else {
+      console.error("Failed to Remove user:", response);
+    }
+  }).catch((error) => {
+    console.error("Error Removing user:", error);
+  });
+}
+const handleConnectClick = async () => {
+    if(connectionStatus === ConnectionStatus.Pending || connectionStatus === ConnectionStatus.Sent)
+      {
+          handleAssuringModal()
+      }
+    else if(connectionStatus === ConnectionStatus.Received){
+      const AcceptPromise = AcceptConnectionRequest(props.userId);
+      toast.promise(AcceptPromise, {
+        loading: `Accepting Invitation...`,
+        success: `${props.firstname} ${props.lastname} is now a connection!`,
+        error: "Failed to Accept Invitation. Please try again.",
+      });
+      try {
+      const response = await AcceptPromise;
+      if(response.status === 200){
+        console.log("Accept invitation response", response);
+        setConnectionStatus(ConnectionStatus.Accepted)
+      }
+    } catch (err) {
+      console.error("Failed to accept connection request:", err);
+    }
+    }
+    else if(connectionStatus === ConnectionStatus.Blocked){
+      setShowConnectionButton(false);
+    }
+    else if(connectionStatus === ConnectionStatus.Accepted){
+      const removeconnectionpromise =  changeConnectionStatus(props.userId, "Canceled");
+      removeconnectionpromise.then((response) => {
+        toast.promise (
+          removeconnectionpromise,
+          {
+            loading: "Removing Connection...",
+            success: "User removed successfully!",
+            error: "Failed to remove user. Please try again.",
+          }
+        )
+        if (response.status === 200) {
+          console.log("Remove Connection Response:", response);
+          setConnectionStatus(ConnectionStatus.Canceled)
+        } else {
+          console.error("Failed to Remove user:", response);
+        }
+      }).catch((error) => {
+        console.error("Error Removing user:", error);
+      });
+    }
+    else {
+      const connectpromise = sendConnectionRequest(props.userId);
+      toast.promise(connectpromise, {
+        loading: "Sending connection request...",
+        success: "Connection sent successfully!", 
+        error: "Failed to send connection request. Please try again.", 
+    }); 
+    try {
+      const response = await connectpromise;
+      console.log("Connection Request Response:", response);
+      if (response.status === 200) { 
+          setConnectionStatus(ConnectionStatus.Pending);
+      }
+  } catch (err) {
+      console.error("Failed to send connection request:", err);
+  }
+    }
+  }
+  const handleWithdrawModal = async () => {
+    const withdrawRequestPromise = changeConnectionStatus(props.userId, "Canceled");
+    toast.promise(withdrawRequestPromise, { 
+        loading: "Withdrawing connection request...",
+        success: "Request Withdrawn successfully!", 
+        error: "Failed to withdraw connection request. Please try again." 
+    });
+    try {
+        const response = await withdrawRequestPromise;
+        if (response.status === 200) { 
+            console.log("Withdraw Request response:", response);
+            setConnectionStatus(ConnectionStatus.Canceled);
+        } else {
+            console.error("Failed to withdraw connection request:", response);
+        }
+    } catch (error) {
+        console.error("Failed to withdraw connection request:", error);
+    }
+    setModalOpen(false);
+};
 
   return (
     <div className="profile-header bg-lightGray p-4 rounded-lg shadow-md relative">
@@ -112,7 +301,10 @@ function ProfileHeader(props: ProfileProps & { isUser: boolean }) {
             <p className="text-mutedSilver">
               {props.city}, {props.country}
             </p>
-            <span className="text-crimsonRed font-medium cursor-pointer ml-2 hover:underline">
+            <span
+              onClick={() => setIsContactInfoModalOpen(true)}
+              className="text-crimsonRed font-medium cursor-pointer ml-2 hover:underline"
+            >
               Contact Info
             </span>
           </div>
@@ -120,11 +312,11 @@ function ProfileHeader(props: ProfileProps & { isUser: boolean }) {
             className="text-crimsonRed font-medium cursor-pointer hover:underline"
             onClick={handleConnectionsClick}
           >
-            Connections: {props.numberofConnections}
+            Connections: {props.numberOfConnections}
           </p>
           <p
             className="text-crimsonRed font-medium cursor-pointer hover:underline"
-            onClick={handleConnectionsClick}
+            onClick={handleMutualsClick}
           >
             Mutuals: {props.mutualConnections}
           </p>
@@ -132,7 +324,7 @@ function ProfileHeader(props: ProfileProps & { isUser: boolean }) {
         {props.isUser && (
           <button
             onClick={() => setIsEditUserModalOpen(true)}
-            className="material-icons w-10 h-10 flex items-center justify-center hover:bg-gray-200 rounded-full cursor-pointer transition duration-400 ease-in-out"
+            className="material-icons text-mutedSilver w-10 h-10 flex items-center justify-center hover:bg-gray-200 rounded-full cursor-pointer transition duration-400 ease-in-out"
           >
             edit
           </button>
@@ -141,18 +333,15 @@ function ProfileHeader(props: ProfileProps & { isUser: boolean }) {
 
       {props.isUser && (
         <div className="flex mt-4 space-x-2">
-          <button className="bg-crimsonRed text-warmWhite px-4 py-1.5 rounded-3xl">
-            Open to Work
-          </button>
-          <button className="bg-darkBurgundy text-warmWhite px-4 py-1.5 rounded-3xl">
-            Add Profile Section
-          </button>
-          <button className="bg-darkBurgundy text-warmWhite px-4 py-1.5 rounded-3xl">
+          <button className="mt-2 px-4 py-1.5 border-1 rounded-3xl font-medium transition duration-300 ease-in-out border-crimsonRed hover:bg-crimsonRed hover:text-white">
             Enhance Profile
           </button>
-          <button className="bg-darkBurgundy text-warmWhite px-4 py-1.5 rounded-3xl">
-            Resources
-          </button>
+          <ProfileUtilityButton
+            isUser={props.isUser}
+            userId={props.userId}
+            connectionStatus={props.connectionStatus}
+            isFollowing={props.isFollowing}
+          />
         </div>
       )}
 
@@ -170,10 +359,60 @@ function ProfileHeader(props: ProfileProps & { isUser: boolean }) {
                 },
               ]);
             }}
-            className={`mt-2 px-4 py-1.5 border-1 rounded-3xl font-medium transition duration-300 ease-in-out ${connectionButtonStyle}`}
+            className={`mt-2 px-4 py-1.5 border-1 rounded-3xl font-medium transition duration-300 ease-in-out border-crimsonRed hover:bg-crimsonRed hover:text-white`}
           >
-            {connectionButtonText}
+            {messageButtonText}
           </button>
+          {showConnectionButton && (
+            <button
+              className={`mt-2 px-4 py-1.5 border-1 rounded-3xl font-medium transition duration-300 ease-in-out ${connectionButtonStyle}`}
+              onClick={handleConnectClick}
+            >
+              {connectionButtonText}
+            </button>
+            )}
+          {showIgnoreButton && (
+            <button
+              className={`mt-2 px-4 py-1.5 border-1 rounded-3xl font-medium transition duration-300 ease-in-out border-gray-400 hover:bg-gray-200 text-gray-400`}
+              onClick={handleIgnoreClick}
+            >
+              Ignore
+            </button>
+            )}
+          <NetworkModal isOpen={modalOpen} onClose={handleCloseModal}>
+                  <div className="flex flex-col">
+                      <div className="border-b border-gray-300 py-2">
+                          <h1 className="font-bold">Withdraw Invitation.</h1>
+                      </div>
+                      <div className="border-b border-gray-300 flex items-center justify-center py-3">
+                          <p className="font-semibold">
+                              Are you sure you want to withdraw your invitation?
+                          </p>
+                      </div>
+                      <div className="flex items-center justify-end space-x-4 pt-3">
+                          <button
+                              data-testid="withdraw-modal-button"
+                              className="cursor-pointer border-2 px-5 py-0.5 rounded-full font-semibold hover:bg-lightGray hover:outline-1 text-crimsonRed border-crimsonRed"
+                              onClick={handleWithdrawModal}
+                          >
+                              Withdraw
+                          </button>
+                          <button
+                              data-testid="cancel-modal-button"
+                              className="cursor-pointer border-2 px-5 py-0.5 rounded-full font-semibold hover:bg-lightGray hover:outline-1 text-darkGray border-darkGray"
+                              onClick={handleCloseModal}
+                          >
+                              Cancel
+                          </button>
+                      </div>
+                  </div>
+          </NetworkModal>
+          <ProfileUtilityButton
+            isUser={props.isUser}
+            userId={props.userId}
+            connectionStatus={props.connectionStatus}
+            isFollowing={props.isFollowing}
+          />
         </div>
       )}
 
@@ -211,6 +450,17 @@ function ProfileHeader(props: ProfileProps & { isUser: boolean }) {
         <EditCoverPicture
           coverPicture={props.coverPicture}
           onSave={handleUpdateCoverPicture}
+        />
+      </Modal>
+
+      <Modal
+        isOpen={isContactInfoModalOpen}
+        onClose={() => setIsContactInfoModalOpen(false)}
+      >
+        <ContactInfo
+          phoneNumber={props.phoneNumber}
+          userId={props.userId}
+          email={props.email}
         />
       </Modal>
     </div>

@@ -9,8 +9,7 @@ function DarkMode() {
     const navigate = useNavigate();
     const [selectedChoice, setSelectedChoice] = useState(false);
     const { darkMode, setDarkMode } = useContext(ThemeContext);
-
-    // Animation variants
+        // Animation variants
     const containerVariants = {
         hidden: { opacity: 0 },
         visible: {

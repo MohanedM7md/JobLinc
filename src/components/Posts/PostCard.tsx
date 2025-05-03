@@ -28,9 +28,15 @@ export default function PostCard(props: PostProps) {
   const [showComment, setShowComment] = useState<boolean>(false);
   const [showRepostModal, setShowRepostModal] = useState<boolean>(false);
   const [showReactionsModal, setShowReactionsModal] = useState<boolean>(false);
+  const [reactionCount, setReactionCount] = useState<number>(props.post.likes);
+  const [commentsCount, setCommentsCount] = useState<number>(
+    props.post.comments,
+  );
+  const [repostsCount, setRepostsCount] = useState<number>(props.post.reposts);
 
-  const posterId: string = props.post.companyId
-    ? props.post.companyId
+  const isCompany: boolean = props.post.companyId ? true : false;
+  const posterId: string = props.post.companyUrlSlug
+    ? props.post.companyUrlSlug
     : props.post.userId;
   const name: string = props.post.companyName
     ? props.post.companyName
@@ -40,18 +46,10 @@ export default function PostCard(props: PostProps) {
 
   function reactionSuccess(newReaction: string, oldReaction: string) {
     if (oldReaction === "NoReaction" && newReaction !== "NoReaction") {
-      props.post.likes++;
+      setReactionCount(reactionCount + 1);
     } else if (oldReaction !== "NoReaction" && newReaction === "NoReaction") {
-      props.post.likes--;
+      setReactionCount(reactionCount - 1);
     }
-  }
-
-  function incrementCommentsCount() {
-    props.post.comments += 1;
-  }
-
-  function decrementCommentsCount() {
-    props.post.comments -= 1;
   }
 
   return !hide ? (
@@ -59,6 +57,7 @@ export default function PostCard(props: PostProps) {
       <div className="flex flex-row w-1/1">
         <PostHeader
           key={`Details of poster ${posterId}`}
+          isCompany={isCompany}
           id={posterId}
           name={name}
           headline={props.post.headline}
@@ -90,6 +89,8 @@ export default function PostCard(props: PostProps) {
           key={`Details of post ${props.post.postId}`}
           text={props.post.text}
           media={props.post.media}
+          taggedUsers={props.post.taggedUsers}
+          taggedCompanies={props.post.taggedCompanies}
         />
         {props.post.repost ? (
           <div className="w-12/12 m-auto my-2 border-1 rounded-lg border-gray-300 transform scale-90">
@@ -102,15 +103,18 @@ export default function PostCard(props: PostProps) {
         ) : null}
       </div>
       <div className="flex flex-row text-mutedSilver m-auto py-2 w-11/12 border-b-1 border-gray-300">
-        <div onClick={() => setShowReactionsModal(true)} className="hover:underline flex flex-row cursor-pointer">
+        <div
+          onClick={() => setShowReactionsModal(true)}
+          className="hover:underline flex flex-row cursor-pointer"
+        >
           <ThumbsUp className="text-blue-500" />
-          <span className="ml-2">{props.post.likes}</span>
+          <span className="ml-2">{reactionCount}</span>
         </div>
         <div className="flex flex-row justify-end w-1/1">
-          <span className="ml-2">{props.post.comments}</span>
+          <span className="ml-2">{commentsCount}</span>
           <MessageSquareText className="ml-2" />
           <span className="ml-2">•</span>
-          <span className="ml-2">{props.post.reposts}</span>
+          <span className="ml-2">{repostsCount}</span>
           <Repeat className="ml-2" />
         </div>
       </div>
@@ -161,7 +165,10 @@ export default function PostCard(props: PostProps) {
                 ? (props.post.repost?.postId ?? "")
                 : props.post.postId
             }
-            onSuccess={() => setShowRepostModal(false)}
+            onSuccess={() => {
+              setRepostsCount(repostsCount + 1);
+              setShowRepostModal(false);
+            }}
           />
         </Modal>
       )}
@@ -176,8 +183,8 @@ export default function PostCard(props: PostProps) {
       {showComment ? (
         <CommentsContainer
           postId={props.post.postId}
-          incrementCommentsCount={incrementCommentsCount}
-          decrementCommentsCount={decrementCommentsCount}
+          incrementCommentsCount={() => setCommentsCount(commentsCount + 1)}
+          decrementCommentsCount={() => setCommentsCount(commentsCount - 1)}
         />
       ) : null}
     </div>

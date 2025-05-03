@@ -85,7 +85,7 @@ export default function PostUtilityButton(props: UtilityProps) {
 
   function handleBlock() {
     toast.promise(userBlock.mutateAsync(props.posterId), {
-      loading: "Blocing user...",
+      loading: "Blocking user...",
       success: "Blocked",
       error: (error) => error.message,
     })

@@ -28,7 +28,8 @@ api.interceptors.response.use(
     if (
       error.response &&
       error.response.status === 401 &&
-      error.response.data.errorCode === 401100 &&
+      (error.response.data.errorCode === 401100 ||
+        error.response.data.errorCode === 401101) &&
       !originalRequest._retry
     ) {
       originalRequest._retry = true;
@@ -38,6 +39,8 @@ api.interceptors.response.use(
         console.log("refreshing refresh token");
         const refreshToken = localStorage.getItem("refreshToken");
         const userId = localStorage.getItem("userId");
+        const companyId = localStorage.getItem("companyId");
+
         if (!refreshToken && !userId) {
           console.log("No refresh token found, logging out...");
           localStorage.removeItem("refreshToken");
@@ -48,10 +51,18 @@ api.interceptors.response.use(
         }
         let data;
         try {
-          const response = await api.post("auth/refresh-token", {
-            userId,
-            refreshToken,
-          });
+          let response;
+          if (companyId)
+            response = await api.post("auth/refresh-token", {
+              userId,
+              refreshToken,
+              companyId,
+            });
+          else
+            response = await api.post("auth/refresh-token", {
+              userId,
+              refreshToken,
+            });
           data = response.data;
         } catch (refreshError) {
           console.log("Failed to refresh token, logging out...");

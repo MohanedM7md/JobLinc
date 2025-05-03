@@ -38,11 +38,13 @@ export default function PostReact({
   function postReaction(type: string) {
     const oldReaction = reaction;
     toast.promise(addReactionMutation.mutateAsync({ postId, type }), {
-      loading: "Adding reaction...",
+      loading: type !== "NoReaction" ? "Adding reaction..." : "Removing reaction...",
       success: () => {
         setReaction(type);
         successHandler(type, oldReaction);
-        return "Reaction added successfully!";
+        return type !== "NoReaction"
+          ? "Added!"
+          : "Removed!";
       },
       error: (error) => error.message,
     });

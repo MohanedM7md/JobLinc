@@ -42,11 +42,14 @@ export interface PostInterface {
   companyId: string | null;
   companyName: string | null;
   companyLogo: string | null;
+  companyUrlSlug: string | null;
   profilePicture: string | null;
   headline: string;
   userReaction: PostReactions;
   text: string;
   media: Media[];
+  taggedUsers: TaggedObject[];
+  taggedCompanies: TaggedObject[];
   time: Date;
   likes: number;
   comments: number;
@@ -83,6 +86,11 @@ export enum MediaTypes {
   Video = "Video",
   Audio = "Audio",
   Document = "Document",
+}
+
+export interface TaggedObject {
+  id: string;
+  index: number;
 }
 
 enum PostReactions {

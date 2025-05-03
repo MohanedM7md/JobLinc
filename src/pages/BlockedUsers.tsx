@@ -1,4 +1,4 @@
-import BlockList from "../components/Connections/BlockList";
+import BlockList from "./Settings/BlockList";
 
 function BlockedUsers() {
   return (

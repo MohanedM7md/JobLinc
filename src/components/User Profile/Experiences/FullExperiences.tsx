@@ -79,9 +79,9 @@ export default function FullExperiences() {
   }
 
   return (
-    <>
+    <div className="bg-warmWhite text-charcoalBlack min-h-dvh h-full">
       {userData && (
-        <div className="w-full bg-darkGray text-white">
+        <div className="w-full bg-charcoalWhite">
           <MiniProfileHeader
             userId={userData.userId}
             firstname={userData.firstname}
@@ -91,13 +91,13 @@ export default function FullExperiences() {
           />
         </div>
       )}
-      <div className="bg-darkGray my-2 p-4 rounded-lg shadow-md relative text-white w-12/12 lg:w-6/12 m-auto">
+      <div className="bg-charcoalWhite my-2 p-4 rounded-lg shadow-md relative w-12/12 lg:w-6/12 m-auto">
         <div className="flex flex-row justify-between items-center">
           <h1 className="font-medium text-xl mb-4">Experience</h1>
           {isUser && (
             <button
               onClick={() => setAddExperienceModal(true)}
-              className="material-icons font-medium text-2xl p-2 rounded-full hover:bg-gray-600 -mt-5 transition duration-400 ease-in-out"
+              className="material-icons text-mutedSilver font-medium text-2xl p-1 mr-1 rounded-full hover:bg-gray-200 -mt-5 transition duration-400 ease-in-out"
             >
               add
             </button>
@@ -109,7 +109,7 @@ export default function FullExperiences() {
               <UserExperience experience={exp} />
               {isUser && (
                 <button
-                  className="material-icons absolute top-0 right-0 text-xl p-1 rounded-full hover:bg-gray-600 mr-1 transition duration-400 ease-in-out"
+                  className="material-icons text-mutedSilver absolute top-0 right-0 text-xl p-2 rounded-full hover:bg-gray-200 mr-1 transition duration-400 ease-in-out"
                   onClick={() => setEditExperienceData(exp)}
                 >
                   edit
@@ -147,6 +147,6 @@ export default function FullExperiences() {
           />
         </Modal>
       </div>
-    </>
+    </div>
   );
 }

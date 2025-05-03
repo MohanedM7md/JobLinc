@@ -1,4 +1,6 @@
 import { api } from "@services/api/api";
+import store from "@store/store";
+import { updateAccessToken } from "@store/user/userSlice";
 
 export const loginUserAPI = async (userData: {
   email: string;
@@ -103,3 +105,20 @@ export const confirmEmailAPI = async (userData: {
   const response = await api.post("auth/confirm-email", userData);
   return response.data;
 };
+
+export const refreshToken = async () => {
+  const refreshToken = localStorage.getItem("refreshToken");
+  const userId = localStorage.getItem("userId");
+  const response = await api.post("auth/refresh-token", {
+    userId,
+    refreshToken,
+  });
+  if (response.status !== 200)
+  {
+    window.location.href = "/home";
+  }
+  const dispatch = store.dispatch;
+  const { data } = response;
+  dispatch(updateAccessToken(data.accessToken));
+  localStorage.setItem("refreshToken", data.refreshToken);
+}

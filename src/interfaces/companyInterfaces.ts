@@ -1,7 +1,9 @@
 export interface CompanyInterface {
   id: string;
+  logo?:string;
   name: string;
   urlSlug: string;
+  isFollowing:boolean;
   type: string;
   size: string;
   industry: string;

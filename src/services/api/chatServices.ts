@@ -1,6 +1,6 @@
 import { api } from "./api";
-import store from "@store/store";
-import { toast } from "react-toastify";
+import axios from "axios";
+import toast from "react-hot-toast";
 export const fetchChats = async () => {
   const response = await api.get("/chat/all");
   return response.data;
@@ -11,13 +11,15 @@ export const fetchNetWorks = async (Id: string) => {
   const users = response.data.map(
     ({
       userId,
-      firstname: chatName,
+      firstname,
+      lastname,
       profilePicture: chatPicture,
     }: {
       userId: string;
       firstname: string;
+      lastname: string;
       profilePicture: string;
-    }) => ({ userId, chatName, chatPicture }),
+    }) => ({ userId, chatName: `${firstname} ${lastname}`, chatPicture }),
   );
   return users;
 };
@@ -25,16 +27,35 @@ export const fetchChatData = async (chatId: string) => {
   const response = await api.get(`/chat/c/${chatId}`);
   return response.data;
 };
-
 export const createChat = async (
   recievers: string[],
   title: string | undefined,
 ) => {
-  const response = await api.post(`/chat/create`, {
-    receiverIds: recievers,
-    title,
-  });
-  return response.data;
+  try {
+    const response = await api.post(`/chat/create`, {
+      receiverIds: recievers,
+      title,
+    });
+    toast.success("Chat succefully created!");
+    return response;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response?.status === 429) {
+        toast.error("Too many requests! Please upgrade your plan.");
+        throw "429";
+      } else {
+        const errorMessage =
+          error.response?.data?.message || error.message || "Unknown error";
+        toast.error(`Error: ${errorMessage}`);
+        throw new Error(errorMessage);
+      }
+    } else {
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
+      toast.error(`Error: ${errorMessage}`);
+      throw error;
+    }
+  }
 };
 
 export const ReadToggler = async (chatId: string) => {
@@ -93,7 +114,6 @@ export const addParticipants = async (
   participants: string[],
   chatId: string,
 ) => {
-  toast.error(`nooooooooooooooo}`);
   const response = await api.post("/chat/add-or-remove-participants", {
     userIds: participants,
     chatId,
@@ -105,6 +125,7 @@ export const addParticipants = async (
       `Response error: ${response.status} - Failed to remove participants`,
     );
   }
+  toast.success("paricipant successfuly added!");
   return response.data;
 };
 
@@ -123,5 +144,6 @@ export const removeParticipants = async (
       `Response error: ${response.status} - Failed to remove participants`,
     );
   }
+  toast.success("paricipant successfuly added!");
   return response.data;
 };
