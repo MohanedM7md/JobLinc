@@ -32,7 +32,7 @@ function CloseAccount() {
       try {
         const response = await getMyCompanies();
         console.log("Why here", response);
-        if (response.length !== 0) {
+        if (response.data.length !== 0) {
           setIsButtonClickable(false);
         }
       } catch (error) {

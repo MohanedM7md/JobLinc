@@ -28,7 +28,7 @@ const CompanyCard = ({ company }: { company: Company }) => {
         ease: "easeInOut",
       }}
       className="bg-charcoalWhite dark:bg-darkGray rounded-xl shadow-sm overflow-hidden border border-gray-100 dark:border-gray-700 
-      hover:border-crimsonRed/20 cursor-pointer group"
+      hover:border-crimsonRed/20 cursor-pointer group m-10"
       onClick={() => navigate(`/company/admin/${company.id}`)}
     >
       <div className="p-6 relative">

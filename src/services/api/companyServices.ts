@@ -101,3 +101,15 @@ export async function searchCompanies({name, values}:{name?: string, values?: st
     throw error;
   }
 }
+
+export async function deleteCompany()
+{
+  try {
+    const response = await api.delete("/companies");
+    return response;
+  }
+  catch(error)
+  {
+    console.error("Error cannot delete company ", error);
+  }
+}

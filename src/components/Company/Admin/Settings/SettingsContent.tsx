@@ -2,13 +2,13 @@ import { ArrowRight, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import ManageAdmins from "./ManageAdmins";
+import DeactivatePage from "./CompanyContentPages/DeactivatePage";
 // Dummy components (replace with real ones)
 
 const RestrictedMembers = () => <div>Restricted Members Component</div>;
 const Following = () => <div>Following Component</div>;
 const InboxSettings = () => <div>Inbox Settings Component</div>;
 const JobPosting = () => <div>Job Posting Component</div>;
-const DeactivatePage = () => <div>Deactivate Page Component</div>;
 
 const menuItems = [
   {
@@ -73,6 +73,7 @@ const modalVariants = {
 const SettingsContent = () => {
   const [activeModal, setActiveModal] = useState<string | null>(null);
   const selectedItem = menuItems.find((item) => item.id === activeModal);
+  const[deleteCompanyModal, setDeleteCompanyModal] = useState(false);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-warmWhite via-warmWhite-50 to-warmBlack-100 dark:from-warmBlack dark:via-darkGray dark:to-charcoalBlack p-6 flex justify-center items-center">
