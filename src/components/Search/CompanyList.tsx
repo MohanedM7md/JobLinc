@@ -16,13 +16,14 @@ function CompanyList({ searchQuery }: CompanyListProps) {
       if (searchQuery?.trim()) {
         try {
           setIsLoading(true);
-          const response = await searchCompanies(searchQuery);
+          const response = await searchCompanies({ name: searchQuery });
           
           const parsedResults = Array.isArray(response)
             ? response.map((company) => ({
                 id: company.id,
                 name: company.name,
                 urlSlug: company.urlSlug,
+                isFollowing: company.isFollowing,
                 type: company.type || "",
                 size: company.size || "",
                 industry: company.industry || "",
