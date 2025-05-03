@@ -56,7 +56,7 @@ export default function PostContainer() {
   }
 
   return (
-    <div className="bg-lightGray w-1/1">
+    <div className="bg-warmWhite w-1/1">
       <PostContainerHeader refreshPosts={updateFeed} />
       {posts
         ? posts.map((post, i) => {
@@ -87,7 +87,7 @@ export default function PostContainer() {
           <span className="material-icons-round text-6xl mb-4">error</span>
           <h1 className="text-xl font-bold">Error</h1>
           <p className="text-center mb-4">
-            Unable to fetch the feed. Please try refreshing the page.
+            Unable to fetch the feed. Please try again.
           </p>
           <button
             onClick={updateFeed}
