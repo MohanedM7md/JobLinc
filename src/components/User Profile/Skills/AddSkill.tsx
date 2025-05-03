@@ -43,21 +43,16 @@ export default function AddSkill(props: AddSkillProps) {
     const newSkill: NewSkill = { name: data.name, level: data.level };
     toast.promise(addSkillMutation.mutateAsync(newSkill), {
       loading: "Adding skill...",
-      success: "Skill added successfully!",
+      success: "Added!",
       error: (error) => error.message,
     });
   };
 
   return (
     <>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="p-4 rounded-lg"
-      >
+      <form onSubmit={handleSubmit(onSubmit)} className="p-4 rounded-lg">
         <div className="mb-4">
-          <label className="text-sm font-medium">
-            Skill Name
-          </label>
+          <label className="text-sm font-medium">Skill Name</label>
           <input
             type="text"
             {...register("name")}
@@ -69,9 +64,7 @@ export default function AddSkill(props: AddSkillProps) {
           )}
         </div>
         <div className="mb-4">
-          <label className="text-sm font-medium">
-            Skill Level
-          </label>
+          <label className="text-sm font-medium">Skill Level</label>
           <select
             {...register("level")}
             className="w-full px-2 py-1 border rounded-lg"
@@ -93,7 +86,14 @@ export default function AddSkill(props: AddSkillProps) {
             className="bg-crimsonRed text-warmWhite px-4 py-1.5 rounded-3xl cursor-pointer hover:bg-red-700 transition duration-400 ease-in-out"
             disabled={addSkillMutation.status === "pending"}
           >
-            {addSkillMutation.status === "pending" ? "Adding..." : "Add"}
+            {addSkillMutation.status === "pending" ? (
+              <span className="flex items-center">
+                <span className="w-4 h-4 border-2 border-t-transparent border-white rounded-full animate-spin mr-2"></span>
+                Adding...
+              </span>
+            ) : (
+              "Add"
+            )}
           </button>
         </div>
       </form>

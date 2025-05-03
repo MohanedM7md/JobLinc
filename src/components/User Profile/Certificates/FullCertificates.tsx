@@ -18,6 +18,8 @@ import { useQuery } from "@tanstack/react-query";
 import store from "@store/store";
 import MiniProfileHeader from "../ProfileHeader/MiniProfileHeader";
 import { AnimatePresence } from "framer-motion";
+import ErrorState from "../Miscellaneous/ErrorState";
+import LoadingSkeleton from "../Miscellaneous/LoadingSkeleton";
 
 export default function FullCertificates() {
   const { userId } = useParams();
@@ -71,16 +73,22 @@ export default function FullCertificates() {
   }
 
   if (isMeFetching || isUserFetching) {
-    return <div>Loading...</div>;
+    return <LoadingSkeleton />;
   }
 
   if (isMeError || isUserError) {
-    return <div>Error loading certificates</div>;
+    return (
+      <ErrorState
+        message="Error loading page, Please try again"
+        fullScreen={true}
+        retry={updateCertificates}
+      />
+    );
   }
 
   return (
     <div className="bg-warmWhite text-charcoalBlack min-h-dvh h-full">
-      <div className="w-full bg-charcoalWhite">
+      <div className="w-full">
         {userData && (
           <AnimatePresence>
             <MiniProfileHeader

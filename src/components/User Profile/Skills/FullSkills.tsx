@@ -9,6 +9,8 @@ import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import store from "@store/store";
 import MiniProfileHeader from "../ProfileHeader/MiniProfileHeader";
+import ErrorState from "../Miscellaneous/ErrorState";
+import LoadingSkeleton from "../Miscellaneous/LoadingSkeleton";
 
 export default function FullSkills() {
   const { userId } = useParams();
@@ -64,17 +66,23 @@ export default function FullSkills() {
   }
 
   if (isMeFetching || isUserFetching) {
-    return <div>Loading...</div>;
-  }
-
-  if (isMeError || isUserError) {
-    return <div>Error loading skills</div>;
-  }
+      return <LoadingSkeleton />;
+    }
+  
+    if (isMeError || isUserError) {
+      return (
+        <ErrorState
+          message="Error loading page, Please try again"
+          fullScreen={true}
+          retry={updateSkills}
+        />
+      );
+    }
 
   return (
     <div className="bg-warmWhite h-dvh text-charcoalBlack">
       {userData && (
-        <div className="bg-lightGray w-full">
+        <div className="w-full">
           <MiniProfileHeader
             userId={userData.userId}
             firstname={userData.firstname}
@@ -84,7 +92,7 @@ export default function FullSkills() {
           />
         </div>
       )}
-      <div className="my-2 p-4 rounded-lg shadow-md relative w-12/12 lg:w-6/12 m-auto">
+      <div className="bg-charcoalWhite my-2 p-4 rounded-lg shadow-md relative w-12/12 lg:w-6/12 m-auto">
         <div className="flex flex-row justify-between items-center">
           <h1 className="font-medium text-xl mb-4">Skills</h1>
           {isUser && (

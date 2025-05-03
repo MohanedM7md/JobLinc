@@ -65,7 +65,7 @@ export default function EditSkill(props: EditSkillProps) {
     };
     toast.promise(editSkillMutation.mutateAsync({skillId: props.id, skill: updatedSkill}), {
       loading: "Saving skill...",
-      success: "Skill updated successfully!",
+      success: "Saved!",
       error: (error) => error.message,
     });
   };
@@ -73,7 +73,7 @@ export default function EditSkill(props: EditSkillProps) {
   function handleDelete() {
     toast.promise(deleteSkillMutation.mutateAsync(props.id), {
       loading: "Deleting skill...",
-      success: "Skill deleted successfully!",
+      success: "Deleted!",
       error: (error) => error.message,
     });
   }
@@ -123,7 +123,14 @@ export default function EditSkill(props: EditSkillProps) {
             className="bg-crimsonRed text-warmWhite px-4 py-1.5 rounded-3xl cursor-pointer hover:bg-red-700 transition duration-400 ease-in-out"
             disabled={isProcessing}
           >
-            {editSkillMutation.status === "pending" ? "Saving..." : "Save"}
+            {editSkillMutation.status === "pending" ? (
+              <span className="flex items-center">
+                <span className="w-4 h-4 border-2 border-t-transparent border-white rounded-full animate-spin mr-2"></span>
+                Saving...
+              </span>
+            ) : (
+              "Save"
+            )}
           </button>
           <button
             type="button"
@@ -131,9 +138,14 @@ export default function EditSkill(props: EditSkillProps) {
             onClick={() => setShowConfirmDelete(true)}
             disabled={isProcessing}
           >
-            {deleteSkillMutation.status === "pending"
-              ? "Deleting..."
-              : "Delete"}
+            {deleteSkillMutation.status === "pending" ? (
+              <span className="flex items-center">
+                <span className="w-4 h-4 border-2 border-t-transparent border-white rounded-full animate-spin mr-2"></span>
+                Deleting...
+              </span>
+            ) : (
+              "Delete"
+            )}
           </button>
         </div>
       </form>

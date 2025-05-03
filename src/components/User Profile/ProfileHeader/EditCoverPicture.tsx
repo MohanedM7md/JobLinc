@@ -97,7 +97,7 @@ export default function EditCoverPicture(props: EditCoverPictureProps) {
       toast
         .promise(updateCoverPictureMutation.mutateAsync(file), {
           loading: "Updating cover picture...",
-          success: "Cover picture updated successfully!",
+          success: "Updated!",
           error: (error) => error.message,
         })
         .then(() => setFile(null));
@@ -107,7 +107,7 @@ export default function EditCoverPicture(props: EditCoverPictureProps) {
   function deletePicture() {
     toast.promise(deleteCoverPictureMutation.mutateAsync(), {
       loading: "Deleting cover picture...",
-      success: "Cover picture deleted successfully!",
+      success: "Deleted!",
       error: (error) => error.message,
     })
   }
@@ -168,14 +168,28 @@ export default function EditCoverPicture(props: EditCoverPictureProps) {
           className="bg-crimsonRed text-warmWhite px-4 py-1.5 rounded-3xl cursor-pointer hover:bg-red-700 transition duration-400 ease-in-out"
           disabled={isPending}
         >
-          {updateCoverPictureMutation.isPending ? "Saving" : "Confirm picture"}
+          {updateCoverPictureMutation.isPending ? (
+            <span className="flex items-center">
+              <span className="w-4 h-4 border-2 border-t-transparent border-white rounded-full animate-spin mr-2"></span>
+              Saving...
+            </span>
+          ) : (
+            "Confirm picture"
+          )}
         </button>
         <button
           onClick={() => setConfirmDelete(true)}
           className="bg-gray-500 text-warmWhite px-4 py-1.5 rounded-3xl cursor-pointer hover:bg-gray-700 transition duration-400 ease-in-out"
           disabled={isPending}
         >
-          {deleteCoverPictureMutation.isPending ? "Removing" : "Remove picture"}
+          {deleteCoverPictureMutation.isPending ? (
+            <span className="flex items-center">
+              <span className="w-4 h-4 border-2 border-t-transparent border-white rounded-full animate-spin mr-2"></span>
+              Removing...
+            </span>
+          ) : (
+            "Remove picture"
+          )}
         </button>
       </div>
       {confirmDelete && (

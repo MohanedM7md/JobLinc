@@ -97,7 +97,7 @@ export default function EditCertificate(props: EditCertificateProps) {
 
     toast.promise(editCertificateMutation.mutateAsync({certificateId: props.id, certificate: editedCertificate}), {
       loading: "Saving certificate...",
-      success: "Certificate edited successfully!",
+      success: "Saved!",
       error: (error) => error.message,
     });
   };
@@ -105,7 +105,7 @@ export default function EditCertificate(props: EditCertificateProps) {
   async function handleDelete() {
     toast.promise(deleteCertificateMutation.mutateAsync(props.id), {
       loading: "Deleting certificate...",
-      success: "Certificate deleted successfully!",
+      success: "Deleted!",
       error: (error) => error.message,
     });
   }
@@ -130,9 +130,7 @@ export default function EditCertificate(props: EditCertificateProps) {
           )}
         </div>
         <div className="mb-4">
-          <label className="text-sm font-medium">
-            Organization
-          </label>
+          <label className="text-sm font-medium">Organization</label>
           <input
             type="text"
             {...register("organization")}
@@ -145,9 +143,7 @@ export default function EditCertificate(props: EditCertificateProps) {
           )}
         </div>
         <div className="mb-4">
-          <label className="text-sm font-medium">
-            Issue Date
-          </label>
+          <label className="text-sm font-medium">Issue Date</label>
           <div className="flex gap-2">
             <select
               {...register("issueMonth")}
@@ -182,9 +178,7 @@ export default function EditCertificate(props: EditCertificateProps) {
           )}
         </div>
         <div className="mb-4">
-          <label className="text-sm font-medium">
-            Expiration Date
-          </label>
+          <label className="text-sm font-medium">Expiration Date</label>
           <div className="flex gap-2">
             <select
               {...register("expirationMonth")}
@@ -225,7 +219,14 @@ export default function EditCertificate(props: EditCertificateProps) {
             className="bg-crimsonRed text-warmWhite px-4 py-1.5 rounded-3xl cursor-pointer hover:bg-red-700 transition duration-400 ease-in-out"
             disabled={isProcessing}
           >
-            {isProcessing ? "Saving..." : "Save"}
+            {isProcessing ? (
+              <span className="flex items-center">
+                <span className="w-4 h-4 border-2 border-t-transparent border-white rounded-full animate-spin mr-2"></span>
+                Saving...
+              </span>
+            ) : (
+              "Save"
+            )}
           </button>
           <button
             type="button"
@@ -233,7 +234,14 @@ export default function EditCertificate(props: EditCertificateProps) {
             className="bg-gray-500 text-warmWhite px-4 py-1.5 rounded-3xl cursor-pointer hover:bg-gray-700 transition duration-400 ease-in-out"
             disabled={isProcessing}
           >
-            {isProcessing ? "Deleting..." : "Delete"}
+            {isProcessing ? (
+              <span className="flex items-center">
+                <span className="w-4 h-4 border-2 border-t-transparent border-white rounded-full animate-spin mr-2"></span>
+                Deleting...
+              </span>
+            ) : (
+              "Delete"
+            )}
           </button>
         </div>
       </form>

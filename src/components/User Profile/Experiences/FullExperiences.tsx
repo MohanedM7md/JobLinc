@@ -17,6 +17,8 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import store from "@store/store";
 import MiniProfileHeader from "../ProfileHeader/MiniProfileHeader";
+import LoadingSkeleton from "../Miscellaneous/LoadingSkeleton";
+import ErrorState from "../Miscellaneous/ErrorState";
 
 export default function FullExperiences() {
   const { userId } = useParams();
@@ -42,9 +44,7 @@ export default function FullExperiences() {
     enabled: false,
   });
 
-  const {
-    refetch: refetchExperiences,
-  } = useQuery({
+  const { refetch: refetchExperiences } = useQuery({
     queryKey: ["getExperiences"],
     queryFn: getExperience,
     enabled: false,
@@ -71,17 +71,23 @@ export default function FullExperiences() {
   }
 
   if (isMeFetching || isUserFetching) {
-    return <div>Loading...</div>;
+    return <LoadingSkeleton />;
   }
 
   if (isMeError || isUserError) {
-    return <div>Error loading experiences</div>;
+    return (
+      <ErrorState
+        message="Error loading page, Please try again"
+        fullScreen={true}
+        retry={updateExperiences}
+      />
+    );
   }
 
   return (
     <div className="bg-warmWhite text-charcoalBlack min-h-dvh h-full">
       {userData && (
-        <div className="w-full bg-charcoalWhite">
+        <div className="w-full">
           <MiniProfileHeader
             userId={userData.userId}
             firstname={userData.firstname}
