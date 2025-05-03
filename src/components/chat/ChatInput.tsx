@@ -105,9 +105,8 @@ function ChatInput({
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files && files.length > 0) {
-      const file = files[0]; // Only take the first file
+      const file = files[0];
 
-      // Check file size and type
       const isImage =
         file.type.startsWith("image/") ||
         [".png", ".jpg", ".jpeg"].some((ext) => file.name.endsWith(ext));

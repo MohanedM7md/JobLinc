@@ -72,7 +72,7 @@ export const uploadingMedia = async (file: File): Promise<string> => {
       "Content-Type": "multipart/form-data",
     },
   });
-
+  if (response.status != 200) toast.error("File not Supported");
   return response.data;
 };
 
