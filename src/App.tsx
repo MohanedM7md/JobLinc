@@ -2,32 +2,28 @@ import { Route, Routes } from "react-router-dom";
 import { lazy } from "react";
 import { Toaster } from "react-hot-toast";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-const Layout = lazy(() => import("./components/Layout"));
-import ProtectedRoute from "./components/ProtectedRoute";
-import AuthRoute from "./components/AuthRoute";
+const Layout = lazy(() => import("@components/Layout"));
+import ProtectedRoute from "@components/ProtectedRoute";
+import AuthRoute from "@components/AuthRoute";
 import Error404 from "@pages/Eror404";
 
 //  auth and frequently used pages
-const LandPage = lazy(() => import("./pages/Land"));
-const SignUpPage = lazy(() => import("./pages/SignUp"));
-const SignInPage = lazy(() => import("./pages/SignIn"));
-const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
-const UserDetails = lazy(
-  () => import("./pages/UserDetails"),
-);
-const ChangePassword = lazy(() => import("./pages/ChangePassword"));
-const ResetPassword = lazy(() => import("./pages/ResetPassword"));
-const Connections = lazy(() => import("./pages/Connections"));
+const LandPage = lazy(() => import("@pages/Land"));
+const SignUpPage = lazy(() => import("@pages/SignUp"));
+const SignInPage = lazy(() => import("@pages/SignIn"));
+const ForgotPassword = lazy(() => import("@pages/ForgotPassword"));
+const UserDetails = lazy(() => import("@pages/UserDetails"));
+const ChangePassword = lazy(() => import("@pages/ChangePassword"));
+const ResetPassword = lazy(() => import("@pages/ResetPassword"));
+const Connections = lazy(() => import("@pages/Connections"));
 
 //Home & Static pages
 import Home from "@pages/Home";
-const Messaging = lazy(() => import("./pages/Messaging"));
+const Messaging = lazy(() => import("@pages/Messaging"));
 import SearchResult from "@pages/SearchResult";
 
 // Profile components
-const ProfileContainer = lazy(
-  () => import("@components/User Profile/ProfileContainer"),
-);
+import ProfileContainer from "@components/User Profile/ProfileContainer";
 const FullExperiences = lazy(
   () => import("@components/User Profile/Experiences/FullExperiences"),
 );
