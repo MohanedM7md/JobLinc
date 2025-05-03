@@ -56,7 +56,7 @@ export default function PostContainer() {
   }
 
   return (
-    <div className="bg-lightGray w-1/1">
+    <div className="bg-warmWhite w-1/1">
       <PostContainerHeader refreshPosts={updateFeed} />
       {posts
         ? posts.map((post, i) => {
