@@ -1,8 +1,7 @@
 import React, { useState, useEffect, FormEvent, ChangeEvent } from "react";
-import JobApplicationModal from "./JobApplicationModal";
-import CreateJobModal from "./CreateJobModal";
+import CreateJobModal from "../../Jobs&hiring/CreateJobModal";
 import toast from "react-hot-toast";
-import {useAppSelector} from "../../store/hooks"
+import { useAppSelector } from "../../../store/hooks";
 import { Link, useNavigate } from "react-router-dom";
 import {
   fetchJobs,
@@ -11,8 +10,10 @@ import {
   saveJob,
   unsaveJob,
   fetchSavedJobs,
-  fetchMyApplications,
+  fetchCompanyJobs,
 } from "@services/api/jobService";
+import { useCompanyStore } from "@store/comapny/companyStore";
+import ApplicantsByJob from "./ApplicantsByJob";
 
 export interface Job {
   id: string;
@@ -78,11 +79,30 @@ interface SaveApplyProps {
   companyName?: string;
 }
 
+interface Applicant {
+    id: string;
+    job: string;
+    applicant: {
+      firstname: string;
+      lastname: string;
+      email: string;
+      city?: string;
+      country?: string;
+    };
+    phone: string;
+    resume: {
+      file: string;
+    };
+    status: "Pending" | "Viewed" | "Accepted" | "Rejected";
+    createdAt: string;
+  }
+  
+  interface Props {
+    jobId: string;
+  }
+
 //@ts-ignore
-const Jobs_And_Hiring: React.FC<SaveApplyProps> = ({
-  jobTitle,
-  companyName,
-}) => {
+const AdminJobApplicants: React.FC<SaveApplyProps> = ({ jobTitle, companyName, jobId }) => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
@@ -99,47 +119,29 @@ const Jobs_And_Hiring: React.FC<SaveApplyProps> = ({
   const [savedJobs, setSavedJobs] = useState<Job[]>([]);
   const [appliedJobs, setAppliedJobs] = useState<Record<string, any>>({});
   const hasApplied = !!selectedJob?.applicationStatus;
+  const { company } = useCompanyStore();
+  const companyId = company?.id;
 
-  const fetchAllJobs = async () => {
-    const [fetchedJobs, myApplications, saved] = await Promise.all([
-      fetchJobs(),
-      fetchMyApplications(),
-      fetchSavedJobs(),
-    ]);
+  const loadCompanyJobs = async () => {
+    if (!companyId) return;
 
-    const appMap: Record<string, any> = {};
-    const allowedStatuses = ["Pending", "Viewed", "Rejected", "Accepted"];
+    const result = await fetchCompanyJobs(companyId);
+    setJobs(result.jobs);
+    setSavedJobs(result.savedJobs);
+    setAppliedJobs(result.appliedJobsMap);
 
-    const applicationMap: Record<
-      string,
-      "Pending" | "Viewed" | "Rejected" | "Accepted"
-    > = {};
-
-    myApplications.forEach((app: any) => {
-      if (allowedStatuses.includes(app.status)) {
-        appMap[app.job.id] = app;
-      }
-    });
-
-    const enrichedJobs = fetchedJobs.map((job) => ({
-      ...job,
-      applicationStatus: appMap[job.id]?.status ?? null,
-    }));
-
-    setAppliedJobs(appMap);
-    setJobs(enrichedJobs);
-    setSavedJobs(saved);
-
-    if (enrichedJobs.length > 0) {
-      setSelectedJob(enrichedJobs[0]);
-      const isJobSaved = saved.some((job) => job.id === enrichedJobs[0].id);
+    if (result.jobs.length > 0) {
+      setSelectedJob(result.jobs[0]);
+      const isJobSaved = result.savedJobs.some(
+        (job) => job.id === result.jobs[0].id,
+      );
       setIsSaved(isJobSaved);
     }
   };
 
   useEffect(() => {
-    fetchAllJobs();
-  }, []);
+    loadCompanyJobs();
+  }, [companyId]);
 
   useEffect(() => {
     if (!selectedJob) return;
@@ -536,7 +538,11 @@ const Jobs_And_Hiring: React.FC<SaveApplyProps> = ({
                   >
                     <div className="flex">
                       <img
-                        src={job.company?.logo ?? (userprofile ?? "/default-logo.png")}
+                        src={
+                          job.company?.logo ??
+                          userprofile ??
+                          "/default-logo.png"
+                        }
                         alt={job.company?.name}
                         className="w-12 h-12 rounded-md mr-4"
                       />
@@ -574,291 +580,7 @@ const Jobs_And_Hiring: React.FC<SaveApplyProps> = ({
           <div className="lg:w-3/5">
             <div className="bg-white rounded-md shadow-sm p-6">
               {selectedJob ? (
-                <>
-                  <div className="flex items-start justify-between">
-                    <div className="flex">
-                      <img
-                        src={selectedJob.company?.logo ?? (userprofile ?? "/default-logo.png")}
-                        alt={selectedJob.company?.name}
-                        className="w-16 h-16 rounded-md mr-4"
-                      />
-                      <div>
-                        <h2 className="text-xl text-darkBurgundy font-semibold">
-                          {selectedJob.title}
-                        </h2>
-                        <p className="text-gray-800">
-                          {selectedJob.company?.name}
-                        </p>
-                        <p className="text-gray-600">
-                          {selectedJob.location?.city},{" "}
-                          {selectedJob.location?.country}{" "}
-                          {selectedJob && selectedJob.remote && "(Remote)"}
-                        </p>
-                        <div className="flex text-gray-500 text-sm mt-1">
-                          <span>{selectedJob && selectedJob.postedDate}</span>
-                          <span className="mx-2">•</span>
-                          <span>{selectedJob.applicants ?? 0} applicants</span>
-                        </div>
-                      </div>
-                    </div>
-                    {selectedJob && selectedJob.applicationStatus && (
-                      <div
-                        className={`px-3 py-1 rounded-md ${getStatusColor(selectedJob.applicationStatus)}`}
-                      >
-                        {selectedJob.applicationStatus}
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="mt-6">
-                    {!hasApplied ? (
-                      <div className="flex items-center space-x-2">
-                        <button
-                          className="bg-softRosewood hover:bg-crimsonRed text-white px-4 py-2 rounded-full"
-                          onClick={handleApplyClick}
-                        >
-                          Apply now
-                        </button>
-                        <button
-                          onClick={handleSaveClick}
-                          className={`px-4 py-2 rounded-full border ${
-                            isSaved
-                              ? "text-crimsonRed border-softRosewood bg-hoverSoftRed cursor-default"
-                              : "bg-white text-crimsonRed border-softRosewood hover:bg-hoverSoftRed"
-                          }`}
-                        >
-                          {isSaved ? "Saved" : "Save"}
-                        </button>
-                      </div>
-                    ) : (
-                      <div>
-                        <p className="text-gray-700 mb-2">
-                          Your application status:{" "}
-                          <strong>
-                            {selectedJob && selectedJob.applicationStatus}
-                          </strong>
-                        </p>
-                        <div className="flex items-center space-x-2">
-                          <button
-                            className="bg-softRosewood hover:bg-crimsonRed text-white px-4 py-2 rounded-full"
-                            onClick={() => {
-                              if (selectedJob) {
-                                setShowModal(true);
-                              } else {
-                                toast.error("No job selected");
-                              }
-                            }}
-                          >
-                            View application
-                          </button>
-                          <button
-                            onClick={handleSaveClick}
-                            className={`px-4 py-2 rounded-full border ${
-                              isSaved
-                                ? "text-crimsonRed border-softRosewood bg-hoverSoftRed cursor-default"
-                                : "bg-white text-crimsonRed border-softRosewood hover:bg-hoverSoftRed"
-                            }`}
-                          >
-                            {isSaved ? "Saved" : "Save"}
-                          </button>
-                        </div>
-                      </div>
-                    )}
-
-                    <JobApplicationModal
-                      isOpen={showModal}
-                      onClose={() => setShowModal(false)}
-                      companyName={selectedJob.company?.name || ""}
-                      jobId={selectedJob?.id || ""}
-                      existingStatus={selectedJob?.applicationStatus}
-                      onSubmit={handleApplicationSubmit}
-                      applicationData={appliedJobs[selectedJob?.id]}
-                    />
-                  </div>
-
-                  <div className="mt-6">
-                    <h3 className="font-semibold mb-2">Job description</h3>
-                    <p className="text-gray-700">{selectedJob.description}</p>
-                  </div>
-                  <div className="mt-6">
-                    <h3 className="font-semibold mb-2">Job highlights</h3>
-                    <ul className="list-disc pl-5">
-                      {selectedJob.highlights?.length ? (
-                        selectedJob.highlights.map((highlight, index) => (
-                          <li key={index}>{highlight}</li>
-                        ))
-                      ) : (
-                        <li>No highlights available.</li>
-                      )}
-                    </ul>
-                  </div>
-
-                  <div className="mt-6">
-                    <h3 className="font-semibold mb-2">Application Timeline</h3>
-                    {selectedJob && selectedJob.applicationStatus ? (
-                      <div className="mt-4 relative">
-                        <div className="absolute left-4 top-0 h-full w-0.5 bg-gray-200"></div>
-
-                        <div className="relative flex items-start mb-6">
-                          <div
-                            className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                              selectedJob.applicationStatus !== null
-                                ? "bg-green-500"
-                                : "bg-gray-300"
-                            } text-white z-10`}
-                          >
-                            <svg
-                              className="w-4 h-4"
-                              fill="currentColor"
-                              viewBox="0 0 20 20"
-                            >
-                              <path
-                                fillRule="evenodd"
-                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                clipRule="evenodd"
-                              ></path>
-                            </svg>
-                          </div>
-                          <div className="ml-4">
-                            <h4 className="text-lg font-medium">
-                              Application Submitted
-                            </h4>
-                            <p className="text-gray-500">
-                              Your application was submitted successfully
-                            </p>
-                            <p className="text-gray-500 text-sm"></p>
-                          </div>
-                        </div>
-
-                        <div className="relative flex items-start mb-6">
-                          <div
-                            className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                              ["Viewed", "Rejected", "Accepted"].includes(
-                                selectedJob.applicationStatus || "",
-                              )
-                                ? "bg-green-500"
-                                : "bg-gray-300"
-                            } text-white z-10`}
-                          >
-                            {["Viewed", "Rejected", "Accepted"].includes(
-                              selectedJob.applicationStatus || "",
-                            ) ? (
-                              <svg
-                                className="w-4 h-4"
-                                fill="currentColor"
-                                viewBox="0 0 20 20"
-                              >
-                                <path
-                                  fillRule="evenodd"
-                                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                  clipRule="evenodd"
-                                ></path>
-                              </svg>
-                            ) : (
-                              <span className="text-xs">2</span>
-                            )}
-                          </div>
-                          <div className="ml-4">
-                            <h4 className="text-lg font-medium">
-                              Application Viewed
-                            </h4>
-                            <p className="text-gray-500">
-                              Recruiter has reviewed your application
-                            </p>
-                            {["Viewed", "Rejected", "Accepted"].includes(
-                              selectedJob.applicationStatus || "",
-                            ) && <p className="text-gray-500 text-sm"></p>}
-                          </div>
-                        </div>
-
-                        <div className="relative flex items-start">
-                          <div
-                            className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                              ["Rejected", "Accepted"].includes(
-                                selectedJob.applicationStatus || "",
-                              )
-                                ? "bg-green-500"
-                                : "bg-gray-300"
-                            } text-white z-10`}
-                          >
-                            {["Rejected", "Accepted"].includes(
-                              selectedJob.applicationStatus || "",
-                            ) ? (
-                              <svg
-                                className="w-4 h-4"
-                                fill="currentColor"
-                                viewBox="0 0 20 20"
-                              >
-                                <path
-                                  fillRule="evenodd"
-                                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                  clipRule="evenodd"
-                                ></path>
-                              </svg>
-                            ) : (
-                              <span className="text-xs">3</span>
-                            )}
-                          </div>
-                          <div className="ml-4">
-                            <h4 className="text-lg font-medium">
-                              Decision Made
-                            </h4>
-                            <p className="text-gray-500">
-                              {selectedJob.applicationStatus === "Accepted" &&
-                                "Congratulations! Your application has been accepted."}
-                              {selectedJob.applicationStatus === "Rejected" &&
-                                "Your application was not selected at this time."}
-                              {!["Rejected", "Accepted"].includes(
-                                selectedJob.applicationStatus || "",
-                              ) && "Waiting for decision"}
-                            </p>
-                            {["Rejected", "Accepted"].includes(
-                              selectedJob.applicationStatus || "",
-                            ) && <p className="text-gray-500 text-sm"></p>}
-                          </div>
-                        </div>
-                      </div>
-                    ) : (
-                      <p className="text-gray-500">
-                        You haven't applied to this job yet.
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="mt-6">
-                    <h3 className="font-semibold mb-2">Similar jobs</h3>
-                    <div className="flex flex-wrap gap-2">
-                      {jobs
-                        .filter((job) => job.id !== selectedJob?.id)
-                        .slice(0, 3)
-                        .map((job) => (
-                          <div
-                            key={job.id}
-                            className="p-3 border border-gray-200 rounded-md w-full md:w-64 cursor-pointer"
-                            onClick={() => setSelectedJob(job)}
-                          >
-                            <div className="flex justify-between items-start">
-                              <h4 className="font-semibold text-darkBurgundy">
-                                {job.title}
-                              </h4>
-                              {job.applicationStatus && (
-                                <span
-                                  className={`text-xs px-2 py-1 rounded-full ${getStatusColor(job.applicationStatus)}`}
-                                >
-                                  {job.applicationStatus}
-                                </span>
-                              )}
-                            </div>
-                            <p className="text-gray-800">{job.company?.name}</p>
-                            <p className="text-gray-600 text-sm">
-                              {selectedJob.location?.city},{" "}
-                              {selectedJob.location?.country}
-                            </p>
-                          </div>
-                        ))}
-                    </div>
-                  </div>
-                </>
+                <ApplicantsByJob jobId={selectedJob.id} />
               ) : (
                 <div className="text-center text-gray-500 py-10">
                   Select a job to see details.
@@ -871,7 +593,9 @@ const Jobs_And_Hiring: React.FC<SaveApplyProps> = ({
           isOpen={showCreateModal}
           onClose={() => setShowCreateModal(false)}
           onJobCreated={() => {
-            fetchAllJobs();
+            if (companyId) {
+              loadCompanyJobs();
+            }
           }}
         />
       </main>
@@ -879,4 +603,4 @@ const Jobs_And_Hiring: React.FC<SaveApplyProps> = ({
   );
 };
 
-export default Jobs_And_Hiring;
+export default AdminJobApplicants;

@@ -134,3 +134,37 @@ export const updateJobApplicationStatus = async (
   );
   return response.data;
 };
+
+// Company 
+// Company Jobs
+export const fetchCompanyJobs = async (companyId: string) => {
+  const [fetchedJobs, myApplications, saved] = await Promise.all([
+    fetchJobs(),
+    fetchMyApplications(),
+    fetchSavedJobs(),
+  ]);
+
+  const appMap: Record<string, any> = {};
+  const allowedStatuses = ["Pending", "Viewed", "Rejected", "Accepted"];
+
+  myApplications.forEach((app: any) => {
+    if (allowedStatuses.includes(app.status)) {
+      appMap[app.job.id] = app;
+    }
+  });
+
+  const enrichedJobs = fetchedJobs.map((job) => ({
+    ...job,
+    applicationStatus: appMap[job.id]?.status ?? null,
+  }));
+
+  const companyJobs = enrichedJobs.filter(
+    (job) => job.company?.id === companyId
+  );
+
+  return {
+    jobs: companyJobs,
+    savedJobs: saved,
+    appliedJobsMap: appMap,
+  };
+};

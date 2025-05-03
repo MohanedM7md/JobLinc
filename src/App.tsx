@@ -215,6 +215,12 @@ function App() {
                 <Route path="admin/:companyId" element={<Admin />} />
                 <Route path="member/:slug" element={<Member />} />
               </Route>
+
+              {/* Jobs & Hiring Routes */}
+              <Route path="/jobs-and-hiring" element={<Jobs_And_Hiring />} />
+              <Route path="/saved-jobs" element={<Saved_Jobs />} />
+
+              
             </Route>
           </Route>
 

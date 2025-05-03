@@ -1,8 +1,8 @@
 import React, { useState, useEffect, FormEvent, ChangeEvent } from "react";
-import JobApplicationModal from "./JobApplicationModal";
-import CreateJobModal from "./CreateJobModal";
+import JobApplicationModal from "../../Jobs&hiring/JobApplicationModal";
+import CreateJobModal from "../../Jobs&hiring/CreateJobModal";
 import toast from "react-hot-toast";
-import {useAppSelector} from "../../store/hooks"
+import { useAppSelector } from "../../../store/hooks";
 import { Link, useNavigate } from "react-router-dom";
 import {
   fetchJobs,
@@ -11,8 +11,9 @@ import {
   saveJob,
   unsaveJob,
   fetchSavedJobs,
-  fetchMyApplications,
+  fetchCompanyJobs,
 } from "@services/api/jobService";
+import { useCompanyStore } from "@store/comapny/companyStore";
 
 export interface Job {
   id: string;
@@ -79,10 +80,7 @@ interface SaveApplyProps {
 }
 
 //@ts-ignore
-const Jobs_And_Hiring: React.FC<SaveApplyProps> = ({
-  jobTitle,
-  companyName,
-}) => {
+const CompanyJobs: React.FC<SaveApplyProps> = ({ jobTitle, companyName }) => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
@@ -99,47 +97,29 @@ const Jobs_And_Hiring: React.FC<SaveApplyProps> = ({
   const [savedJobs, setSavedJobs] = useState<Job[]>([]);
   const [appliedJobs, setAppliedJobs] = useState<Record<string, any>>({});
   const hasApplied = !!selectedJob?.applicationStatus;
+  const { company } = useCompanyStore();
+  const companyId = company?.id;
 
-  const fetchAllJobs = async () => {
-    const [fetchedJobs, myApplications, saved] = await Promise.all([
-      fetchJobs(),
-      fetchMyApplications(),
-      fetchSavedJobs(),
-    ]);
+  const loadCompanyJobs = async () => {
+    if (!companyId) return;
 
-    const appMap: Record<string, any> = {};
-    const allowedStatuses = ["Pending", "Viewed", "Rejected", "Accepted"];
+    const result = await fetchCompanyJobs(companyId);
+    setJobs(result.jobs);
+    setSavedJobs(result.savedJobs);
+    setAppliedJobs(result.appliedJobsMap);
 
-    const applicationMap: Record<
-      string,
-      "Pending" | "Viewed" | "Rejected" | "Accepted"
-    > = {};
-
-    myApplications.forEach((app: any) => {
-      if (allowedStatuses.includes(app.status)) {
-        appMap[app.job.id] = app;
-      }
-    });
-
-    const enrichedJobs = fetchedJobs.map((job) => ({
-      ...job,
-      applicationStatus: appMap[job.id]?.status ?? null,
-    }));
-
-    setAppliedJobs(appMap);
-    setJobs(enrichedJobs);
-    setSavedJobs(saved);
-
-    if (enrichedJobs.length > 0) {
-      setSelectedJob(enrichedJobs[0]);
-      const isJobSaved = saved.some((job) => job.id === enrichedJobs[0].id);
+    if (result.jobs.length > 0) {
+      setSelectedJob(result.jobs[0]);
+      const isJobSaved = result.savedJobs.some(
+        (job) => job.id === result.jobs[0].id,
+      );
       setIsSaved(isJobSaved);
     }
   };
 
   useEffect(() => {
-    fetchAllJobs();
-  }, []);
+    loadCompanyJobs();
+  }, [companyId]);
 
   useEffect(() => {
     if (!selectedJob) return;
@@ -354,14 +334,8 @@ const Jobs_And_Hiring: React.FC<SaveApplyProps> = ({
           Find your next job
         </h1>
         <button
-          onClick={() => setShowCreateModal(true)}
-          className="bg-softRosewood hover:bg-crimsonRed text-white px-6 py-3 rounded-md mb-5"
-        >
-          Create New Job
-        </button>
-        <button
           onClick={() => navigate("/saved-jobs")}
-          className="bg-softRosewood hover:bg-crimsonRed text-white px-6 py-3 rounded-md mb-5 ml-5"
+          className="bg-softRosewood hover:bg-crimsonRed text-white px-6 py-3 rounded-md mb-5"
         >
           View Saved,applied Jobs & My applicants
         </button>
@@ -536,7 +510,11 @@ const Jobs_And_Hiring: React.FC<SaveApplyProps> = ({
                   >
                     <div className="flex">
                       <img
-                        src={job.company?.logo ?? (userprofile ?? "/default-logo.png")}
+                        src={
+                          job.company?.logo ??
+                          userprofile ??
+                          "/default-logo.png"
+                        }
                         alt={job.company?.name}
                         className="w-12 h-12 rounded-md mr-4"
                       />
@@ -578,7 +556,11 @@ const Jobs_And_Hiring: React.FC<SaveApplyProps> = ({
                   <div className="flex items-start justify-between">
                     <div className="flex">
                       <img
-                        src={selectedJob.company?.logo ?? (userprofile ?? "/default-logo.png")}
+                        src={
+                          selectedJob.company?.logo ??
+                          userprofile ??
+                          "/default-logo.png"
+                        }
                         alt={selectedJob.company?.name}
                         className="w-16 h-16 rounded-md mr-4"
                       />
@@ -871,7 +853,9 @@ const Jobs_And_Hiring: React.FC<SaveApplyProps> = ({
           isOpen={showCreateModal}
           onClose={() => setShowCreateModal(false)}
           onJobCreated={() => {
-            fetchAllJobs();
+            if (companyId) {
+              loadCompanyJobs();
+            }
           }}
         />
       </main>
@@ -879,4 +863,4 @@ const Jobs_And_Hiring: React.FC<SaveApplyProps> = ({
   );
 };
 
-export default Jobs_And_Hiring;
+export default CompanyJobs;

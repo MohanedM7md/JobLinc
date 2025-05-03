@@ -6,7 +6,6 @@ interface JobApplicationModalProps {
   companyName: string;
   jobId: string;
   existingStatus?: "Pending" | "Viewed" | "Rejected" | "Accepted" | null;
-  // onSubmit: (status: "Pending" | "Viewed" | "Rejected" | "Accepted") => void;
   onSubmit: (
     jobId: string,
     data: { phone: string; email: string; resume: File; coverLetter?: string },
@@ -67,7 +66,6 @@ const JobApplicationModal: React.FC<JobApplicationModalProps> = ({
         resume: resume as File,
         coverLetter,
       });
-      // localStorage.setItem(`applied-email-${jobId}`, email);
       setSubmittedInfo({
         resumeName: resume?.name,
         resumeSize: resume?.size,
@@ -91,16 +89,6 @@ const JobApplicationModal: React.FC<JobApplicationModalProps> = ({
     setError("");
     setSubmittedInfo({});
   };
-
-  // useEffect(() => {
-  //   if (isOpen && existingStatus) {
-  //     const storedEmail = localStorage.getItem(`applied-email-${jobId}`);
-  //     if (storedEmail) {
-  //       setSubmittedInfo((prev) => ({ ...prev, email: storedEmail }));
-  //     }
-  //   }
-  // }, [isOpen, existingStatus, jobId]);
-  
 
   if (!isOpen) return null;
 
@@ -200,19 +188,6 @@ const JobApplicationModal: React.FC<JobApplicationModalProps> = ({
               </p>
             </div>
 
-            {/* <div className="mb-4">
-              <h3 className="font-medium mb-2">Cover Letter</h3>
-              <div className="border border-gray-300 rounded-md p-3 text-gray-700">
-                <p>Dear Hiring Manager,</p>
-                <p className="my-2">
-                  I am writing to express my interest in the position at{" "}
-                  {companyName}. With my experience in the field, I believe I
-                  would be a great fit for your team.
-                </p>
-                <p>Thank you for considering my application.</p>
-              </div>
-            </div> */}
-
             <div className="mt-6 flex justify-end space-x-3">
               <button
                 onClick={onClose}
@@ -220,29 +195,6 @@ const JobApplicationModal: React.FC<JobApplicationModalProps> = ({
               >
                 Close
               </button>
-              {/* <button
-                onClick={async () => {
-                  if (!resume || !email || !phone) {
-                    setError("resume,email,phone");
-                    return;
-                  }
-                  try {
-                    await onSubmit(jobId, {
-                      phone,
-                      email,
-                      resume,
-                      coverLetter,
-                    });
-                  } catch (err) {
-                    console.error("❌ Reapply failed:", err);
-                    setError("Failed to reapply. Please try again.");
-                  }
-                }}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-                disabled={existingStatus === "Pending"}
-              >
-                Reapply
-              </button> */}
             </div>
           </div>
         ) : (
@@ -298,19 +250,6 @@ const JobApplicationModal: React.FC<JobApplicationModalProps> = ({
                 </label>
               </div>
             </div>
-
-            {/* <div className="mb-4">
-              <label htmlFor="coverLetter" className="block font-medium mb-1">
-                Cover Letter
-              </label>
-              <textarea
-                id="coverLetter"
-                className="w-full border border-gray-300 rounded-md px-3 py-2 h-32"
-                placeholder="Write a cover letter (optional)"
-                value={coverLetter}
-                onChange={(e) => setCoverLetter(e.target.value)}
-              ></textarea>
-            </div> */}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
               <div>
