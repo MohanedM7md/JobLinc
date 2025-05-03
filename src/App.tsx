@@ -6,6 +6,8 @@ const Layout = lazy(() => import("@components/Layout"));
 import ProtectedRoute from "@components/ProtectedRoute";
 import AuthRoute from "@components/AuthRoute";
 import Error404 from "@pages/Eror404";
+import NotificationPage from "@components/Notifications/NotificationsPage";
+import NotificationCard from "@components/Notifications/NotificationCard ";
 
 //  auth and frequently used pages
 const LandPage = lazy(() => import("@pages/Land"));
@@ -118,6 +120,7 @@ function App() {
               path="/signin/forgot-password"
               element={<ForgotPassword />}
             />
+
             <Route path="/reset-password" element={<ResetPassword />} />
           </Route>
 
@@ -125,6 +128,8 @@ function App() {
           <Route element={<ProtectedRoute />}>
             <Route element={<Layout />}>
               {/* Main App Routes */}
+              <Route path="/notifications" element={<NotificationPage />} />
+
               <Route path="/home" element={<Home />} />
               <Route path="/my-network" element={<MyNetwork />} />
               <Route path="/my-connections" element={<MyConnections />} />

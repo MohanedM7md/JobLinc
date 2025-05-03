@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { Bell } from "lucide-react";
 import { useNotificationStore } from "../../store/Notification/notificationStore";
 
 interface Props {
@@ -11,11 +10,10 @@ const NotificationBell: React.FC<Props> = ({ onClick }) => {
   const previousCount = useRef(unseenCount);
   const [jiggle, setJiggle] = useState(false);
 
-  // ✅ Play jiggle animation when unseen count increases
   useEffect(() => {
     if (unseenCount > previousCount.current) {
       setJiggle(true);
-      setTimeout(() => setJiggle(false), 600); // animation duration
+      setTimeout(() => setJiggle(false), 600);
     }
     previousCount.current = unseenCount;
   }, [unseenCount]);
@@ -23,19 +21,23 @@ const NotificationBell: React.FC<Props> = ({ onClick }) => {
   return (
     <div
       onClick={onClick}
-      className="relative cursor-pointer text-gray-700 hover:text-blue-600 transition"
+      className="group flex flex-col items-center justify-center w-[calc(100%/7)] sm:w-1/2 cursor-pointer relative"
     >
-      <Bell
-        className={`w-6 h-6 transition-transform duration-300 ${
-          jiggle ? "animate-bounce" : ""
-        }`}
-      />
-
-      {unseenCount > 0 && (
-        <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full px-1.5 py-0.5 min-w-[1.5rem] text-center">
-          {unseenCount > 99 ? "99+" : unseenCount}
-        </span>
-      )}
+      <div className="relative">
+        <i
+          className={`fa-solid fa-bell text-[20px] text-[#2d2d2d] group-hover:text-black transition-transform duration-300 ${
+            jiggle ? "animate-bounce" : ""
+          }`}
+        />
+        {unseenCount > 0 && (
+          <span className="absolute -top-1.5 -right-2 bg-[#e60023] text-white text-[12px] font-bold rounded-full px-[7px] py-[2px] leading-none min-w-[20px] text-center shadow-lg border-2 border-white">
+            {unseenCount > 99 ? "99+" : unseenCount}
+          </span>
+        )}
+      </div>
+      <span className="text-xs text-[#2d2d2d] group-hover:text-black mt-[2px] hidden sm:flex">
+        Notifications
+      </span>
     </div>
   );
 };
