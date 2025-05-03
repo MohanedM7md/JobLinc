@@ -4,6 +4,7 @@ import ManageFollowers from "./Settings/CompanyContentPages/ManageFollowers";
 import PostsContent from "@pages/Company/Cards/PostsContent";
 import { useState } from "react";
 import AdminJobApplicants from "../Jobs/AdminJobApplicants";
+import CompanyAnalytics from "../Jobs/CompanyAnalytics";
 
 type CompanyContentProps = {
   activeContent: string;
@@ -14,8 +15,6 @@ export function CompanyContent({
   activeContent,
   setActiveContent,
 }: CompanyContentProps) {
-  const [selectedJob, setSelectedJob] = useState<{ id: string } | null>(null);
-
   const getContent = () => {
     switch (activeContent) {
       case "Dashboard":
@@ -36,8 +35,8 @@ export function CompanyContent({
         return <div>Feed Content</div>;
       case "Activity":
         return <div>Activity Content</div>;
-      case "Inbox":
-        return <div>Inbox Content</div>;
+      case "Analytics":
+        return (<CompanyAnalytics />);
       case "Edit page":
         return (
           <CompanyEditModal

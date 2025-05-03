@@ -361,12 +361,6 @@ const AdminJobApplicants: React.FC<SaveApplyProps> = ({ jobTitle, companyName, j
         >
           Create New Job
         </button>
-        <button
-          onClick={() => navigate("/saved-jobs")}
-          className="bg-softRosewood hover:bg-crimsonRed text-white px-6 py-3 rounded-md mb-5 ml-5"
-        >
-          View Saved,applied Jobs & My applicants
-        </button>
 
         <form onSubmit={handleSearchSubmit} className="mb-6">
           <div className="flex flex-col md:flex-row gap-4">

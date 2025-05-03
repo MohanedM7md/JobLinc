@@ -168,3 +168,9 @@ export const fetchCompanyJobs = async (companyId: string) => {
     appliedJobsMap: appMap,
   };
 };
+
+// Fetch company analytics
+export const fetchCompanyStats = async () => {
+  const response = await api.get("/companies/stats");
+  return response.data;
+};
