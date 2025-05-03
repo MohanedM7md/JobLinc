@@ -90,10 +90,10 @@ import CreateForm from "@pages/Company/CreateForm";
 import FollowersFollowing from "@pages/FollowersFollowing";
 import MyConnections from "./pages/Connections";
 import UserConnections from "@pages/UserConnections";
-import BlockList from "@pages/Connections/BlockList";
+import BlockList from "@pages/Settings/BlockList";
 import MutualConnections from "@pages/MutualConnections";
 import MyNetwork from "./pages/MyNetwork";
-import AccountVisibility from "@pages/AccountVisibility/AccountVisibilityCard";
+import AccountVisibility from "@pages/Settings/AccountVisibilityCard";
 
 const queryClient = new QueryClient();
 
