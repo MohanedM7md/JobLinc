@@ -1,243 +1,334 @@
-import React, { useState, useEffect, ChangeEvent } from "react";
-import ReactDOM from "react-dom";
+import React, { useState, FormEvent, useEffect } from "react";
 
 interface JobApplicationModalProps {
   isOpen: boolean;
   onClose: () => void;
   companyName: string;
-}
-
-interface FormData {
-  firstName: string;
-  lastName: string;
-  phoneNumber: string;
-  email: string;
-  gender: string;
-  resume: File | null;
-}
-
-interface FormErrors {
-  [key: string]: string;
-}
-
-const JobApplicationModal: React.FC<JobApplicationModalProps> = ({ isOpen, onClose, companyName }) => {
-  const [formData, setFormData] = useState<FormData>(() => {
-    const savedData = localStorage.getItem("jobApplicationData");
-    return savedData
-      ? JSON.parse(savedData)
-      : {
-          firstName: "",
-          lastName: "",
-          phoneNumber: "",
-          email: "",
-          gender: "",
-          resume: null,
-        };
-  });
-
-  const [errors, setErrors] = useState<FormErrors>({});
-
-  useEffect(() => {
-    // We need to create a serializable version of the form data for storage
-    const serializableData = {...formData};
-    if (formData.resume) {
-      // Store only the file name for localStorage since File objects can't be serialized
-      (serializableData as any).resume = { name: formData.resume.name };
-    }
-    localStorage.setItem("jobApplicationData", JSON.stringify(serializableData));
-  }, [formData]);
-
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>): void => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-
-    setErrors((prevErrors) => ({
-      ...prevErrors,
-      [name]: "",
-    }));
+  jobId: string;
+  existingStatus?: "Pending" | "Viewed" | "Rejected" | "Accepted" | null;
+  onSubmit: (
+    jobId: string,
+    data: { phone: string; email: string; resume: File; coverLetter?: string },
+  ) => Promise<void>;
+  applicationData?: {
+    phone?: string;
+    email?: string;
+    resume?: {
+      name: string;
+      size: number;
+    };
   };
+}
 
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>): void => {
-    const files = e.target.files;
-    if (files && files.length > 0) {
-      const file = files[0];
-      setFormData((prevData) => ({
-        ...prevData,
-        resume: file,
-      }));
+const JobApplicationModal: React.FC<JobApplicationModalProps> = ({
+  isOpen,
+  onClose,
+  companyName,
+  jobId,
+  existingStatus,
+  onSubmit,
+  applicationData,
+}) => {
+  const [resume, setResume] = useState<File | null>(null);
+  const [coverLetter, setCoverLetter] = useState<string>("");
+  const [phone, setPhone] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [error, setError] = useState<string>("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submittedInfo, setSubmittedInfo] = useState<{
+    resumeName?: string;
+    resumeSize?: number;
+    email?: string;
+    phone?: string;
+  }>({});
 
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        resume: "",
-      }));
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError("");
+    console.log("✅ Submit clicked");
+
+    const errors = [];
+    if (!resume && !existingStatus) errors.push("resume");
+    if (!email && !existingStatus) errors.push("email");
+    if (!phone && !existingStatus) errors.push("phone");
+
+    if (errors.length > 0) {
+      setError(errors.join(", "));
+      return;
     }
-  };
 
-  const handleNext = (): void => {
-    const newErrors: FormErrors = {};
+    try {
+      console.log("📄 Resume file:", resume);
+      setIsSubmitting(true);
+      await onSubmit(jobId, {
+        phone,
+        email,
+        resume: resume as File,
+        coverLetter,
+      });
+      setSubmittedInfo({
+        resumeName: resume?.name,
+        resumeSize: resume?.size,
+        email,
+        phone,
+      });
 
-    Object.keys(formData).forEach((key) => {
-      const value = formData[key as keyof FormData];
-      if (!value) {
-        newErrors[key] = "This field is required.";
-      }
-    });
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-    } else {
-      console.log("Proceeding and closing modal:", formData);
-      onClose();
-      window.location.href = "/"; // Redirect to home
+      setIsSubmitting(false);
+    } catch (err) {
+      console.error("❌ Failed to submit application:", err);
+      setError("Failed to apply. Please try again.");
+      setIsSubmitting(false);
     }
   };
 
-  const calculateProgress = (): number => {
-    const filledFields = Object.values(formData).filter(
-      (value) => value
-    ).length;
-    return (filledFields / Object.keys(formData).length) * 100;
+  const resetForm = () => {
+    setResume(null);
+    setCoverLetter("");
+    setPhone("");
+    setEmail("");
+    setError("");
+    setSubmittedInfo({});
   };
 
   if (!isOpen) return null;
 
-  // Ensure the modal root element exists
-  const modalRoot = document.getElementById("modal-root");
-  if (!modalRoot) {
-    console.error("Modal root element not found");
-    return null;
-  }
-
-  return ReactDOM.createPortal(
-    <>
-      <div
-        className="fixed inset-0 bg-black bg-opacity-50 z-40"
-        onClick={onClose}
-      ></div>
-      <div className="fixed inset-0 flex items-center justify-center z-50">
-        <div className="bg-white rounded-lg w-full max-w-xl max-h-screen overflow-y-auto">
-          <div className="flex justify-between items-center p-4 border-b">
-            <h2 className="text-xl font-semibold">Apply to {companyName}</h2>
-            <button
-              onClick={onClose}
-              className="text-gray-500 hover:text-gray-700"
+  return (
+    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg p-6 max-w-lg w-full max-h-[90vh] overflow-y-auto">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-semibold">
+            {existingStatus
+              ? "Application Details"
+              : `Apply to ${companyName || "this company"}`}
+          </h2>
+          <button
+            onClick={() => {
+              resetForm();
+              onClose();
+            }}
+            className="text-gray-500 hover:text-gray-700"
+            aria-label="Close"
+          >
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M6 18L18 6M6 6l12 12"
+              ></path>
+            </svg>
+          </button>
+        </div>
+
+        {existingStatus ? (
+          <div>
+            <div className="mb-4">
+              <h3 className="font-medium mb-2">Application Status</h3>
+              <div
+                className={`inline-block px-3 py-1 rounded-full text-sm ${
+                  existingStatus === "Pending"
+                    ? "bg-yellow-100 text-yellow-800"
+                    : existingStatus === "Viewed"
+                      ? "bg-blue-100 text-blue-800"
+                      : existingStatus === "Rejected"
+                        ? "bg-red-100 text-red-800"
+                        : "bg-green-100 text-green-800"
+                }`}
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M6 18L18 6M6 6l12 12"
-                ></path>
-              </svg>
-            </button>
-          </div>
-
-          <div className="w-full bg-gray-200 h-2">
-            <div
-              className="bg-blue-600 h-2"
-              style={{ width: `${calculateProgress()}%` }}
-            ></div>
-          </div>
-
-          <div className="p-4">
-            <h3 className="text-lg font-medium mb-4">Contact Info</h3>
-            <div className="space-y-4">
-              {["firstName", "lastName", "phoneNumber", "email"].map(
-                (field) => (
-                  <div key={field}>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      {field
-                        .replace(/([A-Z])/g, " $1")
-                        .replace(/^./, (str) => str.toUpperCase())}
-                      *
-                    </label>
-                    <input
-                      type={field === "email" ? "email" : "text"}
-                      name={field}
-                      placeholder={`Enter your ${field}`}
-                      value={formData[field as keyof FormData] as string}
-                      onChange={handleChange}
-                      className={`w-full px-3 py-2 border ${
-                        errors[field] ? "border-red-500" : "border-gray-300"
-                      } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                      required
-                    />
-                    {errors[field] && (
-                      <p className="text-red-500 text-sm mt-1">
-                        {errors[field]}
-                      </p>
-                    )}
-                  </div>
-                )
-              )}
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Gender*
-                </label>
-                <select
-                  name="gender"
-                  value={formData.gender}
-                  onChange={handleChange}
-                  className={`w-full px-3 py-2 border ${
-                    errors.gender ? "border-red-500" : "border-gray-300"
-                  } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                  required
-                >
-                  <option value="">Select an option</option>
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                </select>
-                {errors.gender && (
-                  <p className="text-red-500 text-sm mt-1">{errors.gender}</p>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Resume*
-                </label>
-                <input
-                  type="file"
-                  accept=".pdf,.doc,.docx"
-                  onChange={handleFileChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                {formData.resume && (
-                  <p className="text-sm text-gray-600 mt-1">
-                    Uploaded: {formData.resume.name}
-                  </p>
-                )}
-                {errors.resume && (
-                  <p className="text-red-500 text-sm mt-1">{errors.resume}</p>
-                )}
+                {existingStatus}
               </div>
             </div>
-          </div>
 
-          <div className="px-4 py-3 bg-gray-50 text-right sm:px-6 border-t">
-            <button
-              type="button"
-              onClick={handleNext}
-              className="inline-flex justify-center py-2 px-8 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-            >
-              Next
-            </button>
+            <div className="mb-4">
+              <h3 className="font-medium mb-2">Resume</h3>
+              <div className="border border-gray-300 rounded-md p-3 flex items-center">
+                <svg
+                  className="w-8 h-8 text-gray-400 mr-3"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"></path>
+                </svg>
+                <div>
+                  <p className="font-medium">
+                    {applicationData?.resume?.name ||
+                      submittedInfo.resumeName ||
+                      "Your_Resume.pdf"}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    PDF,{" "}
+                    {(
+                      (applicationData?.resume?.size ??
+                        submittedInfo.resumeSize ??
+                        1200000) /
+                      (1024 * 1024)
+                    ).toFixed(1)}{" "}
+                    MB
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="mb-4">
+              <h3 className="font-medium mb-2">Contact Information</h3>
+              <p className="text-gray-700">
+                {/* Email: {submittedInfo.email || applicationData?.email || "john.doe@example.com"} */}
+              </p>
+              <p className="text-gray-700">
+                Phone:{" "}
+                {applicationData?.phone ||
+                  submittedInfo.phone ||
+                  "(555) 123-4567"}
+              </p>
+            </div>
+
+            <div className="mt-6 flex justify-end space-x-3">
+              <button
+                onClick={onClose}
+                className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50"
+              >
+                Close
+              </button>
+            </div>
           </div>
-        </div>
+        ) : (
+          <form onSubmit={handleSubmit} data-testid="application-form">
+            {error && (
+              <div className="mb-4 p-3 bg-red-50 text-red-700 rounded-md">
+                {error.includes("resume") && (
+                  <div>Please upload your resume</div>
+                )}
+                {error.includes("email") && <div>Please enter your email</div>}
+                {error.includes("phone") && (
+                  <div>Please enter your phone number</div>
+                )}
+              </div>
+            )}
+
+            <div className="mb-4">
+              <label className="block font-medium mb-1">Resume *</label>
+              <div className="border border-gray-300 border-dashed rounded-md p-4 text-center cursor-pointer hover:bg-gray-50">
+                <input
+                  data-testid="resume-upload"
+                  type="file"
+                  accept=".pdf,.doc,.docx"
+                  className="hidden"
+                  id="resume-upload"
+                  onChange={(e) => {
+                    if (e.target.files && e.target.files[0]) {
+                      setResume(e.target.files[0]);
+                      setError("");
+                    }
+                  }}
+                />
+                <label htmlFor="resume-upload" className="cursor-pointer">
+                  <svg
+                    className="w-10 h-10 text-gray-400 mx-auto mb-2"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                    ></path>
+                  </svg>
+                  {resume ? (
+                    <p className="text-blue-600">{resume.name}</p>
+                  ) : (
+                    <p>Upload your resume (PDF, DOC, DOCX)</p>
+                  )}
+                </label>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <div>
+                <label htmlFor="email" className="block font-medium mb-1">
+                  Email *
+                </label>
+                <input
+                  id="email"
+                  type="email"
+                  className="w-full border border-gray-300 rounded-md px-3 py-2"
+                  placeholder="Your email"
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    setError("");
+                  }}
+                  required
+                />
+              </div>
+
+              <div>
+                <label htmlFor="phone" className="block font-medium mb-1">
+                  Phone*
+                </label>
+                <input
+                  id="phone"
+                  type="tel"
+                  className="w-full border border-gray-300 rounded-md px-3 py-2"
+                  placeholder="Your phone number"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div className="mt-6 flex justify-end space-x-3">
+              <button
+                type="button"
+                onClick={() => {
+                  resetForm();
+                  onClose();
+                }}
+                className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="px-4 py-2 bg-darkBurgundy text-white rounded-md hover:bg-softRosewood flex items-center justify-center"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <svg
+                    className="animate-spin h-5 w-5 mr-2 text-white"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    />
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16v-4l-3 3 3 3v-4a8 8 0 01-8-8z"
+                    />
+                  </svg>
+                ) : (
+                  "Submit Application"
+                )}
+              </button>
+            </div>
+          </form>
+        )}
       </div>
-    </>,
-    modalRoot
+    </div>
   );
 };
 

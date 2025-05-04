@@ -36,6 +36,7 @@ export const createChat = async (
       receiverIds: recievers,
       title,
     });
+    toast.success("Chat succefully created!");
     return response;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -113,7 +114,6 @@ export const addParticipants = async (
   participants: string[],
   chatId: string,
 ) => {
-  toast.error(`nooooooooooooooo}`);
   const response = await api.post("/chat/add-or-remove-participants", {
     userIds: participants,
     chatId,
@@ -125,6 +125,7 @@ export const addParticipants = async (
       `Response error: ${response.status} - Failed to remove participants`,
     );
   }
+  toast.success("paricipant successfuly added!");
   return response.data;
 };
 
@@ -143,5 +144,6 @@ export const removeParticipants = async (
       `Response error: ${response.status} - Failed to remove participants`,
     );
   }
+  toast.success("paricipant successfuly added!");
   return response.data;
 };

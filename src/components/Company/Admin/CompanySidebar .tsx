@@ -13,6 +13,7 @@ import {
   BadgePercent,
   Settings,
   Eye,
+  BarChart,
 } from "lucide-react";
 import { FileUploadIcon } from "../Inputs";
 import { updateInfo } from "@services/api/companyServices";
@@ -35,7 +36,7 @@ export function CompanySidebar({
     { icon: BarChart2, title: "Manage Followers" },
     { icon: Rss, title: "Feed" },
     { icon: Bell, title: "Activity" },
-    { icon: Inbox, title: "Inbox" },
+    { icon: BarChart, title: "Analytics" },
     { icon: Edit, title: "Edit page" },
   ];
 

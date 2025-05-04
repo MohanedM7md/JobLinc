@@ -2,32 +2,28 @@ import { Route, Routes } from "react-router-dom";
 import { lazy } from "react";
 import { Toaster } from "react-hot-toast";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-const Layout = lazy(() => import("./components/Layout"));
-import ProtectedRoute from "./components/ProtectedRoute";
-import AuthRoute from "./components/AuthRoute";
+const Layout = lazy(() => import("@components/Layout"));
+import ProtectedRoute from "@components/ProtectedRoute";
+import AuthRoute from "@components/AuthRoute";
 import Error404 from "@pages/Eror404";
 
 //  auth and frequently used pages
-const LandPage = lazy(() => import("./pages/Land"));
-const SignUpPage = lazy(() => import("./pages/SignUp"));
-const SignInPage = lazy(() => import("./pages/SignIn"));
-const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
-const UserDetails = lazy(
-  () => import("./pages/UserDetails"),
-);
-const ChangePassword = lazy(() => import("./pages/ChangePassword"));
-const ResetPassword = lazy(() => import("./pages/ResetPassword"));
-const Connections = lazy(() => import("./pages/Connections"));
+const LandPage = lazy(() => import("@pages/Land"));
+const SignUpPage = lazy(() => import("@pages/SignUp"));
+const SignInPage = lazy(() => import("@pages/SignIn"));
+const ForgotPassword = lazy(() => import("@pages/ForgotPassword"));
+const UserDetails = lazy(() => import("@pages/UserDetails"));
+const ChangePassword = lazy(() => import("@pages/ChangePassword"));
+const ResetPassword = lazy(() => import("@pages/ResetPassword"));
+const Connections = lazy(() => import("@pages/Connections"));
 
 //Home & Static pages
 import Home from "@pages/Home";
-const Messaging = lazy(() => import("./pages/Messaging"));
+const Messaging = lazy(() => import("@pages/Messaging"));
 import SearchResult from "@pages/SearchResult";
 
 // Profile components
-const ProfileContainer = lazy(
-  () => import("@components/User Profile/ProfileContainer"),
-);
+import ProfileContainer from "@components/User Profile/ProfileContainer";
 const FullExperiences = lazy(
   () => import("@components/User Profile/Experiences/FullExperiences"),
 );
@@ -95,20 +91,19 @@ import MutualConnections from "@pages/MutualConnections";
 import MyNetwork from "./pages/MyNetwork";
 import AccountVisibility from "@pages/Settings/AccountVisibilityCard";
 
+// Jobs & Hiring Pages
+const Jobs_And_Hiring = lazy (()=>import ("./components/Jobs&hiring/Jobs_And_Hiring"));
+const Saved_Jobs = lazy(()=> import ('./components/Jobs&hiring/Saved_Jobs'));
+
 const queryClient = new QueryClient();
 
 function App() {
   return (
     <>
+
       <Toaster
-        position="top-center"
-        toastOptions={{
-          duration: 4000,
-          style: {
-            background: "#363636",
-            color: "#fff",
-          },
-        }}
+        position="bottom-left"
+        reverseOrder={false}
       />
       <QueryClientProvider client={queryClient}>
         <Routes>
@@ -220,6 +215,12 @@ function App() {
                 <Route path="admin/:companyId" element={<Admin />} />
                 <Route path="member/:slug" element={<Member />} />
               </Route>
+
+              {/* Jobs & Hiring Routes */}
+              <Route path="/jobs-and-hiring" element={<Jobs_And_Hiring />} />
+              <Route path="/saved-jobs" element={<Saved_Jobs />} />
+
+              
             </Route>
           </Route>
 

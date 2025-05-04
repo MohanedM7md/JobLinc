@@ -2,6 +2,9 @@ import { CompanyEditModal } from "./Edit modal/CompanyEditModal";
 import SettingsContent from "./Settings/SettingsContent";
 import ManageFollowers from "./Settings/CompanyContentPages/ManageFollowers";
 import PostsContent from "@pages/Company/Cards/PostsContent";
+import { useState } from "react";
+import AdminJobApplicants from "../Jobs/AdminJobApplicants";
+import CompanyAnalytics from "../Jobs/CompanyAnalytics";
 
 type CompanyContentProps = {
   activeContent: string;
@@ -32,8 +35,8 @@ export function CompanyContent({
         return <div>Feed Content</div>;
       case "Activity":
         return <div>Activity Content</div>;
-      case "Inbox":
-        return <div>Inbox Content</div>;
+      case "Analytics":
+        return (<CompanyAnalytics />);
       case "Edit page":
         return (
           <CompanyEditModal
@@ -43,7 +46,7 @@ export function CompanyContent({
           />
         );
       case "Jobs":
-        return <div>Jobs Content</div>;
+        return (<AdminJobApplicants/>);
       case "Try Premium Page":
         return <div>Premium Content</div>;
       case "Advertise today":

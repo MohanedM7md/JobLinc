@@ -28,7 +28,8 @@ api.interceptors.response.use(
     if (
       error.response &&
       error.response.status === 401 &&
-      error.response.data.errorCode === 401100 &&
+      (error.response.data.errorCode === 401100 ||
+        error.response.data.errorCode === 401101) &&
       !originalRequest._retry
     ) {
       originalRequest._retry = true;

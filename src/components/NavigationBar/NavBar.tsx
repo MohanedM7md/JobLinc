@@ -59,7 +59,7 @@ function NavBar() {
             Name={isLargeScreen ? "My Network" : "Network"}
             pagePath="/my-network"
           />
-          <NavIcon Icon="fa-solid fa-briefcase" Name="Jobs" pagePath="/jobs" />
+          <NavIcon Icon="fa-solid fa-briefcase" Name="Jobs" pagePath="/jobs-and-hiring" />
           <NavIcon
             Icon="fa-solid fa-message"
             Name="Messaging"
