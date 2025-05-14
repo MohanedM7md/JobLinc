@@ -1,15 +1,15 @@
-#  JopLinc
+#  Joblinc
 
-**JopLinc** is a *shorted* version of LinkedIn — redesigned to focus only on what really matters: professional identity, connections, and opportunities. It trims away the clutter to deliver a fast, clean, and distraction-free experience.
+**Joblinc** is a *shorted* version of LinkedIn — redesigned to focus only on what really matters: professional identity, connections, and opportunities. It trims away the clutter to deliver a fast, clean, and distraction-free experience.
 
-**Live Demo**: [joplinc.me](https://joplinc.me)
+**Live Demo**: [joplinc.me](https://Joblinc.me)
 
 ---
 
-##  What is JopLinc?
+##  What is Joblinc?
 
 A minimalist take on LinkedIn — same purpose, less noise.  
-Built with a modern frontend stack, **JopLinc** prioritizes:
+Built with a modern frontend stack, **Joblinc** prioritizes:
 -  Speed  
 -  Simplicity  
 -  Accessibility  
