@@ -2,7 +2,6 @@
 
 **Joblinc** is a *shorted* version of LinkedIn — redesigned to focus only on what really matters: professional identity, connections, and opportunities. It trims away the clutter to deliver a fast, clean, and distraction-free experience.
 
-**Live Demo**: [Joblinc.me](https://Joblinc.me)
 
 ---
 
