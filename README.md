@@ -11,17 +11,14 @@ The platform includes features such as user authentication, profile management, 
 - **Frontend:** React, TypeScript  
 - **State Management:** Zustand / Redux  
 - **Testing:** Vitest  
-- **Realtime Communication:** WebSocket  
+- **Realtime Communication:** Socket Io  
 - **Payments:** Stripe (Test Mode)  
 - **Styling:** TailwindCSS
 
-## Project Status
-
-The application is in active development. All core modules are implemented and tested locally.
 
 ## Demo
  [Live Project – JobLinc](https://joblinc-production.up.railway.app/)
- <br/>
+ <br/><br/>
 [Video Walkthrough](https://drive.google.com/file/d/1SN-8OLoilYQatvChF9JLunOoAt0v1cdK/view?usp=drive_link)
 
 ## License
