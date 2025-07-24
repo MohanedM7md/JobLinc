@@ -22,6 +22,10 @@ export default defineConfig({
     host: "0.0.0.0",
     port: 5173,
     strictPort: true,
-    allowedHosts: ["joblinc.me", "www.joblinc.me"],
+    allowedHosts: [
+      "joblinc.me",
+      "www.https://joblinc-production.up.railway.app",
+      "joblinc-production.up.railway.app",
+    ],
   },
 });
