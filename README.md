@@ -21,6 +21,7 @@ The application is in active development. All core modules are implemented and t
 
 ## Demo
  [Live Project – JobLinc](https://joblinc-production.up.railway.app/)
+ <br/>
 [Video Walkthrough](https://drive.google.com/file/d/1SN-8OLoilYQatvChF9JLunOoAt0v1cdK/view?usp=drive_link)
 
 ## License
