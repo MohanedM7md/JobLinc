@@ -1,0 +1,51 @@
+import { searchUserInterface } from "@interfaces/networkInterfaces";
+export const SearchResponse: searchUserInterface[] = [
+  {
+    userId: "1",
+    firstname: "John",
+    lastname: "Carter",
+    username: "john.carter",
+    profilePicture: "https://randomuser.me/api/portraits/men/1.jpg",
+    country: "United States",
+    city: "New York",
+    connectionStatus: "Connected",
+    isFollowing: true,
+    numberOfConnections: 452,
+    mutualConnections: 12,
+    skills: ["React", "TypeScript", "Node.js", "AWS"],
+    experiences: ["Senior Software Engineer at Tech Corp"],
+    certificates: ["AWS Certified Developer", "Google Cloud Professional"]
+  },
+  {
+    userId: "2",
+    firstname: "Sarah",
+    lastname: "Johnson",
+    username: "sarah.j",
+    profilePicture: "https://randomuser.me/api/portraits/women/45.jpg",
+    country: "Canada",
+    city: "Toronto",
+    connectionStatus: "Not Connected",
+    isFollowing: false,
+    numberOfConnections: 289,
+    mutualConnections: 4,
+    skills: ["UX Design", "Figma", "User Research", "Prototyping"],
+    experiences: ["Lead UX Designer at Digital Innovations"],
+    certificates: ["Adobe Certified Expert", "NN/g UX Certification"]
+  },
+  {
+    userId: "3",
+    firstname: "Michael",
+    lastname: "Chen",
+    username: "michael.c",
+    profilePicture: "https://randomuser.me/api/portraits/men/22.jpg",
+    country: "Australia",
+    city: "Sydney",
+    connectionStatus: "Connected",
+    isFollowing: true,
+    numberOfConnections: 892,
+    mutualConnections: 27,
+    skills: ["Python", "Data Science", "Machine Learning", "TensorFlow"],
+    experiences: ["Data Scientist at AI Analytics Co"],
+    certificates: ["TensorFlow Developer Certificate", "Data Science Council"]
+  },
+];
