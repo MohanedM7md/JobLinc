@@ -1,6 +1,6 @@
 #  [JobLinc](https://joblinc-production.up.railway.app/)
 
-** [JobLinc](https://joblinc-production.up.railway.app/)** is a professional networking platform inspired by LinkedIn. Built with **React** and **TypeScript**, it enables users to connect, share content, apply for jobs, and engage with companies in a modern, interactive environment.
+**[JobLinc](https://joblinc-production.up.railway.app/)** is a professional networking platform inspired by LinkedIn. Built with **React** and **TypeScript**, it enables users to connect, share content, apply for jobs, and engage with companies in a modern, interactive environment.
 
 ## Overview
 
