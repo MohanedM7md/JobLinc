@@ -1,6 +1,6 @@
-# JobLinc
+#  [JobLinc](https://joblinc-production.up.railway.app/)
 
-**JobLinc** is a professional networking platform inspired by LinkedIn. Built with **React** and **TypeScript**, it enables users to connect, share content, apply for jobs, and engage with companies in a modern, interactive environment.
+** [JobLinc](https://joblinc-production.up.railway.app/)** is a professional networking platform inspired by LinkedIn. Built with **React** and **TypeScript**, it enables users to connect, share content, apply for jobs, and engage with companies in a modern, interactive environment.
 
 ## Overview
 
@@ -20,7 +20,3 @@ The platform includes features such as user authentication, profile management, 
  [Live Project – JobLinc](https://joblinc-production.up.railway.app/)
  <br/><br/>
 [Video Walkthrough](https://drive.google.com/file/d/1SN-8OLoilYQatvChF9JLunOoAt0v1cdK/view?usp=drive_link)
-
-## License
-
-MIT License
