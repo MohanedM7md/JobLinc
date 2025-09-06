@@ -25,6 +25,7 @@ export default defineConfig({
     allowedHosts: [
       "joblinc.me",
       "www.https://joblinc-production.up.railway.app",
+      "server.allowedHosts",
       "joblinc-production.up.railway.app",
     ],
   },
